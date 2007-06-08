@@ -1,11 +1,28 @@
 #include <gtk/gtk.h>
 
 #include "sync-menu.h"
+
+GtkWidget *open_item;
+GtkWidget *copy_item;
+
 static void
 menu_item_activate_cb (GtkWidget *item,
                        gpointer   user_data)
 {
+  gboolean visible;
+  gboolean sensitive;
+
   g_print ("Item activated: %s\n", (gchar *) user_data);
+
+  g_object_get (G_OBJECT (copy_item),
+                "visible", &visible,
+                "sensitive", &sensitive,
+                NULL);
+
+  if (item == open_item) {
+    gtk_widget_set_sensitive (copy_item, !sensitive);
+    /*g_object_set (G_OBJECT (copy_item), "visible", !visible, NULL);*/
+  }
 }
 
 static GtkWidget *
@@ -22,6 +39,7 @@ test_setup_menu (void)
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
   item = gtk_menu_item_new_with_label ("Open");
+  open_item = item;
   g_signal_connect (item, "activate", G_CALLBACK (menu_item_activate_cb), "open");
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
   item = gtk_menu_item_new_with_label ("Quit");
@@ -29,10 +47,12 @@ test_setup_menu (void)
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
   item = gtk_menu_item_new_with_label ("Edit");
+
   gtk_menu_shell_append (GTK_MENU_SHELL (menubar), item);
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
   item = gtk_menu_item_new_with_label ("Copy");
+  copy_item = item;
   g_signal_connect (item, "activate", G_CALLBACK (menu_item_activate_cb), "copy");
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
   item = gtk_menu_item_new_with_label ("Paste");

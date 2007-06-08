@@ -15,6 +15,71 @@
 #define GTK_QUARTZ_MENU_CREATOR 'GTKC'
 #define GTK_QUARTZ_ITEM_WIDGET  'GWID'
 
+static GQuark carbon_menu_item_quark = 0;
+
+typedef struct {
+  MenuRef menu;
+  MenuItemIndex index;
+} CarbonMenuItem;
+
+static CarbonMenuItem * 
+carbon_menu_item_new (MenuRef menu, MenuItemIndex index)
+{
+  CarbonMenuItem *menu_item;
+
+  menu_item = g_slice_new0 (CarbonMenuItem);
+  menu_item->menu = menu;
+  menu_item->index = index;
+
+  return menu_item;
+}
+
+static void
+carbon_menu_item_free (CarbonMenuItem *menu_item)
+{
+  g_slice_free (CarbonMenuItem, menu_item);
+}
+
+static void
+update_menu_item_state (GtkWidget *widget)
+{
+  CarbonMenuItem *menu_item;
+  gboolean        sensitive;
+  gboolean        visible;
+  UInt32          set_attrs = 0;
+  UInt32          clear_attrs = 0;
+
+  menu_item = g_object_get_qdata (G_OBJECT (widget), carbon_menu_item_quark);
+
+  g_object_get (widget,
+                "sensitive", &sensitive,
+                "visible", &visible,
+                NULL);
+
+  if (!sensitive) {
+    set_attrs |= kMenuItemAttrDisabled;
+  } else {
+    clear_attrs |= kMenuItemAttrDisabled;
+  }
+
+  if (!visible) {
+    set_attrs |= kMenuItemAttrHidden;
+  } else {
+    clear_attrs |= kMenuItemAttrHidden;
+  }
+
+  ChangeMenuItemAttributes (menu_item->menu, menu_item->index,
+                            set_attrs, clear_attrs);
+}
+
+static void
+menu_item_notify_cb (GObject    *object,
+                     GParamSpec *arg1,
+                     gpointer    user_data)
+{
+  update_menu_item_state (GTK_WIDGET (object));
+}
+
 static OSStatus
 menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref, 
 			 EventRef             event_ref, 
@@ -177,74 +242,85 @@ get_menu_label_text (GtkMenuItem *item)
 
 static void
 sync_menu_shell (GtkMenuShell *menu_shell,
-		 MenuRef       carbon_menu)
+                 MenuRef       carbon_menu)
 {
   GList *children, *l;
 
   children = gtk_container_get_children (GTK_CONTAINER (menu_shell));
   for (l = children; l; l = l->next)
     {
-      const gchar   *label;
-      CFStringRef    cfstr;
-      GtkWidget     *submenu;
-      MenuItemIndex  index;
+      const gchar    *label;
+      CFStringRef     cfstr;
+      GtkWidget      *submenu;
+      MenuItemIndex   index;
+      CarbonMenuItem *carbon_menu_item;
       
       label = get_menu_label_text (l->data);
       if (label)
-	cfstr = CFStringCreateWithCString (NULL, label, kCFStringEncodingUTF8);
+        cfstr = CFStringCreateWithCString (NULL, label, kCFStringEncodingUTF8);
       else
-	cfstr = NULL;
+        cfstr = NULL;
 
       submenu = gtk_menu_item_get_submenu (l->data);
       if (submenu)
-	{
-	  MenuRef carbon_submenu;
-  
-	  CreateNewMenu (0, 0, &carbon_submenu);
-	  SetMenuTitleWithCFString (carbon_submenu, cfstr);
-	  AppendMenuItemTextWithCFString (carbon_menu, NULL, 0, 0, &index);
-	  SetMenuItemProperty (carbon_menu, index, 
-			       GTK_QUARTZ_MENU_CREATOR, 
-			       GTK_QUARTZ_ITEM_WIDGET, 
-			       sizeof (l->data), &l->data);
-	  
-	  SetMenuItemHierarchicalMenu (carbon_menu, index, carbon_submenu);
+        {
+          MenuRef carbon_submenu;
 
-	  sync_menu_shell (GTK_MENU_SHELL (submenu), carbon_submenu);
-	}
+          CreateNewMenu (0, 0, &carbon_submenu);
+          SetMenuTitleWithCFString (carbon_submenu, cfstr);
+          AppendMenuItemTextWithCFString (carbon_menu, NULL, 0, 0, &index);
+          SetMenuItemProperty (carbon_menu, index, 
+                               GTK_QUARTZ_MENU_CREATOR, 
+                               GTK_QUARTZ_ITEM_WIDGET, 
+                               sizeof (l->data), &l->data);
+
+          SetMenuItemHierarchicalMenu (carbon_menu, index, carbon_submenu);
+
+          sync_menu_shell (GTK_MENU_SHELL (submenu), carbon_submenu);
+        }
       else if (GTK_IS_SEPARATOR_MENU_ITEM (l->data))
-	{
-	  AppendMenuItemTextWithCFString (carbon_menu, NULL, kMenuItemAttrSeparator, 0, &index);
-	  SetMenuItemProperty(carbon_menu, index, 
-			      GTK_QUARTZ_MENU_CREATOR, 
-			      GTK_QUARTZ_ITEM_WIDGET, 
-			      sizeof (l->data), &l->data);
-	}
+        {
+          AppendMenuItemTextWithCFString (carbon_menu, NULL, kMenuItemAttrSeparator, 0, &index);
+          SetMenuItemProperty(carbon_menu, index, 
+                              GTK_QUARTZ_MENU_CREATOR, 
+                              GTK_QUARTZ_ITEM_WIDGET, 
+                              sizeof (l->data), &l->data);
+        }
       else
-	{
-	  AppendMenuItemTextWithCFString (carbon_menu, cfstr, 0, 0, &index);
-	  SetMenuItemProperty (carbon_menu, index, 
-			       GTK_QUARTZ_MENU_CREATOR, 
-			       GTK_QUARTZ_ITEM_WIDGET,
-			       sizeof (l->data), &l->data);
+        {
+          AppendMenuItemTextWithCFString (carbon_menu, cfstr, 0, 0, &index);
+          SetMenuItemProperty (carbon_menu, index, 
+                               GTK_QUARTZ_MENU_CREATOR, 
+                               GTK_QUARTZ_ITEM_WIDGET,
+                               sizeof (l->data), &l->data);
 
-	  /* Setting a shortcut:
-	     SetMenuItemCommandKey (carbon_menu, index, false, 'A'); 
-	     or:
-	     SetItemCmd (carbon_menu, index, 'A');
-	     SetMenuItemModifiers (carbon_menu, index, kMenuNoCommandModifier);
-	     SetMenuItemCommandID (carbon_menu, index, 'Boom');
-	  */
-	}
+          /* Setting a shortcut:
+           *  SetMenuItemCommandKey (carbon_menu, index, false, 'A'); 
+           * or:
+           * SetItemCmd (carbon_menu, index, 'A');
+           * SetMenuItemModifiers (carbon_menu, index, kMenuNoCommandModifier);
+           * SetMenuItemCommandID (carbon_menu, index, 'Boom');
+           */
+        }
+
+      carbon_menu_item = carbon_menu_item_new (carbon_menu, index);
+
+      g_object_set_qdata_full (l->data, carbon_menu_item_quark, 
+                               carbon_menu_item, 
+                               (GDestroyNotify)carbon_menu_item_free);
+
+      g_signal_connect (l->data, "notify", 
+                        G_CALLBACK (menu_item_notify_cb),
+                        NULL);
 
       if (!GTK_WIDGET_IS_SENSITIVE (l->data))
-	ChangeMenuItemAttributes (carbon_menu, index, kMenuItemAttrDisabled, 0);
+        ChangeMenuItemAttributes (carbon_menu, index, kMenuItemAttrDisabled, 0);
 
       if (!GTK_WIDGET_VISIBLE (l->data))
-	ChangeMenuItemAttributes (carbon_menu, index, kMenuItemAttrHidden, 0);
+        ChangeMenuItemAttributes (carbon_menu, index, kMenuItemAttrHidden, 0);
 
-      if (cfstr)
-	CFRelease (cfstr);
+        if (cfstr)
+      CFRelease (cfstr);
     }
   g_list_free (children);
 }
@@ -252,7 +328,11 @@ sync_menu_shell (GtkMenuShell *menu_shell,
 void
 sync_menu_takeover_menu (GtkWidget *menu)
 {
-   MenuRef carbon_menubar;
+  MenuRef carbon_menubar;
+
+  if (carbon_menu_item_quark == 0) 
+    carbon_menu_item_quark = g_quark_from_static_string ("CarbonMenuItem");
+  
 
   CreateNewMenu (0 /*id*/, 0 /*options*/, &carbon_menubar);
   SetRootMenu (carbon_menubar);
