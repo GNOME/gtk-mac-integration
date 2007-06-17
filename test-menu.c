@@ -99,7 +99,7 @@ main (int argc, char **argv)
 
   gtk_widget_hide (menubar);
 
-  sync_menu_takeover_menu (menubar);
+  sync_menu_takeover_menu (GTK_MENU_SHELL (menubar));
 
   gtk_main ();
 
