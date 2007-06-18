@@ -260,7 +260,8 @@ carbon_menu_item_update_label (CarbonMenuItem *carbon_item,
 }
 
 static guint
-accel_key_to_command_key (guint in, gboolean *is_glyph )
+accel_key_to_command_key (guint     in,
+			  gboolean *is_glyph)
 {
   const struct { guint keyval; guint commandkey; } keys[] = {
     { GDK_F1, kMenuF1Glyph },
@@ -286,7 +287,8 @@ accel_key_to_command_key (guint in, gboolean *is_glyph )
       }
 
   *is_glyph = FALSE;
-  return g_ascii_toupper (in);
+
+  return in;
 }
 
 static void
