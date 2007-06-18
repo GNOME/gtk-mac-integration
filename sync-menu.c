@@ -1,4 +1,5 @@
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include <Carbon/Carbon.h>
 
@@ -313,7 +314,9 @@ carbon_menu_item_update_accel_closure (CarbonMenuItem *carbon_item,
           gboolean is_glyph;
           guint    val;
 
-          val = accel_key_to_command_key (key->accel_key, &is_glyph);
+	  val = gdk_keyval_to_upper (key->accel_key);
+          val = accel_key_to_command_key (val, &is_glyph);
+
           if (!is_glyph)
             SetMenuItemCommandKey (carbon_item->menu, carbon_item->index,
                                    false, val);
@@ -382,8 +385,7 @@ static CarbonMenuItem *
 carbon_menu_item_connect (GtkWidget     *menu_item,
 			  GtkWidget     *label,
 			  MenuRef        menu,
-			  MenuItemIndex  index,
-			  MenuRef        submenu)
+			  MenuItemIndex  index)
 {
   CarbonMenuItem *carbon_item = carbon_menu_item_get (menu_item);
 
@@ -407,7 +409,6 @@ carbon_menu_item_connect (GtkWidget     *menu_item,
 
   carbon_item->menu    = menu;
   carbon_item->index   = index;
-  carbon_item->submenu = submenu;
 
   return carbon_item;
 }
@@ -569,11 +570,10 @@ sync_menu_shell (GtkMenuShell *menu_shell,
 
       if (!carbon_item)
 	{
-	  GtkWidget          *label = NULL;
+	  GtkWidget          *label      = NULL;
 	  const gchar        *label_text;
-	  CFStringRef         cfstr = NULL;
+	  CFStringRef         cfstr      = NULL;
 	  MenuItemAttributes  attributes = 0;
-	  MenuRef             carbon_submenu = NULL;
 
 	  label_text = get_menu_label_text (menu_item, &label);
 	  if (label_text)
@@ -602,8 +602,7 @@ sync_menu_shell (GtkMenuShell *menu_shell,
 
 	  carbon_item = carbon_menu_item_connect (menu_item, label,
 						  carbon_menu,
-						  carbon_index,
-						  carbon_submenu);
+						  carbon_index);
 
 	  if (GTK_IS_CHECK_MENU_ITEM (menu_item))
 	    carbon_menu_item_update_active (carbon_item, menu_item);
