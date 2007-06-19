@@ -259,38 +259,6 @@ carbon_menu_item_update_label (CarbonMenuItem *carbon_item,
     CFRelease (cfstr);
 }
 
-static guint
-accel_key_to_command_key (guint     in,
-			  gboolean *is_glyph)
-{
-  const struct { guint keyval; guint commandkey; } keys[] = {
-    { GDK_F1, kMenuF1Glyph },
-    { GDK_F2, kMenuF2Glyph },
-    { GDK_F3, kMenuF3Glyph },
-    { GDK_F4, kMenuF4Glyph },
-    { GDK_F5, kMenuF5Glyph },
-    { GDK_F6, kMenuF6Glyph },
-    { GDK_F7, kMenuF7Glyph },
-    { GDK_F8, kMenuF8Glyph },
-    { GDK_F9, kMenuF9Glyph },
-    { GDK_F10, kMenuF10Glyph },
-    { GDK_F11, kMenuF11Glyph },
-    { GDK_F12, kMenuF12Glyph }
-  };
-  gint i;
-
-  for (i = 0; i < G_N_ELEMENTS (keys); i++)
-    if (keys[i].keyval == in)
-      {
-        *is_glyph = TRUE;
-        return keys[i].commandkey;
-      }
-
-  *is_glyph = FALSE;
-
-  return in;
-}
-
 static void
 carbon_menu_item_update_accel_closure (CarbonMenuItem *carbon_item,
 				       GtkWidget      *widget)
@@ -312,34 +280,38 @@ carbon_menu_item_update_accel_closure (CarbonMenuItem *carbon_item,
 	  key->accel_key &&
 	  key->accel_flags & GTK_ACCEL_VISIBLE)
 	{
-	  UInt8    modifiers = 0;
-          gboolean is_glyph;
-          guint    val;
+	  GdkDisplay      *display = gtk_widget_get_display (widget);
+	  GdkKeymap       *keymap  = gdk_keymap_get_for_display (display);
+	  GdkKeymapKey    *keys;
+	  gint             n_keys;
 
-	  val = gdk_keyval_to_upper (key->accel_key);
-          val = accel_key_to_command_key (val, &is_glyph);
-
-          if (!is_glyph)
-            SetMenuItemCommandKey (carbon_item->menu, carbon_item->index,
-                                   false, val);
-	  else
-            SetMenuItemKeyGlyph (carbon_item->menu, carbon_item->index, val);
-
-	  if (key->accel_mods)
+	  if (gdk_keymap_get_entries_for_keyval (keymap, key->accel_key,
+						 &keys, &n_keys))
 	    {
-	      if (key->accel_mods & GDK_SHIFT_MASK)
-		modifiers |= kMenuShiftModifier;
+	      UInt8 modifiers = 0;
 
-	      if (key->accel_mods & GDK_MOD1_MASK)
-		modifiers |= kMenuOptionModifier;
-	    }
-	  else
-	    {
-	      modifiers |= kMenuNoCommandModifier;
-	    }
+	      SetMenuItemCommandKey (carbon_item->menu, carbon_item->index,
+				     true, keys[0].keycode);
 
-	  SetMenuItemModifiers (carbon_item->menu, carbon_item->index,
-				modifiers);
+	      g_free (keys);
+
+	      if (key->accel_mods)
+		{
+		  if (key->accel_mods & GDK_SHIFT_MASK)
+		    modifiers |= kMenuShiftModifier;
+
+		  if (key->accel_mods & GDK_MOD1_MASK)
+		    modifiers |= kMenuOptionModifier;
+		}
+
+	      if (!(key->accel_mods & GDK_CONTROL_MASK))
+		{
+		  modifiers |= kMenuNoCommandModifier;
+		}
+
+	      SetMenuItemModifiers (carbon_item->menu, carbon_item->index,
+				    modifiers);
+	    }
 	}
     }
 }
