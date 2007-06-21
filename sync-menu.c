@@ -135,9 +135,10 @@ carbon_menu_connect (GtkWidget *menu,
 
 typedef struct
 {
-  MenuRef       menu;
-  MenuItemIndex index;
-  MenuRef       submenu;
+  MenuRef        menu;
+  MenuItemIndex  index;
+  MenuRef        submenu;
+  GClosure      *accel_closure;
 } CarbonMenuItem;
 
 static GQuark carbon_menu_item_quark = 0;
@@ -151,6 +152,9 @@ carbon_menu_item_new (void)
 static void
 carbon_menu_item_free (CarbonMenuItem *menu_item)
 {
+  if (menu_item->accel_closure)
+    g_closure_unref (menu_item->accel_closure);
+
   g_slice_free (CarbonMenuItem, menu_item);
 }
 
@@ -260,8 +264,8 @@ carbon_menu_item_update_label (CarbonMenuItem *carbon_item,
 }
 
 static void
-carbon_menu_item_update_accel_closure (CarbonMenuItem *carbon_item,
-				       GtkWidget      *widget)
+carbon_menu_item_update_accelerator (CarbonMenuItem *carbon_item,
+				     GtkWidget      *widget)
 {
   GtkWidget *label;
 
@@ -311,9 +315,73 @@ carbon_menu_item_update_accel_closure (CarbonMenuItem *carbon_item,
 
 	      SetMenuItemModifiers (carbon_item->menu, carbon_item->index,
 				    modifiers);
+
+	      return;
 	    }
 	}
     }
+
+  /*  otherwise, clear the menu shortcut  */
+  SetMenuItemModifiers (carbon_item->menu, carbon_item->index,
+			kMenuNoModifiers | kMenuNoCommandModifier);
+  ChangeMenuItemAttributes (carbon_item->menu, carbon_item->index,
+			    0, kMenuItemAttrUseVirtualKey);
+  SetMenuItemCommandKey (carbon_item->menu, carbon_item->index,
+			 false, 0);
+}
+
+static void
+carbon_menu_item_accel_changed (GtkAccelGroup   *accel_group,
+				guint            keyval,
+				GdkModifierType  modifier,
+				GClosure        *accel_closure,
+				GtkWidget       *widget)
+{
+  CarbonMenuItem *carbon_item = carbon_menu_item_get (widget);
+  GtkWidget      *label;
+
+  get_menu_label_text (widget, &label);
+
+  if (GTK_ACCEL_LABEL (label)->accel_closure == accel_closure)
+    carbon_menu_item_update_accelerator (carbon_item, widget);
+}
+
+static void
+carbon_menu_item_update_accel_closure (CarbonMenuItem *carbon_item,
+				       GtkWidget      *widget)
+{
+  GtkAccelGroup *group;
+  GtkWidget     *label;
+
+  get_menu_label_text (widget, &label);
+
+  if (carbon_item->accel_closure)
+    {
+      group = gtk_accel_group_from_accel_closure (carbon_item->accel_closure);
+
+      g_signal_handlers_disconnect_by_func (group,
+					    carbon_menu_item_accel_changed,
+					    widget);
+
+      g_closure_unref (carbon_item->accel_closure);
+      carbon_item->accel_closure = NULL;
+    }
+
+  if (GTK_IS_ACCEL_LABEL (label))
+    carbon_item->accel_closure = GTK_ACCEL_LABEL (label)->accel_closure;
+
+  if (carbon_item->accel_closure)
+    {
+      g_closure_ref (carbon_item->accel_closure);
+
+      group = gtk_accel_group_from_accel_closure (carbon_item->accel_closure);
+
+      g_signal_connect_object (group, "accel-changed",
+			       G_CALLBACK (carbon_menu_item_accel_changed),
+			       widget, 0);
+    }
+
+  carbon_menu_item_update_accelerator (carbon_item, widget);
 }
 
 static void
