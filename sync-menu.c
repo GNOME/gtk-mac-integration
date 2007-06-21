@@ -342,7 +342,7 @@ carbon_menu_item_accel_changed (GtkAccelGroup   *accel_group,
 
   get_menu_label_text (widget, &label);
 
-  if (GTK_ACCEL_LABEL (label)->accel_closure == accel_closure)
+  if (GTK_IS_ACCEL_LABEL (label) && GTK_ACCEL_LABEL (label)->accel_closure == accel_closure)
     carbon_menu_item_update_accelerator (carbon_item, widget);
 }
 
