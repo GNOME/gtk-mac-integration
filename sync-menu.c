@@ -5,11 +5,6 @@
 
 #include "sync-menu.h"
 
-#define CARBON_MENU 1
-
-#ifndef CARBON_MENU
-#import <AppKit/AppKit.h>
-#endif
 
 /* TODO
  *
@@ -26,7 +21,8 @@
 
 
 static void   sync_menu_shell (GtkMenuShell *menu_shell,
-			       MenuRef       carbon_menu);
+			       MenuRef       carbon_menu,
+			       gboolean      toplevel);
 
 
 /*
@@ -230,7 +226,7 @@ carbon_menu_item_update_submenu (CarbonMenuItem *carbon_item,
       SetMenuItemHierarchicalMenu (carbon_item->menu, carbon_item->index,
 				   carbon_item->submenu);
 
-      sync_menu_shell (GTK_MENU_SHELL (submenu), carbon_item->submenu);
+      sync_menu_shell (GTK_MENU_SHELL (submenu), carbon_item->submenu, FALSE);
 
       if (cfstr)
 	CFRelease (cfstr);
@@ -342,7 +338,8 @@ carbon_menu_item_accel_changed (GtkAccelGroup   *accel_group,
 
   get_menu_label_text (widget, &label);
 
-  if (GTK_IS_ACCEL_LABEL (label) && GTK_ACCEL_LABEL (label)->accel_closure == accel_closure)
+  if (GTK_IS_ACCEL_LABEL (label) &&
+      GTK_ACCEL_LABEL (label)->accel_closure == accel_closure)
     carbon_menu_item_update_accelerator (carbon_item, widget);
 }
 
@@ -449,8 +446,8 @@ carbon_menu_item_connect (GtkWidget     *menu_item,
 				  menu_item);
     }
 
-  carbon_item->menu    = menu;
-  carbon_item->index   = index;
+  carbon_item->menu  = menu;
+  carbon_item->index = index;
 
   return carbon_item;
 }
@@ -465,8 +462,8 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 			 EventRef             event_ref, 
 			 void                *data)
 {
-  UInt32 event_class = GetEventClass (event_ref);
-  UInt32 event_kind = GetEventKind (event_ref);
+  UInt32  event_class = GetEventClass (event_ref);
+  UInt32  event_kind = GetEventKind (event_ref);
   MenuRef menu_ref;
 
   switch (event_class) 
@@ -579,11 +576,10 @@ setup_menu_event_handler (void)
 #endif
 }
 
-#ifdef CARBON_MENU
-
 static void
 sync_menu_shell (GtkMenuShell *menu_shell,
-                 MenuRef       carbon_menu)
+                 MenuRef       carbon_menu,
+		 gboolean      toplevel)
 {
   GList         *children;
   GList         *l;
@@ -599,6 +595,9 @@ sync_menu_shell (GtkMenuShell *menu_shell,
       CarbonMenuItem *carbon_item;
 
       if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
+	continue;
+
+      if (toplevel && g_object_get_data (menu_item, "gtk-empty-menu-item"))
 	continue;
 
       carbon_item = carbon_menu_item_get (menu_item);
@@ -632,7 +631,7 @@ sync_menu_shell (GtkMenuShell *menu_shell,
 	    attributes |= kMenuItemAttrHidden;
 
 	  InsertMenuItemTextWithCFString (carbon_menu, cfstr,
-					  carbon_index + 1,
+					  carbon_index,
 					  attributes, 0);
 	  SetMenuItemProperty (carbon_menu, carbon_index,
 			       GTK_QUARTZ_MENU_CREATOR,
@@ -679,97 +678,5 @@ sync_menu_takeover_menu (GtkMenuShell *menu_shell)
 
   setup_menu_event_handler ();
   
-  sync_menu_shell (menu_shell, carbon_menubar);
+  sync_menu_shell (menu_shell, carbon_menubar, TRUE);
 }
-
-#else /* !CARBON_MENU */
-
-static void
-nsmenu_from_menushell (GtkMenuShell *menu_shell,
-		       NSMenu       *nsMenu)
-{
-  NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-  GList             *children;
-  GList             *list;
-
-  children = gtk_container_get_children (GTK_CONTAINER (menu_shell));
-
-  for (list = children; list; list = list->next)
-    {
-      GtkMenuItem *menu_item = list->data;
-      GtkLabel    *label;
-      NSMenuItem  *menuItem;
-      const gchar *menu_label;
-      NSString    *menuLabel;
-      GtkWidget   *submenu;
-
-      if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
-	continue;
-
-      menu_label = get_menu_label_text (menu_item, &label);
-      if (menu_label)
-	menuLabel = [NSString stringWithUTF8String:menu_label];
-      else
-	menuLabel = NULL;
-
-      if (GTK_IS_SEPARATOR_MENU_ITEM (menu_item))
-	menuItem = [NSMenuItem separatorItem];
-      else
-	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] init];
-
-      if (menuLabel)
-	[menuItem setTitle:menuLabel];
-
-      if (!GTK_WIDGET_IS_SENSITIVE (menu_item))
-        [menuItem setEnabled:NO];
-
-#if 0
-      /* FIXME ??? */
-      if (!GTK_WIDGET_VISIBLE (menu_item))
-	/* ??? */;
-#endif
-
-      [nsMenu addItem:menuItem];
-
-      submenu = gtk_menu_item_get_submenu (menu_item);
-      if (submenu)
-        {
-	  NSMenu *subMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:menuLabel];
-
-	  [menuItem setSubmenu:subMenu];
-
-	  nsmenu_from_menushell (GTK_MENU_SHELL (submenu), subMenu);
-        }
-
-#if 0
-      g_signal_connect (menu_item, "notify",
-                        G_CALLBACK (menu_item_notify_cb),
-                        NULL);
-#endif
-    }
-
-  g_list_free (children);
-
-  [pool release];
-}
-
-void
-sync_menu_takeover_menu (GtkMenuShell *menu_shell)
-{
-  NSMenu *mainMenu;
-
-  g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
-
-  mainMenu = [[NSMenu alloc] initWithTitle:@""];
-
-  // [mainMenu initWithTitle:[NSString stringWithUTF8String:"Foo"]];
-  // [mainMenu setAutoenablesItems:NO];
-
-  // mainMenu = [NSApp mainMenu];
-
-  nsmenu_from_menushell (menu_shell, mainMenu);
-
-  // [NSApp setMainMenu:mainMenu];
-}
-
-#endif /* CARBON_MENU */
