@@ -1,3 +1,26 @@
+/* GTK+ Integration for the Mac OS X Menubar.
+ *
+ * Copyright (C) 2007 Pioneer Research Center USA, Inc.
+ *
+ * For further information, see:
+ * http://developer.imendio.com/projects/gtk-macosx/menubar
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -33,7 +56,7 @@ static GtkWidget *
 find_menu_label (GtkWidget *widget)
 {
   GtkWidget *label = NULL;
-  
+
   if (GTK_IS_LABEL (widget))
     return widget;
 
@@ -50,7 +73,7 @@ find_menu_label (GtkWidget *widget)
 	  if (label)
 	    break;
 	}
-      
+
       g_list_free (children);
     }
 
@@ -139,7 +162,7 @@ typedef struct
 
 static GQuark carbon_menu_item_quark = 0;
 
-static CarbonMenuItem * 
+static CarbonMenuItem *
 carbon_menu_item_new (void)
 {
   return g_slice_new0 (CarbonMenuItem);
@@ -458,15 +481,15 @@ carbon_menu_item_connect (GtkWidget     *menu_item,
  */
 
 static OSStatus
-menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref, 
-			 EventRef             event_ref, 
+menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
+			 EventRef             event_ref,
 			 void                *data)
 {
   UInt32  event_class = GetEventClass (event_ref);
   UInt32  event_kind = GetEventKind (event_ref);
   MenuRef menu_ref;
 
-  switch (event_class) 
+  switch (event_class)
     {
     case kEventClassCommand:
       /* This is called when activating (is that the right GTK+ term?)
@@ -479,24 +502,24 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 
 	  //g_print ("Menu: kEventClassCommand/kEventCommandProcess\n");
 
-	  err = GetEventParameter (event_ref, kEventParamDirectObject, 
-				   typeHICommand, 0, 
+	  err = GetEventParameter (event_ref, kEventParamDirectObject,
+				   typeHICommand, 0,
 				   sizeof (command), 0, &command);
 
 	  if (err == noErr)
 	    {
 	      GtkWidget *widget = NULL;
-              
+
 	      if (command.commandID == kHICommandQuit)
 		{
 		  gtk_main_quit (); /* Just testing... */
 		  return noErr;
 		}
-	      
+
 	      /* Get any GtkWidget associated with the item. */
-	      err = GetMenuItemProperty (command.menu.menuRef, 
-					 command.menu.menuItemIndex, 
-					 GTK_QUARTZ_MENU_CREATOR, 
+	      err = GetMenuItemProperty (command.menu.menuRef,
+					 command.menu.menuItemIndex,
+					 GTK_QUARTZ_MENU_CREATOR,
 					 GTK_QUARTZ_ITEM_WIDGET,
 					 sizeof (widget), 0, &widget);
 	      if (err == noErr && widget)
@@ -508,13 +531,13 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 	}
       break;
 
-    case kEventClassMenu: 
-      GetEventParameter (event_ref, 
-			 kEventParamDirectObject, 
-			 typeMenuRef, 
-			 NULL, 
-			 sizeof (menu_ref), 
-			 NULL, 
+    case kEventClassMenu:
+      GetEventParameter (event_ref,
+			 kEventParamDirectObject,
+			 typeMenuRef,
+			 NULL,
+			 sizeof (menu_ref),
+			 NULL,
 			 &menu_ref);
 
       switch (event_kind)
@@ -528,11 +551,11 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 
 	case kEventMenuOpening:
 	  /* Is it possible to dynamically build the menu here? We
-	   * can at least set visibility/sensitivity. 
+	   * can at least set visibility/sensitivity.
 	   */
 	  //g_print ("kEventClassMenu/kEventMenuOpening\n");
 	  break;
-	    
+
 	case kEventMenuClosed:
 	  //g_print ("kEventClassMenu/kEventMenuClosed\n");
 	  break;
@@ -542,7 +565,7 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 	}
 
       break;
-	
+
     default:
       break;
     }
@@ -568,7 +591,7 @@ setup_menu_event_handler (void)
   InstallEventHandler (GetApplicationEventTarget (), menu_event_handler_upp,
 		       GetEventTypeCount (menu_events), menu_events, 0,
 		       &menu_event_handler_ref);
-  
+
 #if 0
   /* FIXME: Remove the handler with: */
   RemoveEventHandler(menu_event_handler_ref);
@@ -597,8 +620,8 @@ sync_menu_shell (GtkMenuShell *menu_shell,
       if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
 	continue;
 
-      if (toplevel && g_object_get_data (G_OBJECT (menu_item), 
-                                         "gtk-empty-menu-item"))
+      if (toplevel && g_object_get_data (G_OBJECT (menu_item),
+					 "gtk-empty-menu-item"))
 	continue;
 
       carbon_item = carbon_menu_item_get (menu_item);
@@ -678,6 +701,6 @@ sync_menu_takeover_menu (GtkMenuShell *menu_shell)
   SetRootMenu (carbon_menubar);
 
   setup_menu_event_handler ();
-  
+
   sync_menu_shell (menu_shell, carbon_menubar, TRUE);
 }
