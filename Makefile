@@ -4,6 +4,6 @@ CARBON_FLAGS=-framework Carbon
 
 all: test-menu
 
-test-menu: test-menu.c sync-menu.c
-	gcc $(FLAGS) $(GTK_FLAGS) $(CARBON_FLAGS) test-menu.c sync-menu.c -o $@
+test-menu: test-menu.c gtk-macmenu.c gtk-macmenu.h
+	gcc $(FLAGS) $(GTK_FLAGS) $(CARBON_FLAGS) test-menu.c gtk-macmenu.c -o $@
 

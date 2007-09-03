@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 
-#include "sync-menu.h"
+#include "gtk-macmenu.h"
 
 GtkWidget *open_item;
 GtkWidget *copy_item;
@@ -99,7 +99,7 @@ main (int argc, char **argv)
 
   gtk_widget_hide (menubar);
 
-  sync_menu_takeover_menu (GTK_MENU_SHELL (menubar));
+  gtk_macmenu_set_menubar (GTK_MENU_SHELL (menubar));
 
   gtk_main ();
 
