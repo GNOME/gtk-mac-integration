@@ -2,8 +2,9 @@
 
 #include "ige-mac-menu.h"
 
-GtkWidget *open_item;
-GtkWidget *copy_item;
+static GtkWidget *open_item;
+static GtkWidget *copy_item;
+static GtkWidget *quit_item;
 
 static void
 menu_item_activate_cb (GtkWidget *item,
@@ -42,9 +43,9 @@ test_setup_menu (void)
   open_item = item;
   g_signal_connect (item, "activate", G_CALLBACK (menu_item_activate_cb), "open");
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-  item = gtk_menu_item_new_with_label ("Quit");
-  g_signal_connect (item, "activate", G_CALLBACK (menu_item_activate_cb), "quit");
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+  quit_item = gtk_menu_item_new_with_label ("Quit");
+  g_signal_connect (quit_item, "activate", G_CALLBACK (gtk_main_quit), NULL);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), quit_item);
 
   item = gtk_menu_item_new_with_label ("Edit");
 
@@ -99,7 +100,8 @@ main (int argc, char **argv)
 
   gtk_widget_hide (menubar);
 
-  gtk_macmenu_set_menubar (GTK_MENU_SHELL (menubar));
+  ige_mac_menu_set_menubar (GTK_MENU_SHELL (menubar));
+  ige_mac_menu_set_quit_item (GTK_MENU_ITEM (quit_item));
 
   gtk_main ();
 

@@ -31,16 +31,15 @@
 
 /* TODO
  *
- * - Setup shortcuts, possibly transforming ctrl->cmd
- * - Sync menus
- * - Create on demand? (can this be done with gtk+? ie fill in menu items when the menu is opened)
+ * - Sync adding/removing/reordering items
+ * - Create on demand? (can this be done with gtk+? ie fill in menu
+     items when the menu is opened)
  * - Figure out what to do per app/window...
- * - Toggle/radio items
  *
  */
 
-#define GTK_QUARTZ_MENU_CREATOR 'GTKC'
-#define GTK_QUARTZ_ITEM_WIDGET  'GWID'
+#define IGE_QUARTZ_MENU_CREATOR 'IGEC'
+#define IGE_QUARTZ_ITEM_WIDGET  'IWID'
 
 
 static void   sync_menu_shell (GtkMenuShell *menu_shell,
@@ -500,7 +499,7 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 	  HICommand command;
 	  OSStatus  err;
 
-	  //g_print ("Menu: kEventClassCommand/kEventCommandProcess\n");
+	  /*g_print ("Menu: kEventClassCommand/kEventCommandProcess\n");*/
 
 	  err = GetEventParameter (event_ref, kEventParamDirectObject,
 				   typeHICommand, 0,
@@ -510,19 +509,13 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 	    {
 	      GtkWidget *widget = NULL;
 
-	      if (command.commandID == kHICommandQuit)
-		{
-		  gtk_main_quit (); /* Just testing... */
-		  return noErr;
-		}
-
 	      /* Get any GtkWidget associated with the item. */
 	      err = GetMenuItemProperty (command.menu.menuRef,
 					 command.menu.menuItemIndex,
-					 GTK_QUARTZ_MENU_CREATOR,
-					 GTK_QUARTZ_ITEM_WIDGET,
+					 IGE_QUARTZ_MENU_CREATOR,
+					 IGE_QUARTZ_ITEM_WIDGET,
 					 sizeof (widget), 0, &widget);
-	      if (err == noErr && widget)
+	      if (err == noErr && GTK_IS_WIDGET (widget))
 		{
 		  gtk_menu_item_activate (GTK_MENU_ITEM (widget));
 		  return noErr;
@@ -546,18 +539,18 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 	  /* This is called when an item is selected (what is the
 	   * GTK+ term? prelight?)
 	   */
-	  //g_print ("kEventClassMenu/kEventMenuTargetItem\n");
+	  /*g_print ("kEventClassMenu/kEventMenuTargetItem\n");*/
 	  break;
 
 	case kEventMenuOpening:
 	  /* Is it possible to dynamically build the menu here? We
 	   * can at least set visibility/sensitivity.
 	   */
-	  //g_print ("kEventClassMenu/kEventMenuOpening\n");
+	  /*g_print ("kEventClassMenu/kEventMenuOpening\n");*/
 	  break;
 
 	case kEventMenuClosed:
-	  //g_print ("kEventClassMenu/kEventMenuClosed\n");
+	  /*g_print ("kEventClassMenu/kEventMenuClosed\n");*/
 	  break;
 
 	default:
@@ -658,8 +651,8 @@ sync_menu_shell (GtkMenuShell *menu_shell,
 					  carbon_index,
 					  attributes, 0);
 	  SetMenuItemProperty (carbon_menu, carbon_index,
-			       GTK_QUARTZ_MENU_CREATOR,
-			       GTK_QUARTZ_ITEM_WIDGET,
+			       IGE_QUARTZ_MENU_CREATOR,
+			       IGE_QUARTZ_ITEM_WIDGET,
 			       sizeof (menu_item), &menu_item);
 
 	  if (cfstr)
@@ -685,7 +678,7 @@ sync_menu_shell (GtkMenuShell *menu_shell,
 }
 
 void
-gtk_macmenu_set_menubar (GtkMenuShell *menu_shell)
+ige_mac_menu_set_menubar (GtkMenuShell *menu_shell)
 {
   MenuRef carbon_menubar;
 
@@ -706,7 +699,7 @@ gtk_macmenu_set_menubar (GtkMenuShell *menu_shell)
 }
 
 void
-gtk_macmenu_set_quit_item (GtkMenuItem *menu_item)
+ige_mac_menu_set_quit_item (GtkMenuItem *menu_item)
 {
   MenuRef       appmenu;
   MenuItemIndex index;
@@ -718,8 +711,8 @@ gtk_macmenu_set_quit_item (GtkMenuItem *menu_item)
     {
       SetMenuItemCommandID (appmenu, index, 0);
       SetMenuItemProperty (appmenu, index,
-                           GTK_QUARTZ_MENU_CREATOR,
-                           GTK_QUARTZ_ITEM_WIDGET,
+                           IGE_QUARTZ_MENU_CREATOR,
+                           IGE_QUARTZ_ITEM_WIDGET,
                            sizeof (menu_item), &menu_item);
 
       gtk_widget_hide (GTK_WIDGET (menu_item));
@@ -727,8 +720,8 @@ gtk_macmenu_set_quit_item (GtkMenuItem *menu_item)
 }
 
 void
-gtk_macmenu_set_about_item (GtkMenuItem *menu_item,
-			    const gchar *label)
+ige_mac_menu_set_about_item (GtkMenuItem *menu_item,
+                             const gchar *label)
 {
   MenuRef appmenu;
 
@@ -745,8 +738,8 @@ gtk_macmenu_set_about_item (GtkMenuItem *menu_item,
 
       InsertMenuItemTextWithCFString (appmenu, cfstr, 0, 0, 0);
       SetMenuItemProperty (appmenu, 1,
-			   GTK_QUARTZ_MENU_CREATOR,
-			   GTK_QUARTZ_ITEM_WIDGET,
+			   IGE_QUARTZ_MENU_CREATOR,
+			   IGE_QUARTZ_ITEM_WIDGET,
 			   sizeof (menu_item), &menu_item);
 
       CFRelease (cfstr);
@@ -756,8 +749,8 @@ gtk_macmenu_set_about_item (GtkMenuItem *menu_item,
 }
 
 void
-gtk_macmenu_set_prefs_item (GtkMenuItem  *menu_item,
-			    const gchar  *label)
+ige_mac_menu_set_prefs_item (GtkMenuItem  *menu_item,
+                             const gchar  *label)
 {
   MenuRef appmenu;
 
@@ -777,8 +770,8 @@ gtk_macmenu_set_prefs_item (GtkMenuItem  *menu_item,
 
       InsertMenuItemTextWithCFString (appmenu, cfstr, 2, 0, 0);
       SetMenuItemProperty (appmenu, 3,
-                           GTK_QUARTZ_MENU_CREATOR,
-                           GTK_QUARTZ_ITEM_WIDGET,
+                           IGE_QUARTZ_MENU_CREATOR,
+                           IGE_QUARTZ_ITEM_WIDGET,
                            sizeof (menu_item), &menu_item);
 
       CFRelease (cfstr);
