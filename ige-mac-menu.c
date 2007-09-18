@@ -26,7 +26,7 @@
 
 #include <Carbon/Carbon.h>
 
-#include "gtk-macmenu.h"
+#include "ige-mac-menu.h"
 
 
 /* TODO

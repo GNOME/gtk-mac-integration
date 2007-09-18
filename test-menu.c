@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 
-#include "gtk-macmenu.h"
+#include "ige-mac-menu.h"
 
 GtkWidget *open_item;
 GtkWidget *copy_item;
