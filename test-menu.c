@@ -100,8 +100,8 @@ main (int argc, char **argv)
 
   gtk_widget_hide (menubar);
 
-  ige_mac_menu_set_menubar (GTK_MENU_SHELL (menubar));
-  ige_mac_menu_set_quit_item (GTK_MENU_ITEM (quit_item));
+  ige_mac_menu_set_menu_bar (GTK_MENU_SHELL (menubar));
+  ige_mac_menu_set_quit_menu_item (GTK_MENU_ITEM (quit_item));
 
   gtk_main ();
 
