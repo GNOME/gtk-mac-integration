@@ -764,7 +764,6 @@ void
 ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell)
 {
   MenuRef carbon_menubar;
-  guint   hook_id;
 
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
 
