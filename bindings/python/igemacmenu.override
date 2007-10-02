@@ -1,0 +1,14 @@
+%%
+headers
+#include <Python.h>
+#include <pygtk/pygtk.h>
+#include "../../src/ige-mac-menu.h"
+%%
+modulename igemacmenu
+%%
+import gtk.MenuShell as PyGtkMenuShell_Type
+import gtk.MenuItem as PyGtkMenuItem_Type
+%%
+ignore-glob
+  *_get_type
+%%
