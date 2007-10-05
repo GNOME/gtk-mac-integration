@@ -24,15 +24,14 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-
 #include <Carbon/Carbon.h>
 
 #include "ige-mac-menu.h"
 
-
 /* TODO
  *
- * - Sync adding/removing/reordering items
+ * - Adding a standard Window menu (Minimize etc)?
+ * - Sync reordering items? Does that work now?
  * - Create on demand? (can this be done with gtk+? ie fill in menu
      items when the menu is opened)
  * - Figure out what to do per app/window...
