@@ -19,4 +19,5 @@ compile
 *.la
 *.o
 *.lo
+*.loT
 gtk-doc.make

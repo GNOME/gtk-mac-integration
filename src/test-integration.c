@@ -1,10 +1,45 @@
+/* GTK+ Integration for the Mac OS X Menubar.
+ *
+ * Copyright (C) 2007 Imendio AB
+ *
+ * For further information, see:
+ * http://developer.imendio.com/projects/gtk-macosx/menubar
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; version 2.1
+ * of the License.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
 #include <gtk/gtk.h>
 
 #include "ige-mac-menu.h"
+#include "ige-mac-dock.h"
 
 static GtkWidget *open_item;
 static GtkWidget *copy_item;
 static GtkWidget *quit_item;
+static GtkWidget *about_item;
+static GtkWidget *preferences_item;
+
+static void
+dock_clicked_cb (IgeMacDock *dock,
+                 GtkWindow  *window)
+{
+  g_print ("Dock clicked\n");
+
+  gtk_window_deiconify (window);
+}
 
 static void
 menu_item_activate_cb (GtkWidget *item,
@@ -56,17 +91,23 @@ test_setup_menu (void)
   copy_item = item;
   g_signal_connect (item, "activate", G_CALLBACK (menu_item_activate_cb), "copy");
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+
   item = gtk_menu_item_new_with_label ("Paste");
   g_signal_connect (item, "activate", G_CALLBACK (menu_item_activate_cb), "paste");
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+
+  preferences_item = gtk_menu_item_new_with_label ("Preferences");
+  g_signal_connect (preferences_item, "activate", G_CALLBACK (menu_item_activate_cb), "preferences");
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), preferences_item);
 
   item = gtk_menu_item_new_with_label ("Help");
   gtk_menu_shell_append (GTK_MENU_SHELL (menubar), item);
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-  item = gtk_menu_item_new_with_label ("About");
-  g_signal_connect (item, "activate", G_CALLBACK (menu_item_activate_cb), "about");
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+
+  about_item = gtk_menu_item_new_with_label ("About");
+  g_signal_connect (about_item, "activate", G_CALLBACK (menu_item_activate_cb), "about");
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), about_item);
 
   return menubar;
 }
@@ -74,9 +115,11 @@ test_setup_menu (void)
 int
 main (int argc, char **argv)
 {
-  GtkWidget *window;
-  GtkWidget *vbox;
-  GtkWidget *menubar;
+  GtkWidget       *window;
+  GtkWidget       *vbox;
+  GtkWidget       *menubar;
+  IgeMacMenuGroup *group;
+  IgeMacDock      *dock;
 
   gtk_init (&argc, &argv);
 
@@ -102,6 +145,22 @@ main (int argc, char **argv)
 
   ige_mac_menu_set_menu_bar (GTK_MENU_SHELL (menubar));
   ige_mac_menu_set_quit_menu_item (GTK_MENU_ITEM (quit_item));
+
+  group = ige_mac_menu_add_app_menu_group ();
+  ige_mac_menu_add_app_menu_item  (group,
+                                   GTK_MENU_ITEM (about_item), 
+                                   NULL);
+
+  group = ige_mac_menu_add_app_menu_group ();
+  ige_mac_menu_add_app_menu_item  (group,
+                                   GTK_MENU_ITEM (preferences_item), 
+                                   NULL);
+  
+  dock = ige_mac_dock_new ();
+  g_signal_connect (dock,
+                    "clicked",
+                    G_CALLBACK (dock_clicked_cb),
+                    window);
 
   gtk_main ();
 
