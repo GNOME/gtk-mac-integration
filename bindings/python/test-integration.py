@@ -62,12 +62,12 @@ class MainWindow(gtk.Window):
         group.add_app_menu_item(item, None)
         
         # Set up the dock integration
-        dock = MacDock()
-        dock.connect('quit-activate', lambda d: gtk.main_quit())
-        dock.connect('clicked', self.dock_clicked_cb)
+        macdock = MacDock()
+        macdock.connect('quit-activate', lambda d: gtk.main_quit())
+        macdock.connect('clicked', self.dock_clicked_cb)
 
         # Keep the reference so it's not GC:ed.
-        self.dock = dock
+        self.macdock = macdock
         
     def dock_clicked_cb(self, dock):
         print "Dock clicked"
