@@ -1,20 +1,24 @@
 INCLUDES = -I$(top_srcdir)/../src $(PYTHON_INCLUDES)
 
-igemacmenudir = $(libdir)/python$(PYTHON_VERSION)/site-packages
+igemacintegrationdir = $(libdir)/python$(PYTHON_VERSION)/site-packages
 
-igemacmenu_LTLIBRARIES = igemacmenu.la
+igemacintegration_LTLIBRARIES = igemacintegration.la
 
-igemacmenu.defs: $(top_srcdir)/src/ige-mac-menu.h
+headers =				\
+	$(top_srcdir)/src/ige-mac-menu.h\
+	$(top_srcdir)/src/ige-mac-dock.h
+
+igemacintegration.defs: $(headers)
 	$(PYTHON) $(datadir)/pygtk/2.0/codegen/h2def.py $< > $@
 
-igemacmenu.c: igemacmenu.defs igemacmenu.override
+igemacintegration.c: igemacintegration.defs igemacintegration.override
 
-igemacmenu_la_CFLAGS = $(MENU_CFLAGS) $(PYGTK_CFLAGS)
-igemacmenu_la_LDFLAGS = -module -avoid-version
-igemacmenu_la_LIBADD = $(MENU_LIBS) $(PYGTK_LIBS) $(top_builddir)/src/libigemacmenu.la
-igemacmenu_la_SOURCES = 		\
-	igemacmenu.c			\
-	igemacmenu-module.c
+igemacintegration_la_CFLAGS = $(MAC_CFLAGS) $(PYGTK_CFLAGS)
+igemacintegration_la_LDFLAGS = -module -avoid-version
+igemacintegration_la_LIBADD = $(MAC_LIBS) $(PYGTK_LIBS) $(top_builddir)/src/libigemacintegration.la
+igemacintegration_la_SOURCES = 		\
+	igemacintegration.c			\
+	igemacintegration-module.c
 
 .defs.c: 
 	($(PYGTK_CODEGEN)		\
@@ -26,6 +30,6 @@ igemacmenu_la_SOURCES = 		\
 	&& cp gen-$*.c $*.c		\
 	&& rm -f gen-$*.c
 
-CLEANFILES = igemacmenu.defs igemacmenu.c
+CLEANFILES = igemacintegration.defs igemacintegration.c
 
-EXTRA_DIST = igemacmenu.defs igemacmenu.overrides
+EXTRA_DIST = igemacintegration.defs igemacintegration.overrides

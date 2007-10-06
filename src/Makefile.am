@@ -1,21 +1,23 @@
 AM_CPPFLAGS = -I$(top_srcdir) $(WARN_CFLAGS)
 
-lib_LTLIBRARIES = libigemacmenu.la
+lib_LTLIBRARIES = libigemacintegration.la
 
-libigemacmenu_la_SOURCES = 		\
+libigemacintegration_la_SOURCES = 	\
 	ige-mac-menu.c			\
-	$(menu_HEADERS)
+	ige-mac-dock.c			\
+	$(integration_HEADERS)
 
-libigemacmenu_la_CFLAGS = $(MENU_CFLAGS)
-libigemacmenu_la_LIBADD =  $(MENU_LIBS)
-libigemacmenu_la_LDFLAGS = -framework Carbon
+libigemacintegration_la_CFLAGS = $(MAC_CFLAGS)
+libigemacintegration_la_LIBADD =  $(MAC_LIBS)
+libigemacintegration_la_LDFLAGS = -framework Carbon
 
-menu_includedir = $(includedir)/igemacmenu
-menu_include_HEADERS = 			\
-	ige-mac-menu.h
+integration_includedir = $(includedir)/igemacintegration
+integration_include_HEADERS = 		\
+	ige-mac-menu.h			\
+	ige-mac-dock.h
 
 # Test application
 noinst_PROGRAMS = test-menu
 test_menu_SOURCES = test-menu.c
-test_menu_CFLAGS = $(MENU_CFLAGS)
-test_menu_LDADD =  $(MENU_LIBS) libigemacmenu.la
+test_menu_CFLAGS = $(MAC_CFLAGS)
+test_menu_LDADD =  $(MAC_LIBS) libigemacintegration.la

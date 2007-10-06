@@ -15,7 +15,7 @@ test -z "$srcdir" && srcdir=.
 
 ORIGDIR=`pwd`
 cd $srcdir
-PROJECT=ige-mac-menu
+PROJECT=ige-mac-integration
 TEST_TYPE=-f
 FILE=src/ige-mac-menu.c
 CONFIGURE=configure.ac

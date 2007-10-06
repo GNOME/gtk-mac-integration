@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.52)
  
-AC_INIT(ige-mac-menu, 0.5)
+AC_INIT(ige-mac-integration, 0.5)
 AC_CONFIG_SRCDIR(src/ige-mac-menu.c)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
@@ -28,7 +28,7 @@ dnl  ------------------
 dnl | Pkgconfig checks |---------------------------------------
 dnl  ------------------
 
-PKG_CHECK_MODULES(MENU, [
+PKG_CHECK_MODULES(MAC, [
 	gtk+-2.0 >= 2.12
 ])
 
@@ -45,7 +45,7 @@ AC_OUTPUT([
         bindings/Makefile
         bindings/python/Makefile
         data/Makefile
-        data/ige-mac-menu.pc
+        data/ige-mac-integration.pc
 ])
 
 echo
