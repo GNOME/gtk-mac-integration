@@ -80,7 +80,7 @@ class MainWindow(gtk.Window):
             
 if __name__ == '__main__':
     window = MainWindow()
-    window.connect("destroy", lambda x: gtk.main_quit())
+    window.connect("destroy", gtk.main_quit)
     window.show()
 
     gtk.main()
