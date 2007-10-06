@@ -36,15 +36,15 @@ G_BEGIN_DECLS
 #define IGE_IS_MAC_DOCK_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), IGE_TYPE_MAC_DOCK))
 #define IGE_MAC_DOCK_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), IGE_TYPE_MAC_DOCK, IgeMacDockClass))
 
-typedef struct IgeMacDock      IgeMacDock;
-typedef struct IgeMacDockClass IgeMacDockClass;
+typedef struct _IgeMacDock      IgeMacDock;
+typedef struct _IgeMacDockClass IgeMacDockClass;
 
-struct IgeMacDock
+struct _IgeMacDock
 {
   GObject parent_instance;
 };
 
-struct IgeMacDockClass
+struct _IgeMacDockClass
 {
   GObjectClass parent_class;
 };
