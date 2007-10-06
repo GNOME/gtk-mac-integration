@@ -161,6 +161,10 @@ main (int argc, char **argv)
                     "clicked",
                     G_CALLBACK (dock_clicked_cb),
                     window);
+  g_signal_connect (dock,
+                    "quit-activate",
+                    G_CALLBACK (gtk_main_quit),
+                    window);
 
   gtk_main ();
 

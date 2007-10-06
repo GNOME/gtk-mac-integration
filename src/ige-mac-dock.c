@@ -29,6 +29,7 @@
 
 enum {
   CLICKED,
+  QUIT_ACTIVATE,
   LAST_SIGNAL
 };
 
@@ -63,6 +64,15 @@ ige_mac_dock_class_init (IgeMacDockClass *class)
 
   signals[CLICKED] =
     g_signal_new ("clicked",
+                  IGE_TYPE_MAC_DOCK,
+                  G_SIGNAL_RUN_LAST,
+                  0,
+                  NULL, NULL,
+                  g_cclosure_marshal_VOID__VOID,
+                  G_TYPE_NONE, 0);
+
+  signals[QUIT_ACTIVATE] =
+    g_signal_new ("quit-activate",
                   IGE_TYPE_MAC_DOCK,
                   G_SIGNAL_RUN_LAST,
                   0,
@@ -157,7 +167,7 @@ mac_dock_handle_quit (const AppleEvent *inAppleEvent,
   dock = mac_dock_get_from_id (inHandlerRefcon);
 
   if (dock)
-    gtk_main_quit ();
+    g_signal_emit (dock, signals[QUIT_ACTIVATE], 0);
 
   return noErr;
 }
