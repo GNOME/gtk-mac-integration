@@ -21,3 +21,4 @@ compile
 *.lo
 *.loT
 gtk-doc.make
+py-compile

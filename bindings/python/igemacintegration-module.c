@@ -1,22 +1,22 @@
 #include <pygobject.h>
  
-void igemacmenu_register_classes (PyObject *d); 
+void igemacintegration_register_classes (PyObject *d); 
 
-extern PyMethodDef igemacmenu_functions[];
+extern PyMethodDef igemacintegration_functions[];
  
 DL_EXPORT(void)
-     initigemacmenu (void)
+init_igemacintegration (void)
 {
   PyObject *m, *d;
 
   init_pygobject ();
 
-  m = Py_InitModule ("igemacmenu", igemacmenu_functions);
+  m = Py_InitModule ("igemacintegration._igemacintegration", igemacintegration_functions);
   d = PyModule_GetDict (m);
 
-  igemacmenu_register_classes (d);
+  igemacintegration_register_classes (d);
 
   if (PyErr_Occurred ()) {
-    Py_FatalError ("can't initialise module igemacmenu");
+    Py_FatalError ("can't initialise module igemacintegration");
   }
 }
