@@ -7,7 +7,8 @@ igemacintegration_LTLIBRARIES = _igemacintegration.la
 
 headers =						\
 	$(top_srcdir)/src/ige-mac-menu.h		\
-	$(top_srcdir)/src/ige-mac-dock.h
+	$(top_srcdir)/src/ige-mac-dock.h		\
+	$(top_srcdir)/src/ige-mac-bundle.h
 
 igemacintegration.defs: $(headers)
 	$(PYTHON) $(datadir)/pygtk/2.0/codegen/h2def.py $(headers) > $@
