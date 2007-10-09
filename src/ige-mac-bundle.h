@@ -25,10 +25,10 @@
 
 G_BEGIN_DECLS
 
-#define IGE_TYPE_MAC_BUNDLE           (ige_mac_bundle_get_type ())
+#define IGE_TYPE_MAC_BUNDLE            (ige_mac_bundle_get_type ())
 #define IGE_MAC_BUNDLE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), IGE_TYPE_MAC_BUNDLE, IgeMacBundle))
 #define IGE_MAC_BUNDLE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), IGE_TYPE_MAC_BUNDLE, IgeMacBundleClass))
-#define IGE_IS_MAC_BUNDLE(obj)	    (G_TYPE_CHECK_INSTANCE_TYPE ((obj), IGE_TYPE_MAC_BUNDLE))
+#define IGE_IS_MAC_BUNDLE(obj)	       (G_TYPE_CHECK_INSTANCE_TYPE ((obj), IGE_TYPE_MAC_BUNDLE))
 #define IGE_IS_MAC_BUNDLE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), IGE_TYPE_MAC_BUNDLE))
 #define IGE_MAC_BUNDLE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), IGE_TYPE_MAC_BUNDLE, IgeMacBundleClass))
 
@@ -45,6 +45,8 @@ struct _IgeMacBundleClass {
 
 GType         ige_mac_bundle_get_type (void);
 IgeMacBundle *ige_mac_bundle_new      (void);
+const gchar  *ige_mac_bundle_get_id   (IgeMacBundle *bundle);
+const gchar  *ige_mac_bundle_get_path (IgeMacBundle *bundle);
 
 G_END_DECLS
 

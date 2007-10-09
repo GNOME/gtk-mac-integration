@@ -122,3 +122,19 @@ cf_string_to_utf8 (CFStringRef str)
   g_free (ret);
   return NULL;
 }
+
+const gchar *
+ige_mac_bundle_get_id (IgeMacBundle *bundle)
+{
+        IgeMacBundlePriv *priv = GET_PRIV (bundle);
+
+        return priv->id;
+}
+
+const gchar *
+ige_mac_bundle_get_path (IgeMacBundle *bundle)
+{
+        IgeMacBundlePriv *priv = GET_PRIV (bundle);
+
+        return priv->path;
+}
