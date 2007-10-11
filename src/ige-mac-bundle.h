@@ -43,10 +43,19 @@ struct _IgeMacBundleClass {
   GObjectClass parent_class;
 };
 
-GType         ige_mac_bundle_get_type (void);
-IgeMacBundle *ige_mac_bundle_new      (void);
-const gchar  *ige_mac_bundle_get_id   (IgeMacBundle *bundle);
-const gchar  *ige_mac_bundle_get_path (IgeMacBundle *bundle);
+GType         ige_mac_bundle_get_type          (void);
+IgeMacBundle *ige_mac_bundle_new               (void);
+IgeMacBundle *ige_mac_bundle_get_default       (void);
+void          ige_mac_bundle_setup_environment (IgeMacBundle *bundle);
+const gchar * ige_mac_bundle_get_id            (IgeMacBundle *bundle);
+const gchar * ige_mac_bundle_get_path          (IgeMacBundle *bundle);
+gboolean      ige_mac_bundle_get_is_app_bundle (IgeMacBundle *bundle);
+const gchar * ige_mac_bundle_get_localedir     (IgeMacBundle *bundle);
+const gchar * ige_mac_bundle_get_datadir       (IgeMacBundle *bundle);
+gchar *       ige_mac_bundle_get_resource_path (IgeMacBundle *bundle,
+                                                const gchar  *name,
+                                                const gchar  *type,
+                                                const gchar  *subdir);
 
 G_END_DECLS
 
