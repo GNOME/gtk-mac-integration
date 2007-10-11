@@ -1,6 +1,5 @@
 /* GTK+ Integration for the Mac OS X Dock.
  *
- * Copyright (C) 2007 Pioneer Research Center USA, Inc.
  * Copyright (C) 2007 Imendio AB
  *
  * This library is free software; you can redistribute it and/or
@@ -23,6 +22,7 @@
 #define __IGE_MAC_DOCK_H__
 
 #include <gtk/gtk.h>
+#include <ige-mac-bundle.h>
 
 G_BEGIN_DECLS
 
@@ -36,6 +36,8 @@ G_BEGIN_DECLS
 typedef struct _IgeMacDock      IgeMacDock;
 typedef struct _IgeMacDockClass IgeMacDockClass;
 
+typedef struct _IgeMacAttentionRequest IgeMacAttentionRequest;
+
 struct _IgeMacDock
 {
   GObject parent_instance;
@@ -46,8 +48,32 @@ struct _IgeMacDockClass
   GObjectClass parent_class;
 };
 
-GType       ige_mac_dock_get_type (void);
-IgeMacDock *ige_mac_dock_new      (void);
+typedef enum {
+        IGE_MAC_ATTENTION_CRITICAL,
+        IGE_MAC_ATTENTION_INFO
+} IgeMacAttentionType;
+
+GType                   ige_mac_dock_get_type                  (void);
+IgeMacDock *            ige_mac_dock_new                       (void);
+IgeMacDock *            ige_mac_dock_get_default               (void);
+void                    ige_mac_dock_set_icon_from_pixbuf      (IgeMacDock             *dock,
+                                                                GdkPixbuf              *pixbuf);
+void                    ige_mac_dock_set_icon_from_resource    (IgeMacDock             *dock,
+                                                                IgeMacBundle           *bundle,
+                                                                const gchar            *name,
+                                                                const gchar            *type,
+                                                                const gchar            *subdir);
+void                    ige_mac_dock_set_overlay_from_pixbuf   (IgeMacDock             *dock,
+                                                                GdkPixbuf              *pixbuf);
+void                    ige_mac_dock_set_overlay_from_resource (IgeMacDock             *dock,
+                                                                IgeMacBundle           *bundle,
+                                                                const gchar            *name,
+                                                                const gchar            *type,
+                                                                const gchar            *subdir);
+IgeMacAttentionRequest *ige_mac_dock_attention_request         (IgeMacDock             *dock,
+                                                                IgeMacAttentionType     type);
+void                    ige_mac_dock_attention_cancel          (IgeMacDock             *dock,
+                                                                IgeMacAttentionRequest *request);
 
 G_END_DECLS
 
