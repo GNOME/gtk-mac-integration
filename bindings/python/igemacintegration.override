@@ -12,6 +12,7 @@ modulename igemacintegration
 import gobject.GObject as PyGObject_Type
 import gtk.MenuShell as PyGtkMenuShell_Type
 import gtk.MenuItem as PyGtkMenuItem_Type
+import gdk.GdkPixbuf as PyGdkPixbuf_Type
 %%
 ignore-glob
   *_get_type

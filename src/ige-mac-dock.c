@@ -324,3 +324,10 @@ ige_mac_dock_attention_cancel (IgeMacDock                 *dock,
 
   g_free (request);
 }
+
+GType
+ige_mac_attention_type_get_type (void)
+{
+  /* FIXME */
+  return 0;
+}

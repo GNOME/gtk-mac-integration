@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/../src $(PYTHON_INCLUDES)
+INCLUDES = -I$(top_srcdir)/src $(PYTHON_INCLUDES)
 
 igemacintegrationdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/igemacintegration
 

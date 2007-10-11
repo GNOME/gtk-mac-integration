@@ -26,10 +26,10 @@
 
 G_BEGIN_DECLS
 
-#define IGE_TYPE_MAC_DOCK           (ige_mac_dock_get_type ())
+#define IGE_TYPE_MAC_DOCK            (ige_mac_dock_get_type ())
 #define IGE_MAC_DOCK(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), IGE_TYPE_MAC_DOCK, IgeMacDock))
 #define IGE_MAC_DOCK_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), IGE_TYPE_MAC_DOCK, IgeMacDockClass))
-#define IGE_IS_MAC_DOCK(obj)	    (G_TYPE_CHECK_INSTANCE_TYPE ((obj), IGE_TYPE_MAC_DOCK))
+#define IGE_IS_MAC_DOCK(obj)	     (G_TYPE_CHECK_INSTANCE_TYPE ((obj), IGE_TYPE_MAC_DOCK))
 #define IGE_IS_MAC_DOCK_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), IGE_TYPE_MAC_DOCK))
 #define IGE_MAC_DOCK_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), IGE_TYPE_MAC_DOCK, IgeMacDockClass))
 
@@ -74,6 +74,9 @@ IgeMacAttentionRequest *ige_mac_dock_attention_request         (IgeMacDock      
                                                                 IgeMacAttentionType     type);
 void                    ige_mac_dock_attention_cancel          (IgeMacDock             *dock,
                                                                 IgeMacAttentionRequest *request);
+
+#define IGE_TYPE_MAC_ATTENTION_TYPE (ige_mac_attention_type_get_type())
+GType                   ige_mac_attention_type_get_type        (void);
 
 G_END_DECLS
 
