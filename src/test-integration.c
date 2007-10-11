@@ -1,4 +1,4 @@
-/* GTK+ Integration for the Mac OS X Menubar.
+/* GTK+ Integration for the Mac OS X.
  *
  * Copyright (C) 2007 Imendio AB
  *
@@ -21,10 +21,43 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/* - Dock menu (see
+ *   https://bugzilla.mozilla.org/show_bug.cgi?id=377166) It looks
+ *   like we have to use NSMenu for this unfortunately. However, it
+ *   might be possible to implement a category or to use the "method
+ *   swizzling" trick to override this somehow... look into that.
+ * 
+ *   or, triggering the carbon dock setup before sharedapp:
+ *
+ *     EventTypeSpec kFakeEventList[] = { { INT_MAX, INT_MAX } };
+       EventRef event;
+       ReceiveNextEvent (GetEventTypeCount (kFakeEventList),
+                         kFakeEventList,
+                         kEventDurationNoWait, false, 
+                         &event);
+ *
+ * - Dragging items onto the dock icon?
+ * - Dragging items onto the app launcher icon?
+ *
+ * - Handling many windows with menus...?
+ *
+ * - Better statusicon integration (real menu)
+ *
+ * - "Window" menu, add a way to add a standard Window menu.
+ * - Window listing in the dock menu.
+ *
+ * - Implement moving borderless windows by dragging the window
+ *   background.
+ *
+ * - Suspend/resume notification.
+ * - Network on/off notification.
+ */
+
 #include <gtk/gtk.h>
 
 #include "ige-mac-menu.h"
 #include "ige-mac-dock.h"
+#include "ige-mac-bundle.h"
 
 static GtkWidget *open_item;
 static GtkWidget *copy_item;
@@ -112,6 +145,31 @@ test_setup_menu (void)
   return menubar;
 }
 
+static void
+bounce_cb (GtkWidget  *button,
+           IgeMacDock *dock)
+{
+        ige_mac_dock_attention_request (dock, IGE_MAC_ATTENTION_INFO);
+}
+
+static void
+change_icon_cb (GtkWidget  *button,
+                IgeMacDock *dock)
+{
+  static gboolean   changed;
+  static GdkPixbuf *pixbuf;
+
+  if (!pixbuf)
+    pixbuf = gdk_pixbuf_new_from_file ("/opt/gtk/share/gossip/gossip-logo.png", NULL);
+
+  if (changed) 
+    ige_mac_dock_set_icon_from_pixbuf (dock, NULL);
+  else
+    ige_mac_dock_set_icon_from_pixbuf (dock, pixbuf);
+
+  changed = !changed;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -120,8 +178,12 @@ main (int argc, char **argv)
   GtkWidget       *menubar;
   IgeMacMenuGroup *group;
   IgeMacDock      *dock;
+  GtkWidget       *bbox;
+  GtkWidget       *button;
 
   gtk_init (&argc, &argv);
+
+  dock = ige_mac_dock_get_default ();
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size (GTK_WINDOW (window), 400, 300);
@@ -137,7 +199,27 @@ main (int argc, char **argv)
   
   gtk_box_pack_start (GTK_BOX (vbox), 
                       gtk_label_new ("Some window content here"), 
+                      FALSE, FALSE, 12);
+
+  bbox = gtk_hbutton_box_new ();
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_CENTER);
+  gtk_button_box_set_spacing (GTK_BUTTON_BOX (bbox), 12);
+
+  gtk_box_pack_start (GTK_BOX (vbox), 
+                      bbox,
                       TRUE, TRUE, 0);
+
+  button = gtk_button_new_with_label ("Bounce");
+  g_signal_connect (button, "clicked", G_CALLBACK (bounce_cb), dock);
+  gtk_box_pack_start (GTK_BOX (bbox), 
+                      button,
+                      FALSE, FALSE, 0);
+
+  button = gtk_button_new_with_label ("Change Icon");
+  g_signal_connect (button, "clicked", G_CALLBACK (change_icon_cb), dock);
+  gtk_box_pack_start (GTK_BOX (bbox), 
+                      button,
+                      FALSE, FALSE, 0);
 
   gtk_widget_show_all (window);
 

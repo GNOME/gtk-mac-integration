@@ -6,6 +6,8 @@ libigemacintegration_la_SOURCES =			\
 	ige-mac-menu.c					\
 	ige-mac-dock.c					\
 	ige-mac-bundle.c				\
+	ige-mac-image-utils.c				\
+	ige-mac-image-utils.h				\
 	$(integration_HEADERS)
 
 libigemacintegration_la_CFLAGS = $(MAC_CFLAGS)
