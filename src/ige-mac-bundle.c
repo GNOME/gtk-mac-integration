@@ -18,6 +18,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/* TODO: Add command line parsing and remove any
+ * -psn_... arguments?
+ */
+
 #include <gtk/gtk.h>
 #include <Carbon/Carbon.h>
 
