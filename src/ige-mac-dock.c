@@ -18,8 +18,24 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gtk/gtk.h>
+/* FIXME: Add example like this to docs for the open documents stuff:
+
+    <key>CFBundleDocumentTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleTypeExtensions</key>
+        <array>
+          <string>txt</string>
+        </array>
+      </dict>
+    </array>
+
+*/
+
+#include <config.h>
 #include <Carbon/Carbon.h>
+#include <sys/param.h>
+#include <gtk/gtk.h>
 
 #include "ige-mac-dock.h"
 #include "ige-mac-bundle.h"
@@ -28,6 +44,7 @@
 enum {
   CLICKED,
   QUIT_ACTIVATE,
+  OPEN_DOCUMENTS,
   LAST_SIGNAL
 };
 
@@ -39,13 +56,19 @@ struct IgeMacDockPriv {
   glong id;
 };
 
-static void  mac_dock_finalize      (GObject          *object);
-static OSErr mac_dock_handle_reopen (const AppleEvent *inAppleEvent,
-                                     AppleEvent       *outAppleEvent,
-                                     long              inHandlerRefcon);
-static OSErr mac_dock_handle_quit   (const AppleEvent *inAppleEvent,
-                                     AppleEvent       *outAppleEvent,
-                                     long              inHandlerRefcon);
+static void  mac_dock_finalize                  (GObject          *object);
+static OSErr mac_dock_handle_quit               (const AppleEvent *inAppleEvent,
+                                                 AppleEvent       *outAppleEvent,
+                                                 long              inHandlerRefcon);
+static OSErr mac_dock_handle_open_documents     (const AppleEvent *inAppleEvent,
+                                                 AppleEvent       *outAppleEvent,
+                                                 long              inHandlerRefcon);
+static OSErr mac_dock_handle_open_application   (const AppleEvent *inAppleEvent,
+                                                 AppleEvent       *outAppleEvent,
+                                                 long              inHandlerRefcon);
+static OSErr mac_dock_handle_reopen_application (const AppleEvent *inAppleEvent,
+                                                 AppleEvent       *outAppleEvent,
+                                                 long              inHandlerRefcon);
 
 G_DEFINE_TYPE (IgeMacDock, ige_mac_dock, G_TYPE_OBJECT)
 
@@ -70,6 +93,16 @@ ige_mac_dock_class_init (IgeMacDockClass *class)
                   g_cclosure_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
 
+  /* FIXME: Need marshaller. */
+  signals[OPEN_DOCUMENTS] =
+    g_signal_new ("open-documents",
+                  IGE_TYPE_MAC_DOCK,
+                  G_SIGNAL_RUN_LAST,
+                  0,
+                  NULL, NULL,
+                  g_cclosure_marshal_VOID__VOID,
+                  G_TYPE_NONE, 0);
+
   signals[QUIT_ACTIVATE] =
     g_signal_new ("quit-activate",
                   IGE_TYPE_MAC_DOCK,
@@ -80,6 +113,22 @@ ige_mac_dock_class_init (IgeMacDockClass *class)
                   G_TYPE_NONE, 0);
 
   g_type_class_add_private (object_class, sizeof (IgeMacDockPriv));
+
+  /* FIXME: Just testing with triggering Carbon to take control over
+   * the dock menu events instead of Cocoa (which happens when the
+   * sharedApplication is created) to get custom dock menu working
+   * with carbon menu code. However, doing this makes the dock icon
+   * not get a "running triangle".
+   */
+#if 0
+  EventTypeSpec kFakeEventList[] = { { INT_MAX, INT_MAX } };
+  EventRef event;
+  
+  ReceiveNextEvent (GetEventTypeCount (kFakeEventList),
+                    kFakeEventList,
+                    kEventDurationNoWait, false, 
+                    &event);
+#endif
 }
 
 static void
@@ -92,11 +141,18 @@ ige_mac_dock_init (IgeMacDock *dock)
 
   handlers = g_list_prepend (handlers, dock);
 
-  AEInstallEventHandler (kCoreEventClass, kAEReopenApplication, 
-                         mac_dock_handle_reopen, priv->id, false);
-
   AEInstallEventHandler (kCoreEventClass, kAEQuitApplication, 
-                         mac_dock_handle_quit, priv->id, false);
+                         mac_dock_handle_quit,
+                         priv->id, true);
+  AEInstallEventHandler (kCoreEventClass, kAEOpenApplication,
+                         mac_dock_handle_open_application,
+                         priv->id, true);
+  AEInstallEventHandler (kCoreEventClass, kAEReopenApplication, 
+                         mac_dock_handle_reopen_application,
+                         priv->id, true);
+  AEInstallEventHandler (kCoreEventClass, kAEOpenDocuments,
+                         mac_dock_handle_open_documents,
+                         priv->id, true);
 }
 
 static void
@@ -106,11 +162,14 @@ mac_dock_finalize (GObject *object)
 
   priv = GET_PRIV (object);
 
-  AERemoveEventHandler (kCoreEventClass, kAEReopenApplication,
-                        mac_dock_handle_reopen, false);
-
   AERemoveEventHandler (kCoreEventClass, kAEQuitApplication,
                         mac_dock_handle_quit, false);
+  AERemoveEventHandler (kCoreEventClass, kAEReopenApplication,
+                        mac_dock_handle_reopen_application, false);
+  AERemoveEventHandler (kCoreEventClass, kAEOpenApplication,
+                        mac_dock_handle_open_application, false);
+  AERemoveEventHandler (kCoreEventClass, kAEOpenDocuments,
+                        mac_dock_handle_open_documents, false);
 
   handlers = g_list_remove (handlers, object);
 
@@ -151,21 +210,6 @@ mac_dock_get_from_id (gulong id)
 }
 
 static OSErr
-mac_dock_handle_reopen (const AppleEvent *inAppleEvent, 
-                        AppleEvent       *outAppleEvent, 
-                        long              inHandlerRefcon)
-{
-  IgeMacDock *dock;
-
-  dock = mac_dock_get_from_id (inHandlerRefcon);
-
-  if (dock)
-    g_signal_emit (dock, signals[CLICKED], 0);
-  
-  return noErr;
-}
-
-static OSErr
 mac_dock_handle_quit (const AppleEvent *inAppleEvent, 
                       AppleEvent       *outAppleEvent, 
                       long              inHandlerRefcon)
@@ -178,6 +222,77 @@ mac_dock_handle_quit (const AppleEvent *inAppleEvent,
     g_signal_emit (dock, signals[QUIT_ACTIVATE], 0);
 
   return noErr;
+}
+
+static OSErr
+mac_dock_handle_open_application (const AppleEvent *inAppleEvent,
+                                  AppleEvent       *outAppleEvent,
+                                  long              inHandlerRefCon)
+{
+  g_print ("FIXME: mac_dock_handle_open_application\n");
+
+  return noErr;
+}
+
+static OSErr
+mac_dock_handle_reopen_application (const AppleEvent *inAppleEvent, 
+                                    AppleEvent       *outAppleEvent, 
+                                    long              inHandlerRefcon)
+{
+  IgeMacDock *dock;
+
+  dock = mac_dock_get_from_id (inHandlerRefcon);
+
+  if (dock)
+    g_signal_emit (dock, signals[CLICKED], 0);
+  
+  return noErr;
+}
+
+static OSErr
+mac_dock_handle_open_documents (const AppleEvent *inAppleEvent,
+                                AppleEvent       *outAppleEvent,
+                                long              inHandlerRefCon)
+{
+  IgeMacDock *dock;
+  OSStatus    status;
+  AEDescList  documents;
+  gchar       path[MAXPATHLEN];
+
+  g_print ("FIXME: mac_dock_handle_open_documents\n");
+
+  dock = mac_dock_get_from_id (inHandlerRefCon);
+
+  status = AEGetParamDesc (inAppleEvent,
+                           keyDirectObject, typeAEList,
+                           &documents);
+  if (status == noErr)
+    {
+      long count = 0;
+      int  i;
+
+      AECountItems (&documents, &count);
+
+      for (i = 0; i < count; i++)
+        {
+          FSRef ref;
+
+          status = AEGetNthPtr (&documents, i + 1, typeFSRef, 
+                                0, 0, &ref, sizeof (ref),
+                                0);
+          if (status != noErr)
+            continue;
+
+          FSRefMakePath (&ref, path, MAXPATHLEN);
+
+          /* FIXME: Add to a list, then emit the open-documents
+           * signal.
+           */
+          g_print ("  %s\n", path);
+        }
+    }
+        
+    return status;
 }
 
 void
