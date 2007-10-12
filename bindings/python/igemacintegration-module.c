@@ -11,12 +11,14 @@ init_igemacintegration (void)
 
   init_pygobject ();
 
-  m = Py_InitModule ("igemacintegration._igemacintegration", igemacintegration_functions);
+  m = Py_InitModule ("igemacintegration._igemacintegration", 
+                     igemacintegration_functions);
   d = PyModule_GetDict (m);
 
   igemacintegration_register_classes (d);
 
-  if (PyErr_Occurred ()) {
-    Py_FatalError ("can't initialise module igemacintegration");
+  if (PyErr_Occurred ()) { 
+    PyErr_Print();
+    Py_FatalError ("can't initialize module igemacintegration:");
   }
 }
