@@ -32,6 +32,8 @@
 
 */
 
+/* FIXME: Rename this, it's not only dock specific anymore... */
+
 #include <config.h>
 #include <Carbon/Carbon.h>
 #include <sys/param.h>
