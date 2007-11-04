@@ -104,21 +104,29 @@ AC_DEFUN([IMENDIO_PYTHON_CHECK],
   dnl AC_SUBST([PYTHON_DIR])
 
   AC_ARG_ENABLE([python],
-    AS_HELP_STRING([--enable-python],
-                   [build Python bindings [[default=yes]]]),,
-    [enable_python=yes])
+    AS_HELP_STRING([--enable-python=@<:@no/yes/auto@:>@],
+                   [build Python bindings [[default=auto]]]),,
+    [enable_python=auto])
 
-  if test x$enable_python = xyes; then
+  have_python=no
+
+  if test x$enable_python != xno; then
+    have_python=yes
+
     dnl Check for Python
-    AM_PATH_PYTHON(2.3.5,,[AC_MSG_ERROR([Python 2.3.5 or newer is required])])
-    AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR([Python headers not found])])
+    AM_PATH_PYTHON(2.3.5,,[AC_MSG_RESULT([Python 2.3.5 or newer is required])])
+    AM_CHECK_PYTHON_HEADERS(,[AC_MSG_RESULT([Python headers not found])])
 
     dnl Check for PyGTK
-    PKG_CHECK_MODULES(PYGTK, pygtk-2.0 >= 2.12.0,,[AC_MSG_ERROR([PyGTK 2.12.0 or newer])])
+    PKG_CHECK_MODULES(PYGTK, pygtk-2.0 >= 2.12.0,,have_python=no)
+    if test $have_python == no; then
+      AC_MSG_RESULT([PyGTK 2.12.0 or newer])
+    fi
 
     AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
     if test "x$PYGTK_CODEGEN" = xno; then
-      AC_MSG_ERROR([pygtk-codegen-2.0 script not found])
+      have_python=no
+      AC_MSG_RESULT([pygtk-codegen-2.0 script not found])
     fi
 
     AC_MSG_CHECKING(for pygtk defs)
@@ -128,6 +136,19 @@ AC_DEFUN([IMENDIO_PYTHON_CHECK],
   fi
 
   AC_MSG_CHECKING([whether to build Python bindings])
+
+  if test "x$enable_python" = "xyes"; then
+    if test "x$have_python" != "xyes"; then
+      AC_MSG_ERROR([Couldn't find the required Python tools.])
+   fi
+  fi
+
+  if test "x$have_python" = "xno"; then
+    enable_python=no
+  elif test "x$have_python" = "xyes" -a "x$enable_python" = "xauto"; then
+    enable_python=yes
+  fi
+
   AC_MSG_RESULT($enable_python)
 
   AM_CONDITIONAL([ENABLE_PYTHON], [test x$enable_python = xyes])
