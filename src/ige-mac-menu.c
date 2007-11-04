@@ -570,11 +570,10 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
   return CallNextEventHandler (event_handler_call_ref, event_ref);
 }
 
-static gboolean is_setup = FALSE;
-
 static void
 setup_menu_event_handler (void)
 {
+  static gboolean is_setup;
   EventHandlerUPP menu_event_handler_upp;
   EventHandlerRef menu_event_handler_ref;
   const EventTypeSpec menu_events[] = {
@@ -850,6 +849,8 @@ ige_mac_menu_add_app_menu_item (IgeMacMenuGroup *group,
 
   g_return_if_fail (group != NULL);
   g_return_if_fail (GTK_IS_MENU_ITEM (menu_item));
+
+  setup_menu_event_handler ();
 
   if (GetIndMenuItemWithCommandID (NULL, kHICommandHide, 1,
                                    &appmenu, NULL) != noErr)
