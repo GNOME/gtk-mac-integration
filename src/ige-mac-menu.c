@@ -112,6 +112,7 @@ accel_find_func (GtkAccelKey *key,
 typedef struct
 {
   MenuRef menu;
+  guint   toplevel : 1;
 } CarbonMenu;
 
 static GQuark carbon_menu_quark = 0;
@@ -136,7 +137,8 @@ carbon_menu_get (GtkWidget *widget)
 
 static void
 carbon_menu_connect (GtkWidget *menu,
-		     MenuRef    menuRef)
+		     MenuRef    menuRef,
+                     gboolean   toplevel)
 {
   CarbonMenu *carbon_menu = carbon_menu_get (menu);
 
@@ -150,6 +152,7 @@ carbon_menu_connect (GtkWidget *menu,
     }
 
   carbon_menu->menu = menuRef;
+  carbon_menu->toplevel = toplevel;
 }
 
 
@@ -614,7 +617,7 @@ sync_menu_shell (GtkMenuShell *menu_shell,
   if (debug)
     g_printerr ("%s: syncing shell %p\n", G_STRFUNC, menu_shell);
 
-  carbon_menu_connect (GTK_WIDGET (menu_shell), carbon_menu);
+  carbon_menu_connect (GTK_WIDGET (menu_shell), carbon_menu, toplevel);
 
   children = gtk_container_get_children (GTK_CONTAINER (menu_shell));
 
@@ -701,8 +704,8 @@ sync_menu_shell (GtkMenuShell *menu_shell,
   g_list_free (children);
 }
 
-
 static gulong emission_hook_id = 0;
+static gint   emission_hook_count = 0;
 
 static gboolean
 parent_set_emission_hook (GSignalInvocationHint *ihint,
@@ -742,7 +745,7 @@ parent_set_emission_hook (GSignalInvocationHint *ihint,
 
 	      sync_menu_shell (GTK_MENU_SHELL (menu_shell),
 			       carbon_menu->menu,
-			       carbon_menu->menu == (MenuRef) data,
+			       carbon_menu->toplevel,
 			       FALSE);
 	    }
         }
@@ -755,9 +758,15 @@ static void
 parent_set_emission_hook_remove (GtkWidget *widget,
 				 gpointer   data)
 {
+  emission_hook_count--;
+
+  if (emission_hook_count > 0)
+    return;
+
   g_signal_remove_emission_hook (g_signal_lookup ("parent-set",
 						  GTK_TYPE_WIDGET),
 				 emission_hook_id);
+  emission_hook_id = 0;
 }
 
 
@@ -778,17 +787,30 @@ ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell)
   if (carbon_menu_item_quark == 0)
     carbon_menu_item_quark = g_quark_from_static_string ("CarbonMenuItem");
 
+  CarbonMenu *current_menu;
+  current_menu = carbon_menu_get (GTK_WIDGET (menu_shell));
+  if (current_menu)
+    {
+      SetRootMenu (current_menu->menu);
+      return;
+    }
+
   CreateNewMenu (0 /*id*/, 0 /*options*/, &carbon_menubar);
   SetRootMenu (carbon_menubar);
 
   setup_menu_event_handler ();
 
-  emission_hook_id =
-    g_signal_add_emission_hook (g_signal_lookup ("parent-set",
-						 GTK_TYPE_WIDGET),
-				0,
-				parent_set_emission_hook,
-				carbon_menubar, NULL);
+  if (emission_hook_id == 0)
+    {
+      emission_hook_id =
+        g_signal_add_emission_hook (g_signal_lookup ("parent-set",
+                                                     GTK_TYPE_WIDGET),
+                                    0,
+                                    parent_set_emission_hook,
+                                    NULL, NULL);
+    }
+
+  emission_hook_count++;
 
   g_signal_connect (menu_shell, "destroy",
 		    G_CALLBACK (parent_set_emission_hook_remove),
