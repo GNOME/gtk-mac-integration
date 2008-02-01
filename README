@@ -1,5 +1,9 @@
-GTK+ Integration for the Mac OS X Menubar.
+GTK+ Integration for the Mac OS X desktop, like the menubar, dock and
+app bundles.
+
+For an example on how to use, see src/test-integration.c
 
 For further information, see:
 http://developer.imendio.com/projects/gtk-macosx/menubar
 
+Note that this API is not frozen yet and may change between releases.
