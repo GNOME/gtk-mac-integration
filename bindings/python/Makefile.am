@@ -42,4 +42,4 @@ CLEANFILES =						\
 
 EXTRA_DIST =						\
 	igemacintegration.defs				\
-	igemacintegration.overrides
+	igemacintegration.override
