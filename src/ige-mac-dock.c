@@ -1,6 +1,6 @@
 /* GTK+ Integration for the Mac OS X Dock.
  *
- * Copyright (C) 2007 Imendio AB
+ * Copyright (C) 2007-2008 Imendio AB
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,8 +31,6 @@
     </array>
 
 */
-
-/* FIXME: Rename this, it's not only dock specific anymore... */
 
 #include <config.h>
 #include <Carbon/Carbon.h>
@@ -405,7 +403,7 @@ mac_dock_attention_cb (IgeMacAttentionRequest *request)
  * requests.
  */
 IgeMacAttentionRequest *
-ige_mac_dock_attention_request (IgeMacDock              *dock, 
+ige_mac_dock_attention_request (IgeMacDock          *dock,
                                 IgeMacAttentionType  type)
 {
   IgeMacAttentionRequest *request;
@@ -422,15 +420,16 @@ ige_mac_dock_attention_request (IgeMacDock              *dock,
     }
 
   if (type == IGE_MAC_ATTENTION_INFO)
-    request->timeout_id = gdk_threads_add_timeout (1000, 
-                                                   (GSourceFunc) mac_dock_attention_cb, 
-                                                   request);
+    request->timeout_id = gdk_threads_add_timeout (
+            1000,
+            (GSourceFunc) mac_dock_attention_cb,
+            request);
 
   return request;
 }
 
 void
-ige_mac_dock_attention_cancel (IgeMacDock                 *dock, 
+ige_mac_dock_attention_cancel (IgeMacDock             *dock,
                                IgeMacAttentionRequest *request)
 {
   if (request->timeout_id)
