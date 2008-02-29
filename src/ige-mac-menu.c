@@ -22,6 +22,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "config.h"
+
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <Carbon/Carbon.h>
@@ -151,7 +153,7 @@ carbon_menu_connect (GtkWidget *menu,
 			       (GDestroyNotify) carbon_menu_free);
     }
 
-  carbon_menu->menu = menuRef;
+  carbon_menu->menu     = menuRef;
   carbon_menu->toplevel = toplevel;
 }
 
@@ -576,7 +578,8 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 static void
 setup_menu_event_handler (void)
 {
-  static gboolean is_setup;
+  static gboolean is_setup = FALSE;
+
   EventHandlerUPP menu_event_handler_upp;
   EventHandlerRef menu_event_handler_ref;
   const EventTypeSpec menu_events[] = {
@@ -601,6 +604,7 @@ setup_menu_event_handler (void)
   RemoveEventHandler(menu_event_handler_ref);
   DisposeEventHandlerUPP(menu_event_handler_upp);
 #endif
+
   is_setup = TRUE;
 }
 
@@ -704,7 +708,7 @@ sync_menu_shell (GtkMenuShell *menu_shell,
   g_list_free (children);
 }
 
-static gulong emission_hook_id = 0;
+static gulong emission_hook_id    = 0;
 static gint   emission_hook_count = 0;
 
 static gboolean
@@ -777,7 +781,8 @@ parent_set_emission_hook_remove (GtkWidget *widget,
 void
 ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell)
 {
-  MenuRef carbon_menubar;
+  CarbonMenu *current_menu;
+  MenuRef     carbon_menubar;
 
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
 
@@ -787,7 +792,6 @@ ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell)
   if (carbon_menu_item_quark == 0)
     carbon_menu_item_quark = g_quark_from_static_string ("CarbonMenuItem");
 
-  CarbonMenu *current_menu;
   current_menu = carbon_menu_get (GTK_WIDGET (menu_shell));
   if (current_menu)
     {
