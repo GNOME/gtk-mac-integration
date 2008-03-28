@@ -258,6 +258,15 @@ carbon_menu_item_update_submenu (CarbonMenuItem *carbon_item,
       SetMenuItemHierarchicalMenu (carbon_item->menu, carbon_item->index,
 				   carbon_item->submenu);
 
+      /* FIXME: This makes it possible to hide toplevel menu items
+       * completely, but it only works if you hide the menu item before
+       * setting up the menu, not dynamically afterwards.
+       */
+      if (!GTK_WIDGET_VISIBLE (widget))
+      {
+        ChangeMenuAttributes (carbon_item->submenu, kMenuAttrHidden, 0);
+      }
+
       sync_menu_shell (GTK_MENU_SHELL (submenu), carbon_item->submenu, FALSE, FALSE);
 
       if (cfstr)
