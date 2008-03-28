@@ -36,8 +36,8 @@
  * - Sync reordering items? Does that work now?
  * - Create on demand? (can this be done with gtk+? ie fill in menu
      items when the menu is opened)
- * - Figure out what to do per app/window...
  *
+ * - Deleting a menu item that is not the last one in a menu doesn't work
  */
 
 #define IGE_QUARTZ_MENU_CREATOR 'IGEC'
@@ -245,15 +245,16 @@ carbon_menu_item_update_submenu (CarbonMenuItem *carbon_item,
 
   if (submenu)
     {
-      const gchar *label_text;
-      CFStringRef  cfstr = NULL;
+      const gchar   *label_text;
+      CFStringRef    cfstr = NULL;
+      static MenuID  menu_id;
 
       label_text = get_menu_label_text (widget, NULL);
       if (label_text)
         cfstr = CFStringCreateWithCString (NULL, label_text,
 					   kCFStringEncodingUTF8);
 
-      CreateNewMenu (0, 0, &carbon_item->submenu);
+      CreateNewMenu (++menu_id, 0, &carbon_item->submenu);
       SetMenuTitleWithCFString (carbon_item->submenu, cfstr);
       SetMenuItemHierarchicalMenu (carbon_item->menu, carbon_item->index,
 				   carbon_item->submenu);
