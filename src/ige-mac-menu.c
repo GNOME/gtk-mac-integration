@@ -29,6 +29,7 @@
 #include <Carbon/Carbon.h>
 
 #include "ige-mac-menu.h"
+#include "ige-mac-private.h"
 
 /* TODO
  *
@@ -854,6 +855,24 @@ ige_mac_menu_set_quit_menu_item (GtkMenuItem *menu_item)
 
       gtk_widget_hide (GTK_WIDGET (menu_item));
     }
+}
+
+/* For internal use only. Returns TRUE if there is a GtkMenuItem assigned to
+ * the Quit menu item.
+ */
+gboolean
+_ige_mac_menu_is_quit_menu_item_handled (void)
+{
+  MenuRef       appmenu;
+  MenuItemIndex index;
+
+  if (GetIndMenuItemWithCommandID (NULL, kHICommandQuit, 1,
+                                   &appmenu, &index) == noErr)
+    {
+      return FALSE;
+    }
+  
+  return TRUE;
 }
 
 

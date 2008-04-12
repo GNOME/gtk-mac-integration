@@ -8,6 +8,7 @@ libigemacintegration_la_SOURCES =			\
 	ige-mac-bundle.c				\
 	ige-mac-image-utils.c				\
 	ige-mac-image-utils.h				\
+	ige-mac-integration-private.h			\
 	$(integration_HEADERS)
 
 libigemacintegration_la_CFLAGS = $(MAC_CFLAGS)
@@ -16,6 +17,7 @@ libigemacintegration_la_LDFLAGS = -framework Carbon
 
 integration_includedir = $(includedir)/igemacintegration
 integration_include_HEADERS =				\
+	ige-mac-integration.h				\
 	ige-mac-menu.h					\
 	ige-mac-dock.h					\
 	ige-mac-bundle.h
