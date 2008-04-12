@@ -60,6 +60,7 @@
 #include "ige-mac-bundle.h"
 
 static GtkWidget *open_item;
+static GtkWidget *edit_item;
 static GtkWidget *copy_item;
 static GtkWidget *quit_item;
 static GtkWidget *about_item;
@@ -115,7 +116,7 @@ test_setup_menu (void)
   g_signal_connect (quit_item, "activate", G_CALLBACK (gtk_main_quit), NULL);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), quit_item);
 
-  item = gtk_menu_item_new_with_label ("Edit");
+  edit_item = item = gtk_menu_item_new_with_label ("Edit");
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menubar), item);
   menu = gtk_menu_new ();
@@ -170,6 +171,15 @@ change_icon_cb (GtkWidget  *button,
   changed = !changed;
 }
 
+static void
+change_menu_cb (GtkWidget  *button,
+                gpointer    data)
+{
+  gtk_widget_hide (edit_item);
+}
+
+gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
+
 int
 main (int argc, char **argv)
 {
@@ -218,6 +228,12 @@ main (int argc, char **argv)
   button = gtk_button_new_with_label ("Change Icon");
   g_signal_connect (button, "clicked", G_CALLBACK (change_icon_cb), dock);
   gtk_box_pack_start (GTK_BOX (bbox), 
+                      button,
+                      FALSE, FALSE, 0);
+
+  button = gtk_button_new_with_label ("Change Menu");
+  g_signal_connect (button, "clicked", G_CALLBACK (change_menu_cb), NULL);
+  gtk_box_pack_start (GTK_BOX (bbox),
                       button,
                       FALSE, FALSE, 0);
 
