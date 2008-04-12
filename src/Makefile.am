@@ -8,7 +8,7 @@ libigemacintegration_la_SOURCES =			\
 	ige-mac-bundle.c				\
 	ige-mac-image-utils.c				\
 	ige-mac-image-utils.h				\
-	ige-mac-integration-private.h			\
+	ige-mac-private.h				\
 	$(integration_HEADERS)
 
 libigemacintegration_la_CFLAGS = $(MAC_CFLAGS)
