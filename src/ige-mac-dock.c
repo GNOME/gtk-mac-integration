@@ -229,7 +229,7 @@ mac_dock_handle_open_application (const AppleEvent *inAppleEvent,
                                   AppleEvent       *outAppleEvent,
                                   long              inHandlerRefCon)
 {
-  g_print ("FIXME: mac_dock_handle_open_application\n");
+  /*g_print ("FIXME: mac_dock_handle_open_application\n");*/
 
   return noErr;
 }
@@ -259,7 +259,7 @@ mac_dock_handle_open_documents (const AppleEvent *inAppleEvent,
   AEDescList  documents;
   gchar       path[MAXPATHLEN];
 
-  g_print ("FIXME: mac_dock_handle_open_documents\n");
+  /*g_print ("FIXME: mac_dock_handle_open_documents\n");*/
 
   dock = mac_dock_get_from_id (inHandlerRefCon);
 
@@ -288,7 +288,7 @@ mac_dock_handle_open_documents (const AppleEvent *inAppleEvent,
           /* FIXME: Add to a list, then emit the open-documents
            * signal.
            */
-          g_print ("  %s\n", path);
+          /*g_print ("  %s\n", path);*/
         }
     }
         
