@@ -21,7 +21,7 @@ GTK_DOC_CHECK(1.7)
 IMENDIO_COMPILE_WARNINGS
 IMENDIO_PYTHON_CHECK
 
-PKG_CHECK_MODULES(MAC, [gtk+-2.0 >= 2.12])
+PKG_CHECK_MODULES(MAC, [gtk+-2.0 >= 2.13])
 
 # This will cause the automake generated makefiles to pass the correct
 # flags to aclocal.

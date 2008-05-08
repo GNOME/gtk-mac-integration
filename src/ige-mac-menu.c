@@ -26,7 +26,9 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <gdk/gdkquartz.h>
 #include <Carbon/Carbon.h>
+#import <Cocoa/Cocoa.h>
 
 #include "ige-mac-menu.h"
 #include "ige-mac-private.h"
@@ -44,12 +46,33 @@
 #define IGE_QUARTZ_MENU_CREATOR 'IGEC'
 #define IGE_QUARTZ_ITEM_WIDGET  'IWID'
 
+static MenuID  last_menu_id;
 
 static void   sync_menu_shell (GtkMenuShell *menu_shell,
 			       MenuRef       carbon_menu,
 			       gboolean      toplevel,
 			       gboolean      debug);
 
+/* A category that exposes the protected carbon event for an NSEvent. */
+@interface NSEvent (GdkQuartzNSEvent)
+- (void *)gdk_quartz_event_ref;
+@end
+
+@implementation NSEvent (GdkQuartzNSEvent)
+- (void *)gdk_quartz_event_ref
+{
+  return _eventRef;
+}
+@end
+
+static gboolean
+menu_flash_off_cb (gpointer data)
+{
+  /* Disable flash by flashing a non-existing menu id. */
+  FlashMenuBar (last_menu_id + 1);
+
+  return FALSE;
+}
 
 /*
  * utility functions
@@ -246,16 +269,15 @@ carbon_menu_item_update_submenu (CarbonMenuItem *carbon_item,
 
   if (submenu)
     {
-      const gchar   *label_text;
-      CFStringRef    cfstr = NULL;
-      static MenuID  menu_id;
+      const gchar *label_text;
+      CFStringRef  cfstr = NULL;
 
       label_text = get_menu_label_text (widget, NULL);
       if (label_text)
         cfstr = CFStringCreateWithCString (NULL, label_text,
 					   kCFStringEncodingUTF8);
 
-      CreateNewMenu (++menu_id, 0, &carbon_item->submenu);
+      CreateNewMenu (++last_menu_id, 0, &carbon_item->submenu);
       SetMenuTitleWithCFString (carbon_item->submenu, cfstr);
       SetMenuItemHierarchicalMenu (carbon_item->menu, carbon_item->index,
 				   carbon_item->submenu);
@@ -494,6 +516,31 @@ carbon_menu_item_connect (GtkWidget     *menu_item,
   return carbon_item;
 }
 
+typedef struct {
+  GtkWidget *widget;
+} ActivateIdleData;
+
+static void
+activate_destroy_cb (gpointer user_data)
+{
+  ActivateIdleData *data = user_data;
+
+  if (data->widget)
+    g_object_remove_weak_pointer (G_OBJECT (data->widget), (gpointer) &data->widget);
+
+  g_free (data);
+}
+
+static gboolean
+activate_idle_cb (gpointer user_data)
+{
+  ActivateIdleData *data = user_data;
+
+  if (data->widget)
+    gtk_menu_item_activate (GTK_MENU_ITEM (data->widget));
+
+  return FALSE;
+}
 
 /*
  * carbon event handler
@@ -504,9 +551,8 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 			 EventRef             event_ref,
 			 void                *data)
 {
-  UInt32  event_class = GetEventClass (event_ref);
-  UInt32  event_kind = GetEventKind (event_ref);
-  MenuRef menu_ref;
+  UInt32 event_class = GetEventClass (event_ref);
+  UInt32 event_kind = GetEventKind (event_ref);
 
   switch (event_class)
     {
@@ -537,7 +583,21 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 					 sizeof (widget), 0, &widget);
 	      if (err == noErr && GTK_IS_WIDGET (widget))
 		{
-		  gtk_menu_item_activate (GTK_MENU_ITEM (widget));
+                  ActivateIdleData *data;
+
+                  /* Activate from an idle handler so that the event is
+                   * emitted from the main loop instead of in the middle of
+                   * handling quartz events.
+                   */
+                  data = g_new0 (ActivateIdleData, 1);
+                  data->widget= widget;
+
+                  g_object_add_weak_pointer (G_OBJECT (widget), (gpointer) &data->widget);
+
+                  g_idle_add_full (G_PRIORITY_HIGH,
+                                   activate_idle_cb,
+                                   data,
+                                   activate_destroy_cb);
 		  return noErr;
 		}
 	    }
@@ -545,38 +605,8 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
       break;
 
     case kEventClassMenu:
-      GetEventParameter (event_ref,
-			 kEventParamDirectObject,
-			 typeMenuRef,
-			 NULL,
-			 sizeof (menu_ref),
-			 NULL,
-			 &menu_ref);
-
-      switch (event_kind)
-	{
-	case kEventMenuTargetItem:
-	  /* This is called when an item is selected (what is the
-	   * GTK+ term? prelight?)
-	   */
-	  /*g_printerr ("kEventClassMenu/kEventMenuTargetItem\n");*/
-	  break;
-
-	case kEventMenuOpening:
-	  /* Is it possible to dynamically build the menu here? We
-	   * can at least set visibility/sensitivity.
-	   */
-	  /*g_printerr ("kEventClassMenu/kEventMenuOpening\n");*/
-	  break;
-
-	case kEventMenuClosed:
-	  /*g_printerr ("kEventClassMenu/kEventMenuClosed\n");*/
-	  break;
-
-	default:
-	  break;
-	}
-
+      if (event_kind == kEventMenuEndTracking)
+        g_idle_add (menu_flash_off_cb, NULL);
       break;
 
     default:
@@ -584,6 +614,121 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
     }
 
   return CallNextEventHandler (event_handler_call_ref, event_ref);
+}
+
+static gboolean
+nsevent_handle_menu_key (NSEvent *nsevent)
+{
+  EventRef      event_ref;
+  MenuRef       menu_ref;
+  MenuItemIndex index;
+
+  if ([nsevent type] != NSKeyDown)
+    return FALSE;
+
+  event_ref = [nsevent gdk_quartz_event_ref];
+  if (IsMenuKeyEvent (NULL, event_ref,
+                          kMenuEventQueryOnly,
+                          &menu_ref, &index))
+    {
+      MenuCommand menu_command;
+      HICommand   hi_command;
+
+      if (GetMenuItemCommandID (menu_ref, index, &menu_command) != noErr)
+        return FALSE;
+
+      hi_command.commandID = menu_command;
+      hi_command.menu.menuRef = menu_ref;
+      hi_command.menu.menuItemIndex = index;
+
+      CreateEvent (NULL, kEventClassCommand, kEventCommandProcess,
+                   0, kEventAttributeUserEvent, &event_ref);
+      SetEventParameter (event_ref, kEventParamDirectObject,
+                         typeHICommand,
+                         sizeof (HICommand), &hi_command);
+
+      FlashMenuBar (GetMenuID (menu_ref));
+      g_timeout_add (30, menu_flash_off_cb, NULL);
+
+      SendEventToEventTarget (event_ref, GetMenuEventTarget (menu_ref));
+
+      ReleaseEvent (event_ref);
+
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+gboolean
+ige_mac_menu_handle_menu_event (GdkEventKey *event)
+{
+  NSEvent *nsevent;
+
+  /* FIXME: If the event here is unallocated, we crash. */
+  nsevent = gdk_quartz_event_get_nsevent ((GdkEvent *) event);
+  if (nsevent)
+    return nsevent_handle_menu_key (nsevent);
+
+  return FALSE;
+}
+
+static GdkFilterReturn
+filter_func (gpointer  windowing_event,
+             GdkEvent *event,
+             gpointer  user_data)
+{
+  NSEvent *nsevent = windowing_event;
+
+  /* Handle menu events with no window, since they won't go through the
+   * regular event processing.
+   */
+  if ([nsevent window] == nil)
+    {
+      if (nsevent_handle_menu_key (nsevent))
+        return GDK_FILTER_REMOVE;
+    }
+
+  return GDK_FILTER_CONTINUE;
+}
+
+static gboolean
+key_press_event (GtkWidget   *widget,
+                 GdkEventKey *event)
+{
+  GtkWindow *window  = GTK_WINDOW (widget);
+  GtkWidget *focus   = gtk_window_get_focus (window);
+  gboolean   handled = FALSE;
+
+  /* We're overriding the GtkWindow implementation here to give the focus
+   * widget precedence over unmodified accelerators before the accelerator
+   * activation scheme.
+   */
+
+  /* Text widgets get all key events first. */
+  if (GTK_IS_EDITABLE (focus) || GTK_IS_TEXT_VIEW (focus))
+    handled = gtk_window_propagate_key_event (window, event);
+
+  if (!handled)
+    handled = ige_mac_menu_handle_menu_event (event);
+
+  /* Invoke control/alt accelerators. */
+  if (!handled && event->state & (GDK_CONTROL_MASK | GDK_MOD1_MASK))
+    handled = gtk_window_activate_key (window, event);
+
+  /* Invoke focus widget handlers. */
+  if (!handled)
+    handled = gtk_window_propagate_key_event (window, event);
+
+  /* Invoke non-(control/alt) accelerators. */
+  if (!handled && !(event->state & (GDK_CONTROL_MASK | GDK_MOD1_MASK)))
+    handled = gtk_window_activate_key (window, event);
+
+  /* Chain up, bypassing gtk_window_key_press(), to invoke binding set. */
+  if (!handled)
+    handled = GTK_WIDGET_CLASS (g_type_class_peek (g_type_parent (GTK_TYPE_WINDOW)))->key_press_event (widget, event);
+
+  return handled;
 }
 
 static void
@@ -595,15 +740,11 @@ setup_menu_event_handler (void)
   EventHandlerRef menu_event_handler_ref;
   const EventTypeSpec menu_events[] = {
     { kEventClassCommand, kEventCommandProcess },
-    { kEventClassMenu, kEventMenuTargetItem },
-    { kEventClassMenu, kEventMenuOpening },
-    { kEventClassMenu, kEventMenuClosed }
+    { kEventClassMenu, kEventMenuEndTracking }
   };
 
   if (is_setup)
     return;
-
-  /* FIXME: We might have to install one per window? */
 
   menu_event_handler_upp = NewEventHandlerUPP (menu_event_handler_func);
   InstallEventHandler (GetApplicationEventTarget (), menu_event_handler_upp,
@@ -611,7 +752,9 @@ setup_menu_event_handler (void)
 		       &menu_event_handler_ref);
 
 #if 0
-  /* FIXME: Remove the handler with: */
+  /* Note: If we want to supporting shutting down, remove the handler
+   * with:
+   */
   RemoveEventHandler(menu_event_handler_ref);
   DisposeEventHandlerUPP(menu_event_handler_upp);
 #endif
@@ -857,6 +1000,27 @@ ige_mac_menu_set_quit_menu_item (GtkMenuItem *menu_item)
     }
 }
 
+/* Most application will want to call this, but some might want to handle
+ * the key events themselves.
+ */
+void
+ige_mac_menu_install_key_handler (void)
+{
+  static gboolean  is_setup = FALSE;
+  GtkWidgetClass  *klass;
+
+  if (is_setup)
+    return;
+
+  is_setup = TRUE;
+
+  /* Evil, don't try this at home... */
+  klass = GTK_WIDGET_CLASS (g_type_class_peek (GTK_TYPE_WINDOW));
+  klass->key_press_event = key_press_event;
+
+  gdk_window_add_filter (NULL, filter_func, NULL);
+}
+
 /* For internal use only. Returns TRUE if there is a GtkMenuItem assigned to
  * the Quit menu item.
  */
@@ -871,7 +1035,7 @@ _ige_mac_menu_is_quit_menu_item_handled (void)
     {
       return FALSE;
     }
-  
+
   return TRUE;
 }
 

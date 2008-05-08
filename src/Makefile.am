@@ -11,9 +11,9 @@ libigemacintegration_la_SOURCES =			\
 	ige-mac-private.h				\
 	$(integration_HEADERS)
 
-libigemacintegration_la_CFLAGS = $(MAC_CFLAGS)
-libigemacintegration_la_LIBADD =  $(MAC_LIBS)
-libigemacintegration_la_LDFLAGS = -framework Carbon
+libigemacintegration_la_CFLAGS = $(MAC_CFLAGS) -xobjective-c
+libigemacintegration_la_LIBADD =  $(MAC_LIBS) -lobjc
+libigemacintegration_la_LDFLAGS = -framework Carbon -framework ApplicationServices
 
 integration_includedir = $(includedir)/igemacintegration
 integration_include_HEADERS =				\
