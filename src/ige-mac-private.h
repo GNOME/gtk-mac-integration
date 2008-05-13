@@ -27,6 +27,7 @@
 G_BEGIN_DECLS
 
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
+gboolean _ige_mac_dock_is_quit_menu_item_handled (void);
 
 G_END_DECLS
 

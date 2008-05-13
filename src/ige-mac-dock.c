@@ -40,6 +40,7 @@
 #include "ige-mac-dock.h"
 #include "ige-mac-bundle.h"
 #include "ige-mac-image-utils.h"
+#include "ige-mac-private.h"
 
 enum {
   CLICKED,
@@ -189,6 +190,15 @@ ige_mac_dock_get_default (void)
     global_dock = g_object_new (IGE_TYPE_MAC_DOCK, NULL);
 
   return global_dock;
+}
+
+/* For internal use only. Returns TRUE if there is a handled setup for the
+ * Quit dock menu item (i.e. if there is a dock instance alive).
+ */
+gboolean
+_ige_mac_dock_is_quit_menu_item_handled (void)
+{
+  return handlers != NULL;
 }
 
 static IgeMacDock *
