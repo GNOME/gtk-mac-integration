@@ -1,7 +1,7 @@
 /* GTK+ Integration for the Mac OS X Menubar.
  *
  * Copyright (C) 2007 Pioneer Research Center USA, Inc.
- * Copyright (C) 2007 Imendio AB
+ * Copyright (C) 2007, 2008 Imendio AB
  *
  * For further information, see:
  * http://developer.imendio.com/projects/gtk-macosx/menubar
@@ -46,7 +46,10 @@
 #define IGE_QUARTZ_MENU_CREATOR 'IGEC'
 #define IGE_QUARTZ_ITEM_WIDGET  'IWID'
 
-static MenuID  last_menu_id;
+#define IGE_MAC_KEY_HANDLER     "ige-mac-key-handler"
+
+static MenuID   last_menu_id;
+static gboolean global_key_handler_enabled;
 
 static void   sync_menu_shell (GtkMenuShell *menu_shell,
 			       MenuRef       carbon_menu,
@@ -674,9 +677,9 @@ ige_mac_menu_handle_menu_event (GdkEventKey *event)
 }
 
 static GdkFilterReturn
-filter_func (gpointer  windowing_event,
-             GdkEvent *event,
-             gpointer  user_data)
+global_event_filter_func (gpointer  windowing_event,
+                          GdkEvent *event,
+                          gpointer  user_data)
 {
   NSEvent *nsevent = windowing_event;
 
@@ -688,17 +691,49 @@ filter_func (gpointer  windowing_event,
       if (nsevent_handle_menu_key (nsevent))
         return GDK_FILTER_REMOVE;
     }
+  else if (global_key_handler_enabled && [nsevent type] == NSKeyDown)
+    {
+      GList *toplevels, *l;
+      GtkWindow *focus = NULL;
+
+      toplevels = gtk_window_list_toplevels ();
+      for (l = toplevels; l; l = l->next)
+        {
+          if (gtk_window_has_toplevel_focus (l->data))
+            {
+              focus = l->data;
+              break;
+            }
+        }
+      g_list_free (toplevels);
+
+      if (!focus || !g_object_get_data (G_OBJECT (focus), IGE_MAC_KEY_HANDLER))
+        {
+          /*g_printerr ("using global handler\n");*/
+
+          /* We might want to do something more advanced here... */
+          if (nsevent_handle_menu_key (nsevent))
+            return GDK_FILTER_REMOVE;
+        }
+      else
+        {
+          /*g_printerr ("not using global handler, window has its own\n");*/
+        }
+    }
 
   return GDK_FILTER_CONTINUE;
 }
 
 static gboolean
 key_press_event (GtkWidget   *widget,
-                 GdkEventKey *event)
+                 GdkEventKey *event,
+                 gpointer     user_data)
 {
-  GtkWindow *window  = GTK_WINDOW (widget);
-  GtkWidget *focus   = gtk_window_get_focus (window);
+  GtkWindow *window = GTK_WINDOW (widget);
+  GtkWidget *focus = gtk_window_get_focus (window);
   gboolean   handled = FALSE;
+
+  g_print ("key_press_event\n");
 
   /* We're overriding the GtkWindow implementation here to give the focus
    * widget precedence over unmodified accelerators before the accelerator
@@ -725,8 +760,8 @@ key_press_event (GtkWidget   *widget,
     handled = gtk_window_activate_key (window, event);
 
   /* Chain up, bypassing gtk_window_key_press(), to invoke binding set. */
-  if (!handled)
-    handled = GTK_WIDGET_CLASS (g_type_class_peek (g_type_parent (GTK_TYPE_WINDOW)))->key_press_event (widget, event);
+  //if (!handled)
+  //  handled = GTK_WIDGET_CLASS (g_type_class_peek (g_type_parent (GTK_TYPE_WINDOW)))->key_press_event (widget, event);
 
   return handled;
 }
@@ -745,6 +780,8 @@ setup_menu_event_handler (void)
 
   if (is_setup)
     return;
+
+  gdk_window_add_filter (NULL, global_event_filter_func, NULL);
 
   menu_event_handler_upp = NewEventHandlerUPP (menu_event_handler_func);
   InstallEventHandler (GetApplicationEventTarget (), menu_event_handler_upp,
@@ -1000,25 +1037,27 @@ ige_mac_menu_set_quit_menu_item (GtkMenuItem *menu_item)
     }
 }
 
+void
+ige_mac_menu_connect_window_key_handler (GtkWindow *window)
+{
+  if (g_object_get_data (G_OBJECT (window), IGE_MAC_KEY_HANDLER))
+    {
+      g_warning ("Window %p is already connected", window);
+      return;
+    }
+
+  g_signal_connect (window, "key-press-event", G_CALLBACK (key_press_event), NULL);
+  g_object_set_data (G_OBJECT (window), IGE_MAC_KEY_HANDLER, GINT_TO_POINTER (1));
+}
+
 /* Most application will want to call this, but some might want to handle
- * the key events themselves.
+ * the key events themselves, for example if they need to handle
+ * accelerators without modifiers.
  */
 void
-ige_mac_menu_install_key_handler (void)
+ige_mac_menu_set_global_key_handler_enabled (gboolean enabled)
 {
-  static gboolean  is_setup = FALSE;
-  GtkWidgetClass  *klass;
-
-  if (is_setup)
-    return;
-
-  is_setup = TRUE;
-
-  /* Evil, don't try this at home... */
-  klass = GTK_WIDGET_CLASS (g_type_class_peek (GTK_TYPE_WINDOW));
-  klass->key_press_event = key_press_event;
-
-  gdk_window_add_filter (NULL, filter_func, NULL);
+  global_key_handler_enabled = enabled;
 }
 
 /* For internal use only. Returns TRUE if there is a GtkMenuItem assigned to
