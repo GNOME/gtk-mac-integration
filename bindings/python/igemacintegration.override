@@ -10,9 +10,10 @@ headers
 modulename igemacintegration
 %%
 import gobject.GObject as PyGObject_Type
+import gtk.gdk.Pixbuf as PyGdkPixbuf_Type
 import gtk.MenuShell as PyGtkMenuShell_Type
 import gtk.MenuItem as PyGtkMenuItem_Type
-import gtk.gdk.Pixbuf as PyGdkPixbuf_Type
+import gtk.Window as PyGtkWindow_Type
 %%
 ignore-glob
   *_get_type
