@@ -1,10 +1,10 @@
 /* GTK+ Integration for the Mac OS X Menubar.
  *
  * Copyright (C) 2007 Pioneer Research Center USA, Inc.
- * Copyright (C) 2007 Imendio AB
+ * Copyright (C) 2007, 2008 Imendio AB
  *
  * For further information, see:
- * http://developer.imendio.com/projects/gtk-macosx/menubar
+ * http://developer.imendio.com/projects/gtk-macosx/integration
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
