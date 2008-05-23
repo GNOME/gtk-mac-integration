@@ -356,11 +356,16 @@ ige_mac_dock_set_overlay_from_pixbuf (IgeMacDock  *dock,
   CGImageRef image;
 
   g_return_if_fail (IGE_IS_MAC_DOCK (dock));
-  g_return_if_fail (GDK_IS_PIXBUF (pixbuf));
+  g_return_if_fail (pixbuf == NULL || GDK_IS_PIXBUF (pixbuf));
 
-  image = ige_mac_image_from_pixbuf (pixbuf);
-  OverlayApplicationDockTileImage (image);
-  CGImageRelease (image);
+  if (pixbuf)
+    {
+      image = ige_mac_image_from_pixbuf (pixbuf);
+      OverlayApplicationDockTileImage (image);
+      CGImageRelease (image);
+    }
+  else
+    RestoreApplicationDockTileImage ();
 }
 
 void
