@@ -49,7 +49,7 @@
 #define IGE_MAC_KEY_HANDLER     "ige-mac-key-handler"
 
 static MenuID   last_menu_id;
-static gboolean global_key_handler_enabled;
+static gboolean global_key_handler_enabled = TRUE;
 
 static void   sync_menu_shell (GtkMenuShell *menu_shell,
 			       MenuRef       carbon_menu,
@@ -707,17 +707,13 @@ global_event_filter_func (gpointer  windowing_event,
         }
       g_list_free (toplevels);
 
+      /* FIXME: We could do something to skip menu events if there is a
+       * modal dialog...
+       */
       if (!focus || !g_object_get_data (G_OBJECT (focus), IGE_MAC_KEY_HANDLER))
         {
-          /*g_printerr ("using global handler\n");*/
-
-          /* We might want to do something more advanced here... */
           if (nsevent_handle_menu_key (nsevent))
             return GDK_FILTER_REMOVE;
-        }
-      else
-        {
-          /*g_printerr ("not using global handler, window has its own\n");*/
         }
     }
 
@@ -731,14 +727,7 @@ key_press_event (GtkWidget   *widget,
 {
   GtkWindow *window = GTK_WINDOW (widget);
   GtkWidget *focus = gtk_window_get_focus (window);
-  gboolean   handled = FALSE;
-
-  g_print ("key_press_event\n");
-
-  /* We're overriding the GtkWindow implementation here to give the focus
-   * widget precedence over unmodified accelerators before the accelerator
-   * activation scheme.
-   */
+  gboolean handled = FALSE;
 
   /* Text widgets get all key events first. */
   if (GTK_IS_EDITABLE (focus) || GTK_IS_TEXT_VIEW (focus))
@@ -758,10 +747,6 @@ key_press_event (GtkWidget   *widget,
   /* Invoke non-(control/alt) accelerators. */
   if (!handled && !(event->state & (GDK_CONTROL_MASK | GDK_MOD1_MASK)))
     handled = gtk_window_activate_key (window, event);
-
-  /* Chain up, bypassing gtk_window_key_press(), to invoke binding set. */
-  //if (!handled)
-  //  handled = GTK_WIDGET_CLASS (g_type_class_peek (g_type_parent (GTK_TYPE_WINDOW)))->key_press_event (widget, event);
 
   return handled;
 }
@@ -1051,9 +1036,9 @@ ige_mac_menu_connect_window_key_handler (GtkWindow *window)
   g_object_set_data (G_OBJECT (window), IGE_MAC_KEY_HANDLER, GINT_TO_POINTER (1));
 }
 
-/* Most application will want to call this, but some might want to handle
- * the key events themselves, for example if they need to handle
- * accelerators without modifiers.
+/* Most applications will want to have this enabled (which is the
+ * defalt). For apps that need to deal with the events themselves, the
+ * global handling can be disabled.
  */
 void
 ige_mac_menu_set_global_key_handler_enabled (gboolean enabled)
