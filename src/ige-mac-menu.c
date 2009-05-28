@@ -284,17 +284,7 @@ carbon_menu_item_update_submenu (CarbonMenuItem *carbon_item,
       SetMenuTitleWithCFString (carbon_item->submenu, cfstr);
       SetMenuItemHierarchicalMenu (carbon_item->menu, carbon_item->index,
 				   carbon_item->submenu);
-
-      /* FIXME: This makes it possible to hide toplevel menu items
-       * completely, but it only works if you hide the menu item before
-       * setting up the menu, not dynamically afterwards.
-       */
-      if (!GTK_WIDGET_VISIBLE (widget))
-      {
-        ChangeMenuAttributes (carbon_item->submenu, kMenuAttrHidden, 0);
-      }
-
-      sync_menu_shell (GTK_MENU_SHELL (submenu), carbon_item->submenu, FALSE, FALSE);
+      sync_menu_shell (GTK_MENU_SHELL (submenu), carbon_item->submenu, FALSE,FALSE);
 
       if (cfstr)
 	CFRelease (cfstr);
@@ -805,6 +795,7 @@ sync_menu_shell (GtkMenuShell *menu_shell,
     {
       GtkWidget      *menu_item = l->data;
       CarbonMenuItem *carbon_item;
+      MenuAttributes attrs;
 
       if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
 	continue;
@@ -879,9 +870,28 @@ sync_menu_shell (GtkMenuShell *menu_shell,
 	    carbon_menu_item_update_submenu (carbon_item, menu_item);
 	}
 
+      GetMenuAttributes( carbon_item->submenu, &attrs);
+      if (!GTK_WIDGET_VISIBLE (menu_item)) {
+	  if ((attrs & kMenuAttrHidden) == 0) {
+	      if (debug) {
+		  const gchar *label = get_menu_label_text (menu_item, NULL);
+		  g_printerr("Hiding menu %s\n", label);
+	      }
+	      ChangeMenuAttributes (carbon_item->submenu, kMenuAttrHidden, 0);
+	  }
+      }
+      else  {
+	  if ((attrs & kMenuAttrHidden) != 0) {
+	      if (debug) {
+		  const gchar *label = get_menu_label_text (menu_item, NULL);
+		  g_printerr("Revealing menu %s\n", label);
+	      }
+	      ChangeMenuAttributes (carbon_item->submenu, 0, kMenuAttrHidden);
+	  }
+      }
+
       carbon_index++;
     }
-
   g_list_free (children);
 }
 
@@ -996,6 +1006,8 @@ ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell)
   g_signal_connect (menu_shell, "destroy",
 		    G_CALLBACK (parent_set_emission_hook_remove),
 		    NULL);
+
+//    g_printerr ("%s: syncing menubar\n", G_STRFUNC);
 
   sync_menu_shell (menu_shell, carbon_menubar, TRUE, FALSE);
 }
@@ -1155,4 +1167,13 @@ ige_mac_menu_add_app_menu_item (IgeMacMenuGroup *group,
   if (!list)
     g_warning ("%s: app menu group %p does not exist",
 	       G_STRFUNC, group);
+}
+
+void
+ige_mac_menu_sync(GtkMenuShell *menu_shell) {
+    CarbonMenu *carbon_menu = carbon_menu_get (GTK_WIDGET(menu_shell));
+//    g_printerr ("%s: syncing menubar\n", G_STRFUNC);
+
+    sync_menu_shell (menu_shell, carbon_menu->menu,
+		     carbon_menu->toplevel, FALSE);
 }

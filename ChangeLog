@@ -1,1 +1,12 @@
-Not used for now, see git log.
+2009-05-26  John Ralls  <john@manjusri.ceridwen.fremont.ca.us>
+
+	* src/ige-mac-menu.c (sync_menu_shell): Moved the hiding code from
+	carbon_menu_item update_submenu and added unhiding code. This now
+	works correctly, at least in GnuCash.
+
+	* src/ige-mac-menu.h: New function ige_mac_menu_sync() to update
+	the main menu after changes (e.g., different menus for pages in a
+	notebook). 
+
+Note that Richard Hult's changes are documented only in the git log.
+
