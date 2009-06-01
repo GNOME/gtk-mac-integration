@@ -1,3 +1,13 @@
+2009-06-01  John Ralls  <john@manjusri.ceridwen.fremont.ca.us>
+
+	* AUTHORS: Added myself to the AUTHORS file
+
+	* configure.ac: Bump version to 0.8.4
+
+	* data/ige-mac-integration.pc.in (Cflags): Added a define for
+	MAC_INTEGRATION that clients can use to ifdef around integration
+	code. 
+
 2009-05-26  John Ralls  <john@manjusri.ceridwen.fremont.ca.us>
 
 	* src/ige-mac-menu.c (sync_menu_shell): Moved the hiding code from

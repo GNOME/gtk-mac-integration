@@ -1,6 +1,6 @@
 AC_PREREQ(2.52)
  
-AC_INIT(ige-mac-integration, 0.8.3)
+AC_INIT(ige-mac-integration, 0.8.4)
 AC_CONFIG_SRCDIR(src/ige-mac-menu.c)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
