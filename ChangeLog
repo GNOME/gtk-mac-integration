@@ -1,5 +1,7 @@
 2009-06-01  John Ralls  <john@manjusri.ceridwen.fremont.ca.us>
 
+	* README: Updated to reflect MAC_INTEGRATION define
+
 	* AUTHORS: Added myself to the AUTHORS file
 
 	* configure.ac: Bump version to 0.8.4

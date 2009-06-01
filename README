@@ -4,6 +4,6 @@ app bundles.
 For an example on how to use, see src/test-integration.c
 
 For further information, see:
-http://developer.imendio.com/projects/gtk-macosx/menubar
+http://live.gnome.org/GTK%2B/OSX/Integration
 
 Note that this API is not frozen yet and may change between releases.
