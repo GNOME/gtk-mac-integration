@@ -8,4 +8,4 @@ Description: Mac menu bar and dock integration for GTK+
 Requires: gtk+-2.0
 Version: @VERSION@
 Libs: -L${libdir} -ligemacintegration
-Cflags: -I${includedir}/igemacintegration
+Cflags: -I${includedir}/igemacintegration -DMAC_INTEGRATION
