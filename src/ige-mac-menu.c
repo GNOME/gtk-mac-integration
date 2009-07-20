@@ -48,6 +48,11 @@
 
 #define IGE_MAC_KEY_HANDLER     "ige-mac-key-handler"
 
+#define DEBUG FALSE
+#define DEBUG_SET FALSE
+#define DEBUG_SYNC FALSE
+#define DEBUG_SIGNAL FALSE
+
 static MenuID   last_menu_id;
 static gboolean global_key_handler_enabled = TRUE;
 
@@ -212,7 +217,7 @@ carbon_menu_item_update_active (CarbonMenuItem *carbon_item,
 
 static void
 carbon_menu_item_update_submenu (CarbonMenuItem *carbon_item, 
-				 GtkWidget *widget) {
+				 GtkWidget *widget, bool debug) {
     GtkWidget *submenu;
     const gchar *label_text;
     CFStringRef  cfstr = NULL;
@@ -234,7 +239,7 @@ carbon_menu_item_update_submenu (CarbonMenuItem *carbon_item,
     SetMenuItemHierarchicalMenu (carbon_item->menu, carbon_item->index,
 				 carbon_item->submenu);
     sync_menu_shell (GTK_MENU_SHELL (submenu), carbon_item->submenu, 
-		     FALSE,FALSE);
+		     FALSE, debug);
     if (cfstr)
 	CFRelease (cfstr);
 }
@@ -431,7 +436,7 @@ carbon_menu_create_item (GtkWidget *menu_item, int *index, bool debug) {
 	carbon_menu_item_update_active (carbon_item, menu_item);
     carbon_menu_item_update_accel_closure (carbon_item, menu_item);
     if (gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item)))
-	carbon_menu_item_update_submenu (carbon_item, menu_item);
+	carbon_menu_item_update_submenu (carbon_item, menu_item, debug);
     return carbon_item;
 }
 
@@ -480,7 +485,9 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 	if (event_kind != kEventCommandProcess)
 	    break;
 
-	/*g_printerr ("Menu: kEventClassCommand/kEventCommandProcess\n");*/
+#if DEBUG
+	g_printerr ("Menu: kEventClassCommand/kEventCommandProcess\n");
+#endif
 	err = GetEventParameter (event_ref, kEventParamDirectObject,
 				 typeHICommand, 0,
 				 sizeof (command), 0, &command);
@@ -749,7 +756,7 @@ parent_set_emission_hook (GSignalInvocationHint *ihint, guint n_param_values,
 
     if (!carbon_menu) 
 	return TRUE;
-#if 0
+#if DEBUG
     g_printerr ("%s: item %s %p (%s, %s)\n", G_STRFUNC,
 		previous_parent ? "removed from" : "added to",
 		menu_shell, get_menu_label_text (instance, NULL),
@@ -757,7 +764,7 @@ parent_set_emission_hook (GSignalInvocationHint *ihint, guint n_param_values,
 #endif
 
     sync_menu_shell (GTK_MENU_SHELL (menu_shell), carbon_menu->menu,
-		     carbon_menu->toplevel, FALSE);
+		     carbon_menu->toplevel, DEBUG_SIGNAL);
     return TRUE;
 }
 
@@ -804,8 +811,10 @@ ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell) {
     g_signal_connect (menu_shell, "destroy",
 		      G_CALLBACK (parent_set_emission_hook_remove), NULL);
 
-//    g_printerr ("%s: syncing menubar\n", G_STRFUNC);
-    sync_menu_shell (menu_shell, carbon_menubar, TRUE, FALSE);
+#if DEBUG_SET
+    g_printerr ("%s: syncing menubar\n", G_STRFUNC);
+#endif
+    sync_menu_shell (menu_shell, carbon_menubar, TRUE, DEBUG_SET);
 }
 
 void
@@ -935,7 +944,9 @@ void
 ige_mac_menu_sync(GtkMenuShell *menu_shell) {
     CarbonMenu *carbon_menu = carbon_menu_get (GTK_WIDGET(menu_shell));
 
-//    g_printerr ("%s: syncing menubar\n", G_STRFUNC);
+#if DEBUG_SYNC
+    g_printerr ("%s: syncing menubar\n", G_STRFUNC);
+#endif
     sync_menu_shell (menu_shell, carbon_menu->menu,
-		     carbon_menu->toplevel, FALSE);
+		     carbon_menu->toplevel, DEBUG_SYNC);
 }
