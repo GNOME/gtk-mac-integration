@@ -594,13 +594,19 @@ carbon_menu_create_item (GtkWidget *menu_item, MenuRef carbon_menu,
 
     if (cfstr)
 	CFRelease (cfstr);
-    carbon_menu_err_return_label_val(err, label_text, 
-				     "Failed to set menu property", NULL);
+    if (err) {
+	carbon_menu_warn_label(err, label_text,
+				   "Failed to set menu property");
+  	DeleteMenuItem(carbon_menu, index); //Clean up the extra menu item
+	return NULL;
+    }
     carbon_item = carbon_menu_item_connect (menu_item, label,
 					    carbon_menu,
 					    index);
-    if (!carbon_item) //Got a bad carbon_item, bail out
+    if (!carbon_item) { //Got a bad carbon_item, bail out
+	DeleteMenuItem(carbon_menu, index); //Clean up the extra menu item
 	return carbon_item;
+    }
     if (GTK_IS_CHECK_MENU_ITEM (menu_item))
 	carbon_menu_item_update_active (carbon_item, menu_item);
     carbon_menu_item_update_accel_closure (carbon_item, menu_item);
