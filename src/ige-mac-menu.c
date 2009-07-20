@@ -287,10 +287,8 @@ carbon_menu_item_get (GtkWidget *widget) {
 			       sizeof (checkWidget), 0, &checkWidget);
     if (err) {
 	if (DEBUG_CARBON)
-	    g_printerr("%s: Carbon Menu Item associated with widget %s returned %s when cross-checking its linkage\n", G_STRFUNC,
-		       gtk_widget_get_name(widget), 
-		       carbon_menu_error_string(err));
-	carbon_menu_item_free(carbon_item);
+	    g_printerr("%s: Widget %s %s Cross-check error %s\n", G_STRFUNC,
+		       name, label, carbon_menu_error_string(err));
 	return NULL;
     }
 /* This could check the checkWidget, but that could turn into a
@@ -298,9 +296,12 @@ carbon_menu_item_get (GtkWidget *widget) {
  * carbon_menu_item_get on it.
  */
     if (widget != checkWidget) {
+	const gchar *clabel = get_menu_label_text(GTK_WIDGET(checkWidget), 
+						  NULL);
+	const gchar *cname = gtk_widget_get_name(checkWidget);
 	if (DEBUG_CARBON)
-	    g_printerr("Carbon Menu Item associated with widget %s returns a different widget %s\n", gtk_widget_get_name(widget), 
-		       gtk_widget_get_name(checkWidget)); 
+	    g_printerr("%s: Widget mismatch, expected %s %s got %s %s\n", 
+		       G_STRFUNC, name, label, cname, clabel);
 	return NULL;
     }
     return carbon_item;
