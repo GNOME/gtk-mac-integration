@@ -274,12 +274,20 @@ carbon_menu_error_string(OSStatus err) {
 
 static CarbonMenuItem *
 carbon_menu_item_get (GtkWidget *widget) {
-    CarbonMenuItem *carbon_item = g_object_get_qdata (G_OBJECT (widget), 
-						      carbon_menu_item_quark);
+    return g_object_get_qdata (G_OBJECT (widget), carbon_menu_item_quark);
+}
+
+static CarbonMenuItem *
+carbon_menu_item_get_checked (GtkWidget *widget) {
+    CarbonMenuItem * carbon_item = carbon_menu_item_get(widget);
     GtkWidget *checkWidget = NULL;
     OSStatus  err;
+    const gchar *label = get_menu_label_text(GTK_WIDGET(widget), NULL);
+    const gchar *name = gtk_widget_get_name(widget);
+
     if (!carbon_item)
 	return NULL;
+
     /* Get any GtkWidget associated with the item. */
     err = GetMenuItemProperty (carbon_item->menu, carbon_item->index,
 			       IGE_QUARTZ_MENU_CREATOR,
