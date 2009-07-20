@@ -868,6 +868,7 @@ sync_menu_shell (GtkMenuShell *menu_shell, MenuRef carbon_menu,
 	GtkWidget      *menu_item = l->data;
 	CarbonMenuItem *carbon_item;
 	MenuAttributes attrs;
+	const gchar *label = get_menu_label_text (menu_item, NULL);
 
 	if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
 	    continue;
