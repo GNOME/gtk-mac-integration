@@ -520,7 +520,8 @@ DEBUG_SIGNAL);
 static void
 carbon_menu_item_notify_label (GObject *object, GParamSpec *pspec,
 			       gpointer data) {
-    CarbonMenuItem *carbon_item = carbon_menu_item_get (GTK_WIDGET (object));
+    CarbonMenuItem *carbon_item = 
+	carbon_menu_item_get_checked (GTK_WIDGET (object));
     const gchar *label_text = get_menu_label_text(GTK_WIDGET(object), NULL);
 
     if (!carbon_item) {
@@ -540,7 +541,8 @@ carbon_menu_item_notify_label (GObject *object, GParamSpec *pspec,
 static CarbonMenuItem *
 carbon_menu_item_connect (GtkWidget *menu_item, GtkWidget *label,
 			  MenuRef menu, MenuItemIndex index) {
-    CarbonMenuItem *carbon_item = carbon_menu_item_get (menu_item);
+    CarbonMenuItem *carbon_item = 
+	carbon_menu_item_get_checked (menu_item);
 
     if (!carbon_item) {
 	carbon_item = carbon_menu_item_new ();
