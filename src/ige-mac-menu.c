@@ -395,6 +395,46 @@ carbon_menu_item_connect (GtkWidget *menu_item, GtkWidget *label,
     return carbon_item;
 }
 
+static CarbonMenuItem *
+carbon_menu_create_item (GtkWidget *menu_item, int *index, bool debug) {
+    GtkWidget          *label      = NULL;
+    const gchar        *label_text;
+    CFStringRef         cfstr      = NULL;
+    MenuItemAttributes  attributes = 0;
+
+    if (debug)
+	g_printerr ("%s:   -> creating new\n", G_STRFUNC);
+    label_text = get_menu_label_text (menu_item, &label);
+    if (label_text)
+	cfstr = CFStringCreateWithCString (NULL, label_text,
+					   kCFStringEncodingUTF8);
+    if (GTK_IS_SEPARATOR_MENU_ITEM (menu_item))
+	attributes |= kMenuItemAttrSeparator;
+    if (!GTK_WIDGET_IS_SENSITIVE (menu_item))
+	attributes |= kMenuItemAttrDisabled;
+    if (!GTK_WIDGET_VISIBLE (menu_item))
+	attributes |= kMenuItemAttrHidden;
+    InsertMenuItemTextWithCFString (carbon_menu, cfstr,
+				    index - 1,
+				    attributes, 0);
+    SetMenuItemProperty (carbon_menu, index,
+			 IGE_QUARTZ_MENU_CREATOR,
+			 IGE_QUARTZ_ITEM_WIDGET,
+			 sizeof (menu_item), &menu_item);
+
+    if (cfstr)
+	CFRelease (cfstr);
+    carbon_item = carbon_menu_item_connect (menu_item, label,
+					    carbon_menu,
+					    index);
+    if (GTK_IS_CHECK_MENU_ITEM (menu_item))
+	carbon_menu_item_update_active (carbon_item, menu_item);
+    carbon_menu_item_update_accel_closure (carbon_item, menu_item);
+    if (gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item)))
+	carbon_menu_item_update_submenu (carbon_item, menu_item);
+    return carbon_item;
+}
+
 typedef struct {
     GtkWidget *widget;
 } ActivateIdleData;
@@ -657,44 +697,9 @@ sync_menu_shell (GtkMenuShell *menu_shell, MenuRef carbon_menu,
 	    DeleteMenuItem (carbon_item->menu, carbon_index);
 	    carbon_item = NULL;
 	}
-	if (!carbon_item) {
-	    GtkWidget          *label      = NULL;
-	    const gchar        *label_text;
-	    CFStringRef         cfstr      = NULL;
-	    MenuItemAttributes  attributes = 0;
-
-	    if (debug)
-		g_printerr ("%s:   -> creating new\n", G_STRFUNC);
-	    label_text = get_menu_label_text (menu_item, &label);
-	    if (label_text)
-		cfstr = CFStringCreateWithCString (NULL, label_text,
-						   kCFStringEncodingUTF8);
-	    if (GTK_IS_SEPARATOR_MENU_ITEM (menu_item))
-		attributes |= kMenuItemAttrSeparator;
-	    if (!GTK_WIDGET_IS_SENSITIVE (menu_item))
-		attributes |= kMenuItemAttrDisabled;
-	    if (!GTK_WIDGET_VISIBLE (menu_item))
-		attributes |= kMenuItemAttrHidden;
-	    InsertMenuItemTextWithCFString (carbon_menu, cfstr,
-					    carbon_index - 1,
-					    attributes, 0);
-	    SetMenuItemProperty (carbon_menu, carbon_index,
-				 IGE_QUARTZ_MENU_CREATOR,
-				 IGE_QUARTZ_ITEM_WIDGET,
-				 sizeof (menu_item), &menu_item);
-
-	    if (cfstr)
-		CFRelease (cfstr);
-	    carbon_item = carbon_menu_item_connect (menu_item, label,
-						    carbon_menu,
-						    carbon_index);
-	    if (GTK_IS_CHECK_MENU_ITEM (menu_item))
-		carbon_menu_item_update_active (carbon_item, menu_item);
-	    carbon_menu_item_update_accel_closure (carbon_item, menu_item);
-	    if (gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item)))
-		carbon_menu_item_update_submenu (carbon_item, menu_item);
-	}
-
+	if (!carbon_item)
+	    carbon_item = carbon_menu_create_item(menu_item, &carbon_index, 
+						  debug);
 	GetMenuAttributes( carbon_item->submenu, &attrs);
 	if (!GTK_WIDGET_VISIBLE (menu_item)) {
 	    if ((attrs & kMenuAttrHidden) == 0) {
