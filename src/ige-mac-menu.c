@@ -880,42 +880,52 @@ sync_menu_shell (GtkMenuShell *menu_shell, MenuRef carbon_menu,
 	if (debug)
 	    g_printerr ("%s: carbon_item %d for menu_item %d (%s, %s)\n",
 			G_STRFUNC, carbon_item ? carbon_item->index : -1,
-			carbon_index, get_menu_label_text (menu_item, NULL),
+			carbon_index, label,
 			g_type_name (G_TYPE_FROM_INSTANCE (menu_item)));
 
 	if (carbon_item && carbon_item->index != carbon_index) {
-	    if (debug)
-		g_printerr ("%s:   -> not matching, deleting\n", G_STRFUNC);
-	    DeleteMenuItem (carbon_item->menu, carbon_index);
-	    carbon_item = NULL;
+	    if (carbon_item->index == carbon_index - 1) {
+		if (debug)
+		    g_printerr("%s: %s incrementing index\n", G_STRFUNC, label);
+		++carbon_item->index;
+	    } 
+	    else {
+		if (debug)
+		    g_printerr ("%s: %s -> not matching, deleting\n",
+				G_STRFUNC, label);
+		DeleteMenuItem (carbon_item->menu, carbon_index);
+		carbon_item = NULL;
+	    }
 	}
 	if (!carbon_item)
 	    carbon_item = carbon_menu_create_item(menu_item, carbon_menu,
 						  carbon_index, debug);
 	if (!carbon_item) //Bad carbon item, give up
 	    continue;
-	GetMenuAttributes( carbon_item->submenu, &attrs);
+	if (!carbon_item->submenu) {
+	    carbon_index++;
+	    continue;
+	}
+/*The rest only applies to submenus, not to items which should have
+ * been fixed up in carbon_menu_item_create
+ */
+	err = GetMenuAttributes( carbon_item->submenu, &attrs);
+	carbon_menu_warn(err, "Failed to get menu attributes");
 	if (!GTK_WIDGET_VISIBLE (menu_item)) {
 	    if ((attrs & kMenuAttrHidden) == 0) {
-		if (debug) {
-		    const gchar *label = get_menu_label_text (menu_item, NULL);
+		if (debug)
 		    g_printerr("Hiding menu %s\n", label);
-		}
 		err = ChangeMenuAttributes (carbon_item->submenu, 
 					    kMenuAttrHidden, 0);
-		carbon_menu_warn(err, "Failed to set visible");
+		carbon_menu_warn_label(err, label, "Failed to set visible");
 	    }
 	}
-	else  {
-	    if ((attrs & kMenuAttrHidden) != 0) {
-		if (debug) {
-		    const gchar *label = get_menu_label_text (menu_item, NULL);
-		    g_printerr("Revealing menu %s\n", label);
-		}
-		err = ChangeMenuAttributes (carbon_item->submenu, 0, 
+	else if ((attrs & kMenuAttrHidden) != 0) {
+	    if (debug) 
+		g_printerr("Revealing menu %s\n", label);
+	    err = ChangeMenuAttributes (carbon_item->submenu, 0, 
 					    kMenuAttrHidden);
-		carbon_menu_warn(err, "Failed to set Hidden");
-	    }
+	    carbon_menu_warn_label(err, label, "Failed to set Hidden");
 	}
 	carbon_index++;
     }
