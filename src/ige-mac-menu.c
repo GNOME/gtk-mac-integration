@@ -980,6 +980,17 @@ parent_set_emission_hook_remove (GtkWidget *widget, gpointer data) {
     emission_hook_id = 0;
 }
 
+static void
+window_focus(GtkWindow *window, GtkWidget *widget, CarbonMenu *menu) {
+    OSStatus err = SetRootMenu(menu->menu);
+    if (err) {
+	carbon_menu_warn(err, "Failed to transfer menu");
+    }
+    else {
+	g_printerr("%s: Switched Menu\n", G_STRFUNC);
+    }
+}
+
 
 /*
  * public functions
@@ -990,6 +1001,7 @@ ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell) {
     CarbonMenu *current_menu;
     MenuRef     carbon_menubar;
     OSStatus    err;
+    GtkWidget *parent = gtk_widget_get_toplevel(GTK_WIDGET(menu_shell));
 
     g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
     if (carbon_menu_quark == 0)
@@ -1002,7 +1014,7 @@ ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell) {
 	carbon_menu_warn(err, "Failed to set root menu");
 	return;
     }
-    err = CreateNewMenu (0 /*id*/, 0 /*options*/, &carbon_menubar);
+    err = CreateNewMenu (++last_menu_id /*id*/, 0 /*options*/, &carbon_menubar);
     carbon_menu_err_return(err, "Failed to create menu");
     err = SetRootMenu (carbon_menubar);
     carbon_menu_err_return(err, "Failed to set root menu");
@@ -1021,6 +1033,10 @@ ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell) {
     g_printerr ("%s: syncing menubar\n", G_STRFUNC);
 #endif
     sync_menu_shell (menu_shell, carbon_menubar, TRUE, DEBUG_SET);
+    g_signal_connect (parent, "set-focus",
+		      G_CALLBACK(window_focus), 
+		      carbon_menu_get(GTK_WIDGET(menu_shell)));
+
 }
 
 void
