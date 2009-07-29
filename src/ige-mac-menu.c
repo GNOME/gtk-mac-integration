@@ -861,7 +861,9 @@ sync_menu_shell (GtkMenuShell *menu_shell, MenuRef carbon_menu,
     OSStatus err;
 
     if (debug)
-	g_printerr ("%s: syncing shell %p\n", G_STRFUNC, menu_shell);
+	g_printerr ("%s: syncing shell %s (%p)\n", G_STRFUNC, 
+		    get_menu_label_text(GTK_WIDGET(menu_shell), NULL),
+		    menu_shell);
     carbon_menu_connect (GTK_WIDGET (menu_shell), carbon_menu, toplevel);
     children = gtk_container_get_children (GTK_CONTAINER (menu_shell));
     for (l = children; l; l = l->next) {
@@ -959,10 +961,12 @@ parent_set_emission_hook (GSignalInvocationHint *ihint, guint n_param_values,
     if (!carbon_menu) 
 	return TRUE;
 #if DEBUG
-    g_printerr ("%s: item %s %p (%s, %s)\n", G_STRFUNC,
+    g_printerr ("%s: item %s (%s) %s %s (%p)\n", G_STRFUNC,
+		get_menu_label_text (instance, NULL),
+		g_type_name (G_TYPE_FROM_INSTANCE (instance)),
 		previous_parent ? "removed from" : "added to",
-		menu_shell, get_menu_label_text (instance, NULL),
-		g_type_name (G_TYPE_FROM_INSTANCE (instance)));
+		get_menu_label_text(menu_shell, NULL),
+		menu_shell);
 #endif
 
     sync_menu_shell (GTK_MENU_SHELL (menu_shell), carbon_menu->menu,
