@@ -562,7 +562,7 @@ carbon_menu_item_connect (GtkWidget *menu_item, GtkWidget *label,
 }
 
 static CarbonMenuItem *
-carbon_menu_create_item (GtkWidget *menu_item, MenuRef carbon_menu,
+carbon_menu_item_create (GtkWidget *menu_item, MenuRef carbon_menu,
 			 MenuItemIndex index, bool debug) {
     GtkWidget          *label      = NULL;
     const gchar        *label_text;
@@ -900,7 +900,7 @@ sync_menu_shell (GtkMenuShell *menu_shell, MenuRef carbon_menu,
 	    }
 	}
 	if (!carbon_item)
-	    carbon_item = carbon_menu_create_item(menu_item, carbon_menu,
+	    carbon_item = carbon_menu_item_create(menu_item, carbon_menu,
 						  carbon_index, debug);
 	if (!carbon_item) //Bad carbon item, give up
 	    continue;
