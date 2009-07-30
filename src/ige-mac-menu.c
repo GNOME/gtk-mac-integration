@@ -891,6 +891,11 @@ sync_menu_shell (GtkMenuShell *menu_shell, MenuRef carbon_menu,
 		    g_printerr("%s: %s incrementing index\n", G_STRFUNC, label);
 		++carbon_item->index;
 	    } 
+	    else if (carbon_item->index == carbon_index + 1) {
+		if (debug)
+		    g_printerr("%s: %s decrementing index\n", G_STRFUNC, label);
+		--carbon_item->index;
+	    } 
 	    else {
 		if (debug)
 		    g_printerr ("%s: %s -> not matching, deleting\n",
