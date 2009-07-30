@@ -982,6 +982,12 @@ parent_set_emission_hook (GSignalInvocationHint *ihint, guint n_param_values,
 
 static void
 parent_set_emission_hook_remove (GtkWidget *widget, gpointer data) {
+    CarbonMenu *carbon_menu = carbon_menu_get(widget);
+    if (carbon_menu) {
+	MenuID id = GetMenuID(carbon_menu->menu);
+	ClearMenuBar();
+	DeleteMenu(id);
+    }
     emission_hook_count--;
     if (emission_hook_count > 0)
 	return;
