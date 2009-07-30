@@ -990,7 +990,7 @@ parent_set_emission_hook_remove (GtkWidget *widget, gpointer data) {
     emission_hook_id = 0;
 }
 
-static gboolean
+static void
 window_focus(GtkWindow *window, GtkWidget *widget, CarbonMenu *menu) {
     OSStatus err = SetRootMenu(menu->menu);
     if (err) {
@@ -999,16 +999,8 @@ window_focus(GtkWindow *window, GtkWidget *widget, CarbonMenu *menu) {
     else {
 	g_printerr("%s: Switched Menu\n", G_STRFUNC);
     }
-    return FALSE;
 }
 
-static gboolean
-window_delete(GtkWindow *window, GdkEvent *event, CarbonMenu *menu) {
-    DisposeMenu(menu->menu);
-    carbon_menu_free(menu);
-    g_printerr("%s, Window deleted\n", G_STRFUNC);
-    return FALSE;
-}
 
 /*
  * public functions
@@ -1053,12 +1045,6 @@ ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell) {
     sync_menu_shell (menu_shell, carbon_menubar, TRUE, DEBUG_SET);
     g_signal_connect (parent, "set-focus",
 		      G_CALLBACK(window_focus), 
-		      carbon_menu_get(GTK_WIDGET(menu_shell)));
-    g_signal_connect (parent, "destroy-event",
-		      G_CALLBACK(window_delete), 
-		      carbon_menu_get(GTK_WIDGET(menu_shell)));
-    g_signal_connect (parent, "delete-event",
-		      G_CALLBACK(window_delete), 
 		      carbon_menu_get(GTK_WIDGET(menu_shell)));
 
 }
