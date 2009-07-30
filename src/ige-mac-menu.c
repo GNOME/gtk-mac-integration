@@ -136,6 +136,7 @@ carbon_menu_new (void) {
 
 static void
 carbon_menu_free (CarbonMenu *menu) {
+    DisposeMenu(menu->menu);
     g_slice_free (CarbonMenu, menu);
 }
 
@@ -178,6 +179,7 @@ carbon_menu_item_new (void) {
 
 static void
 carbon_menu_item_free (CarbonMenuItem *menu_item) {
+    DeleteMenuItem(menu_item->menu, menu_item->index);  //Clean up the Carbon Menu
     if (menu_item->accel_closure)
 	g_closure_unref (menu_item->accel_closure);
     g_slice_free (CarbonMenuItem, menu_item);
@@ -973,7 +975,6 @@ parent_set_emission_hook (GSignalInvocationHint *ihint, guint n_param_values,
 		get_menu_label_text(menu_shell, NULL),
 		menu_shell);
 #endif
-
     sync_menu_shell (GTK_MENU_SHELL (menu_shell), carbon_menu->menu,
 		     carbon_menu->toplevel, DEBUG_SIGNAL);
     return TRUE;
