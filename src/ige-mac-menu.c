@@ -990,15 +990,16 @@ parent_set_emission_hook_remove (GtkWidget *widget, gpointer data) {
     emission_hook_id = 0;
 }
 
-static void
+static gboolean
 window_focus(GtkWindow *window, GtkWidget *widget, CarbonMenu *menu) {
     OSStatus err = SetRootMenu(menu->menu);
     if (err) {
 	carbon_menu_warn(err, "Failed to transfer menu");
     }
-    else {
+    else if (DEBUG){
 	g_printerr("%s: Switched Menu\n", G_STRFUNC);
     }
+    return FALSE;
 }
 
 
