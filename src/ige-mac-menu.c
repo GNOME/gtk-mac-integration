@@ -1050,9 +1050,10 @@ ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell) {
     g_printerr ("%s: syncing menubar\n", G_STRFUNC);
 #endif
     sync_menu_shell (menu_shell, carbon_menubar, TRUE, DEBUG_SET);
-    g_signal_connect (parent, "focus-in-event",
-		      G_CALLBACK(window_focus), 
-		      carbon_menu_get(GTK_WIDGET(menu_shell)));
+    if (parent)
+	g_signal_connect (parent, "focus-in-event",
+			  G_CALLBACK(window_focus), 
+			  carbon_menu_get(GTK_WIDGET(menu_shell)));
 
 }
 
