@@ -11,7 +11,7 @@ headers =						\
 	$(top_srcdir)/src/ige-mac-bundle.h
 
 igemacintegration.defs: $(headers)
-	$(PYTHON) $(datadir)/pygtk/2.0/codegen/h2def.py $(headers) > $@
+	$(PYTHON) $(datadir)/pygobject/2.0/codegen/h2def.py $(headers) > $@
 
 igemacintegration.c: igemacintegration.defs igemacintegration.override
 
