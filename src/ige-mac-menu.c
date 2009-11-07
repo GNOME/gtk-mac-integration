@@ -120,6 +120,13 @@ accel_find_func (GtkAccelKey *key, GClosure *closure, gpointer data) {
 
 /*
  * CarbonMenu functions
+ *
+ * A CarbonMenu contains a reference to the OSX menu; connect attaches
+ * it to the GtkMenu so that sync_menu will know which OSX menu to
+ * synchronise as it recurses through the GtkMenu tree. There is no
+ * back-pointer from the OSX Menu to the GtkMenu. Note that Gtk
+ * doesn't have an "App" menu (the one named after the application),
+ * so no MenuRef points to it.
  */
 
 typedef struct {
@@ -128,8 +135,8 @@ typedef struct {
 } CarbonMenu;
 
 static GQuark carbon_menu_quark = 0;
-static CarbonMenu *
 
+static CarbonMenu *
 carbon_menu_new (void) {
     return g_slice_new0 (CarbonMenu);
 }
@@ -161,6 +168,17 @@ carbon_menu_connect (GtkWidget *menu, MenuRef menuRef, gboolean toplevel) {
 
 /*
  * CarbonMenuItem functions
+ *
+ * Like CarbonMenu, the CarbonMenuItem contains a reference to the OSX
+ * Menu which contains it and the index the menu item in that menu
+ * (there aren't pointers directly to menu items in Carbon like there
+ * are in Cocoa). If the item has a submenu, there's a reference for
+ * that object as well, and there's a pointer to the accelerator for
+ * connecting signals from. This structure is inserted into the
+ * GtkMenuItem, and pointer to the GtkMenuItem is attached to the OSX
+ * Menu at the indicated index. Much effort goes into ensuring that
+ * the indices stay synchronized, as interesting behavior will result
+ * if they get out of sync.
  */
 
 typedef struct {
@@ -1102,7 +1120,7 @@ ige_mac_menu_set_global_key_handler_enabled (gboolean enabled) {
     global_key_handler_enabled = enabled;
 }
 
-/* For internal use only. Returns TRUE if there is a GtkMenuItem assigned to
+/* For testing use only. Returns TRUE if there is a GtkMenuItem assigned to
  * the Quit menu item.
  */
 gboolean
@@ -1115,11 +1133,22 @@ _ige_mac_menu_is_quit_menu_item_handled (void) {
     return (err == noErr);
 }
 
-
+/* Applicaation Menu Functions
+ *
+ * The "application" menu (the one named the same as the application),
+ * is special because there isn't a corresponding Gtk menu, but OSX
+ * practice puts the About, Preferences, and Quit menu items in it, so
+ * we need to provide a way for app developers to move those items
+ * (and others, if they want) from their Gtk locations to the app
+ * menu.
+ */
 struct _IgeMacMenuGroup {
     GList *items;
 };
-
+/* app_menu_groups is a list of IgeMacMenuGroups, itself a list of
+ * menu_items. They're provided to insert separators into the app
+ * menu, grouping the items. 
+*/
 static GList *app_menu_groups = NULL;
 
 IgeMacMenuGroup *
@@ -1170,6 +1199,7 @@ ige_mac_menu_add_app_menu_item (IgeMacMenuGroup *group, GtkMenuItem *menu_item,
 	    label = get_menu_label_text (GTK_WIDGET (menu_item), NULL);
 	cfstr = CFStringCreateWithCString (NULL, label,
 					   kCFStringEncodingUTF8);
+//Add a new menu item and associate it with the GtkMenuItem.
 	err = InsertMenuItemTextWithCFString (appmenu, cfstr, index, 0, 0);
 	carbon_menu_err_return(err, "Failed to add menu item");
 	err = SetMenuItemProperty (appmenu, index + 1,
@@ -1179,7 +1209,9 @@ ige_mac_menu_add_app_menu_item (IgeMacMenuGroup *group, GtkMenuItem *menu_item,
 	CFRelease (cfstr);
 	carbon_menu_err_return(err, "Failed to associate Gtk Widget");
 	gtk_widget_hide (GTK_WIDGET (menu_item));
+//Finally add the item to the group; this is really just for tracking the count.
 	group->items = g_list_append (group->items, menu_item);
+//Bail out: The rest of the menu doesn't matter.
 	return;
 
     }
