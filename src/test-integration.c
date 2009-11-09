@@ -161,7 +161,6 @@ test_setup_menu (MenuItems *items)
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menubar), item);
   menu = gtk_menu_new ();
-  gtk_widget_set_parent(GTK_WIDGET(menu), GTK_WIDGET(menubar));
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
   item = gtk_menu_item_new_with_label ("Copy");
   items->copy_item = item;
