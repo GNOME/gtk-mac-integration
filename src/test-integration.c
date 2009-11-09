@@ -59,12 +59,47 @@
 #include "ige-mac-dock.h"
 #include "ige-mac-bundle.h"
 
-static GtkWidget *open_item;
-static GtkWidget *edit_item;
-static GtkWidget *copy_item;
-static GtkWidget *quit_item;
-static GtkWidget *about_item;
-static GtkWidget *preferences_item;
+typedef struct {
+  GtkWindow *window;
+  GtkWidget *open_item;
+  GtkWidget *edit_item;
+  GtkWidget *copy_item;
+  GtkWidget *quit_item;
+  GtkWidget *about_item;
+  GtkWidget *preferences_item;
+} MenuItems;
+
+static MenuItems *
+menu_items_new() {
+    return g_slice_new0 (MenuItems);
+}
+
+static void
+menu_items_destroy(MenuItems *items) {
+    g_slice_free(MenuItems, items);
+}
+
+typedef struct {
+    gchar *label;
+    GtkWindow *window;
+} MenuCBData;
+
+static MenuCBData *
+menu_cbdata_new (gchar *label, GtkWindow *window) {
+    MenuCBData *datum =  g_slice_new0 (MenuCBData);
+    datum->label = label;
+    datum->window = window;
+    g_object_ref (datum->window);
+    return datum;
+}
+
+static void
+menu_cbdata_delete (MenuCBData *datum) {
+    g_object_unref (datum->window);
+    g_slice_free (MenuCBData, datum);
+}
+
+static GQuark menu_items_quark = 0;
 
 static void
 dock_clicked_cb (IgeMacDock *dock,
@@ -77,26 +112,30 @@ dock_clicked_cb (IgeMacDock *dock,
 
 static void
 menu_item_activate_cb (GtkWidget *item,
-                       gpointer   user_data)
+                       MenuCBData  *datum)
 {
   gboolean visible;
   gboolean sensitive;
+  MenuItems *items = g_object_get_qdata (G_OBJECT(datum->window), 
+					 menu_items_quark);
+  g_assert(items != NULL);
 
-  g_print ("Item activated: %s\n", (gchar *) user_data);
+  g_print ("Item activated: %s:%s\n", gtk_window_get_title(datum->window),
+	   datum->label);
 
-  g_object_get (G_OBJECT (copy_item),
+  g_object_get (G_OBJECT (items->copy_item),
                 "visible", &visible,
                 "sensitive", &sensitive,
                 NULL);
 
-  if (item == open_item) {
-    gtk_widget_set_sensitive (copy_item, !sensitive);
-    /*g_object_set (G_OBJECT (copy_item), "visible", !visible, NULL);*/
+  if (item == items->open_item) {
+    gtk_widget_set_sensitive (items->copy_item, !sensitive);
+    /*g_object_set (G_OBJECT (items->copy_item), "visible", !visible, NULL);*/
   }
 }
 
 static GtkWidget *
-test_setup_menu (void)
+test_setup_menu (MenuItems *items)
 {
   GtkWidget *menubar;
   GtkWidget *menu;
@@ -109,39 +148,52 @@ test_setup_menu (void)
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
   item = gtk_menu_item_new_with_label ("Open");
-  open_item = item;
-  g_signal_connect (item, "activate", G_CALLBACK (menu_item_activate_cb), "open");
+  items->open_item = item;
+  g_signal_connect_data (item, "activate", G_CALLBACK (menu_item_activate_cb),
+			 menu_cbdata_new ("open", items->window),
+			 (GClosureNotify) menu_cbdata_delete, 0);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-  quit_item = gtk_menu_item_new_with_label ("Quit");
-  g_signal_connect (quit_item, "activate", G_CALLBACK (gtk_main_quit), NULL);
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), quit_item);
+  items->quit_item = gtk_menu_item_new_with_label ("Quit");
+  g_signal_connect (items->quit_item, "activate", G_CALLBACK (gtk_main_quit), NULL);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), items->quit_item);
 
-  edit_item = item = gtk_menu_item_new_with_label ("Edit");
+  items->edit_item = item = gtk_menu_item_new_with_label ("Edit");
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menubar), item);
   menu = gtk_menu_new ();
+  gtk_widget_set_parent(GTK_WIDGET(menu), GTK_WIDGET(menubar));
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
   item = gtk_menu_item_new_with_label ("Copy");
-  copy_item = item;
-  g_signal_connect (item, "activate", G_CALLBACK (menu_item_activate_cb), "copy");
+  items->copy_item = item;
+  g_signal_connect_data (item, "activate", G_CALLBACK (menu_item_activate_cb),
+			 menu_cbdata_new ("copy", items->window),
+			 (GClosureNotify) menu_cbdata_delete, 0);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
   item = gtk_menu_item_new_with_label ("Paste");
-  g_signal_connect (item, "activate", G_CALLBACK (menu_item_activate_cb), "paste");
+  g_signal_connect_data (item, "activate", G_CALLBACK (menu_item_activate_cb),
+			 menu_cbdata_new ( "paste", items->window),
+			 (GClosureNotify) menu_cbdata_delete, 0);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-  preferences_item = gtk_menu_item_new_with_label ("Preferences");
-  g_signal_connect (preferences_item, "activate", G_CALLBACK (menu_item_activate_cb), "preferences");
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), preferences_item);
+  items->preferences_item = gtk_menu_item_new_with_label ("Preferences");
+  g_signal_connect_data (items->preferences_item, "activate", 
+			 G_CALLBACK (menu_item_activate_cb), 
+			 menu_cbdata_new ("preferences", items->window),
+			 (GClosureNotify) menu_cbdata_delete, 0);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), items->preferences_item);
 
   item = gtk_menu_item_new_with_label ("Help");
   gtk_menu_shell_append (GTK_MENU_SHELL (menubar), item);
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 
-  about_item = gtk_menu_item_new_with_label ("About");
-  g_signal_connect (about_item, "activate", G_CALLBACK (menu_item_activate_cb), "about");
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), about_item);
+  items->about_item = gtk_menu_item_new_with_label ("About");
+  g_signal_connect_data (items->about_item, "activate", 
+			 G_CALLBACK (menu_item_activate_cb), 
+			 menu_cbdata_new ("about", items->window),
+			 (GClosureNotify) menu_cbdata_delete, 0);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), items->about_item);
 
   return menubar;
 }
@@ -173,36 +225,37 @@ change_icon_cb (GtkWidget  *button,
 
 static void
 change_menu_cb (GtkWidget  *button,
-                gpointer    data)
+                gpointer    user_data)
 {
-  gtk_widget_hide (edit_item);
+  GtkWidget *window = gtk_widget_get_toplevel(button);
+  MenuItems *items = g_object_get_qdata(G_OBJECT(window), menu_items_quark);
+  gtk_widget_hide (items->edit_item);
 }
 
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
 
-int
-main (int argc, char **argv)
+static GtkWidget *
+create_window(IgeMacDock *dock, const gchar *title)
 {
-  GtkWidget       *window;
+  GtkWidget	  *window;
   GtkWidget       *vbox;
   GtkWidget       *menubar;
   IgeMacMenuGroup *group;
-  IgeMacDock      *dock;
   GtkWidget       *bbox;
   GtkWidget       *button;
-
-  gtk_init (&argc, &argv);
-
-  dock = ige_mac_dock_get_default ();
+  MenuItems       *items = menu_items_new();
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  if (title)
+      gtk_window_set_title (GTK_WINDOW (window), title);
   gtk_window_set_default_size (GTK_WINDOW (window), 400, 300);
-  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+  items->window = GTK_WINDOW (window);
+//  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
-  menubar = test_setup_menu ();
+  menubar = test_setup_menu (items);
   gtk_box_pack_start (GTK_BOX (vbox), 
                       menubar,
                       FALSE, TRUE, 0);
@@ -242,27 +295,46 @@ main (int argc, char **argv)
   gtk_widget_hide (menubar);
 
   ige_mac_menu_set_menu_bar (GTK_MENU_SHELL (menubar));
-  ige_mac_menu_set_quit_menu_item (GTK_MENU_ITEM (quit_item));
+  ige_mac_menu_set_quit_menu_item (GTK_MENU_ITEM (items->quit_item));
 
   group = ige_mac_menu_add_app_menu_group ();
   ige_mac_menu_add_app_menu_item  (group,
-                                   GTK_MENU_ITEM (about_item), 
+                                   GTK_MENU_ITEM (items->about_item), 
                                    NULL);
 
   group = ige_mac_menu_add_app_menu_group ();
   ige_mac_menu_add_app_menu_item  (group,
-                                   GTK_MENU_ITEM (preferences_item), 
+                                   GTK_MENU_ITEM (items->preferences_item), 
                                    NULL);
-  
+  if (!menu_items_quark)
+      menu_items_quark = g_quark_from_static_string("MenuItem");
+  g_object_set_qdata_full(G_OBJECT(window), menu_items_quark, 
+			  items, (GDestroyNotify)menu_items_destroy);
+
+  return window;
+}
+
+int
+main (int argc, char **argv)
+{
+  GtkWidget       *window1, *window2;
+  IgeMacDock      *dock;
+
+  gtk_init (&argc, &argv);
+
+  dock = ige_mac_dock_get_default ();
+
+  window1 = create_window(dock, "Test Integration Window 1"); 
+  window2 = create_window(dock, "Test Integration Window 2"); 
   dock = ige_mac_dock_new ();
   g_signal_connect (dock,
                     "clicked",
                     G_CALLBACK (dock_clicked_cb),
-                    window);
+                    window1);
   g_signal_connect (dock,
                     "quit-activate",
                     G_CALLBACK (gtk_main_quit),
-                    window);
+                    window1);
 
   gtk_main ();
 
