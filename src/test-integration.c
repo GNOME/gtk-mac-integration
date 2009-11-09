@@ -54,10 +54,12 @@
  */
 
 #include <gtk/gtk.h>
+#include <stdio.h>
 
 #include "ige-mac-menu.h"
 #include "ige-mac-dock.h"
 #include "ige-mac-bundle.h"
+#include <config.h>
 
 typedef struct {
   GtkWindow *window;
@@ -211,8 +213,12 @@ change_icon_cb (GtkWidget  *button,
   static gboolean   changed;
   static GdkPixbuf *pixbuf;
 
-  if (!pixbuf)
-    pixbuf = gdk_pixbuf_new_from_file ("/opt/gtk/share/gossip/gossip-logo.png", NULL);
+  if (!pixbuf) {
+      char filename[PATH_MAX];
+      snprintf (filename, sizeof(filename), "%s/%s", PREFIX, 
+		 "share/gtk-2.0/demo/gnome-foot.png");
+      pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+  }
 
   if (changed) 
     ige_mac_dock_set_icon_from_pixbuf (dock, NULL);

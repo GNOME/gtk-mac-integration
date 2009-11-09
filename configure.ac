@@ -27,6 +27,7 @@ PKG_CHECK_MODULES(MAC, [gtk+-2.0 >= 2.13])
 # flags to aclocal.
 ACLOCAL_AMFLAGS="\${ACLOCAL_FLAGS}"
 AC_SUBST(ACLOCAL_AMFLAGS)
+AC_DEFINE_UNQUOTED([PREFIX],["$prefix"], [Installation prefix (for making filenames)])
 
 AC_OUTPUT([
 	Makefile 
