@@ -1,6 +1,7 @@
 /* GTK+ Integration for the Mac OS X.
  *
  * Copyright (C) 2007 Imendio AB
+ * Copyright © 2009, 2010 John Ralls
  *
  * For further information, see:
  * http://sourceforge.net/apps/trac/gtk-osx/wiki/Integrate

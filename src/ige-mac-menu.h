@@ -2,6 +2,7 @@
  *
  * Copyright (C) 2007 Pioneer Research Center USA, Inc.
  * Copyright (C) 2007, 2008 Imendio AB
+ * Copyright © 2009, 2010 John Ralls
  *
  * For further information, see:
  * http://sourceforge.net/apps/trac/gtk-osx/wiki/Integrate
