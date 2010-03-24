@@ -3,7 +3,15 @@ AM_CPPFLAGS = -I$(top_srcdir) $(WARN_CFLAGS)
 lib_LTLIBRARIES = libigemacintegration.la
 
 libigemacintegration_la_SOURCES =			\
-	ige-mac-menu.c					\
+	GtkApplicationDelegate.c			\
+	GtkApplicationNotify.c				\
+	GNSMenuItem.c					\
+	GtkApplicationDelegate.h			\
+	GtkApplicationNotify.h				\
+	GNSMenuItem.h					\
+	gtkapplication_quartz.c				\
+	gtkapplication.c				\
+	gtkapplicationprivate.h				\
 	ige-mac-dock.c					\
 	ige-mac-bundle.c				\
 	ige-mac-image-utils.c				\
@@ -12,13 +20,14 @@ libigemacintegration_la_SOURCES =			\
 	$(integration_HEADERS)
 
 libigemacintegration_la_CFLAGS = $(MAC_CFLAGS) -xobjective-c
+libigemacintegration_la_OBJCFLAGS = $(MAC_CFLAGS)
 libigemacintegration_la_LIBADD =  $(MAC_LIBS) -lobjc
 libigemacintegration_la_LDFLAGS = -framework Carbon -framework ApplicationServices
 
 integration_includedir = $(includedir)/igemacintegration
 integration_include_HEADERS =				\
 	ige-mac-integration.h				\
-	ige-mac-menu.h					\
+	gtkapplication.h				\
 	ige-mac-dock.h					\
 	ige-mac-bundle.h
 
