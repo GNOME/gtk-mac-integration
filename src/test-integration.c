@@ -56,7 +56,8 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 
-#include "ige-mac-menu.h"
+//#include "ige-mac-menu.h"
+#include "gtkapplication.h"
 #include "ige-mac-dock.h"
 #include "ige-mac-bundle.h"
 #include <config.h>
@@ -245,10 +246,12 @@ create_window(IgeMacDock *dock, const gchar *title)
   GtkWidget	  *window;
   GtkWidget       *vbox;
   GtkWidget       *menubar;
-  IgeMacMenuGroup *group;
+//  IgeMacMenuGroup *group;
+  GtkApplicationMenuGroup *group;
   GtkWidget       *bbox;
   GtkWidget       *button;
   MenuItems       *items = menu_items_new();
+  GtkApplication *theApp = g_object_new(GTK_TYPE_APPLICATION, NULL);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   if (title)
@@ -299,18 +302,17 @@ create_window(IgeMacDock *dock, const gchar *title)
 
   gtk_widget_hide (menubar);
 
-  ige_mac_menu_set_menu_bar (GTK_MENU_SHELL (menubar));
-  ige_mac_menu_set_quit_menu_item (GTK_MENU_ITEM (items->quit_item));
+//  ige_mac_menu_set_menu_bar (GTK_MENU_SHELL (menubar));
+//  ige_mac_menu_set_quit_menu_item (GTK_MENU_ITEM (items->quit_item));
+  gtk_application_set_menu_bar(theApp, GTK_MENU_SHELL(menubar));
+//  group = ige_mac_menu_add_app_menu_group ();
+  group = gtk_application_add_app_menu_group (theApp);
+  gtk_application_add_app_menu_item  (theApp, group,
+				      GTK_MENU_ITEM (items->about_item));
 
-  group = ige_mac_menu_add_app_menu_group ();
-  ige_mac_menu_add_app_menu_item  (group,
-                                   GTK_MENU_ITEM (items->about_item), 
-                                   NULL);
-
-  group = ige_mac_menu_add_app_menu_group ();
-  ige_mac_menu_add_app_menu_item  (group,
-                                   GTK_MENU_ITEM (items->preferences_item), 
-                                   NULL);
+  group = gtk_application_add_app_menu_group (theApp);
+  gtk_application_add_app_menu_item  (theApp, group,
+				      GTK_MENU_ITEM (items->preferences_item));
   if (!menu_items_quark)
       menu_items_quark = g_quark_from_static_string("MenuItem");
   g_object_set_qdata_full(G_OBJECT(window), menu_items_quark, 
@@ -322,15 +324,17 @@ create_window(IgeMacDock *dock, const gchar *title)
 int
 main (int argc, char **argv)
 {
-  GtkWidget       *window1, *window2;
+    GtkWidget       *window1;//, *window2;
+//    int err;
   IgeMacDock      *dock;
-
+  GtkApplication *theApp;
   gtk_init (&argc, &argv);
-
+  theApp  = g_object_new(GTK_TYPE_APPLICATION, NULL);
   dock = ige_mac_dock_get_default ();
 
+//  err  = gtk_application_init(theApp);
   window1 = create_window(dock, "Test Integration Window 1"); 
-  window2 = create_window(dock, "Test Integration Window 2"); 
+  //window2 = create_window(dock, "Test Integration Window 2"); 
   dock = ige_mac_dock_new ();
   g_signal_connect (dock,
                     "clicked",
@@ -343,5 +347,6 @@ main (int argc, char **argv)
 
   gtk_main ();
 
+  g_object_unref(theApp);
   return 0;
 }
