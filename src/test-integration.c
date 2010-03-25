@@ -345,6 +345,7 @@ main (int argc, char **argv)
                     G_CALLBACK (gtk_main_quit),
                     window1);
 
+  gtk_application_ready(theApp);
   gtk_main ();
 
   g_object_unref(theApp);
