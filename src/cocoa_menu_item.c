@@ -408,8 +408,11 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
 
   cocoa_item = cocoa_menu_item_get (menu_item);
 
-  if (cocoa_item) 
-    return;
+  if (cocoa_item) {
+    DEBUG ("\tremoving Item\n");
+    [cocoa_item retain];
+    [[cocoa_item menu] removeItem:cocoa_item];
+  }
 
   if (GTK_IS_SEPARATOR_MENU_ITEM (menu_item)) {
     cocoa_item = (GNSMenuItem*)[NSMenuItem separatorItem];
