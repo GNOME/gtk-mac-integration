@@ -3,12 +3,18 @@ AM_CPPFLAGS = -I$(top_srcdir) $(WARN_CFLAGS)
 lib_LTLIBRARIES = libigemacintegration.la
 
 libigemacintegration_la_SOURCES =			\
-	GtkApplicationDelegate.c			\
-	GtkApplicationNotify.c				\
-	GNSMenuItem.c					\
 	GtkApplicationDelegate.h			\
+	GtkApplicationDelegate.c			\
 	GtkApplicationNotify.h				\
+	GtkApplicationNotify.c				\
 	GNSMenuItem.h					\
+	GNSMenuItem.c					\
+	getlabel.h					\
+	getlabel.c					\
+	cocoa_menu.h					\
+	cocoa_menu.c					\
+	cocoa_menu_item.h				\
+	cocoa_menu_item.c				\
 	gtkapplication_quartz.c				\
 	gtkapplication.c				\
 	gtkapplicationprivate.h				\
