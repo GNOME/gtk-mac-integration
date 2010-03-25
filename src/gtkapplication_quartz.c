@@ -24,16 +24,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/*
-#import <AppKit/NSMenu.h>
-#import <AppKit/NSMenuItem.h>
-#import <AppKit/NSCell.h>
-#import <AppKit/NSEvent.h>
-#import <AppKit/NSApplication.h>
-#import <Foundation/NSString.h>
-#import <Foundation/NSNotification.h>
-*/
-#include <string.h>
 #include <gtk/gtk.h>
 
 #import "GtkApplicationDelegate.h"
@@ -258,17 +248,6 @@ struct construction_args {
   GObjectConstructParam *props;
 };
 
-
-void 
-gtk_application_class_init(GtkApplicationClass *klass)
-{
-  GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
-  g_type_class_add_private(klass, sizeof(GtkApplicationPrivate));
-  gobject_class->constructor = gtk_application_constructor;
-}
-
-
-
 static void
 gtk_application_init (GtkApplication *self)
 {
@@ -288,6 +267,14 @@ gtk_application_init (GtkApplication *self)
   [ NSApp setDelegate: [GtkApplicationDelegate new]];
 }
 
+
+void 
+gtk_application_class_init(GtkApplicationClass *klass)
+{
+  GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
+  g_type_class_add_private(klass, sizeof(GtkApplicationPrivate));
+  gobject_class->constructor = gtk_application_constructor;
+}
 
 void
 gtk_application_ready (GtkApplication *self)
