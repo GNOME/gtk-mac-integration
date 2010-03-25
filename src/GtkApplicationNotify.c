@@ -33,12 +33,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
 					  selector:@selector(appDidBecomeActive:)
 					  name:NSApplicationDidBecomeActiveNotification
-					  object:[NSApplication sharedApplication]];
+					  object:NSApp];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
 					  selector:@selector(appDidBecomeInactive:)
 					  name:NSApplicationWillResignActiveNotification 
-					  object:[NSApplication sharedApplication]];
+					  object:NSApp];
   }
 
   return self;

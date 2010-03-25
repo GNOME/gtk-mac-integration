@@ -251,6 +251,7 @@ struct construction_args {
 static void
 gtk_application_init (GtkApplication *self)
 {
+  [NSApplication sharedApplication];
   self->priv = GTK_APPLICATION_GET_PRIVATE (self);
   self->priv->main_menubar = [[NSMenu alloc] initWithTitle: @""];
   self->priv->in_menu_event_handler = FALSE;
@@ -307,7 +308,7 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
 
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
 
-  cocoa_menubar = [ [ NSApplication sharedApplication] mainMenu];
+  cocoa_menubar = [NSApp mainMenu];
 
   /* turn off auto-enabling for the menu - its silly and slow and
      doesn't really make sense for a Gtk/Cocoa hybrid menu.
