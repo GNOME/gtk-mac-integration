@@ -31,10 +31,10 @@ void cocoa_menu_item_add_item (NSMenu* cocoa_menu,
 			       GtkWidget* menu_item, 
 			       int index);
 
-void carbon_menu_item_add_submenu (GtkMenuShell *menu_shell,
-				   NSMenu*       cocoa_menu,
-				   gboolean      toplevel,
-				   gboolean      debug);
+void cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
+				  NSMenu*       cocoa_menu,
+				  gboolean      toplevel,
+				  gboolean      debug);
 
 
 #endif __COCOA_MENU_ITEM_H__

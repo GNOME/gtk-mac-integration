@@ -145,7 +145,7 @@ cocoa_menu_item_update_submenu (NSMenuItem *cocoa_item,
       [ cocoa_item setSubmenu:cocoa_submenu];
 
       /* and push the GTK menu into the submenu */
-      carbon_menu_item_add_submenu (GTK_MENU_SHELL (submenu), cocoa_submenu, FALSE, FALSE);
+      cocoa_menu_item_add_submenu (GTK_MENU_SHELL (submenu), cocoa_submenu, FALSE, FALSE);
 
       [ cocoa_submenu release ];
     }
@@ -466,7 +466,7 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
 }
 
 void
-carbon_menu_item_add_submenu (GtkMenuShell *menu_shell,
+cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
 			   NSMenu*       cocoa_menu,
 			   gboolean      toplevel,
 			   gboolean      debug)

@@ -95,7 +95,7 @@ parent_set_emission_hook (GSignalInvocationHint *ihint,
 
 	  if (cocoa_menu)
 	    {
-	      carbon_menu_item_add_submenu (GTK_MENU_SHELL (menu_shell),
+	      cocoa_menu_item_add_submenu (GTK_MENU_SHELL (menu_shell),
 					 cocoa_menu,
 					 cocoa_menu == (NSMenu*) data,
 					 FALSE);
@@ -327,7 +327,7 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
 		    G_CALLBACK (parent_set_emission_hook_remove),
 		    NULL);
 
-  carbon_menu_item_add_submenu (menu_shell, cocoa_menubar, TRUE, FALSE);
+  cocoa_menu_item_add_submenu (menu_shell, cocoa_menubar, TRUE, FALSE);
 }
 
 void
