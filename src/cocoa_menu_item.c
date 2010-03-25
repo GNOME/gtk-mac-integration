@@ -424,7 +424,9 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
     const gchar* label_text = get_menu_label_text (menu_item, &label);
 		
     if (label_text)
-      cocoa_item = [ [ GNSMenuItem alloc] initWithTitle:[ [ NSString alloc] initWithCString:label_text encoding:NSUTF8StringEncoding]
+      cocoa_item = [ [ GNSMenuItem alloc] 
+		     initWithTitle:[ [ NSString alloc] 
+				     initWithCString:label_text encoding:NSUTF8StringEncoding]
 					  andGtkWidget:(GtkMenuItem*)menu_item];
     else
       cocoa_item = [ [ GNSMenuItem alloc] initWithTitle:@"" andGtkWidget:(GtkMenuItem*)menu_item];
