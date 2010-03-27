@@ -22,14 +22,18 @@
 #import "GNSMenuItem.h"
 
 static gboolean
-idle_call_activate (gpointer data)
+idle_call_activate (GClosure *closure)
 {
-  gtk_menu_item_activate ((GtkMenuItem*) data);
+    GValue args = {0};
+    g_value_init(&args, GTK_TYPE_MENU_ITEM);
+    g_value_set_instance(&args, closure->data);
+    g_closure_invoke(closure, NULL, 1, &args, 0);
+//  gtk_menu_item_activate ((GtkMenuItem*) data);
   return FALSE;
 }
 
 @implementation GNSMenuItem
-- (id) initWithTitle:(NSString*) title andGtkWidget:(GtkMenuItem*) w
+- (id) initWithTitle:(NSString*) title andGClosure:(GClosure*) closure
 {
   /* All menu items have the action "activate", which will be handled by this child class
    */
@@ -39,13 +43,15 @@ idle_call_activate (gpointer data)
   if (self) {
     /* make this handle its own action */
     [ self setTarget:self ];
-    gtk_menu_item = w;
+    g_closure_ref(closure);
+    g_closure_sink(closure);
+    action_closure = closure;
     accel_closure = 0;
   }
   return self;
 }
 - (void) activate:(id) sender
 {
-  g_idle_add (idle_call_activate, gtk_menu_item);
+    g_idle_add ((GSourceFunc)idle_call_activate, action_closure);
 }
 @end

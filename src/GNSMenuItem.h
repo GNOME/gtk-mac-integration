@@ -21,15 +21,28 @@
  */
 #import <Cocoa/Cocoa.h>
 #include <gtk/gtk.h>
-#include "gtkapplication.h"
+// #include "gtkapplication.h"
 
-
+/**
+ * GNSMenuItem is a wrapper class around NSMenuItem providing an
+ * action function which puts invocation of the provided GClosure onto
+ * the gtk idle queue. 
+ */
 @interface GNSMenuItem : NSMenuItem
 {
 @public
-  GtkMenuItem* gtk_menu_item;
-  GClosure      *accel_closure;
+  /// action_closure is the closure invoked when the menu item is
+  /// activated (usually by clicking on it).
+  GClosure *action_closure;
+  GClosure *accel_closure;	/**< accel_closure is reserved for future use */
 }
-- (id) initWithTitle:(NSString*) title andGtkWidget:(GtkMenuItem*) w;
+/** Create a new GNSMenuItem with a GClosure to call when the menu is activated
+ */
+
+- (id) initWithTitle:(NSString*) title andGClosure:(GClosure*) closure;
+/** overrides the superclass function and puts (indirectly) the
+ *  action_closure on the idle queue.
+ */
+
 - (void) activate:(id) sender;
 @end

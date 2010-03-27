@@ -425,14 +425,19 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
     }
 
     const gchar* label_text = get_menu_label_text (menu_item, &label);
+    GClosure *menu_action = g_cclosure_new(G_CALLBACK(gtk_menu_item_activate), 
+					   menu_item, NULL);
+    g_closure_set_marshal(menu_action, g_cclosure_marshal_VOID__VOID);
 		
     if (label_text)
       cocoa_item = [ [ GNSMenuItem alloc] 
 		     initWithTitle:[ [ NSString alloc] 
-				     initWithCString:label_text encoding:NSUTF8StringEncoding]
-					  andGtkWidget:(GtkMenuItem*)menu_item];
+				     initWithCString:label_text 
+				     encoding:NSUTF8StringEncoding]
+		     andGClosure:menu_action];
     else
-      cocoa_item = [ [ GNSMenuItem alloc] initWithTitle:@"" andGtkWidget:(GtkMenuItem*)menu_item];
+      cocoa_item = [ [ GNSMenuItem alloc] initWithTitle:@"" 
+		     andGClosure:menu_action];
     DEBUG ("\tan item\n");
   }
 	
