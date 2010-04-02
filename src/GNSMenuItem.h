@@ -23,6 +23,12 @@
 #include <gtk/gtk.h>
 // #include "gtkapplication.h"
 
+typedef struct {
+  GClosure *closure;
+  gpointer data;
+} ClosureData;
+
+
 /**
  * GNSMenuItem is a wrapper class around NSMenuItem providing an
  * action function which puts invocation of the provided GClosure onto
@@ -33,13 +39,16 @@
 @public
   /// action_closure is the closure invoked when the menu item is
   /// activated (usually by clicking on it).
-  GClosure *action_closure;
-  GClosure *accel_closure;	/**< accel_closure is reserved for future use */
+  ClosureData action;
+  //accel_closure is manipulated directly by
+  //cocoa_menu_item_update_accel_closure()
+  GClosure *accel_closure; 
 }
-/** Create a new GNSMenuItem with a GClosure to call when the menu is activated
- */
 
-- (id) initWithTitle:(NSString*) title andGClosure:(GClosure*) closure;
+/** Create a new GNSMenuItem with a GClosure and an additional arbitrary data struct */
+
+- (id) initWithTitle:(NSString*) title aGClosure:(GClosure*) closure andPointer:(gpointer) ptr;
+
 /** overrides the superclass function and puts (indirectly) the
  *  action_closure on the idle queue.
  */

@@ -22,22 +22,24 @@
 #import "GNSMenuItem.h"
 
 static gboolean
-idle_call_activate (GClosure *closure)
+idle_call_activate (ClosureData *action)
 {
-    GValue args = {0};
-    g_value_init(&args, GTK_TYPE_MENU_ITEM);
-    g_value_set_instance(&args, closure->data);
-    g_closure_invoke(closure, NULL, 1, &args, 0);
+//    g_value_init(&args, GTK_TYPE_MENU_ITEM);
+  GValue arg = {0};
+  g_value_init(&arg, G_TYPE_POINTER);
+  g_value_set_pointer(&arg, action->data);
+  g_closure_invoke(action->closure, NULL, 1, &arg, 0);
 //  gtk_menu_item_activate ((GtkMenuItem*) data);
   return FALSE;
 }
 
 @implementation GNSMenuItem
-- (id) initWithTitle:(NSString*) title andGClosure:(GClosure*) closure
+
+- (id) initWithTitle:(NSString*) title aGClosure:(GClosure*) closure andPointer:(gpointer) ptr
 {
+
   /* All menu items have the action "activate", which will be handled by this child class
    */
-
   self = [ super initWithTitle:title action:@selector(activate:) keyEquivalent:@"" ];
 
   if (self) {
@@ -45,13 +47,15 @@ idle_call_activate (GClosure *closure)
     [ self setTarget:self ];
     g_closure_ref(closure);
     g_closure_sink(closure);
-    action_closure = closure;
-    accel_closure = 0;
+    action.closure = closure;
+    action.data = ptr;
+    accel_closure = NULL;
   }
   return self;
 }
+
 - (void) activate:(id) sender
 {
-    g_idle_add ((GSourceFunc)idle_call_activate, action_closure);
+    g_idle_add ((GSourceFunc)idle_call_activate, &action);
 }
 @end
