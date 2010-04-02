@@ -434,10 +434,10 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
 		     initWithTitle:[ [ NSString alloc] 
 				     initWithCString:label_text 
 				     encoding:NSUTF8StringEncoding]
-		     andGClosure:menu_action];
+		     aGClosure:menu_action andPointer:NULL];
     else
       cocoa_item = [ [ GNSMenuItem alloc] initWithTitle:@"" 
-		     andGClosure:menu_action];
+		     aGClosure:menu_action andPointer:NULL];
     DEBUG ("\tan item\n");
   }
 	
