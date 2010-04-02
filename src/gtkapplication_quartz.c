@@ -334,7 +334,9 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
 void
 gtk_application_add_app_menu_item (GtkApplication *self,
 				   GtkApplicationMenuGroup *group,
-				   GtkMenuItem     *menu_item)
+				   const gchar *label,
+				   GClosure *menu_action,
+				   gpointer action_data)
 {
   // we know that the application menu is always the submenu of the first item in the main menu
   GList   *list;
@@ -342,7 +344,6 @@ gtk_application_add_app_menu_item (GtkApplication *self,
 
 
   g_return_if_fail (group != NULL);
-  g_return_if_fail (GTK_IS_MENU_ITEM (menu_item));
 
   for (list = self->priv->menu_groups; list; list = g_list_next (list))
     {
@@ -368,12 +369,11 @@ gtk_application_add_app_menu_item (GtkApplication *self,
 	       atIndex:index+1];
 	      index++;
 	    }
-	  DEBUG ("Add to APP menu bar %s\n", get_menu_label_text (GTK_WIDGET(menu_item), NULL));
-	  cocoa_menu_item_add_item (self->priv->app_menu, 
-				    GTK_WIDGET(menu_item), index+1);
+	  DEBUG ("Add to APP menu bar %s\n", label);
+	  cocoa_menu_item_add_action (self->priv->app_menu, label, 
+				      menu_action, action_data, index+1);
 
-	  group->items = g_list_append (group->items, menu_item);
-	  gtk_widget_hide (GTK_WIDGET (menu_item));
+	  group->items = g_list_append (group->items, menu_action);
 	  return;
 	}
     }
