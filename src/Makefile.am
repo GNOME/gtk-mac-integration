@@ -20,6 +20,7 @@ libigemacintegration_la_SOURCES =			\
 	gtkapplicationprivate.h				\
 	ige-mac-dock.c					\
 	ige-mac-bundle.c				\
+	ige-mac-menu.c					\
 	ige-mac-image-utils.c				\
 	ige-mac-image-utils.h				\
 	ige-mac-private.h				\
@@ -34,6 +35,7 @@ integration_includedir = $(includedir)/igemacintegration
 integration_include_HEADERS =				\
 	ige-mac-integration.h				\
 	gtkapplication.h				\
+	ige-mac-menu.h					\
 	ige-mac-dock.h					\
 	ige-mac-bundle.h
 
