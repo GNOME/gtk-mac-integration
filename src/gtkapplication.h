@@ -67,9 +67,7 @@ void gtk_application_set_menu_bar       (GtkApplication *self,
 GtkApplicationMenuGroup * gtk_application_add_app_menu_group (GtkApplication *self);
 void gtk_application_add_app_menu_item   (GtkApplication *self,
 					  GtkApplicationMenuGroup *group,
-					  const gchar *label,
-					  GClosure *menu_action,
-					  gpointer action_data);
+					  GtkMenuItem *menu_item);
 gboolean gdk_quartz_in_menu_event_handler (GtkApplication *self);
 void gtk_application_activation_changed (GtkApplication *self, 
 					 gboolean changed);
