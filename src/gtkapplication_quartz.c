@@ -124,14 +124,17 @@ parent_set_emission_hook_remove (GtkWidget *widget,
 /** Add a submenu to the currently active main menubar.
  */
 static int
-add_to_menubar (GtkApplication *self, NSMenu *menu)
+add_to_menubar (GtkApplication *self, NSMenu *menu, NSInteger pos)
 {
   NSMenuItem *dummyItem = [[NSMenuItem alloc] initWithTitle:@""
 					      action:nil keyEquivalent:@""];
   NSMenu *menubar = [NSApp mainMenu];
 
   [dummyItem setSubmenu:menu];
-  [menubar addItem:dummyItem];
+  if (pos < 0)
+      [menubar addItem:dummyItem];
+  else
+      [menubar insertItem:dummyItem atIndex:pos];
   [dummyItem release];
   return 0;
 }
