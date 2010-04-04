@@ -33,11 +33,16 @@
   g_object_unref(app);
   return 1;
 }
+
+
 - (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *)sender
 {
   GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
-  gtk_application_should_quit(app);
+  gboolean result = gtk_application_should_quit(app);
   g_object_unref(app);
-  return NSTerminateCancel;
+  if (result)
+    return NSTerminateNow;
+  else
+    return NSTerminateLater;
 }
 @end

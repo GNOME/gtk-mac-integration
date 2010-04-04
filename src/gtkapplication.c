@@ -38,23 +38,32 @@ gtk_application_add_app_menu_group (GtkApplication *self)
   return group;
 }
 
+/** Override this function to do something useful when your app gets
+ *  or loses the focus.
+ */
 void 
 gtk_application_activation_changed (GtkApplication *self, gboolean changed) 
 {
-  if (changed)
-    g_print("Application now active\n");
-  else
-    g_print("Application now inactive\n");
+  // if (changed)
+  //    g_print("Application now active\n");
+  //else
+  //  g_print("Application now inactive\n");
 }
 
+/** Override this function to load the indicated file.
+ */
 void gtk_application_should_load (GtkApplication *self, const gchar *utf8_path)
 {
   g_print("Should Load %s\n");
 }
 
-void gtk_application_should_quit (GtkApplication *self)
+/** Override this function to check for open files or the like and to
+ *  return FALSE if you're not ready to quit, or TRUE if you are.
+ */
+
+gboolean gtk_application_should_quit (GtkApplication *self)
 {
-  gtk_main_quit();
+  return TRUE;
 }
 
 
