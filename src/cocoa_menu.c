@@ -27,7 +27,9 @@ static GQuark cocoa_menu_quark = 0;
 NSMenu *
 cocoa_menu_get (GtkWidget *widget)
 {
-  g_assert(cocoa_menu_quark > 0);
+  /* If cocoa_menu_quark == 0 then cocoa_menu_connect hasn't been
+     called yet and we therefore don't have an NSMenu* to return. */
+  g_return_val_if_fail(cocoa_menu_quark > 0, NULL);
   return (NSMenu*) g_object_get_qdata (G_OBJECT (widget), cocoa_menu_quark);
 }
 
