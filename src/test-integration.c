@@ -51,6 +51,8 @@
  *
  * - Suspend/resume notification.
  * - Network on/off notification.
+ * - GtkCheckMenuItems
+ * - GtkRadioMenuItems (special case of GtkCheckMenuItems)
  */
 
 #include <gtk/gtk.h>
