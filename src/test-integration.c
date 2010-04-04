@@ -333,8 +333,8 @@ create_window(IgeMacDock *dock, const gchar *title)
 int
 main (int argc, char **argv)
 {
-    GtkWidget       *window1;//, *window2;
 //    int err;
+  GtkWidget       *window1, *window2;
   IgeMacDock      *dock;
   GtkApplication *theApp;
   gtk_init (&argc, &argv);
@@ -343,7 +343,7 @@ main (int argc, char **argv)
 
 //  err  = gtk_application_init(theApp);
   window1 = create_window(dock, "Test Integration Window 1"); 
-  //window2 = create_window(dock, "Test Integration Window 2"); 
+  window2 = create_window(dock, "Test Integration Window 2"); 
   dock = ige_mac_dock_new ();
   g_signal_connect (dock,
                     "clicked",
