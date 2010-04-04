@@ -116,10 +116,10 @@ parent_set_emission_hook_remove (GtkWidget *widget,
 }
 
 
-#warning You can safely ignore the next warning about a duplicate interface definition
-@interface NSApplication(NSWindowsMenu)
-- (void)setAppleMenu:(NSMenu *)aMenu;
-@end
+//#warning You can safely ignore the next warning about a duplicate interface definition
+//@interface NSApplication(NSWindowsMenu)
+//- (void)setAppleMenu:(NSMenu *)aMenu;
+//@end
 
 /** Add a submenu to the currently active main menubar.
  */
@@ -197,7 +197,7 @@ create_apple_menu (GtkApplication *self)
   [app_menu addItem: menuitem];
   [menuitem release];
 
-  [NSApp setAppleMenu:app_menu];
+  [NSApp performSelector:@selector(setAppleMenu:) withObject:app_menu];
   add_to_menubar (self, app_menu);
 
   return 0;
