@@ -157,6 +157,13 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
   item = gtk_image_menu_item_new_from_stock(GTK_STOCK_OPEN, accel);
   items->open_item = item;
+/* We're being fancy with our connection here so that we don't have to
+ * have a separate callback function for each menu item, since each
+ * one is going to print out a message saying what item got
+ * selected. A real-life menu item usually uses just
+ * g-signal_connect() to a dedicated callback -- or uses GuiManager
+ * action closures.
+ */
   g_signal_connect_data (item, "activate", G_CALLBACK (menu_item_activate_cb),
 			 menu_cbdata_new ("open", items->window),
 			 (GClosureNotify) menu_cbdata_delete, 0);
