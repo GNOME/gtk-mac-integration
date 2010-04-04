@@ -121,7 +121,6 @@ parent_set_emission_hook_remove (GtkWidget *widget,
 - (void)setAppleMenu:(NSMenu *)aMenu;
 @end
 
-
 /** Add a submenu to the currently active main menubar.
  */
 static int
@@ -338,6 +337,11 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
   g_signal_connect (menu_shell, "destroy",
 		    G_CALLBACK (parent_set_emission_hook_remove),
 		    NULL);
+
+  g_signal_connect (parent, "focus-in-event", 
+		    G_CALLBACK(window_focus_cb),
+		    cocoa_menubar);
+
 
   cocoa_menu_item_add_submenu (menu_shell, cocoa_menubar, TRUE, FALSE);
 }
