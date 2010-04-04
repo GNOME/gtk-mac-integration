@@ -55,6 +55,7 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include <gdk/gdkkeysyms.h>
 
 //#include "ige-mac-menu.h"
 #include "gtkapplication.h"
@@ -138,7 +139,7 @@ menu_item_activate_cb (GtkWidget *item,
 }
 
 static GtkWidget *
-test_setup_menu (MenuItems *items)
+test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
 {
   GtkWidget *menubar;
   GtkWidget *menu;
@@ -149,16 +150,23 @@ test_setup_menu (MenuItems *items)
   item = gtk_menu_item_new_with_label ("File");
   gtk_menu_shell_append (GTK_MENU_SHELL (menubar), item);
   menu = gtk_menu_new ();
+  gtk_menu_set_accel_group(GTK_MENU(menu), accel);
+  gtk_menu_set_accel_path(GTK_MENU(menu), "<test-integration>/File");
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-  item = gtk_menu_item_new_with_label ("Open");
+  item = gtk_image_menu_item_new_from_stock(GTK_STOCK_OPEN, accel);
   items->open_item = item;
   g_signal_connect_data (item, "activate", G_CALLBACK (menu_item_activate_cb),
 			 menu_cbdata_new ("open", items->window),
 			 (GClosureNotify) menu_cbdata_delete, 0);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-  items->quit_item = gtk_menu_item_new_with_label ("Quit");
+  items->quit_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, accel);
   g_signal_connect (items->quit_item, "activate", G_CALLBACK (gtk_main_quit), NULL);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), items->quit_item);
+//Set accelerators
+  gtk_accel_map_add_entry("<test-integration>/File/Open", GDK_O, 
+			  GDK_CONTROL_MASK);
+  gtk_accel_map_add_entry("<test-integration>/File/Quit", GDK_Q, 
+			  GDK_CONTROL_MASK);
 
   items->edit_item = item = gtk_menu_item_new_with_label ("Edit");
 
@@ -252,18 +260,19 @@ create_window(IgeMacDock *dock, const gchar *title)
   GtkWidget       *button;
   MenuItems       *items = menu_items_new();
   GtkApplication *theApp = g_object_new(GTK_TYPE_APPLICATION, NULL);
+  GtkAccelGroup *accel_group = gtk_accel_group_new();
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   if (title)
       gtk_window_set_title (GTK_WINDOW (window), title);
   gtk_window_set_default_size (GTK_WINDOW (window), 400, 300);
   items->window = GTK_WINDOW (window);
+  gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
 //  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
-
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
-  menubar = test_setup_menu (items);
+  menubar = test_setup_menu (items, accel_group);
   gtk_box_pack_start (GTK_BOX (vbox), 
                       menubar,
                       FALSE, TRUE, 0);
