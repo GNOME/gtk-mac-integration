@@ -2,14 +2,15 @@
  *
  * Copyright (C) 2007 Pioneer Research Center USA, Inc.
  * Copyright (C) 2007, 2008 Imendio AB
+ * Copyright © 2009, 2010 John Ralls
  *
  * For further information, see:
- * http://developer.imendio.com/projects/gtk-macosx/menubar
+ * http://sourceforge.net/apps/trac/gtk-osx/wiki/Integrate
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; version 2.1
- * of the License.
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 2.1 of the License, or
+ * (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -627,11 +628,6 @@ carbon_menu_item_create (GtkWidget *menu_item, MenuRef carbon_menu,
 	DeleteMenuItem(carbon_menu, index); //Clean up the extra menu item
 	return carbon_item;
     }
-    if (GTK_IS_CHECK_MENU_ITEM (menu_item))
-	carbon_menu_item_update_active (carbon_item, menu_item);
-    carbon_menu_item_update_accel_closure (carbon_item, menu_item);
-    if (gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item)))
-	carbon_menu_item_update_submenu (carbon_item, menu_item, debug);
     return carbon_item;
 }
 
@@ -929,10 +925,23 @@ sync_menu_shell (GtkMenuShell *menu_shell, MenuRef carbon_menu,
 						  carbon_index, debug);
 	if (!carbon_item) //Bad carbon item, give up
 	    continue;
-	if (!carbon_item->submenu) {
-	    carbon_index++;
-	    continue;
+	if (GTK_IS_CHECK_MENU_ITEM (menu_item))
+	    carbon_menu_item_update_active (carbon_item, menu_item);
+	carbon_menu_item_update_accel_closure (carbon_item, menu_item);
+	if (gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item)))
+	    carbon_menu_item_update_submenu (carbon_item, menu_item, debug);
+	{
+	    GtkWidget *submenu;
+	    if (submenu) {
+		sync_menu_shell (GTK_MENU_SHELL(submenu), 
+				 carbon_item->submenu, FALSE, debug);
+	    }
+	    else {
+		carbon_index++;
+		continue;
+	    }
 	}
+
 /*The rest only applies to submenus, not to items which should have
  * been fixed up in carbon_menu_item_create
  */
