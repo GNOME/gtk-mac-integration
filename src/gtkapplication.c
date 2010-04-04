@@ -54,7 +54,7 @@ gtk_application_activation_changed (GtkApplication *self, gboolean changed)
  */
 void gtk_application_should_load (GtkApplication *self, const gchar *utf8_path)
 {
-  g_print("Should Load %s\n");
+    g_print("Should Load %s\n", utf8_path);
 }
 
 /** Override this function to check for open files or the like and to
