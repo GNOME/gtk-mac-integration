@@ -136,28 +136,30 @@ add_to_menubar (GtkApplication *self, NSMenu *menu)
   return 0;
 }
 
+/* Not Used
 static int
 add_to_app_menu (GtkApplication *self, NSMenu *menu)
 {
   NSMenuItem *dummyItem = [[NSMenuItem alloc] initWithTitle:@""
 					      action:nil keyEquivalent:@""];
   [dummyItem setSubmenu:menu];
-  [self->priv->app_menu addItem:dummyItem];
+  [[[[NSApp mainMenu] itemAtIndex: 0] submenu] addItem:dummyItem];
   [dummyItem release];
   return 0;
 }
-
+*/
+ /* Not used
 static int
 add_to_window_menu (GtkApplication *self, NSMenu *menu)
 {
   NSMenuItem *dummyItem = [[NSMenuItem alloc] initWithTitle:@""
 					      action:nil keyEquivalent:@""];
   [dummyItem setSubmenu:menu];
-  [self->priv->window_menu addItem:dummyItem];
+  [[NSApp windowsMenu] addItem:dummyItem];
   [dummyItem release];
   return 0;
 }
-
+ */
 static int
 create_apple_menu (GtkApplication *self)
 {
