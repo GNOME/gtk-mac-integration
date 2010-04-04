@@ -628,11 +628,6 @@ carbon_menu_item_create (GtkWidget *menu_item, MenuRef carbon_menu,
 	DeleteMenuItem(carbon_menu, index); //Clean up the extra menu item
 	return carbon_item;
     }
-    if (GTK_IS_CHECK_MENU_ITEM (menu_item))
-	carbon_menu_item_update_active (carbon_item, menu_item);
-    carbon_menu_item_update_accel_closure (carbon_item, menu_item);
-    if (gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item)))
-	carbon_menu_item_update_submenu (carbon_item, menu_item, debug);
     return carbon_item;
 }
 
@@ -930,10 +925,23 @@ sync_menu_shell (GtkMenuShell *menu_shell, MenuRef carbon_menu,
 						  carbon_index, debug);
 	if (!carbon_item) //Bad carbon item, give up
 	    continue;
-	if (!carbon_item->submenu) {
-	    carbon_index++;
-	    continue;
+	if (GTK_IS_CHECK_MENU_ITEM (menu_item))
+	    carbon_menu_item_update_active (carbon_item, menu_item);
+	carbon_menu_item_update_accel_closure (carbon_item, menu_item);
+	if (gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item)))
+	    carbon_menu_item_update_submenu (carbon_item, menu_item, debug);
+	{
+	    GtkWidget *submenu;
+	    if (submenu) {
+		sync_menu_shell (GTK_MENU_SHELL(submenu), 
+				 carbon_item->submenu, FALSE, debug);
+	    }
+	    else {
+		carbon_index++;
+		continue;
+	    }
 	}
+
 /*The rest only applies to submenus, not to items which should have
  * been fixed up in carbon_menu_item_create
  */
