@@ -32,8 +32,8 @@
 struct _GtkApplicationPrivate
 {
   GList *menu_groups;
-  NSMenu* window_menu;
-  NSMenu* app_menu;
+//  NSMenu* window_menu;
+//  NSMenu* app_menu;
   gboolean in_menu_event_handler;
 
 };

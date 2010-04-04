@@ -211,16 +211,17 @@ create_apple_menu (GtkApplication *self)
 static int
 create_window_menu (GtkApplication *self)
 {   
-  self->priv->window_menu = [[NSMenu alloc] initWithTitle: @"Window"];
-
-  [self->priv->window_menu addItemWithTitle:@"Minimize"
+  NSMenu *window_menu = [[NSMenu alloc] initWithTitle: @"Window"];
+  NSInteger pos;
+  [window_menu addItemWithTitle:@"Minimize"
 		action:@selector(performMiniaturize:) keyEquivalent:@""];
-  [self->priv->window_menu addItem: [NSMenuItem separatorItem]];
-  [self->priv->window_menu addItemWithTitle:@"Bring All to Front"
+  [window_menu addItem: [NSMenuItem separatorItem]];
+  [window_menu addItemWithTitle:@"Bring All to Front"
 		action:@selector(arrangeInFront:) keyEquivalent:@""];
 
-  [NSApp setWindowsMenu:self->priv->window_menu];
-  add_to_menubar(self, self->priv->window_menu);
+  [NSApp setWindowsMenu:window_menu];
+  pos = [[NSApp mainMenu] indexOfItemWithTitle: @"Help"];
+  add_to_menubar (self, window_menu, pos);
 
   return 0;
 }  
@@ -290,8 +291,6 @@ void
 gtk_application_cleanup(GtkApplication *self)
 {
     GList *list;
-  if (self->priv->window_menu)
-    [ self->priv->window_menu release ];
   //FIXME: release each window's menubar
   
   for (list = self->priv->menu_groups; list; list = g_list_next(list)) {
@@ -349,6 +348,8 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
 
 
   cocoa_menu_item_add_submenu (menu_shell, cocoa_menubar, TRUE, FALSE);
+  create_window_menu (self);
+
 }
 
 void
