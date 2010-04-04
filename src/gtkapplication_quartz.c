@@ -203,7 +203,7 @@ create_apple_menu (GtkApplication *self)
   [menuitem release];
 
   [NSApp performSelector:@selector(setAppleMenu:) withObject:app_menu];
-  add_to_menubar (self, app_menu);
+  add_to_menubar (self, app_menu, 0);
 
   return 0;
 }
