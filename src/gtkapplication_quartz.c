@@ -122,13 +122,17 @@ parent_set_emission_hook_remove (GtkWidget *widget,
 @end
 
 
+/** Add a submenu to the currently active main menubar.
+ */
 static int
 add_to_menubar (GtkApplication *self, NSMenu *menu)
 {
   NSMenuItem *dummyItem = [[NSMenuItem alloc] initWithTitle:@""
 					      action:nil keyEquivalent:@""];
+  NSMenu *menubar = [NSApp mainMenu];
+
   [dummyItem setSubmenu:menu];
-  [self->priv->main_menubar addItem:dummyItem];
+  [menubar addItem:dummyItem];
   [dummyItem release];
   return 0;
 }
@@ -160,42 +164,42 @@ create_apple_menu (GtkApplication *self)
 {
   NSMenuItem *menuitem;
   // Create the application (Apple) menu.
-  self->priv->app_menu = [[NSMenu alloc] initWithTitle: @"Apple Menu"];
+  NSMenu *app_menu = [[NSMenu alloc] initWithTitle: @"Apple Menu"];
 
   NSMenu *menuServices = [[NSMenu alloc] initWithTitle: @"Services"];
   [NSApp setServicesMenu:menuServices];
 
-  [self->priv->app_menu addItem: [NSMenuItem separatorItem]];
+  [app_menu addItem: [NSMenuItem separatorItem]];
   menuitem = [[NSMenuItem alloc] initWithTitle: @"Services"
 				 action:nil keyEquivalent:@""];
   [menuitem setSubmenu:menuServices];
-  [self->priv->app_menu addItem: menuitem];
+  [app_menu addItem: menuitem];
   [menuitem release];
-  [self->priv->app_menu addItem: [NSMenuItem separatorItem]];
+  [app_menu addItem: [NSMenuItem separatorItem]];
   menuitem = [[NSMenuItem alloc] initWithTitle:@"Hide"
 				 action:@selector(hide:) keyEquivalent:@""];
   [menuitem setTarget: NSApp];
-  [self->priv->app_menu addItem: menuitem];
+  [app_menu addItem: menuitem];
   [menuitem release];
   menuitem = [[NSMenuItem alloc] initWithTitle:@"Hide Others"
 				 action:@selector(hideOtherApplications:) keyEquivalent:@""];
   [menuitem setTarget: NSApp];
-  [self->priv->app_menu addItem: menuitem];
+  [app_menu addItem: menuitem];
   [menuitem release];
   menuitem = [[NSMenuItem alloc] initWithTitle:@"Show All"
 				 action:@selector(unhideAllApplications:) keyEquivalent:@""];
   [menuitem setTarget: NSApp];
-  [self->priv->app_menu addItem: menuitem];
+  [app_menu addItem: menuitem];
   [menuitem release];
-  [self->priv->app_menu addItem: [NSMenuItem separatorItem]];
+  [app_menu addItem: [NSMenuItem separatorItem]];
   menuitem = [[NSMenuItem alloc] initWithTitle:@"Quit"
 				 action:@selector(terminate:) keyEquivalent:@"q"];
   [menuitem setTarget: NSApp];
-  [self->priv->app_menu addItem: menuitem];
+  [app_menu addItem: menuitem];
   [menuitem release];
 
-  [NSApp setAppleMenu:self->priv->app_menu];
-  add_to_menubar (self, self->priv->app_menu);
+  [NSApp setAppleMenu:app_menu];
+  add_to_menubar (self, app_menu);
 
   return 0;
 }
@@ -253,13 +257,8 @@ gtk_application_init (GtkApplication *self)
 {
   [NSApplication sharedApplication];
   self->priv = GTK_APPLICATION_GET_PRIVATE (self);
-  self->priv->main_menubar = [[NSMenu alloc] initWithTitle: @""];
   self->priv->in_menu_event_handler = FALSE;
 
-  g_return_if_fail (self->priv->main_menubar != NULL);
-
-  [NSApp setMainMenu: self->priv->main_menubar];
-  create_apple_menu (self);
   // create_window_menu (self);
 
   /* this will stick around for ever ... is that OK ? */
@@ -289,10 +288,7 @@ gtk_application_cleanup(GtkApplication *self)
     GList *list;
   if (self->priv->window_menu)
     [ self->priv->window_menu release ];
-  if (self->priv->app_menu)
-    [ self->priv->app_menu release ];
-  if (self->priv->main_menubar)
-    [ self->priv->main_menubar release ];
+  //FIXME: release each window's menubar
   
   for (list = self->priv->menu_groups; list; list = g_list_next(list)) {
     if (list->data)
@@ -301,20 +297,35 @@ gtk_application_cleanup(GtkApplication *self)
   g_list_free(self->priv->menu_groups);
 }
 
+static gboolean
+window_focus_cb (GtkWindow* window, GdkEventFocus *event, NSMenu *menubar)
+{
+  [NSApp setMainMenu: menubar];
+  return FALSE;
+}
+
 void
 gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
 {
   NSMenu* cocoa_menubar;
+  GtkWidget *parent = gtk_widget_get_toplevel(GTK_WIDGET(menu_shell));
 
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
 
-  cocoa_menubar = [NSApp mainMenu];
-
+  cocoa_menubar = cocoa_menu_get(GTK_WIDGET (menu_shell));
+  if (!cocoa_menubar) {
+    cocoa_menubar = [[NSMenu alloc] initWithTitle: @""];
+    cocoa_menu_connect(GTK_WIDGET (menu_shell), cocoa_menubar);
   /* turn off auto-enabling for the menu - its silly and slow and
      doesn't really make sense for a Gtk/Cocoa hybrid menu.
   */
 
+  }
+  if (cocoa_menubar != [NSApp mainMenu])
+    [NSApp setMainMenu: cocoa_menubar];
+
   [cocoa_menubar setAutoenablesItems:NO];
+  create_apple_menu (self);
 
   emission_hook_id =
     g_signal_add_emission_hook (g_signal_lookup ("parent-set",
@@ -342,6 +353,7 @@ gtk_application_add_app_menu_item (GtkApplication *self,
   GList   *list;
   gint     index = 0;
 
+  NSMenu *app_menu = [[[NSApp mainMenu] itemAtIndex: 0] submenu];
 
   g_return_if_fail (group != NULL);
 
@@ -366,12 +378,13 @@ gtk_application_add_app_menu_item (GtkApplication *self,
 	  if (!group->items && list->prev)
 	    {
 	      [self->priv->app_menu insertItem:[NSMenuItem separatorItem] 
+	      [app_menu insertItem:[NSMenuItem separatorItem] 
 	       atIndex:index+1];
 	      index++;
 	    }
 	  DEBUG ("Add to APP menu bar %s\n", label);
-	  cocoa_menu_item_add_action (self->priv->app_menu, label, 
 				      menu_action, action_data, index+1);
+	  cocoa_menu_item_add_item ([[[NSApp mainMenu] itemAtIndex: 0] submenu],
 
 	  group->items = g_list_append (group->items, menu_action);
 	  return;
