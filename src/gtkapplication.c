@@ -27,17 +27,6 @@
 
 
 
-
-
-
-GtkApplicationMenuGroup *
-gtk_application_add_app_menu_group (GtkApplication *self)
-{
-  GtkApplicationMenuGroup *group = g_slice_new0 (GtkApplicationMenuGroup);
-  self->priv->menu_groups = g_list_append (self->priv->menu_groups, group);
-  return group;
-}
-
 /** Override this function to do something useful when your app gets
  *  or loses the focus.
  */

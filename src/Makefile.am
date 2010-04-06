@@ -7,6 +7,8 @@ libigemacintegration_la_SOURCES =			\
 	GtkApplicationDelegate.c			\
 	GtkApplicationNotify.h				\
 	GtkApplicationNotify.c				\
+	GNSMenuBar.h					\
+	GNSMenuBar.c					\
 	GNSMenuItem.h					\
 	GNSMenuItem.c					\
 	getlabel.h					\

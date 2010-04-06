@@ -54,6 +54,11 @@ struct _GtkApplicationClass
   void (*should_quit) (GtkApplication *self);
 };
 
+struct _GtkApplicationMenuGroup
+{
+  GList *items;
+};
+
 
 GType gtk_application_get_type (void);
 //GtkApplication *gtk_application_get (void);
@@ -64,7 +69,7 @@ void gtk_application_cleanup (GtkApplication *self);
 
 void gtk_application_set_menu_bar       (GtkApplication *self, 
 					 GtkMenuShell    *menu_shell);
-GtkApplicationMenuGroup * gtk_application_add_app_menu_group (GtkApplication *self);
+GtkApplicationMenuGroup * gtk_application_add_app_menu_group (GtkApplication*);
 void gtk_application_add_app_menu_item   (GtkApplication *self,
 					  GtkApplicationMenuGroup *group,
 					  GtkMenuItem *menu_item);

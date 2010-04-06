@@ -28,6 +28,7 @@
 
 #import "GtkApplicationDelegate.h"
 #import "GtkApplicationNotify.h"
+#import "GNSMenuBar.h"
 
 #include "gtkapplication.h"
 #include "gtkapplicationprivate.h"
@@ -293,15 +294,10 @@ gtk_application_cleanup(GtkApplication *self)
     GList *list;
   //FIXME: release each window's menubar
   
-  for (list = self->priv->menu_groups; list; list = g_list_next(list)) {
-    if (list->data)
-      g_list_free(list->data);
-  }
-  g_list_free(self->priv->menu_groups);
 }
 
 static gboolean
-window_focus_cb (GtkWindow* window, GdkEventFocus *event, NSMenu *menubar)
+window_focus_cb (GtkWindow* window, GdkEventFocus *event, GNSMenuBar *menubar)
 {
   [NSApp setMainMenu: menubar];
   return FALSE;
@@ -310,14 +306,14 @@ window_focus_cb (GtkWindow* window, GdkEventFocus *event, NSMenu *menubar)
 void
 gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
 {
-  NSMenu* cocoa_menubar;
+  GNSMenuBar* cocoa_menubar;
   GtkWidget *parent = gtk_widget_get_toplevel(GTK_WIDGET(menu_shell));
 
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
 
-  cocoa_menubar = cocoa_menu_get(GTK_WIDGET (menu_shell));
+  cocoa_menubar = (GNSMenuBar*)cocoa_menu_get(GTK_WIDGET (menu_shell));
   if (!cocoa_menubar) {
-    cocoa_menubar = [[NSMenu alloc] initWithTitle: @""];
+    cocoa_menubar = [[GNSMenuBar alloc] initWithTitle: @""];
     cocoa_menu_connect(GTK_WIDGET (menu_shell), cocoa_menubar);
   /* turn off auto-enabling for the menu - its silly and slow and
      doesn't really make sense for a Gtk/Cocoa hybrid menu.
@@ -352,20 +348,31 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
 
 }
 
+GtkApplicationMenuGroup *
+gtk_application_add_app_menu_group (GtkApplication* self )
+{
+  GNSMenuBar *menubar = (GNSMenuBar*)[NSApp mainMenu];
+  GtkApplicationMenuGroup *group = [menubar addGroup];
+    return group;
+}
+
 void
 gtk_application_add_app_menu_item (GtkApplication *self,
 				   GtkApplicationMenuGroup *group,
 				   GtkMenuItem *menu_item)
 {
   // we know that the application menu is always the submenu of the first item in the main menu
-  GList   *list;
+  GNSMenuBar *menubar = (GNSMenuBar*)[NSApp mainMenu];
+  GList   *list = NULL, *menu_groups = [menubar app_menu_groups];
   gint     index = 0;
-  NSMenu *app_menu = [[[NSApp mainMenu] itemAtIndex: 0] submenu];
+  NSMenu *app_menu = [[menubar itemAtIndex: 0] submenu];
+  GtkWidget *parent = gtk_widget_get_toplevel (GTK_WIDGET (menu_item));
 
   g_return_if_fail (group != NULL);
   g_return_if_fail (GTK_IS_MENU_ITEM (menu_item));
+  g_return_if_fail(parent != NULL);
 
-  for (list = self->priv->menu_groups; list; list = g_list_next (list))
+  for (list = menu_groups; list; list = g_list_next (list))
     {
       GtkApplicationMenuGroup *list_group = (GtkApplicationMenuGroup*) list->data;
 

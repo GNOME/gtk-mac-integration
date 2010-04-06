@@ -1,7 +1,6 @@
 /* GTK+ Integration with platform-specific application-wide features 
  * such as the OS X menubar and application delegate concepts.
  *
- * Copyright (C) 2009 Paul Davis
  * Copyright © 2010 John Ralls
  *
  * This library is free software; you can redistribute it and/or
@@ -19,20 +18,40 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#import "GNSMenuBar.h"
 
-#ifndef __GTK_APPLICATIONPRIVATE_H__
-#define __GTK_APPLICATIONPRIVATE_H__
-#import <AppKit/NSMenu.h>
-#import <AppKit/NSApplication.h>
+@implementation GNSMenuBar
 
-#include "gtkapplication.h"
-
-#define  GTK_APPLICATION_GET_PRIVATE(obj)	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_APPLICATION, GtkApplicationPrivate))
-
-struct _GtkApplicationPrivate
+- (id) initWithTitle:(NSString*) title
 {
-  gboolean in_menu_event_handler;
+  self = [super initWithTitle: title];
+  app_menu_groups = nil;
+ return self;
+}
 
-};
+- (GtkApplicationMenuGroup*) addGroup
+{
+  GtkApplicationMenuGroup *group = g_slice_new0 (GtkApplicationMenuGroup);
+  app_menu_groups = g_list_append (app_menu_groups, group);
+  return group;
+}
 
-#endif
+- (GList *) app_menu_groups
+{
+  return app_menu_groups;
+}
+
+- (void) dealloc
+{
+  GList *list;
+  g_print("GNSMenuBar dealloc with count %d\n", [self retainCount]);
+  for (list = app_menu_groups; list; list = g_list_next(list)) {
+    if (list && list->data)
+      g_list_free(list->data);
+  }
+  if (app_menu_groups)
+    g_list_free(app_menu_groups);
+  [super dealloc];
+
+}
+@end
