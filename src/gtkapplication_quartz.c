@@ -39,6 +39,11 @@
 #define DEBUG(format, ...) g_printerr ("%s: " format, G_STRFUNC, ## __VA_ARGS__)
 //#define DEBUG(format, ...)
 
+/* This is a private function in libgdk; we need to have is so that we
+   can force new windows onto the Window menu */
+extern NSWindow* gdk_quartz_window_get_nswindow(GdkWindow*);
+
+
 /* TODO
  *
  * - Sync adding/removing/reordering items
@@ -115,12 +120,6 @@ parent_set_emission_hook_remove (GtkWidget *widget,
 						  GTK_TYPE_WIDGET),
 				 emission_hook_id);
 }
-
-
-//#warning You can safely ignore the next warning about a duplicate interface definition
-//@interface NSApplication(NSWindowsMenu)
-//- (void)setAppleMenu:(NSMenu *)aMenu;
-//@end
 
 /** Add a submenu to the currently active main menubar.
  */
@@ -210,10 +209,11 @@ create_apple_menu (GtkApplication *self)
 }
 
 static int
-create_window_menu (GtkApplication *self)
+create_window_menu (GtkApplication *self, NSWindow* window)
 {   
   NSMenu *window_menu = [[NSMenu alloc] initWithTitle: @"Window"];
   NSInteger pos;
+  
   [window_menu addItemWithTitle:@"Minimize"
 		action:@selector(performMiniaturize:) keyEquivalent:@""];
   [window_menu addItem: [NSMenuItem separatorItem]];
@@ -221,6 +221,7 @@ create_window_menu (GtkApplication *self)
 		action:@selector(arrangeInFront:) keyEquivalent:@""];
 
   [NSApp setWindowsMenu:window_menu];
+  [NSApp addWindowsItem: window title: [window title] filename: NO];
   pos = [[NSApp mainMenu] indexOfItemWithTitle: @"Help"];
   add_to_menubar (self, window_menu, pos);
 
@@ -308,8 +309,14 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
 {
   GNSMenuBar* cocoa_menubar;
   GtkWidget *parent = gtk_widget_get_toplevel(GTK_WIDGET(menu_shell));
+  GdkWindow *win = gtk_widget_get_window(parent);
+  NSWindow *nswin; 
 
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
+  g_return_if_fail (win != NULL);
+  g_return_if_fail (GDK_IS_WINDOW(win));
+  nswin = gdk_quartz_window_get_nswindow(win);
+  g_return_if_fail(nswin != NULL);
 
   cocoa_menubar = (GNSMenuBar*)cocoa_menu_get(GTK_WIDGET (menu_shell));
   if (!cocoa_menubar) {
@@ -342,9 +349,8 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
 		    G_CALLBACK(window_focus_cb),
 		    cocoa_menubar);
 
-
   cocoa_menu_item_add_submenu (menu_shell, cocoa_menubar, TRUE, FALSE);
-  create_window_menu (self);
+  create_window_menu (self, nswin);
 
 }
 
