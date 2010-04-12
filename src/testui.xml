@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui>
+  <menubar>
+    <menu name="File" action="FileMenuAction">
+      <menuitem name="Open" action="OpenAction"/>
+      <separator/>
+      <menuitem name="Quit" action="QuitAction"/>
+    </menu>
+    <menu name="Edit" action="EditMenuAction">
+      <menuitem name="Copy" action="CopyAction"/>
+      <menuitem name="Paste" action="PasteAction"/>
+      <menuitem name="Preferences" action="PrefsAction"/>
+    </menu>
+    <menu name="Help" action="HelpMenuAction">
+      <menuitem name="About" action="AboutAction"/>
+    </menu>
+  </menubar>
+</ui>
