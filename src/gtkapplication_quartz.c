@@ -292,11 +292,9 @@ gtk_application_ready (GtkApplication *self)
 void
 gtk_application_cleanup(GtkApplication *self)
 {
-    GList *list;
   //FIXME: release each window's menubar
   
 }
-
 static gboolean
 window_focus_cb (GtkWindow* window, GdkEventFocus *event, GNSMenuBar *menubar)
 {
@@ -325,12 +323,12 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
   /* turn off auto-enabling for the menu - its silly and slow and
      doesn't really make sense for a Gtk/Cocoa hybrid menu.
   */
+    [cocoa_menubar setAutoenablesItems:NO];
 
   }
   if (cocoa_menubar != [NSApp mainMenu])
     [NSApp setMainMenu: cocoa_menubar];
 
-  [cocoa_menubar setAutoenablesItems:NO];
   create_apple_menu (self);
 
   emission_hook_id =
