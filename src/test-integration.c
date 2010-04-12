@@ -86,6 +86,8 @@ typedef struct {
   GtkWidget *preferences_item;
 } MenuItems;
 
+static GQuark menu_items_quark = 0;
+
 static MenuItems *
 menu_items_new() {
     return g_slice_new0 (MenuItems);
@@ -147,17 +149,6 @@ menu_cbdata_delete (MenuCBData *datum) {
     g_slice_free (MenuCBData, datum);
 }
 
-static GQuark menu_items_quark = 0;
-
-static void
-dock_clicked_cb (IgeMacDock *dock,
-                 GtkWindow  *window)
-{
-  g_print ("Dock clicked\n");
-
-  gtk_window_deiconify (window);
-}
-
 static void
 menu_item_activate_cb (GtkWidget *item,
                        MenuCBData  *datum)
@@ -193,7 +184,6 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   GtkWidget *menubar;
   GtkWidget *menu;
   GtkWidget *item;
-  
   menubar = gtk_menu_bar_new ();
 
   item = gtk_menu_item_new_with_label ("File");
@@ -262,6 +252,16 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
 
   return menubar;
 }
+#endif
+
+static void
+dock_clicked_cb (IgeMacDock *dock,
+                 GtkWindow  *window)
+{
+  g_print ("Dock clicked\n");
+
+  gtk_window_deiconify (window);
+}
 
 static void
 bounce_cb (GtkWidget  *button,
@@ -312,7 +312,15 @@ create_window(IgeMacDock *dock, const gchar *title)
   GtkWidget       *bbox;
   GtkWidget       *button;
   MenuItems       *items = menu_items_new();
+#ifdef BUILT_UI
+  GtkUIManager *mgr = gtk_ui_manager_new();
+  GtkActionGroup *actions = gtk_action_group_new("TestActions");
+  GtkAccelGroup *accel_group;
+  guint mergeid;
+  GError *err;
+#else
   GtkAccelGroup *accel_group = gtk_accel_group_new();
+#endif
 #ifdef IGEMACMENU
   IgeMacMenuGroup *group;
 #endif
@@ -327,8 +335,26 @@ create_window(IgeMacDock *dock, const gchar *title)
   items->window = GTK_WINDOW (window);
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (window), vbox);
-
+#ifdef BUILT_UI
+  mergeid = gtk_ui_manager_add_ui_from_file(mgr, "src/testui.xml", &err);
+  if (err) {
+    g_print("Error retrieving file: %d %s\n", mergeid, err->message);
+  }
+  gtk_action_group_add_actions(actions, test_actions,
+			       sizeof(test_actions)/sizeof(GtkActionEntry),
+			       (gpointer)window);
+  gtk_ui_manager_insert_action_group(mgr, actions, 0);
+  menubar = gtk_ui_manager_get_widget(mgr, "/menubar");
+  items->open_item = gtk_ui_manager_get_widget(mgr, "/menubar/File/Open");
+  items->edit_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit");
+  items->copy_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit/Copy");
+  items->quit_item = gtk_ui_manager_get_widget(mgr, "/menubar/File/Quit");
+  items->about_item = gtk_ui_manager_get_widget(mgr, "/menubar/Help/About");
+  items->preferences_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit/Preferences");
+  accel_group = gtk_ui_manager_get_accel_group(mgr);
+#else    
   menubar = test_setup_menu (items, accel_group);
+#endif
   gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
   g_signal_connect(accel_group, "accel_activate", 
 		   G_CALLBACK (accel_activate_cb), NULL);
@@ -400,7 +426,6 @@ create_window(IgeMacDock *dock, const gchar *title)
       menu_items_quark = g_quark_from_static_string("MenuItem");
   g_object_set_qdata_full(G_OBJECT(window), menu_items_quark, 
 			  items, (GDestroyNotify)menu_items_destroy);
-
   return window;
 }
 
