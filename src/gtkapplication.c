@@ -25,6 +25,8 @@
 #include "gtkapplication.h"
 #include "gtkapplicationprivate.h"
 
+//#define DEBUG(format, ...) g_printerr ("%s: " format, G_STRFUNC, ## __VA_ARGS__)
+#define DEBUG(format, ...)
 
 
 /** Override this function to do something useful when your app gets
@@ -33,17 +35,17 @@
 void 
 gtk_application_activation_changed (GtkApplication *self, gboolean changed) 
 {
-  // if (changed)
-  //    g_print("Application now active\n");
-  //else
-  //  g_print("Application now inactive\n");
+  if (changed)
+    DEBUG("Application now active\n");
+  else
+    DEBUG("Application now inactive\n");
 }
 
 /** Override this function to load the indicated file.
  */
 void gtk_application_should_load (GtkApplication *self, const gchar *utf8_path)
 {
-    g_print("Should Load %s\n", utf8_path);
+  DEBUG("Should Load %s\n", utf8_path);
 }
 
 /** Override this function to check for open files or the like and to
@@ -52,6 +54,7 @@ void gtk_application_should_load (GtkApplication *self, const gchar *utf8_path)
 
 gboolean gtk_application_should_quit (GtkApplication *self)
 {
+  DEBUG("Application Should Quit\n");
   return TRUE;
 }
 
