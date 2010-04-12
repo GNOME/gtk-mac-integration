@@ -36,13 +36,13 @@
 #include "cocoa_menu.h"
 #include "getlabel.h"
 
-#define DEBUG(format, ...) g_printerr ("%s: " format, G_STRFUNC, ## __VA_ARGS__)
-//#define DEBUG(format, ...)
 
 /* This is a private function in libgdk; we need to have is so that we
    can force new windows onto the Window menu */
 extern NSWindow* gdk_quartz_window_get_nswindow(GdkWindow*);
 
+//#define DEBUG(format, ...) g_printerr ("%s: " format, G_STRFUNC, ## __VA_ARGS__)
+#define DEBUG(format, ...)
 
 /* TODO
  *

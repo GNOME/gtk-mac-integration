@@ -29,8 +29,8 @@
 #include "getlabel.h"
 #import "GNSMenuItem.h"
 
-#define DEBUG(format, ...) g_printerr ("%s: " format, G_STRFUNC, ## __VA_ARGS__)
-//#define DEBUG(format, ...)
+//#define DEBUG(format, ...) g_printerr ("%s: " format, G_STRFUNC, ## __VA_ARGS__)
+#define DEBUG(format, ...)
 
 /*
  * These functions are long, ugly, and monotonous, so forward declare
@@ -221,7 +221,6 @@ cocoa_menu_item_update_accelerator (NSMenuItem *cocoa_item,
 	  }
 			
 	  str = gdk_quartz_keyval_to_string (actual_key);
-			
 	  if (str) {
 	    unichar ukey = str[0];
 	    [cocoa_item setKeyEquivalent:[NSString stringWithCharacters:&ukey length:1]];
