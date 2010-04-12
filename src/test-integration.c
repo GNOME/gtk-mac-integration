@@ -59,6 +59,7 @@
 /* Uncomment ONE of these to test menu-mangling: */
 //#define IGEMACMENU
 #define GTKAPPLICATION
+//#define BUILT_UI
 
 #include <gtk/gtk.h>
 #include <stdio.h>
@@ -94,6 +95,37 @@ static void
 menu_items_destroy(MenuItems *items) {
     g_slice_free(MenuItems, items);
 }
+
+#ifdef BUILT_UI
+
+static void
+action_activate_cb(GtkAction* action, gpointer data)
+{
+  GtkWindow *window = data;
+  g_print("Window %s, Action %s\n", gtk_window_get_title(window),
+	  gtk_action_get_name(action));
+}
+
+static GtkActionEntry test_actions[] = 
+  {
+    /*{Name, stock_id, label, accelerator, tooltip, callback} */
+    {"FileMenuAction", NULL, "_File", NULL, NULL, NULL},
+    {"OpenAction",  GTK_STOCK_OPEN, "_Open", NULL, NULL, 
+     G_CALLBACK(action_activate_cb)},
+    {"QuitAction", GTK_STOCK_QUIT, "_Quit", NULL, NULL,
+     G_CALLBACK(gtk_main_quit)},
+    {"EditMenuAction", NULL, "_Edit", NULL, NULL, NULL },
+    {"CopyAction", GTK_STOCK_COPY, "_Copy", NULL, NULL,
+     G_CALLBACK(action_activate_cb)},
+    {"PasteAction", GTK_STOCK_PASTE, "_Paste", NULL, NULL,
+     G_CALLBACK(action_activate_cb)},
+    {"PrefsAction", GTK_STOCK_PREFERENCES, "Pr_eferences", NULL, NULL, NULL },
+    {"HelpMenuAction", NULL, "_Help", NULL, NULL, NULL },
+    {"AboutAction", GTK_STOCK_ABOUT, "_About", NULL, NULL,
+     G_CALLBACK(action_activate_cb)}
+  };
+#else
+
 
 typedef struct {
     gchar *label;
@@ -149,6 +181,11 @@ menu_item_activate_cb (GtkWidget *item,
     /*g_object_set (G_OBJECT (items->copy_item), "visible", !visible, NULL);*/
   }
 }
+static gboolean
+can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data)
+{
+  return gtk_widget_is_sensitive(widget);
+}
 
 static GtkWidget *
 test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
@@ -182,11 +219,10 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   g_signal_connect (items->quit_item, "activate", G_CALLBACK (gtk_main_quit), NULL);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), items->quit_item);
 //Set accelerators
-  gtk_accel_map_add_entry("<test-integration>/File/Open", GDK_O, 
+  gtk_accel_map_add_entry("<test-integration>/File/Open", GDK_o, 
 			  GDK_CONTROL_MASK);
-  gtk_accel_map_add_entry("<test-integration>/File/Quit", GDK_Q, 
+  gtk_accel_map_add_entry("<test-integration>/File/Quit", GDK_q, 
 			  GDK_CONTROL_MASK);
-
   items->edit_item = item = gtk_menu_item_new_with_label ("Edit");
 
   gtk_menu_shell_append (GTK_MENU_SHELL (menubar), item);
@@ -289,12 +325,13 @@ create_window(IgeMacDock *dock, const gchar *title)
       gtk_window_set_title (GTK_WINDOW (window), title);
   gtk_window_set_default_size (GTK_WINDOW (window), 400, 300);
   items->window = GTK_WINDOW (window);
-  gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
-//  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
   menubar = test_setup_menu (items, accel_group);
+  gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
+  g_signal_connect(accel_group, "accel_activate", 
+		   G_CALLBACK (accel_activate_cb), NULL);
   gtk_box_pack_start (GTK_BOX (vbox), 
                       menubar,
                       FALSE, TRUE, 0);
@@ -330,9 +367,13 @@ create_window(IgeMacDock *dock, const gchar *title)
                       FALSE, FALSE, 0);
 
   gtk_widget_show_all (window);
-
+#if defined IGE_MAC_MENU || defined GTKAPPLICATION
   gtk_widget_hide (menubar);
-
+#ifdef GTKAPPLICATION
+  g_signal_connect(menubar, "can-activate-accel", G_CALLBACK(can_activate_cb), 
+		   NULL);
+#endif
+#endif
 #ifdef IGEMACMENU
   ige_mac_menu_set_menu_bar (GTK_MENU_SHELL (menubar));
   ige_mac_menu_set_quit_menu_item (GTK_MENU_ITEM (items->quit_item));
