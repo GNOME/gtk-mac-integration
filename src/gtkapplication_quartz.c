@@ -253,6 +253,22 @@ gtk_application_constructor (GType gtype,
 
 }
 
+static GdkFilterReturn
+global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
+                          gpointer  user_data)
+{
+  NSEvent *nsevent = windowing_event;
+
+  /* Handle menu events with no window, since they won't go through the
+   * regular event processing.
+   */
+  if ([nsevent type] == NSKeyDown) {
+    [[NSApp mainMenu] performKeyEquivalent: nsevent];
+      return GDK_FILTER_REMOVE;
+  }
+   return GDK_FILTER_CONTINUE;
+}
+
 struct construction_args {
   GType gtype;
   guint n_props;
@@ -265,6 +281,7 @@ gtk_application_init (GtkApplication *self)
   [NSApplication sharedApplication];
   self->priv = GTK_APPLICATION_GET_PRIVATE (self);
   self->priv->in_menu_event_handler = FALSE;
+  gdk_window_add_filter (NULL, global_event_filter_func, NULL);
 
   // create_window_menu (self);
 
@@ -295,6 +312,7 @@ gtk_application_cleanup(GtkApplication *self)
   //FIXME: release each window's menubar
   
 }
+
 static gboolean
 window_focus_cb (GtkWindow* window, GdkEventFocus *event, GNSMenuBar *menubar)
 {
