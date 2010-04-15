@@ -415,9 +415,3 @@ gtk_application_add_app_menu_item (GtkApplication *self,
 	       G_STRFUNC, group);
 }
 
-
-gboolean 
-gdk_quartz_in_menu_event_handler (GtkApplication *self)
-{
-  return self->priv->in_menu_event_handler;
-}
