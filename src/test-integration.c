@@ -356,8 +356,6 @@ create_window(IgeMacDock *dock, const gchar *title)
   menubar = test_setup_menu (items, accel_group);
 #endif
   gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
-  g_signal_connect(accel_group, "accel_activate", 
-		   G_CALLBACK (accel_activate_cb), NULL);
   gtk_box_pack_start (GTK_BOX (vbox), 
                       menubar,
                       FALSE, TRUE, 0);
