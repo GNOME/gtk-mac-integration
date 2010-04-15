@@ -31,13 +31,6 @@ void cocoa_menu_item_add_item (NSMenu* cocoa_menu,
 			       GtkWidget* menu_item, 
 			       int index);
 
-void cocoa_menu_item_add_action (NSMenu* cocoa_menu, 
-				 const gchar *label_text,
-				 GClosure* closure,
-				 gpointer action_data, 
-				 int index);
-
-
 void cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
 				  NSMenu*       cocoa_menu,
 				  gboolean      toplevel,

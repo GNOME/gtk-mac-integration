@@ -470,36 +470,6 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
 }
 
 void
-cocoa_menu_item_add_action (NSMenu* cocoa_menu, const gchar *label, 
-			    GClosure* action, gpointer action_data, int index)
-{
-  GNSMenuItem *cocoa_item;
-	
-  DEBUG ("add %s to menu %s\n", label,
-	 [[cocoa_menu title] cStringUsingEncoding:NSUTF8StringEncoding]);
-
-    if (label)
-      cocoa_item = [ [ GNSMenuItem alloc] 
-		     initWithTitle:[ [ NSString alloc] 
-				     initWithCString:label
-				     encoding:NSUTF8StringEncoding]
-		     aGClosure:action andPointer:action_data];
-    else
-      cocoa_item = [ [ GNSMenuItem alloc] initWithTitle:@"" 
-		     aGClosure:action andPointer:action_data];
-    DEBUG ("\tan item\n");
-	
- 
-  [ cocoa_item setEnabled:YES];
-  if (index >= 0) 
-    [ cocoa_menu insertItem:cocoa_item atIndex:index];
-  else 
-    [ cocoa_menu addItem:cocoa_item];
-	
-   [ cocoa_item release];
-}
-
-void
 cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
 			   NSMenu*       cocoa_menu,
 			   gboolean      toplevel,
