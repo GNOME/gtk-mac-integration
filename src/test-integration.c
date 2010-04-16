@@ -193,7 +193,7 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   gtk_menu_set_accel_group(GTK_MENU(menu), accel);
   gtk_menu_set_accel_path(GTK_MENU(menu), "<test-integration>/File");
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-  item = gtk_image_menu_item_new_from_stock(GTK_STOCK_OPEN, accel);
+  item = gtk_image_menu_item_new_from_stock(GTK_STOCK_OPEN, NULL);
   items->open_item = item;
 /* We're being fancy with our connection here so that we don't have to
  * have a separate callback function for each menu item, since each
@@ -206,7 +206,7 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
 			 menu_cbdata_new ("open", items->window),
 			 (GClosureNotify) menu_cbdata_delete, 0);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-  items->quit_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, accel);
+  items->quit_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
   g_signal_connect (items->quit_item, "activate", G_CALLBACK (gtk_main_quit), NULL);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), items->quit_item);
 //Set accelerators
@@ -299,7 +299,24 @@ change_menu_cb (GtkWidget  *button,
 {
   GtkWidget *window = gtk_widget_get_toplevel(button);
   MenuItems *items = g_object_get_qdata(G_OBJECT(window), menu_items_quark);
-  gtk_widget_hide (items->edit_item);
+  const gchar* open_accel_path = 
+      gtk_menu_item_get_accel_path(GTK_MENU_ITEM(items->open_item));
+  const gchar* quit_accel_path = 
+      gtk_menu_item_get_accel_path(GTK_MENU_ITEM(items->quit_item));
+
+  if (gtk_widget_get_visible(items->edit_item)) {
+      gtk_widget_set_visible(items->edit_item, FALSE);
+      gtk_accel_map_change_entry(open_accel_path, GDK_o, 
+				 GDK_META_MASK, TRUE);
+      gtk_accel_map_change_entry(quit_accel_path, GDK_q, 
+				 GDK_META_MASK, TRUE);
+  } else {
+     gtk_widget_set_visible(items->edit_item, TRUE);
+      gtk_accel_map_change_entry(open_accel_path, GDK_o, 
+				 GDK_CONTROL_MASK, TRUE);
+      gtk_accel_map_change_entry(quit_accel_path, GDK_q, 
+				 GDK_CONTROL_MASK, TRUE);
+  }
 }
 
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
