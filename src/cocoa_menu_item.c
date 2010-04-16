@@ -398,7 +398,8 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
   GtkWidget* label      = NULL;
   GNSMenuItem *cocoa_item;
 	
-  DEBUG ("add %s to menu %s separator ? %d\n", get_menu_label_text (menu_item, NULL), 
+  DEBUG ("add %s to menu %s separator ? %d\n", 
+	 get_menu_label_text (menu_item, NULL), 
 	 [[cocoa_menu title] cStringUsingEncoding:NSUTF8StringEncoding],
 	 GTK_IS_SEPARATOR_MENU_ITEM(menu_item));
 
@@ -437,7 +438,8 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
     DEBUG ("\tan item\n");
   }
 	
-  /* connect GtkMenuItem and NSMenuItem so that we can notice changes to accel/label/submenu etc. */
+  /* connect GtkMenuItem and NSMenuItem so that we can notice changes
+   * to accel/label/submenu etc. */
   cocoa_menu_item_connect (menu_item, (GNSMenuItem*) cocoa_item, label);
 	
   [ cocoa_item setEnabled:YES];
