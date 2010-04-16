@@ -86,13 +86,10 @@ cocoa_menu_item_update_state (NSMenuItem* cocoa_item,
   else
     [cocoa_item setEnabled:YES];
 
-#if 0
-  // requires OS X 10.5 or later
   if (!visible)
     [cocoa_item setHidden:YES];
   else
     [cocoa_item setHidden:NO];
-#endif
 }
 
 static void
@@ -452,10 +449,8 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
   if (!GTK_WIDGET_IS_SENSITIVE (menu_item))
     [cocoa_item setState:NSOffState];
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4
   if (!GTK_WIDGET_VISIBLE (menu_item))
     [cocoa_item setHidden:YES];
-#endif
 	
   if (GTK_IS_CHECK_MENU_ITEM (menu_item))
     cocoa_menu_item_update_active (cocoa_item, menu_item);
