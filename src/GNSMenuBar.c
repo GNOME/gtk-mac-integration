@@ -44,7 +44,6 @@
 - (void) dealloc
 {
   GList *list;
-  g_print("GNSMenuBar dealloc with count %d\n", [self retainCount]);
   for (list = app_menu_groups; list; list = g_list_next(list)) {
     if (list && list->data)
       g_list_free(list->data);
