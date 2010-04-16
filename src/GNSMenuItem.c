@@ -58,4 +58,32 @@ idle_call_activate (ClosureData *action)
 {
     g_idle_add ((GSourceFunc)idle_call_activate, &action);
 }
+
+- (BOOL) isHidden
+{
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4
+  return [super isHidden];
+#else
+  return hidden;
+#endif
+}
+  
+- (void) setHidden: (BOOL) shouldHide
+{
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4
+  [super setHidden: shouldHide];
+#else
+  [self retain];
+  if (!hidden && shouldHide) {
+    inMenu = [self menu];
+    index = [inMenu indexOfItem: self];
+    [inMenu removeItem: self];
+  }
+  else if (hidden && !shouldHide) {
+    [inMenu insertItem: self atIndex: index];
+    [self release];
+  }
+#endif
+}
+
 @end

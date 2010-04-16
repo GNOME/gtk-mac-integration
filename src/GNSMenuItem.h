@@ -43,6 +43,14 @@ typedef struct {
   //accel_closure is manipulated directly by
   //cocoa_menu_item_update_accel_closure()
   GClosure *accel_closure; 
+  // The hidden parameter was introduced in 10.5; for earlier OSX
+  // versions we need to emulate it.
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
+  BOOL hidden;
+  uint index;
+  NSMenu *inMenu;
+#endif
+
 }
 
 /** Create a new GNSMenuItem with a GClosure and an additional arbitrary data struct */
@@ -54,4 +62,7 @@ typedef struct {
  */
 
 - (void) activate:(id) sender;
+
+- (BOOL) isHidden;
+- (void) setHidden: (BOOL) shouldHide;
 @end
