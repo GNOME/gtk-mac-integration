@@ -40,6 +40,22 @@ gtk_application_activation_changed (GtkApplication *self, gboolean changed)
   else
     DEBUG("Application now inactive\n");
 }
+/** Are we using Quartz or Gtk+ accelerator handling? */
+gboolean
+gtk_application_use_quartz_accelerators(GtkApplication *self)
+{
+    return self->priv->use_quartz_accelerators;
+}
+
+/** Set quartz accelerator handling; TRUE (default) uses quartz; FALSE
+ * uses Gtk+. Quartz accelerator handling is required for normal OSX
+ * accelerators (e.g., command-q to quit) to work. */
+void
+gtk_application_set_use_quartz_accelerators(GtkApplication *self,
+					    gboolean use_quartz_accelerators)
+{
+    self->priv->use_quartz_accelerators = use_quartz_accelerators;
+}
 
 /** Override this function to load the indicated file.
  */

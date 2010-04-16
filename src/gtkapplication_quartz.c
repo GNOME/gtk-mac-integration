@@ -258,15 +258,16 @@ global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
                           gpointer  user_data)
 {
   NSEvent *nsevent = windowing_event;
+  GtkApplication* app = user_data;
 
   /* Handle menu events with no window, since they won't go through the
    * regular event processing.
    */
-  if ([nsevent type] == NSKeyDown) {
-    [[NSApp mainMenu] performKeyEquivalent: nsevent];
-      return GDK_FILTER_REMOVE;
-  }
-   return GDK_FILTER_CONTINUE;
+  if ([nsevent type] == NSKeyDown && 
+      gtk_application_use_quartz_accelerators(app) )
+    if ([[NSApp mainMenu] performKeyEquivalent: nsevent])
+      return GDK_FILTER_TRANSLATE;
+  return GDK_FILTER_CONTINUE;
 }
 
 struct construction_args {
@@ -280,8 +281,8 @@ gtk_application_init (GtkApplication *self)
 {
   [NSApplication sharedApplication];
   self->priv = GTK_APPLICATION_GET_PRIVATE (self);
-  self->priv->in_menu_event_handler = FALSE;
-  gdk_window_add_filter (NULL, global_event_filter_func, NULL);
+  self->priv->use_quartz_accelerators = TRUE;
+  gdk_window_add_filter (NULL, global_event_filter_func, (gpointer)self);
 
   // create_window_menu (self);
 

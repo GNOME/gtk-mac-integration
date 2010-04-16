@@ -66,6 +66,9 @@ GType gtk_application_get_type (void);
 //void gtk_application_init (GtkApplication *self);
 void gtk_application_ready (GtkApplication *self);
 void gtk_application_cleanup (GtkApplication *self);
+void gtk_application_set_use_quartz_accelerators(GtkApplication *self, 
+						 gboolean use_accelerators);
+gboolean gtk_application_use_quartz_accelerators(GtkApplication *self);
 
 void gtk_application_set_menu_bar       (GtkApplication *self, 
 					 GtkMenuShell    *menu_shell);

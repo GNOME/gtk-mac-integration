@@ -31,7 +31,7 @@
 
 struct _GtkApplicationPrivate
 {
-  gboolean in_menu_event_handler;
+  gboolean use_quartz_accelerators;
 
 };
 
