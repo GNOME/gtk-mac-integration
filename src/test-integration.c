@@ -412,8 +412,10 @@ create_window(IgeMacDock *dock, const gchar *title)
 #if defined IGE_MAC_MENU || defined GTKAPPLICATION
   gtk_widget_hide (menubar);
 #ifdef GTKAPPLICATION
-  g_signal_connect(menubar, "can-activate-accel", G_CALLBACK(can_activate_cb), 
-		   NULL);
+/* Not really necessary unless quartz accelerator handling is turned off. */
+/*  g_signal_connect(menubar, "can-activate-accel", 
+		   G_CALLBACK(can_activate_cb), NULL);
+*/
 #endif
 #endif
 #ifdef IGEMACMENU
@@ -470,6 +472,7 @@ main (int argc, char **argv)
                     G_CALLBACK (gtk_main_quit),
                     window1);
 #ifdef GTKAPPLICATION
+//  gtk_application_set_use_quartz_accelerators(theApp, FALSE);
   gtk_application_ready(theApp);
 #endif
   gtk_main ();
