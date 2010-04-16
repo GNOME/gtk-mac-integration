@@ -168,10 +168,11 @@ menu_item_activate_cb (GtkWidget *item,
                 NULL);
 
   if (item == items->open_item) {
-    gtk_widget_set_sensitive (items->copy_item, !sensitive);
-    /*g_object_set (G_OBJECT (items->copy_item), "visible", !visible, NULL);*/
+    gtk_widget_set_sensitive (items->copy_item, 
+			      !gtk_widget_get_sensitive(items->copy_item));
   }
 }
+
 static gboolean
 can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data)
 {
