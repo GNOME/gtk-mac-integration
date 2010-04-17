@@ -37,12 +37,13 @@ typedef struct {
 @interface GNSMenuItem : NSMenuItem
 {
 @public
-  /// action_closure is the closure invoked when the menu item is
-  /// activated (usually by clicking on it).
-  ClosureData action;
   //accel_closure is manipulated directly by
   //cocoa_menu_item_update_accel_closure()
   GClosure *accel_closure; 
+@private
+  /// action_closure is the closure invoked when the menu item is
+  /// activated (usually by clicking on it).
+  ClosureData action;
   // The hidden parameter was introduced in 10.5; for earlier OSX
   // versions we need to emulate it.
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
