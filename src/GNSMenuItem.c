@@ -20,6 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 #import "GNSMenuItem.h"
+#import "GNSMenuBar.h"
 
 static gboolean
 idle_call_activate (ClosureData *action)
@@ -78,11 +79,14 @@ idle_call_activate (ClosureData *action)
     inMenu = [self menu];
     index = [inMenu indexOfItem: self];
     [inMenu removeItem: self];
+    hidden = YES;
   }
   else if (hidden && !shouldHide) {
     [inMenu insertItem: self atIndex: index];
-    [self release];
+    [(GNSMenuBar*)[NSApp mainMenu] resync];
+    hidden = NO;
   }
+  [self release];
 #endif
 }
 
