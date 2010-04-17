@@ -28,18 +28,29 @@
 
 @interface GNSMenuBar : NSMenu
 {
-@public
-    GList *app_menu_groups;
+@private
+  GList *app_menu_groups;
+  GtkMenuBar *gtk_menubar;
 }
-/** Override the designate initializer */
+
+/** Override the designated initializer */
 - (id) initWithTitle: (NSString*) title;
+
+/** Provide the initializer we actually want to use */
+- (id) initWithGtkMenuBar: (GtkMenuBar*) menubar;
+
 /** Create a new GtkApplicationMenuGroup, add it to the list, and
  * return a pointer to it.
  */
 - (GtkApplicationMenuGroup *) addGroup;
+
 /** Get a pointer to the current head of the app_menu_groups list
  */
 - (GList *) app_menu_groups;
+
+/** Resynchronize ourself with out GtkMenuBar */
+-(void) resync;
+
 /** Destructor */
 - (void) dealloc;
 @end

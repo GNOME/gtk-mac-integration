@@ -337,7 +337,8 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
 
   cocoa_menubar = (GNSMenuBar*)cocoa_menu_get(GTK_WIDGET (menu_shell));
   if (!cocoa_menubar) {
-    cocoa_menubar = [[GNSMenuBar alloc] initWithTitle: @""];
+    cocoa_menubar = [[GNSMenuBar alloc] initWithGtkMenuBar: 
+		     GTK_MENU_BAR(menu_shell)];
     cocoa_menu_connect(GTK_WIDGET (menu_shell), cocoa_menubar);
   /* turn off auto-enabling for the menu - its silly and slow and
      doesn't really make sense for a Gtk/Cocoa hybrid menu.
@@ -370,6 +371,13 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
   create_window_menu (self, nswin);
 
 }
+
+void
+gtk_application_sync_menubar()
+{
+  [(GNSMenuBar*)[NSApp mainMenu] resync];
+}
+
 
 GtkApplicationMenuGroup *
 gtk_application_add_app_menu_group (GtkApplication* self )

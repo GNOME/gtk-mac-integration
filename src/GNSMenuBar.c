@@ -19,6 +19,7 @@
  * Boston, MA 02111-1307, USA.
  */
 #import "GNSMenuBar.h"
+#include "cocoa_menu_item.h"
 
 @implementation GNSMenuBar
 
@@ -26,7 +27,14 @@
 {
   self = [super initWithTitle: title];
   app_menu_groups = nil;
- return self;
+  return self;
+}
+
+- (id) initWithGtkMenuBar: (GtkMenuBar*) menubar
+{
+  self = [self initWithTitle: @""];
+  gtk_menubar = menubar;
+  return self;
 }
 
 - (GtkApplicationMenuGroup*) addGroup
@@ -39,6 +47,11 @@
 - (GList *) app_menu_groups
 {
   return app_menu_groups;
+}
+
+- (void) resync
+{
+  cocoa_menu_item_add_submenu(GTK_MENU_SHELL(gtk_menubar), self, TRUE, FALSE);
 }
 
 - (void) dealloc

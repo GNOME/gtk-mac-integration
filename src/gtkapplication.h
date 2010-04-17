@@ -72,6 +72,7 @@ gboolean gtk_application_use_quartz_accelerators(GtkApplication *self);
 
 void gtk_application_set_menu_bar       (GtkApplication *self, 
 					 GtkMenuShell    *menu_shell);
+void gtk_application_sync_menubar( void );
 GtkApplicationMenuGroup * gtk_application_add_app_menu_group (GtkApplication*);
 void gtk_application_add_app_menu_item   (GtkApplication *self,
 					  GtkApplicationMenuGroup *group,
