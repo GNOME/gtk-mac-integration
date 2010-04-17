@@ -93,14 +93,19 @@ cocoa_menu_item_update_state (NSMenuItem* cocoa_item,
 }
 
 static void
-cocoa_menu_item_update_active (NSMenuItem *cocoa_item,
+cocoa_menu_item_update_checked (NSMenuItem *cocoa_item,
 			       GtkWidget  *widget)
 {
-  gboolean active;
+  gboolean active, inconsistent;
 
-  g_object_get (widget, "active", &active, NULL);
+  g_object_get (widget, 
+		"active", &active, 
+		"inconsistent", &inconsistent,
+		NULL);
 
-  if (active) 
+  if (inconsistent)
+    [cocoa_item setState:NSMixedState];
+  else if (active) 
     [cocoa_item setState:NSOnState];
   else
     [cocoa_item setState:NSOffState];
@@ -349,9 +354,10 @@ cocoa_menu_item_notify (GObject        *object,
     {
       cocoa_menu_item_update_state (cocoa_item, GTK_WIDGET (object));
     }
-  else if (!strcmp (pspec->name, "active"))
+  else if (!strcmp (pspec->name, "active") ||
+	   !strcmp (pspec->name, "inconsistent"))
     {
-      cocoa_menu_item_update_active (cocoa_item, GTK_WIDGET (object));
+      cocoa_menu_item_update_checked (cocoa_item, GTK_WIDGET (object));
     }
   else if (!strcmp (pspec->name, "submenu"))
     {
@@ -386,6 +392,25 @@ cocoa_menu_item_connect (GtkWidget*   menu_item,
 				G_CALLBACK (cocoa_menu_item_notify_label),
 				menu_item);
   }
+}
+
+static void
+cocoa_menu_item_sync_state (GtkWidget* menu_item)
+{
+  GNSMenuItem *cocoa_item = cocoa_menu_item_get (menu_item);
+  cocoa_menu_item_update_state (cocoa_item, menu_item);
+
+  [cocoa_item setHidden: (GTK_WIDGET_VISIBLE (menu_item) ? NO : YES)];
+	
+  if (GTK_IS_CHECK_MENU_ITEM (menu_item))
+    cocoa_menu_item_update_checked (cocoa_item, menu_item);
+	
+  if (!GTK_IS_SEPARATOR_MENU_ITEM (menu_item))
+    cocoa_menu_item_update_accel_closure (cocoa_item, menu_item);
+	
+  if (gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item))) 
+    cocoa_menu_item_update_submenu (cocoa_item, menu_item);
+
 }
 
 /*
@@ -447,23 +472,7 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
     [ cocoa_menu insertItem:cocoa_item atIndex:index];
   else 
     [ cocoa_menu addItem:cocoa_item];
-	
-  if (!GTK_WIDGET_IS_SENSITIVE (menu_item))
-    [cocoa_item setState:NSOffState];
-
-  if (!GTK_WIDGET_VISIBLE (menu_item))
-    [cocoa_item setHidden:YES];
-	
-  if (GTK_IS_CHECK_MENU_ITEM (menu_item))
-    cocoa_menu_item_update_active (cocoa_item, menu_item);
-	
-  if (!GTK_IS_SEPARATOR_MENU_ITEM (menu_item))
-    cocoa_menu_item_update_accel_closure (cocoa_item, menu_item);
-	
-  if (gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item))) 
-    cocoa_menu_item_update_submenu (cocoa_item, menu_item);
-
-  [ cocoa_item release];
+  cocoa_menu_item_sync_state(menu_item);
 }
 
 void
