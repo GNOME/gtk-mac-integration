@@ -299,23 +299,23 @@ change_menu_cb (GtkWidget  *button,
 {
   GtkWidget *window = gtk_widget_get_toplevel(button);
   MenuItems *items = g_object_get_qdata(G_OBJECT(window), menu_items_quark);
-  const gchar* open_accel_path = 
+  const gchar* open_accel_path =
       gtk_menu_item_get_accel_path(GTK_MENU_ITEM(items->open_item));
-  const gchar* quit_accel_path = 
+  const gchar* quit_accel_path =
       gtk_menu_item_get_accel_path(GTK_MENU_ITEM(items->quit_item));
 
   if (gtk_widget_get_visible(items->edit_item)) {
       gtk_widget_set_visible(items->edit_item, FALSE);
-      gtk_accel_map_change_entry(open_accel_path, GDK_o, 
+      gtk_accel_map_change_entry(open_accel_path, GDK_o,
 				 GDK_META_MASK, TRUE);
-      gtk_accel_map_change_entry(quit_accel_path, GDK_q, 
+      gtk_accel_map_change_entry(quit_accel_path, GDK_q,
 				 GDK_META_MASK, TRUE);
   } else {
      gtk_widget_set_visible(items->edit_item, TRUE);
-      gtk_accel_map_change_entry(open_accel_path, GDK_o, 
-				 GDK_CONTROL_MASK, TRUE);
-      gtk_accel_map_change_entry(quit_accel_path, GDK_q, 
-				 GDK_CONTROL_MASK, TRUE);
+     gtk_accel_map_change_entry(open_accel_path, GDK_o,
+				GDK_CONTROL_MASK, TRUE);
+     gtk_accel_map_change_entry(quit_accel_path, GDK_q,
+				GDK_CONTROL_MASK, TRUE);
   }
 }
 
