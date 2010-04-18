@@ -124,7 +124,9 @@ static GtkActionEntry test_actions[] =
     {"PrefsAction", GTK_STOCK_PREFERENCES, "Pr_eferences", NULL, NULL, NULL },
     {"HelpMenuAction", NULL, "_Help", NULL, NULL, NULL },
     {"AboutAction", GTK_STOCK_ABOUT, "_About", NULL, NULL,
-     G_CALLBACK(action_activate_cb)}
+     G_CALLBACK(action_activate_cb)},
+    {"HelpAction", GTK_STOCK_HELP, "_Help", NULL, NULL, 
+     G_CALLBACK(action_activate_cb)},
   };
 #else
 

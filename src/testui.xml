@@ -13,6 +13,7 @@
     </menu>
     <menu name="Help" action="HelpMenuAction">
       <menuitem name="About" action="AboutAction"/>
+      <menuitem name="Help" action="HelpAction"/>
     </menu>
   </menubar>
 </ui>
