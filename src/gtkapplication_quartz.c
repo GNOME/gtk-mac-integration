@@ -29,6 +29,7 @@
 #import "GtkApplicationDelegate.h"
 #import "GtkApplicationNotify.h"
 #import "GNSMenuBar.h"
+#import "GNSMenuItem.h"
 
 #include "gtkapplication.h"
 #include "gtkapplicationprivate.h"
@@ -81,34 +82,27 @@ parent_set_emission_hook (GSignalInvocationHint *ihint,
 {
   GtkWidget *instance = (GtkWidget*) g_value_get_object (param_values);
 
-  if (GTK_IS_MENU_ITEM (instance))
-    {
-      GtkWidget *previous_parent = (GtkWidget*) g_value_get_object (param_values + 1);
-      GtkWidget *menu_shell      = NULL;
+  if (GTK_IS_MENU_ITEM (instance)) {
+    GtkWidget *previous_parent = (GtkWidget*) g_value_get_object (param_values + 1);
+    GtkWidget *menu_shell      = NULL;
 
-      if (GTK_IS_MENU_SHELL (previous_parent))
-	{
-	  menu_shell = previous_parent;
-	}
-      else if (GTK_IS_MENU_SHELL (instance->parent))
-	{
-	  menu_shell = instance->parent;
-	}
-
-      if (menu_shell)
-	{
-	  NSMenu *cocoa_menu = cocoa_menu_get (menu_shell);
-
-	  if (cocoa_menu)
-	    {
-	      cocoa_menu_item_add_submenu (GTK_MENU_SHELL (menu_shell),
-					 cocoa_menu,
-					 cocoa_menu == (NSMenu*) data,
-					 FALSE);
-	    }
-	}
+    if (GTK_IS_MENU_SHELL (previous_parent)) {
+      menu_shell = previous_parent;
+    }
+    else if (GTK_IS_MENU_SHELL (instance->parent)) {
+      menu_shell = instance->parent;
     }
 
+    if (menu_shell) {
+      NSMenu *cocoa_menu = cocoa_menu_get (menu_shell);
+      if (cocoa_menu) {
+	cocoa_menu_item_add_submenu (GTK_MENU_SHELL (menu_shell),
+				     cocoa_menu,
+				     cocoa_menu == (NSMenu*) data,
+				     FALSE);
+      }
+    }
+  }
   return TRUE;
 }
 

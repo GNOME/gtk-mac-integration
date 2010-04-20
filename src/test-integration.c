@@ -194,12 +194,16 @@ menu_item_activate_cb (GtkWidget *item,
   }
 }
 
+/* This is needed as a callback to enable accelerators when not using
+ * the Quartz event handling path and using GtkMenuItems instead of
+ * GtkActions, otherwise hiding the menu disables accelerators. */
+/*
 static gboolean
 can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data)
 {
   return gtk_widget_is_sensitive(widget);
 }
-
+*/
 static GtkWidget *
 test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
 {
