@@ -123,10 +123,10 @@ parent_set_emission_hook_remove (GtkWidget *widget,
 
 /** Add a submenu to the currently active main menubar.
  */
-static int
+static GNSMenuItem*
 add_to_menubar (GtkApplication *self, NSMenu *menu, NSInteger pos)
 {
-  NSMenuItem *dummyItem = [[NSMenuItem alloc] initWithTitle:@""
+  GNSMenuItem *dummyItem = [[GNSMenuItem alloc] initWithTitle:@""
 					      action:nil keyEquivalent:@""];
   NSMenu *menubar = [NSApp mainMenu];
 
@@ -135,8 +135,7 @@ add_to_menubar (GtkApplication *self, NSMenu *menu, NSInteger pos)
       [menubar addItem:dummyItem];
   else
       [menubar insertItem:dummyItem atIndex:pos];
-  [dummyItem release];
-  return 0;
+  return dummyItem;
 }
 
 /* Not Used
@@ -162,8 +161,8 @@ add_to_window_menu (GtkApplication *self, NSMenu *menu)
   [dummyItem release];
   return 0;
 }
- */
-static int
+*/
+static GNSMenuItem*
 create_apple_menu (GtkApplication *self)
 {
   NSMenuItem *menuitem;
@@ -203,12 +202,10 @@ create_apple_menu (GtkApplication *self)
   [menuitem release];
 
   [NSApp performSelector:@selector(setAppleMenu:) withObject:app_menu];
-  add_to_menubar (self, app_menu, 0);
-
-  return 0;
+  return add_to_menubar (self, app_menu, 0);
 }
 
-static int
+static GNSMenuItem *
 create_window_menu (GtkApplication *self, NSWindow* window)
 {   
   NSMenu *window_menu = [[NSMenu alloc] initWithTitle: @"Window"];
@@ -223,9 +220,7 @@ create_window_menu (GtkApplication *self, NSWindow* window)
   [NSApp setWindowsMenu:window_menu];
   [NSApp addWindowsItem: window title: [window title] filename: NO];
   pos = [[NSApp mainMenu] indexOfItemWithTitle: @"Help"];
-  add_to_menubar (self, window_menu, pos);
-
-  return 0;
+  return add_to_menubar (self, window_menu, pos);
 }  
 
 
@@ -349,7 +344,7 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
   if (cocoa_menubar != [NSApp mainMenu])
     [NSApp setMainMenu: cocoa_menubar];
 
-  create_apple_menu (self);
+  [cocoa_menubar setAppMenu: create_apple_menu (self)];
 
   emission_hook_id =
     g_signal_add_emission_hook (g_signal_lookup ("parent-set",
@@ -368,7 +363,14 @@ gtk_application_set_menu_bar (GtkApplication *self, GtkMenuShell *menu_shell)
 		    cocoa_menubar);
 
   cocoa_menu_item_add_submenu (menu_shell, cocoa_menubar, TRUE, FALSE);
-  create_window_menu (self, nswin);
+  if (![cocoa_menubar itemWithTitle: @"Help"]) {
+    [cocoa_menubar setHelpMenu: [[GNSMenuItem alloc] initWithTitle: @"Help"
+				 action: NULL keyEquivalent: @""]];
+    [cocoa_menubar addItem: [cocoa_menubar helpMenu]];
+    [NSApp setHelpMenu: [cocoa_menubar helpMenu]];
+  }
+  if (![cocoa_menubar itemWithTitle: @"Window"]) 
+    [cocoa_menubar setWindowMenu:  create_window_menu (self, nswin)];
 
 }
 
