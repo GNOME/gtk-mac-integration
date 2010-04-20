@@ -123,7 +123,7 @@ cocoa_menu_item_update_submenu (GNSMenuItem *cocoa_item,
 
   submenu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (widget));
 
-  if (submenu) {
+  if (!submenu) {
     if ([cocoa_item hasSubmenu]) 
     /*If the cocoa_item has a submenu but the menu_item doesn't,
       lose the cocoa_item's submenu */
