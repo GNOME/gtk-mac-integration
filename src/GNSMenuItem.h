@@ -46,6 +46,7 @@ typedef struct {
   ClosureData action;
   // The hidden parameter was introduced in 10.5; for earlier OSX
   // versions we need to emulate it.
+  BOOL notUsed;
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
   BOOL hidden;
   uint index;
@@ -66,4 +67,9 @@ typedef struct {
 
 - (BOOL) isHidden;
 - (void) setHidden: (BOOL) shouldHide;
+- (void) mark;
+- (void) unmark;
+- (BOOL) isMarked;
+
 @end
+

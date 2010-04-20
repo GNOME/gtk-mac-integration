@@ -51,6 +51,7 @@ idle_call_activate (ClosureData *action)
     action.closure = closure;
     action.data = ptr;
     accel_closure = NULL;
+    notUsed = NO;
   }
   return self;
 }
@@ -88,6 +89,21 @@ idle_call_activate (ClosureData *action)
   }
   [self release];
 #endif
+}
+
+- (void) mark
+{
+  notUsed = YES;
+}
+
+- (void) unmark
+{
+  notUsed = NO;
+}
+
+- (BOOL) isMarked
+{
+  return notUsed;
 }
 
 @end
