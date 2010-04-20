@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui>
+  <menubar>
+    <placeholder name="ViewMenuPlace">
+      <menu name="View" action="ViewMenuAction">
+	<menuitem name="Horizontal" action="HorizontalAction"/>
+	<menuitem name="Vertical" action="VerticalAction"/>
+      </menu>
+    </placeholder>
+  </menubar>
+</ui>

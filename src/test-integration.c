@@ -150,7 +150,25 @@ static GtkActionEntry test_actions[] =
   };
 
 static void
+radio_item_changed_cb (GtkAction* action, GtkAction* current, MenuCBData *datum)
+{
+    g_print ("Radio group %s in window %s changed value: %s is now active.\n", 
+	     datum->label, gtk_window_get_title(datum->window), 
+	     gtk_action_get_name(GTK_ACTION(current)));
 }
+
+static GtkActionEntry view_menu[] =
+{
+    {"ViewMenuAction", NULL, "_View", NULL, NULL, NULL},
+};
+
+static GtkRadioActionEntry view_actions[] = 
+{
+/* Name, StockID, Label, Accelerator, Tooltip, Value */
+    {"HorizontalAction", NULL, "_Horizontal", NULL, NULL, 0},
+    {"VerticalAction", NULL, "_Vertical", NULL, NULL, 0},
+};
+#else
 
 static void
 menu_item_activate_cb (GtkWidget *item,
@@ -322,6 +340,46 @@ change_menu_cb (GtkWidget  *button,
   }
 }
 
+static void
+view_menu_cb (GtkWidget *button, gpointer user_data)
+{
+  GtkToggleButton *toggle = GTK_TOGGLE_BUTTON(button);
+#ifdef BUILT_UI
+  static guint mergeid = 0;
+  static GtkActionGroup* view_action_group = NULL;
+  GtkUIManager *mgr = user_data;
+  GtkWidget *window = gtk_widget_get_toplevel(button);
+  GError *err = NULL;
+  if (view_action_group == NULL) {
+    view_action_group = gtk_action_group_new("ViewAction");
+    gtk_action_group_add_actions(view_action_group, view_menu,
+				 sizeof(view_menu)/sizeof(GtkActionEntry),
+				 NULL);
+    gtk_action_group_add_radio_actions_full(
+	    view_action_group, view_actions, 
+	    sizeof(view_actions)/sizeof(GtkRadioActionEntry), 
+	    0, G_CALLBACK(radio_item_changed_cb),
+	    menu_cbdata_new ("View", GTK_WINDOW(window)),
+	    (GDestroyNotify) menu_cbdata_delete );
+  }
+  if (gtk_toggle_button_get_active(toggle)) {
+    mergeid = gtk_ui_manager_add_ui_from_file(mgr, "src/addedui.xml", &err);
+    if (err) {
+      g_print("Error retrieving file: %d %s\n", mergeid, err->message);
+    }
+    gtk_ui_manager_insert_action_group(mgr, view_action_group, 0);
+  }
+  else if (mergeid) {
+    gtk_ui_manager_remove_action_group(mgr, view_action_group);
+    gtk_ui_manager_remove_ui(mgr, mergeid);
+    mergeid = 0;
+  }
+  gtk_application_sync_menubar();
+#else
+  g_print("View Menu Toggle Button doesn't actually do anything in the hand-built menu build\n");
+#endif
+}
+
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
 
 static GtkWidget *
@@ -410,10 +468,20 @@ create_window(IgeMacDock *dock, const gchar *title)
   gtk_box_pack_start (GTK_BOX (bbox),
                       button,
                       FALSE, FALSE, 0);
+  button = gtk_toggle_button_new_with_label("View Menu");
+#ifdef BUILT_UI
+  g_signal_connect(button, "toggled", G_CALLBACK (view_menu_cb), (gpointer)mgr);
+#else
+  g_signal_connect(button, "toggled", G_CALLBACK (view_menu_cb), NULL);
+#endif
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), FALSE);
+  gtk_box_pack_start (GTK_BOX (bbox),
+		      button,
+		      FALSE, FALSE, 0);
 
   gtk_widget_show_all (window);
 #if defined IGE_MAC_MENU || defined GTKAPPLICATION
-  gtk_widget_hide (menubar);
+  //  gtk_widget_hide (menubar);
 #ifdef GTKAPPLICATION
 /* Not really necessary unless quartz accelerator handling is turned off. */
 /*  g_signal_connect(menubar, "can-activate-accel", 
