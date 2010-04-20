@@ -22,6 +22,8 @@
 #include <gtk/gtk.h>
 #include "gtkapplication.h"
 
+@class GNSMenuItem;
+
 /** GNSMenuBar is a wrapper class around NSMenu providing an extra
  * parameter for stashing the App menu groups.
  */
@@ -31,6 +33,9 @@
 @private
   GList *app_menu_groups;
   GtkMenuBar *gtk_menubar;
+  GNSMenuItem *app_menu;
+  GNSMenuItem *window_menu;
+  GNSMenuItem *help_menu;
 }
 
 /** Override the designated initializer */
@@ -50,6 +55,13 @@
 
 /** Resynchronize ourself with out GtkMenuBar */
 -(void) resync;
+
+- (void) setAppMenu: (GNSMenuItem*) menu_item;
+- (GNSMenuItem*) appMenu;
+- (void) setWindowMenu: (GNSMenuItem*) menu_item;
+- (GNSMenuItem*) windowMenu;
+- (void) setHelpMenu: (GNSMenuItem*) menu_item;
+- (GNSMenuItem*) helpMenu;
 
 /** Destructor */
 - (void) dealloc;

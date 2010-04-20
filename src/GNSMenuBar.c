@@ -54,6 +54,35 @@
   cocoa_menu_item_add_submenu(GTK_MENU_SHELL(gtk_menubar), self, TRUE, FALSE);
 }
 
+- (void) setAppMenu: (GNSMenuItem*) menu_item
+{
+  app_menu = menu_item;
+}
+
+- (GNSMenuItem*) appMenu {
+  return app_menu;
+}
+
+- (void) setWindowMenu: (GNSMenuItem*) menu_item 
+{
+  window_menu = menu_item;
+}
+
+- (GNSMenuItem*) windowMenu
+{
+  return window_menu;
+}
+
+- (void) setHelpMenu: (GNSMenuItem*) menu_item
+{
+  help_menu = menu_item;
+}
+
+- (GNSMenuItem*) helpMenu
+{
+  return help_menu;
+}
+
 - (void) dealloc
 {
   GList *list;
