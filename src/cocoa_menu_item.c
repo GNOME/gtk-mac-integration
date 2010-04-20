@@ -475,7 +475,7 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
   cocoa_menu_item_connect (menu_item, (GNSMenuItem*) cocoa_item, label);
 	
   [ cocoa_item setEnabled:YES];
-  if (index >= 0) 
+  if (index >= 0 && index < [cocoa_menu numberOfItems]) 
     [ cocoa_menu insertItem:cocoa_item atIndex:index];
   else 
     [ cocoa_menu addItem:cocoa_item];
@@ -521,6 +521,9 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
       cocoa_menu_item_sync_state(menu_item);
       continue;
     }
+    if (GTK_IS_SEPARATOR_MENU_ITEM (menu_item) && GTK_IS_MENU_BAR(menu_shell))
+      continue;
+
     if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
       continue;
 
