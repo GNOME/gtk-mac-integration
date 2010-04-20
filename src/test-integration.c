@@ -98,6 +98,26 @@ menu_items_destroy(MenuItems *items) {
     g_slice_free(MenuItems, items);
 }
 
+typedef struct {
+    gchar *label;
+    GtkWindow *window;
+} MenuCBData;
+
+static MenuCBData *
+menu_cbdata_new (gchar *label, GtkWindow *window) {
+    MenuCBData *datum =  g_slice_new0 (MenuCBData);
+    datum->label = label;
+    datum->window = window;
+    g_object_ref (datum->window);
+    return datum;
+}
+
+static void
+menu_cbdata_delete (MenuCBData *datum) {
+    g_object_unref (datum->window);
+    g_slice_free (MenuCBData, datum);
+}
+
 #ifdef BUILT_UI
 
 static void
@@ -128,27 +148,8 @@ static GtkActionEntry test_actions[] =
     {"HelpAction", GTK_STOCK_HELP, "_Help", NULL, NULL, 
      G_CALLBACK(action_activate_cb)},
   };
-#else
-
-
-typedef struct {
-    gchar *label;
-    GtkWindow *window;
-} MenuCBData;
-
-static MenuCBData *
-menu_cbdata_new (gchar *label, GtkWindow *window) {
-    MenuCBData *datum =  g_slice_new0 (MenuCBData);
-    datum->label = label;
-    datum->window = window;
-    g_object_ref (datum->window);
-    return datum;
-}
 
 static void
-menu_cbdata_delete (MenuCBData *datum) {
-    g_object_unref (datum->window);
-    g_slice_free (MenuCBData, datum);
 }
 
 static void
