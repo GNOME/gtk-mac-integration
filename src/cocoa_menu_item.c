@@ -122,39 +122,50 @@ cocoa_menu_item_update_submenu (NSMenuItem *cocoa_item,
 
   submenu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (widget));
 
-  if (submenu)
-    {
-      GtkWidget* label = NULL;
-      const gchar *label_text;
-      NSMenu* cocoa_submenu;
+  if (submenu) {
+    if ([cocoa_item hasSubmenu]) 
+    /*If the cocoa_item has a submenu but the menu_item doesn't,
+      lose the cocoa_item's submenu */
+      [cocoa_item setSubmenu: nil];
+    return;
+  }
+  GtkWidget* label = NULL;
+  NSMenu* cocoa_submenu = cocoa_menu_get(submenu);
+    
+  if (cocoa_submenu != nil)
+    if ([cocoa_item submenu] != cocoa_submenu) 
+      //covers no submenu or wrong submenu on cocoa_item)
+      [cocoa_item setSubmenu:cocoa_submenu];
+    else ;
+  //Nothing required -- the submenus are already set up correctly
+  else if ([cocoa_item hasSubmenu]) {
+    cocoa_submenu = [cocoa_item submenu];
+    cocoa_menu_connect (submenu, cocoa_submenu);
+  }
+  else { //no submenu anywhere, so create one
+    const gchar *label_text = get_menu_label_text (widget, &label);
+    if (label_text) 
+      cocoa_submenu = [ [ NSMenu alloc ] initWithTitle:
+			[[ NSString alloc] initWithUTF8String:label_text]];
+    else
+      cocoa_submenu = [ [ NSMenu alloc ] initWithTitle:@""];
 
-      label_text = get_menu_label_text (widget, &label);
+    [cocoa_submenu setAutoenablesItems:NO];
+    cocoa_menu_connect (submenu, cocoa_submenu);
 
-      /* create a new nsmenu to hold the GTK menu */
-
-      if (label_text) 
-	cocoa_submenu = [ [ NSMenu alloc ] initWithTitle:[ [ NSString alloc] initWithCString:label_text encoding:NSUTF8StringEncoding]];
-      else
-	cocoa_submenu = [ [ NSMenu alloc ] initWithTitle:@""];
-
-      [cocoa_submenu setAutoenablesItems:NO];
-      cocoa_menu_connect (submenu, cocoa_submenu);
-
-      /* connect the new nsmenu to the passed-in item (which lives in
-	 the parent nsmenu)
-	 (Note: this will release any pre-existing version of this submenu)
-      */
-      [ cocoa_item setSubmenu:cocoa_submenu];
-
-      /* and push the GTK menu into the submenu */
-      cocoa_menu_item_add_submenu (GTK_MENU_SHELL (submenu), cocoa_submenu, FALSE, FALSE);
-
-      [ cocoa_submenu release ];
-    }
+    /* connect the new nsmenu to the passed-in item (which lives in
+       the parent nsmenu)
+       (Note: this will release any pre-existing version of this submenu)
+    */
+    [ cocoa_item setSubmenu:cocoa_submenu];
+  }
+  /* and push the GTK menu into the submenu */
+  cocoa_menu_item_add_submenu (GTK_MENU_SHELL (submenu), cocoa_submenu, 
+			       FALSE, FALSE);
 }
 
 static void
-cocoa_menu_item_update_label (NSMenuItem *cocoa_item,
+cocoa_menu_item_update_label (GNSMenuItem *cocoa_item,
 			      GtkWidget      *widget)
 {
   const gchar *label_text;
@@ -484,23 +495,64 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
 {
   GList         *children;
   GList         *l;
+  guint index = 0, loc;
 
   children = gtk_container_get_children (GTK_CONTAINER (menu_shell));
-
-  for (l = children; l; l = l->next)
-    {
-      GtkWidget   *menu_item = (GtkWidget*) l->data;
-
-      if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
-	continue;
-
-      if (g_object_get_data (G_OBJECT (menu_item), "gtk-empty-menu-item"))
-	continue;
-
-      cocoa_menu_item_add_item (cocoa_menu, menu_item, -1);
+  if (GTK_IS_MENU_BAR(menu_shell))
+    ++index; //Don't touch the App(le) Menu
+  for (l = children; l; l = l->next) {
+    GtkWidget   *menu_item = (GtkWidget*) l->data;
+    GNSMenuItem *cocoa_item =  cocoa_menu_item_get (menu_item);
+    if ([cocoa_item menu] && [cocoa_item menu] != cocoa_menu)
+      /* This item has been moved to another menu; skip it */
+      continue;
+    if ([cocoa_item respondsToSelector: @selector(isMarked)] &&
+	[cocoa_menu numberOfItems] > index && 
+	[cocoa_menu itemAtIndex:index] == cocoa_item) {
+      [cocoa_item unmark];
+      cocoa_menu_item_sync_state(menu_item);
+      ++index;
+      continue;
     }
-  
-  g_list_free (children);
+    if (cocoa_item && (loc = [cocoa_menu indexOfItem: cocoa_item]) > -1) {
+      /*It's in there, just in the wrong place*/
+      [cocoa_item retain];
+      [cocoa_menu removeItem: cocoa_item];
+      [cocoa_menu insertItem: cocoa_item atIndex: index++];
+      if ([cocoa_item respondsToSelector: @selector(isMarked)])
+	[cocoa_item unmark];
+      [cocoa_item release];
+      cocoa_menu_item_sync_state(menu_item);
+      continue;
+    }
+    if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
+      continue;
+
+    if (g_object_get_data (G_OBJECT (menu_item), "gtk-empty-menu-item"))
+      continue;
+
+    if ([cocoa_menu numberOfItems] > index) {
+      GNSMenuItem *indexedItem = (GNSMenuItem*)[cocoa_menu itemAtIndex: index];
+      if ([indexedItem respondsToSelector: @selector(isMarked)] &&
+	    !(GTK_IS_MENU_BAR(menu_shell) &&
+	      (indexedItem == [(GNSMenuBar*)cocoa_menu windowMenu] || 
+	       indexedItem == [(GNSMenuBar*)cocoa_menu helpMenu] ||
+	       indexedItem == [(GNSMenuBar*)cocoa_menu appMenu])))
+	[indexedItem mark];
+    }
+
+    cocoa_menu_item_add_item (cocoa_menu, menu_item, index++);
+  }
+  index = 0;
+  while (index < [cocoa_menu numberOfItems]) {
+    GNSMenuItem *item = (GNSMenuItem*)[cocoa_menu itemAtIndex: index];
+    if (([item respondsToSelector: @selector(isMarked)]) && [item isMarked])
+      [cocoa_menu removeItem: item];
+    else
+      ++index;
+  }
+
+  g_list_free (children); 
 }
 
 /*
