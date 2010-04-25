@@ -393,17 +393,25 @@ cocoa_menu_item_connect (GtkWidget*   menu_item,
 			   cocoa_item,
 			   (GDestroyNotify) cocoa_menu_item_free);
 	
-  if (!old_item) {
-
-    g_signal_connect (menu_item, "notify",
-		      G_CALLBACK (cocoa_menu_item_notify),
-		      cocoa_item);
+  if (old_item) {
+      GSignalMatchType mask = G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_DATA;
+      guint notify_sig = g_signal_lookup("notify", GTK_TYPE_MENU_ITEM);
+      if (! g_signal_handlers_disconnect_matched(G_OBJECT(menu_item), 
+						 mask, notify_sig, 
+						 (GQuark)0, NULL, NULL, 
+						 old_item))
+	  g_print ("Failed to disconnect old notify signal for %s\\n",
+		   gtk_widget_get_name(menu_item));
+      [old_item release];
+  }
+  g_signal_connect (menu_item, "notify",
+		    G_CALLBACK (cocoa_menu_item_notify),
+		    cocoa_item);
 		
-    if (label)
+  if (label)
       g_signal_connect_swapped (label, "notify::label",
 				G_CALLBACK (cocoa_menu_item_notify_label),
 				menu_item);
-  }
 }
 
 static void
