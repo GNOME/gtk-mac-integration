@@ -94,13 +94,16 @@ parent_set_emission_hook (GSignalInvocationHint *ihint,
     }
 
     if (menu_shell) {
-      NSMenu *cocoa_menu = cocoa_menu_get (menu_shell);
-      if (cocoa_menu) {
+      GNSMenuBar *cocoa_menu = (GNSMenuBar*)cocoa_menu_get (menu_shell);
+      if (GTK_IS_MENU_BAR(menu_shell) && cocoa_menu && 
+	  [cocoa_menu respondsToSelector: @selector(resync)]) {
+	[cocoa_menu resync];
+      }
+      else
 	cocoa_menu_item_add_submenu (GTK_MENU_SHELL (menu_shell),
 				     cocoa_menu,
 				     cocoa_menu == (NSMenu*) data,
 				     FALSE);
-      }
     }
   }
   return TRUE;
