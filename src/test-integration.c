@@ -59,7 +59,8 @@
 /* Uncomment ONE of these to test menu-mangling: */
 //#define IGEMACMENU
 #define GTKAPPLICATION
-//#define BUILT_UI
+#define BUILT_UI
+#define QUARTZ_HANDLERS
 
 #include <gtk/gtk.h>
 #include <stdio.h>
@@ -197,13 +198,14 @@ menu_item_activate_cb (GtkWidget *item,
 /* This is needed as a callback to enable accelerators when not using
  * the Quartz event handling path and using GtkMenuItems instead of
  * GtkActions, otherwise hiding the menu disables accelerators. */
-/*
+
 static gboolean
 can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data)
 {
   return gtk_widget_is_sensitive(widget);
 }
-*/
+
+
 static GtkWidget *
 test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
 {
@@ -378,7 +380,6 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
     gtk_ui_manager_remove_ui(mgr, mergeid);
     mergeid = 0;
   }
-  gtk_application_sync_menubar();
 #else
   g_print("View Menu Toggle Button doesn't actually do anything in the hand-built menu build\n");
 #endif
@@ -485,12 +486,13 @@ create_window(IgeMacDock *dock, const gchar *title)
 
   gtk_widget_show_all (window);
 #if defined IGE_MAC_MENU || defined GTKAPPLICATION
-  //  gtk_widget_hide (menubar);
+  gtk_widget_hide (menubar);
 #ifdef GTKAPPLICATION
 /* Not really necessary unless quartz accelerator handling is turned off. */
-/*  g_signal_connect(menubar, "can-activate-accel", 
+#if !defined QUARTZ_HANDLERS && !defined BUILT_UI
+  g_signal_connect(menubar, "can-activate-accel", 
 		   G_CALLBACK(can_activate_cb), NULL);
-*/
+#endif
 #endif
 #endif
 #ifdef IGEMACMENU
@@ -547,7 +549,9 @@ main (int argc, char **argv)
                     G_CALLBACK (gtk_main_quit),
                     window1);
 #ifdef GTKAPPLICATION
-//  gtk_application_set_use_quartz_accelerators(theApp, FALSE);
+#ifndef QUARTZ_HANDLERS
+  gtk_application_set_use_quartz_accelerators(theApp, FALSE);
+#endif
   gtk_application_ready(theApp);
 #endif
   gtk_main ();
