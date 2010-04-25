@@ -384,6 +384,9 @@ cocoa_menu_item_connect (GtkWidget*   menu_item,
 {
   GNSMenuItem* old_item = cocoa_menu_item_get (menu_item);
 
+  if (old_item == cocoa_item)
+      return;
+
   [cocoa_item retain];
 
   if (cocoa_menu_item_quark == 0)
