@@ -491,27 +491,41 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
 {
   GList         *children;
   GList         *l;
-  guint index = 0, loc;
+  guint index = 0, count, loc;
 
+  count = [cocoa_menu numberOfItems];
+  /* First go through the cocoa menu and mark all of the items unused. */
+  for (index = 0; index < count; index++) {
+    GNSMenuItem *indexedItem = (GNSMenuItem*)[cocoa_menu itemAtIndex: index];
+    if (GTK_IS_MENU_BAR(menu_shell) &&
+	(indexedItem == [(GNSMenuBar*)cocoa_menu windowMenu] || 
+	 indexedItem == [(GNSMenuBar*)cocoa_menu helpMenu] ||
+	 indexedItem == [(GNSMenuBar*)cocoa_menu appMenu]))
+      continue;
+    if ([[cocoa_menu itemAtIndex: index] respondsToSelector: @selector(mark)])
+      [(GNSMenuItem*)[cocoa_menu itemAtIndex: index] mark];
+  }
+  index = toplevel ? 1 : 0; //Skip the 0th menu item on the menu bar
+  /* Now iterate over the menu shell and check it against the cocoa menu */
   children = gtk_container_get_children (GTK_CONTAINER (menu_shell));
-  if (GTK_IS_MENU_BAR(menu_shell))
-    ++index; //Don't touch the App(le) Menu
   for (l = children; l; l = l->next) {
     GtkWidget   *menu_item = (GtkWidget*) l->data;
     GNSMenuItem *cocoa_item =  cocoa_menu_item_get (menu_item);
-    if ([cocoa_item menu] && [cocoa_item menu] != cocoa_menu)
+    if ([cocoa_item menu] && [cocoa_item menu] != cocoa_menu) 
       /* This item has been moved to another menu; skip it */
       continue;
     if ([cocoa_item respondsToSelector: @selector(isMarked)] &&
 	[cocoa_menu numberOfItems] > index && 
 	[cocoa_menu itemAtIndex:index] == cocoa_item) {
+      /* This item is where it belongs, so unmark and update it */
       [cocoa_item unmark];
       cocoa_menu_item_sync_state(menu_item);
       ++index;
       continue;
     }
     if (cocoa_item && (loc = [cocoa_menu indexOfItem: cocoa_item]) > -1) {
-      /*It's in there, just in the wrong place*/
+      /*It's in there, just in the wrong place. Put it where it goes
+	and update it*/
       [cocoa_item retain];
       [cocoa_menu removeItem: cocoa_item];
       [cocoa_menu insertItem: cocoa_item atIndex: index++];
@@ -522,33 +536,24 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
       continue;
     }
     if (GTK_IS_SEPARATOR_MENU_ITEM (menu_item) && GTK_IS_MENU_BAR(menu_shell))
+      /* Don't want separators on the menubar */
       continue;
 
     if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
+      /*Don't want tearoff items at all */
       continue;
 
     if (g_object_get_data (G_OBJECT (menu_item), "gtk-empty-menu-item"))
+      /* Nor blank items. */
       continue;
-
-    if ([cocoa_menu numberOfItems] > index) {
-      GNSMenuItem *indexedItem = (GNSMenuItem*)[cocoa_menu itemAtIndex: index];
-      if ([indexedItem respondsToSelector: @selector(isMarked)] &&
-	    !(GTK_IS_MENU_BAR(menu_shell) &&
-	      (indexedItem == [(GNSMenuBar*)cocoa_menu windowMenu] || 
-	       indexedItem == [(GNSMenuBar*)cocoa_menu helpMenu] ||
-	       indexedItem == [(GNSMenuBar*)cocoa_menu appMenu])))
-	[indexedItem mark];
-    }
-
+    /*OK, this must be a new one. Add it. */
     cocoa_menu_item_add_item (cocoa_menu, menu_item, index++);
   }
-  index = 0;
-  while (index < [cocoa_menu numberOfItems]) {
+  /* Iterate over the cocoa menu again removing anything that's still marked */
+  for (index = 0; index < [cocoa_menu numberOfItems]; index++) {
     GNSMenuItem *item = (GNSMenuItem*)[cocoa_menu itemAtIndex: index];
     if (([item respondsToSelector: @selector(isMarked)]) && [item isMarked])
       [cocoa_menu removeItem: item];
-    else
-      ++index;
   }
 
   g_list_free (children); 
