@@ -280,7 +280,7 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
 
   return menubar;
 }
-#endif
+#endif //BUILT_UI
 
 static void
 dock_clicked_cb (IgeMacDock *dock,
@@ -382,7 +382,7 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
   }
 #else
   g_print("View Menu Toggle Button doesn't actually do anything in the hand-built menu build\n");
-#endif
+#endif //BUILT_UI
 }
 
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
@@ -402,16 +402,16 @@ create_window(IgeMacDock *dock, const gchar *title)
   GtkAccelGroup *accel_group;
   guint mergeid;
   GError *err;
-#else
+#else //not BUILT_UI
   GtkAccelGroup *accel_group = gtk_accel_group_new();
-#endif
+#endif //not BUILT_UI
 #ifdef IGEMACMENU
   IgeMacMenuGroup *group;
-#endif
+#endif //IGEMACMENU
 #ifdef GTKAPPLICATION
   GtkApplicationMenuGroup *group;
   GtkApplication *theApp = g_object_new(GTK_TYPE_APPLICATION, NULL);
-#endif
+#endif //GTKAPPLICATION
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   if (title)
       gtk_window_set_title (GTK_WINDOW (window), title);
@@ -436,9 +436,9 @@ create_window(IgeMacDock *dock, const gchar *title)
   items->about_item = gtk_ui_manager_get_widget(mgr, "/menubar/Help/About");
   items->preferences_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit/Preferences");
   accel_group = gtk_ui_manager_get_accel_group(mgr);
-#else    
+#else //not BUILT_UI
   menubar = test_setup_menu (items, accel_group);
-#endif
+#endif //not BUILT_UI
   gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
   gtk_box_pack_start (GTK_BOX (vbox), 
                       menubar,
@@ -476,9 +476,9 @@ create_window(IgeMacDock *dock, const gchar *title)
   button = gtk_toggle_button_new_with_label("View Menu");
 #ifdef BUILT_UI
   g_signal_connect(button, "toggled", G_CALLBACK (view_menu_cb), (gpointer)mgr);
-#else
+#else //not BUILT_UI
   g_signal_connect(button, "toggled", G_CALLBACK (view_menu_cb), NULL);
-#endif
+#endif //not BUILT_UI
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), FALSE);
   gtk_box_pack_start (GTK_BOX (bbox),
 		      button,
@@ -492,9 +492,9 @@ create_window(IgeMacDock *dock, const gchar *title)
 #if !defined QUARTZ_HANDLERS && !defined BUILT_UI
   g_signal_connect(menubar, "can-activate-accel", 
 		   G_CALLBACK(can_activate_cb), NULL);
-#endif
-#endif
-#endif
+#endif // !defined QUARTZ_HANDLERS && !defined BUILT_UI
+#endif  //GTKAPPLICATION
+#endif //defined IGE_MAC_MENU || defined GTKAPPLICATION
 #ifdef IGEMACMENU
   ige_mac_menu_set_menu_bar (GTK_MENU_SHELL (menubar));
   ige_mac_menu_set_quit_menu_item (GTK_MENU_ITEM (items->quit_item));
@@ -506,7 +506,7 @@ create_window(IgeMacDock *dock, const gchar *title)
   ige_mac_menu_add_app_menu_item  (group,
 				   GTK_MENU_ITEM (items->preferences_item),
 				   "Preferences");
-#endif
+#endif //IGEMACMENU
 #ifdef GTKAPPLICATION
   gtk_application_set_menu_bar(theApp, GTK_MENU_SHELL(menubar));
   group = gtk_application_add_app_menu_group (theApp);
@@ -516,7 +516,7 @@ create_window(IgeMacDock *dock, const gchar *title)
   group = gtk_application_add_app_menu_group (theApp);
   gtk_application_add_app_menu_item  (theApp, group,
 				      GTK_MENU_ITEM (items->preferences_item));
-#endif
+#endif //GTKAPPLICATION
   if (!menu_items_quark)
       menu_items_quark = g_quark_from_static_string("MenuItem");
   g_object_set_qdata_full(G_OBJECT(window), menu_items_quark, 
@@ -531,12 +531,12 @@ main (int argc, char **argv)
   IgeMacDock      *dock;
 #ifdef GTKAPPLICATION
   GtkApplication *theApp;
-#endif
+#endif //GTKAPPLICATION
   gtk_init (&argc, &argv);
   dock = ige_mac_dock_get_default ();
 #ifdef GTKAPPLICATION
   theApp  = g_object_new(GTK_TYPE_APPLICATION, NULL);
-#endif
+#endif //GTKAPPLICATION
   window1 = create_window(dock, "Test Integration Window 1"); 
   window2 = create_window(dock, "Test Integration Window 2"); 
   dock = ige_mac_dock_new ();
@@ -551,13 +551,13 @@ main (int argc, char **argv)
 #ifdef GTKAPPLICATION
 #ifndef QUARTZ_HANDLERS
   gtk_application_set_use_quartz_accelerators(theApp, FALSE);
-#endif
+#endif //QUARTZ_HANDLERS
   gtk_application_ready(theApp);
-#endif
+#endif //GTKAPPLICATION
   gtk_main ();
 
 #ifdef GTKAPPLICATION
   g_object_unref(theApp);
-#endif
+#endif //GTKAPPLICATION
   return 0;
 }
