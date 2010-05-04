@@ -17,6 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/* This interface is checked to be 64-bit safe */
+
 #include <config.h>
 #include <gtk/gtk.h>
 #include <Carbon/Carbon.h>
