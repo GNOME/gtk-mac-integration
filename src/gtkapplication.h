@@ -66,10 +66,11 @@ GType gtk_application_get_type (void);
 //void gtk_application_init (GtkApplication *self);
 void gtk_application_ready (GtkApplication *self);
 void gtk_application_cleanup (GtkApplication *self);
+//Accelerator functions
 void gtk_application_set_use_quartz_accelerators(GtkApplication *self, 
 						 gboolean use_accelerators);
 gboolean gtk_application_use_quartz_accelerators(GtkApplication *self);
-
+//Menu functions
 void gtk_application_set_menu_bar       (GtkApplication *self, 
 					 GtkMenuShell    *menu_shell);
 void gtk_application_sync_menubar( void );
@@ -81,8 +82,12 @@ void gtk_application_add_app_menu_item   (GtkApplication *self,
 void gtk_application_set_dock_menu(GtkApplication *self, 
 				   GtkMenuShell *menu_shell);
 
+//Quartz event callbacks: Override these with real functions
+//FIXME: The class should register the callback so that applications don't need to create a derived class
 void gtk_application_activation_changed (GtkApplication *self, 
 					 gboolean changed);
+//Delegate callbacks: Override these with real functions
+//FIXME: The delegate should register callbacks so that applications don't need to override the class
 void gtk_application_should_load (GtkApplication *self, const gchar *utf8_path);
 gboolean gtk_application_should_quit (GtkApplication *self);
 
