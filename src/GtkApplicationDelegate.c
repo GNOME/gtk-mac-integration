@@ -45,4 +45,14 @@
   else
     return NSTerminateLater;
 }
+
+
+-(NSMenu *)applicationDockMenu: (NSApplication*) sender
+{
+    extern NSMenu* gtk_application_dock_menu(GtkApplication* app);
+    g_print("Dock requested a menu");
+    GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
+    return gtk_application_dock_menu(app);
+}
+
 @end

@@ -274,6 +274,7 @@ gtk_application_init (GtkApplication *self)
   [NSApplication sharedApplication];
   self->priv = GTK_APPLICATION_GET_PRIVATE (self);
   self->priv->use_quartz_accelerators = TRUE;
+  self->priv->dock_menu = NULL;
   gdk_window_add_filter (NULL, global_event_filter_func, (gpointer)self);
 
   // create_window_menu (self);
@@ -441,3 +442,22 @@ gtk_application_add_app_menu_item (GtkApplication *self,
 	       G_STRFUNC, group);
 }
 
+/* Dock support */
+NSMenu* gtk_application_dock_menu(GtkApplication *self);
+
+NSMenu*
+gtk_application_dock_menu(GtkApplication *self)
+{
+  return(self->priv->dock_menu);
+}
+
+void
+gtk_application_set_dock_menu(GtkApplication *self,
+			      GtkMenuShell *menu_shell)
+{
+  g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
+  if (!self->priv->dock_menu) {
+    self->priv->dock_menu = [[NSMenu alloc] initWithTitle: @""]; 
+    cocoa_menu_connect(GTK_WIDGET (menu_shell), self->priv->dock_menu);
+  }
+}

@@ -32,6 +32,7 @@
 struct _GtkApplicationPrivate
 {
   gboolean use_quartz_accelerators;
+  NSMenu *dock_menu;
 
 };
 

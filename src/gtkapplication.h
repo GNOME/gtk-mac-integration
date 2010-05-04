@@ -77,6 +77,10 @@ GtkApplicationMenuGroup * gtk_application_add_app_menu_group (GtkApplication*);
 void gtk_application_add_app_menu_item   (GtkApplication *self,
 					  GtkApplicationMenuGroup *group,
 					  GtkMenuItem *menu_item);
+//Dock Functions:
+void gtk_application_set_dock_menu(GtkApplication *self, 
+				   GtkMenuShell *menu_shell);
+
 void gtk_application_activation_changed (GtkApplication *self, 
 					 gboolean changed);
 void gtk_application_should_load (GtkApplication *self, const gchar *utf8_path);
