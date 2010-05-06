@@ -1135,7 +1135,7 @@ _ige_mac_menu_is_quit_menu_item_handled (void) {
     return (err == noErr);
 }
 
-/* Applicaation Menu Functions
+/* Application Menu Functions
  *
  * The "application" menu (the one named the same as the application),
  * is special because there isn't a corresponding Gtk menu, but OSX
@@ -1161,6 +1161,13 @@ ige_mac_menu_add_app_menu_group (void) {
     return group;
 }
 
+/** Move a menu item to the App menu (the one named with the
+ * application's name). This has issues with multiple window menubars,
+ * because the menu items are tied to a particular window's menu and
+ * because there's only one App menu in Carbon regardless of how many
+ * menubars there are. Don't use this for Quit, it has its own
+ * function.
+ */
 void
 ige_mac_menu_add_app_menu_item (IgeMacMenuGroup *group, GtkMenuItem *menu_item,
 				const gchar *label) {
@@ -1220,7 +1227,10 @@ ige_mac_menu_add_app_menu_item (IgeMacMenuGroup *group, GtkMenuItem *menu_item,
     if (!list)
 	g_warning ("%s: app menu group %p does not exist", G_STRFUNC, group);
 }
-
+/** Syncronize changes in the GtkMenuBar to an already-created Mac
+ * MenuBar. You must have already run ige_mac_menu_set_menu_bar on the
+ * GtkMenuBar to be synced.
+ */
 void
 ige_mac_menu_sync(GtkMenuShell *menu_shell) {
     CarbonMenu *carbon_menu = carbon_menu_get (GTK_WIDGET(menu_shell));
