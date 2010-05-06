@@ -1234,7 +1234,7 @@ ige_mac_menu_add_app_menu_item (IgeMacMenuGroup *group, GtkMenuItem *menu_item,
 void
 ige_mac_menu_sync(GtkMenuShell *menu_shell) {
     CarbonMenu *carbon_menu = carbon_menu_get (GTK_WIDGET(menu_shell));
-
+    g_return_if_fail(carbon_menu != NULL);
 #if DEBUG_SYNC
     g_printerr ("%s: syncing menubar\n", G_STRFUNC);
 #endif
