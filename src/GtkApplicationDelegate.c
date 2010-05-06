@@ -31,7 +31,7 @@
   GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
   gtk_application_should_load(app, utf8_path);
   g_object_unref(app);
-  return 1;
+  return NO;
 }
 
 
@@ -50,7 +50,7 @@
 -(NSMenu *)applicationDockMenu: (NSApplication*) sender
 {
     extern NSMenu* gtk_application_dock_menu(GtkApplication* app);
-    g_print("Dock requested a menu");
+    g_print("Dock requested a menu\n");
     GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
     return gtk_application_dock_menu(app);
 }
