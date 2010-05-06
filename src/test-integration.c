@@ -68,13 +68,12 @@
 
 #ifdef IGEMACMENU
 #include "ige-mac-menu.h"
+#include "ige-mac-dock.h"
+#include "ige-mac-bundle.h"
 #endif
 #ifdef GTKAPPLICATION
 #include "gtkapplication.h"
 #endif
-
-#include "ige-mac-dock.h"
-#include "ige-mac-bundle.h"
 #include <config.h>
 
 typedef struct {
@@ -101,21 +100,21 @@ menu_items_destroy(MenuItems *items) {
 
 typedef struct {
     gchar *label;
-    GtkWindow *window;
+    gpointer item;
 } MenuCBData;
 
 static MenuCBData *
-menu_cbdata_new (gchar *label, GtkWindow *window) {
+menu_cbdata_new (gchar *label, gpointer item) {
     MenuCBData *datum =  g_slice_new0 (MenuCBData);
     datum->label = label;
-    datum->window = window;
-    g_object_ref (datum->window);
+    datum->item = item;
+    g_object_ref (datum->item);
     return datum;
 }
 
 static void
 menu_cbdata_delete (MenuCBData *datum) {
-    g_object_unref (datum->window);
+    g_object_unref (datum->item);
     g_slice_free (MenuCBData, datum);
 }
 
@@ -154,7 +153,7 @@ static void
 radio_item_changed_cb (GtkAction* action, GtkAction* current, MenuCBData *datum)
 {
     g_print ("Radio group %s in window %s changed value: %s is now active.\n", 
-	     datum->label, gtk_window_get_title(datum->window), 
+	     datum->label, gtk_window_get_title(GTK_WINDOW(datum->item)), 
 	     gtk_action_get_name(GTK_ACTION(current)));
 }
 
@@ -169,31 +168,7 @@ static GtkRadioActionEntry view_actions[] =
     {"HorizontalAction", NULL, "_Horizontal", NULL, NULL, 0},
     {"VerticalAction", NULL, "_Vertical", NULL, NULL, 0},
 };
-#else
-
-static void
-menu_item_activate_cb (GtkWidget *item,
-                       MenuCBData  *datum)
-{
-  gboolean visible;
-  gboolean sensitive;
-  MenuItems *items = g_object_get_qdata (G_OBJECT(datum->window), 
-					 menu_items_quark);
-  g_assert(items != NULL);
-
-  g_print ("Item activated: %s:%s\n", gtk_window_get_title(datum->window),
-	   datum->label);
-
-  g_object_get (G_OBJECT (items->copy_item),
-                "visible", &visible,
-                "sensitive", &sensitive,
-                NULL);
-
-  if (item == items->open_item) {
-    gtk_widget_set_sensitive (items->copy_item, 
-			      !gtk_widget_get_sensitive(items->copy_item));
-  }
-}
+#else //not BUILT_UI
 
 /* This is needed as a callback to enable accelerators when not using
  * the Quartz event handling path and using GtkMenuItems instead of
@@ -280,14 +255,43 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
 
   return menubar;
 }
-#endif //BUILT_UI
+#endif //not BUILT_UI
 
+static void
+menu_item_activate_cb (GtkWidget *item,
+                       MenuCBData  *datum)
+{
+  gboolean visible;
+  gboolean sensitive;
+  MenuItems *items = g_object_get_qdata (G_OBJECT(datum->item),
+					 menu_items_quark);
+  if (GTK_IS_WINDOW(G_OBJECT(datum->item)))
+      g_print ("Item activated: %s:%s\n",
+	       gtk_window_get_title(GTK_WINDOW(datum->item)),
+	       datum->label);
+  else
+    g_print ("Item activated %s\n", datum->label);
+
+  if (!items)
+    return;
+
+  g_object_get (G_OBJECT (items->copy_item),
+                "visible", &visible,
+                "sensitive", &sensitive,
+                NULL);
+
+  if (item == items->open_item) {
+    gtk_widget_set_sensitive (items->copy_item,
+			      !gtk_widget_get_sensitive(items->copy_item));
+  }
+}
+
+#ifdef IGEMACMENU
 static void
 dock_clicked_cb (IgeMacDock *dock,
                  GtkWindow  *window)
 {
   g_print ("Dock clicked\n");
-
   gtk_window_deiconify (window);
 }
 
@@ -295,7 +299,7 @@ static void
 bounce_cb (GtkWidget  *button,
            IgeMacDock *dock)
 {
-        ige_mac_dock_attention_request (dock, IGE_MAC_ATTENTION_INFO);
+  ige_mac_dock_attention_request (dock, IGE_MAC_ATTENTION_INFO);
 }
 
 static void
@@ -319,6 +323,52 @@ change_icon_cb (GtkWidget  *button,
 
   changed = !changed;
 }
+#elif defined GTKAPPLICATION
+typedef struct {
+  GtkApplication *app;
+  GtkApplicationAttentionType type;
+} AttentionRequest;
+
+static gboolean
+attention_cb(AttentionRequest* req)
+{
+  gtk_application_attention_request(req->app, req->type);
+  g_free(req);
+  return FALSE;
+}
+
+static void
+bounce_cb (GtkWidget  *button,
+           GtkApplication *app)
+{
+  AttentionRequest *req = g_new0 (AttentionRequest, 1);
+  req->app = app;
+  req->type = CRITICAL_REQUEST;
+  g_timeout_add_seconds(2, (GSourceFunc)attention_cb, req);
+  g_print("Now switch to some other application\n");
+}
+
+static void
+change_icon_cb (GtkWidget  *button,
+                GtkApplication *app)
+{
+  static gboolean   changed;
+  static GdkPixbuf *pixbuf;
+  if (!pixbuf) {
+      char filename[PATH_MAX];
+      snprintf (filename, sizeof(filename), "%s/%s", PREFIX,
+		 "share/gtk-2.0/demo/gnome-foot.png");
+      pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+  }
+
+  if (changed)
+    gtk_application_set_dock_icon_pixbuf (app, NULL);
+  else
+    gtk_application_set_dock_icon_pixbuf (app, pixbuf);
+
+  changed = !changed;
+}
+#endif
 
 static void
 change_menu_cb (GtkWidget  *button,
@@ -355,6 +405,7 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
   static GtkActionGroup* view_action_group = NULL;
   GtkUIManager *mgr = user_data;
   GtkWidget *window = gtk_widget_get_toplevel(button);
+  GtkApplication *theApp = g_object_new(GTK_TYPE_APPLICATION, NULL);
   GError *err = NULL;
   if (view_action_group == NULL) {
     view_action_group = gtk_action_group_new("ViewAction");
@@ -374,6 +425,23 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
       g_print("Error retrieving file: %d %s\n", mergeid, err->message);
     }
     gtk_ui_manager_insert_action_group(mgr, view_action_group, 0);
+    {
+      GtkWidget *menu = gtk_menu_new();
+      GtkWidget *item;
+      item = gtk_menu_item_new_with_label("Framish");
+      g_signal_connect_data (item, "activate",
+			     G_CALLBACK (menu_item_activate_cb),
+			     menu_cbdata_new ( "Framish", item),
+			     (GClosureNotify) menu_cbdata_delete, 0);
+      gtk_menu_append(menu, item);
+      item = gtk_menu_item_new_with_label("Freebish");
+      g_signal_connect_data (item, "activate",
+			     G_CALLBACK (menu_item_activate_cb),
+			     menu_cbdata_new ( "Freebish", item),
+			     (GClosureNotify) menu_cbdata_delete, 0);
+      gtk_menu_append(menu, item);
+      gtk_application_set_dock_menu(theApp, GTK_MENU_SHELL(menu));
+    }
   }
   else if (mergeid) {
     gtk_ui_manager_remove_action_group(mgr, view_action_group);
@@ -387,9 +455,16 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
 
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
 
+#ifdef IGEMACMENU
 static GtkWidget *
 create_window(IgeMacDock *dock, const gchar *title)
 {
+#else
+static GtkWidget *
+create_window(const gchar *title)
+{
+  gpointer	dock = NULL;
+#endif
   GtkWidget	  *window;
   GtkWidget       *vbox;
   GtkWidget       *menubar;
@@ -401,7 +476,7 @@ create_window(IgeMacDock *dock, const gchar *title)
   GtkActionGroup *actions = gtk_action_group_new("TestActions");
   GtkAccelGroup *accel_group;
   guint mergeid;
-  GError *err;
+  GError *err = NULL;
 #else //not BUILT_UI
   GtkAccelGroup *accel_group = gtk_accel_group_new();
 #endif //not BUILT_UI
@@ -528,15 +603,15 @@ int
 main (int argc, char **argv)
 {
   GtkWidget       *window1, *window2;
+#ifdef IGEMACMENU
   IgeMacDock      *dock;
+#endif //IGEMACMENU
 #ifdef GTKAPPLICATION
   GtkApplication *theApp;
 #endif //GTKAPPLICATION
   gtk_init (&argc, &argv);
+#ifdef IGEMACMENU
   dock = ige_mac_dock_get_default ();
-#ifdef GTKAPPLICATION
-  theApp  = g_object_new(GTK_TYPE_APPLICATION, NULL);
-#endif //GTKAPPLICATION
   window1 = create_window(dock, "Test Integration Window 1"); 
   window2 = create_window(dock, "Test Integration Window 2"); 
   dock = ige_mac_dock_new ();
@@ -545,10 +620,15 @@ main (int argc, char **argv)
                     G_CALLBACK (dock_clicked_cb),
                     window1);
   g_signal_connect (dock,
+
                     "quit-activate",
                     G_CALLBACK (gtk_main_quit),
                     window1);
+#endif //IGEMACMENU
 #ifdef GTKAPPLICATION
+  theApp  = g_object_new(GTK_TYPE_APPLICATION, NULL);
+  window1 = create_window("Test Integration Window 1");
+  window2 = create_window("Test Integration Window 2");
 #ifndef QUARTZ_HANDLERS
   gtk_application_set_use_quartz_accelerators(theApp, FALSE);
 #endif //QUARTZ_HANDLERS

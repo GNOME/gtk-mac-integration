@@ -79,8 +79,32 @@ void gtk_application_add_app_menu_item   (GtkApplication *self,
 					  GtkApplicationMenuGroup *group,
 					  GtkMenuItem *menu_item);
 //Dock Functions:
+
+typedef enum {
+  CRITICAL_REQUEST = 0,
+  INFO_REQUEST = 10
+} GtkApplicationAttentionType;
+
 void gtk_application_set_dock_menu(GtkApplication *self, 
 				   GtkMenuShell *menu_shell);
+void gtk_application_set_dock_icon_pixbuf(GtkApplication *self,
+					  GdkPixbuf *pixbuf);
+void gtk_application_set_dock_icon_resource(GtkApplication *self,
+					    const gchar  *name,
+					    const gchar  *type,
+					    const gchar  *subdir);
+/** Ige-mac-dock provided two functions,
+ * ige_mac_dock_set_overlay_from_pixbuf and
+ * ige_mac_doc_set_overlay_from_resource, but OSX 10.5 and later do
+ * not support application dock tile overlays. Document dock tiles
+ * will by default represent a miniaturized view of the document's
+ * contents badged with an even more miniaturized application
+ * icon. The interface to change this is a bit complex and will be
+ * left up to the application rather than implemented here.
+ */
+gint gtk_application_attention_request(GtkApplication *self,
+				       GtkApplicationAttentionType type);
+void gtk_application_cancel_attention_request(GtkApplication *self, gint id);
 
 //Quartz event callbacks: Override these with real functions
 //FIXME: The class should register the callback so that applications don't need to create a derived class

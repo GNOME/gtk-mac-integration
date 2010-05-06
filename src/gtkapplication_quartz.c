@@ -36,7 +36,7 @@
 #include "cocoa_menu_item.h"
 #include "cocoa_menu.h"
 #include "getlabel.h"
-
+#include "ige-mac-image-utils.h"
 
 /* This is a private function in libgdk; we need to have is so that we
    can force new windows onto the Window menu */
@@ -304,6 +304,7 @@ void
 gtk_application_cleanup(GtkApplication *self)
 {
   //FIXME: release each window's menubar
+  [self->priv->dock_menu release];
   
 }
 
@@ -443,6 +444,7 @@ gtk_application_add_app_menu_item (GtkApplication *self,
 }
 
 /* Dock support */
+/* A bogus prototype to shut up a compiler warning. This function is for GtkApplicationDelegate and is not public. */
 NSMenu* gtk_application_dock_menu(GtkApplication *self);
 
 NSMenu*
@@ -451,6 +453,19 @@ gtk_application_dock_menu(GtkApplication *self)
   return(self->priv->dock_menu);
 }
 
+/** Set a GtkMenu as the dock menu.  
+
+ * This menu does not have a "sync" function, so changes made while
+ * signals are disconnected will not update the menu which appears in
+ * the dock, and may produce strange results or crashes if a
+ * GtkMenuItem or GtkAction associated with a dock menu item is
+ * deallocated.
+
+ * @param self The GtkApplication
+
+ * @param menu_shell A GtkMenu (cast it with GTK_MENU_SHELL() when you
+ * pass it in
+ */
 void
 gtk_application_set_dock_menu(GtkApplication *self,
 			      GtkMenuShell *menu_shell)
@@ -458,6 +473,130 @@ gtk_application_set_dock_menu(GtkApplication *self,
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
   if (!self->priv->dock_menu) {
     self->priv->dock_menu = [[NSMenu alloc] initWithTitle: @""]; 
-    cocoa_menu_connect(GTK_WIDGET (menu_shell), self->priv->dock_menu);
+    cocoa_menu_item_add_submenu(menu_shell, self->priv->dock_menu, FALSE, FALSE);
+    [self->priv->dock_menu retain];
   }
+}
+
+/** Retrieve an image file from the bundle and return an NSImage* of it.
+ * @param name The filename
+ * @param type The extension (e.g., jpg) of the filename
+ * @param subdir The subdirectory of $Bundle/Contents/Resources in which to look for the file.
+ * @return An autoreleased NSImage
+ */
+static NSImage*
+nsimage_from_resource(const gchar *name, const gchar* type, const gchar* subdir)
+{
+  NSString *ns_name, *ns_type, *ns_subdir, *path;
+  NSImage *image;
+  g_return_val_if_fail(name != NULL, NULL);
+  g_return_val_if_fail(type != NULL, NULL);
+  g_return_val_if_fail(subdir != NULL, NULL);
+  ns_name = [NSString stringWithUTF8String: name];
+  ns_type = [NSString stringWithUTF8String: type];
+  ns_subdir = [NSString stringWithUTF8String: subdir];
+  path = [[NSApp mainBundle] pathForResource: ns_name
+		     ofType: ns_type inDirectory: ns_subdir];
+  if (!path) {
+    [ns_name release];
+    [ns_type release];
+    [ns_subdir release];
+    return NULL;
+  }
+  image = [[[NSImage alloc] initWithContentsOfFile: path] autorelease];
+  [ns_name release];
+  [ns_type release];
+  [ns_subdir release];
+  [path release];
+  return image;
+}
+
+/** Create an NSImage from a CGImageRef.
+ * Lifted from http://www.cocoadev.com/index.pl?CGImageRef
+ * @param pixbuf: The GdkPixbuf* to convert
+ * @return An auto-released NSImage*
+ */
+static NSImage*
+nsimage_from_pixbuf(GdkPixbuf *pixbuf)
+{
+  CGImageRef image = NULL;
+  NSRect imageRect = NSMakeRect(0.0, 0.0, 0.0, 0.0);
+  CGContextRef imageContext = nil;
+  NSImage* newImage = nil;
+
+  g_return_val_if_fail (pixbuf !=  NULL, NULL);
+  image = ige_mac_image_from_pixbuf (pixbuf);
+  // Get the image dimensions.
+  imageRect.size.height = CGImageGetHeight(image);
+  imageRect.size.width = CGImageGetWidth(image);
+
+  // Create a new image to receive the Quartz image data.
+  newImage = [[[NSImage alloc] initWithSize:imageRect.size] autorelease];
+  [newImage lockFocus];
+
+  // Get the Quartz context and draw.
+  imageContext = (CGContextRef)[[NSGraphicsContext currentContext]
+				graphicsPort];
+  CGContextDrawImage(imageContext, *(CGRect*)&imageRect, image);
+  [newImage unlockFocus];
+  CGImageRelease (image);
+  return newImage;
+}
+
+/** Set the dock icon from a GdkPixbuf
+ * @param self The GtkApplication
+ * @param pixbuf The pixbuf. Pass NULL to reset the icon to its default.
+ */
+void
+gtk_application_set_dock_icon_pixbuf(GtkApplication *self,
+					  GdkPixbuf *pixbuf)
+{
+  if (!pixbuf)
+    [NSApp setApplicationIconImage: nil];
+  else
+    [NSApp setApplicationIconImage: nsimage_from_pixbuf(pixbuf)];
+
+}
+
+/** Set the dock icon from an image file in the bundle/
+ * @param self The GtkApplication
+ * @param name The ame of the image file
+ * @param type The extension (e.g., jpg) of the filename
+ * @param subdir The subdirectory of $Bundle/Contents/Resources in which to look for the file.
+ */
+void
+gtk_application_set_dock_icon_resource(GtkApplication *self,
+					    const gchar  *name,
+					    const gchar  *type,
+					    const gchar  *subdir)
+{
+  NSImage *image = nsimage_from_resource(name, type, subdir);
+  [NSApp setApplicationIconImage: image];
+  [image release];
+}
+
+/** Create an attention request.  If type is CRITICAL_REQUEST, the
+ * dock icon will bounce until cancelled the application receives
+ * focus; otherwise it will bounce for 1 second -- but the attention
+ * request will remain asserted until cancelled or the application
+ * receives focus. This function has no effect if the application has focus.
+ * @param self The GtkApplication pointer
+ * @param type CRITICAL_REQUEST or INFO_REQUEST
+ * @return A the attention request ID. Pass this id to gtk_application_cancel_attention_request.
+ */
+gint
+gtk_application_attention_request(GtkApplication *self,
+				  GtkApplicationAttentionType type)
+{
+  return (gint)[NSApp requestUserAttention: (NSRequestUserAttentionType)type];
+}
+
+/** Cancel an attention request created with gtk_application_attention_request.
+ * @param self The application
+ * @param id The integer attention request id returned from gtk_application_attention_request.
+ */
+void
+gtk_application_cancel_attention_request(GtkApplication *self, gint id)
+{
+  [NSApp cancelUserAttentionRequest: (NSInteger)id];
 }
