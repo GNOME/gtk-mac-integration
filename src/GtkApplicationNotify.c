@@ -28,18 +28,16 @@
 - (GtkApplicationNotificationObject*) init
 {
   self = [ super init ];
+  g_return_val_if_fail(self != NULL, NULL);
+  [[NSNotificationCenter defaultCenter] addObserver:self
+   selector:@selector(appDidBecomeActive:)
+   name:NSApplicationDidBecomeActiveNotification
+   object:NSApp];
 
-  if (self) {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-					  selector:@selector(appDidBecomeActive:)
-					  name:NSApplicationDidBecomeActiveNotification
-					  object:NSApp];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-					  selector:@selector(appDidBecomeInactive:)
-					  name:NSApplicationWillResignActiveNotification 
-					  object:NSApp];
-  }
+  [[NSNotificationCenter defaultCenter] addObserver:self
+   selector:@selector(appDidBecomeInactive:)
+   name:NSApplicationWillResignActiveNotification 
+   object:NSApp];
 
   return self;
 }
@@ -47,14 +45,20 @@
 - (void)appDidBecomeActive:(NSNotification *)notification
 {
   GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
-  gtk_application_activation_changed(app, true);
+  guint sig = g_signal_lookup("NSApplicationDidBecomeActive", 
+			      GTK_TYPE_APPLICATION);
+  if (sig)
+      g_signal_emit(app, sig, 0);
   g_object_unref(app);
 }
 
 - (void)appDidBecomeInactive:(NSNotification *)notification
 {
   GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
-  gtk_application_activation_changed(app, false);
+  guint sig = g_signal_lookup("NSApplicationWillResignActive", 
+			      GTK_TYPE_APPLICATION);
+  if (sig)
+      g_signal_emit(app, sig, 0);
   g_object_unref(app);
 }
 

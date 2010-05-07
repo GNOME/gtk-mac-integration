@@ -277,7 +277,20 @@ gtk_application_init (GtkApplication *self)
   self->priv->dock_menu = NULL;
   gdk_window_add_filter (NULL, global_event_filter_func, (gpointer)self);
 
-  // create_window_menu (self);
+  g_signal_new("NSApplicationDidBecomeActive",
+	       GTK_TYPE_APPLICATION,
+	       G_SIGNAL_RUN_FIRST | G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+	       0, NULL, NULL,
+	       g_cclosure_marshal_VOID__VOID,
+	       G_TYPE_NONE, 0);
+
+  g_signal_new("NSApplicationWillResignActive",
+	       GTK_TYPE_APPLICATION,
+	       G_SIGNAL_RUN_FIRST | G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+	       0, NULL, NULL,
+	       g_cclosure_marshal_VOID__VOID,
+	       G_TYPE_NONE, 0);
+
 
   /* this will stick around for ever ... is that OK ? */
 

@@ -26,6 +26,20 @@
 #include <gtk/gtk.h>
 #include <glib-object.h>
 
+/** GtkApplication exposes to the Gtk+ program important functions of
+ * OSX's NSApplication class for use by Gtk+ applications running with
+ * the quartz Gdk backend and provides addtional functions for
+ * integrating a Gtk+ program into the OSX user environment.
+
+ * SIGNALS:
+ * The "NSApplicationDidBecomeActive" signal
+ * void user_function(GtkApplication *app,
+ *		      gpointer user_data)
+ * The "NSApplicationWillResignActive" signal
+ * void user_function(GtkApplication *app,
+ *		      gpointer user_data)
+ */
+
 G_BEGIN_DECLS
 #define GTK_TYPE_APPLICATION	(gtk_application_get_type())
 #define GTK_APPLICATION(obj) 	(G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_APPLICATION, GtkApplication))
@@ -49,7 +63,6 @@ struct _GtkApplication
 struct _GtkApplicationClass
 {
   GObjectClass parent_class;
-  void (*activation_changed) (GtkApplication *self, gboolean changed);
   void (*should_load) (GtkApplication *self, gchar *utf8_path);
   void (*should_quit) (GtkApplication *self);
 };

@@ -29,17 +29,6 @@
 #define DEBUG(format, ...)
 
 
-/** Override this function to do something useful when your app gets
- *  or loses the focus.
- */
-void 
-gtk_application_activation_changed (GtkApplication *self, gboolean changed) 
-{
-  if (changed)
-    DEBUG("Application now active\n");
-  else
-    DEBUG("Application now inactive\n");
-}
 /** Are we using Quartz or Gtk+ accelerator handling? */
 gboolean
 gtk_application_use_quartz_accelerators(GtkApplication *self)

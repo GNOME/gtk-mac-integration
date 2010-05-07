@@ -453,6 +453,12 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
 #endif //BUILT_UI
 }
 
+static void
+app_active_cb (GtkApplication* app, gboolean user_data)
+{
+  g_print("Application became %s\n", user_data ? "active" : "inactive");
+}
+
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
 
 #ifdef IGEMACMENU
@@ -629,6 +635,9 @@ main (int argc, char **argv)
   theApp  = g_object_new(GTK_TYPE_APPLICATION, NULL);
   window1 = create_window("Test Integration Window 1");
   window2 = create_window("Test Integration Window 2");
+  g_signal_connect(theApp, "NSApplicationDidBecomeActive", app_active_cb, TRUE);
+  g_signal_connect(theApp, "NSApplicationWillResignActive",
+		   app_active_cb, FALSE);
 #ifndef QUARTZ_HANDLERS
   gtk_application_set_use_quartz_accelerators(theApp, FALSE);
 #endif //QUARTZ_HANDLERS
