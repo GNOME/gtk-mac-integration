@@ -633,6 +633,12 @@ main (int argc, char **argv)
   gtk_application_set_use_quartz_accelerators(theApp, FALSE);
 #endif //QUARTZ_HANDLERS
   gtk_application_ready(theApp);
+  {
+    const gchar *id = gtk_application_get_bundle_id(theApp);
+    if (id != NULL) {
+      g_print ("Error! Bundle Has ID %s\n", id); 
+    }
+  }
 #endif //GTKAPPLICATION
   gtk_main ();
 

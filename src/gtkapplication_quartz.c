@@ -600,3 +600,73 @@ gtk_application_cancel_attention_request(GtkApplication *self, gint id)
 {
   [NSApp cancelUserAttentionRequest: (NSInteger)id];
 }
+
+/** Return the root path of the bundle or the directory containing the
+ *  executable if it isn't actually a bundle.
+
+ * @param self The GtkApplication. Not Used.
+ * @return path The bundle's absolute path
+ */
+const gchar*
+gtk_application_get_bundle_path(GtkApplication *self)
+{
+  return [[[NSBundle mainBundle] bundlePath] UTF8String];
+}
+
+/** Return the value of the CFBundleIdentifier key from the bundle's Info.plist
+
+ * This will return NULL if it's not really a bundle, there's no
+ * Info.plist, or if Info.plist doesn't have a CFBundleIdentifier key
+ * (So if you need to detect being in a bundle, make sure that your
+ * bundle has that key!)
+
+ * @param self The GtkApplication. Not Used.
+ * @return The string value of CFBundleIdentifier, or NULL if there is none.
+ */
+const gchar*
+gtk_application_get_bundle_id(GtkApplication *self)
+{
+  return [[[NSBundle mainBundle] bundleIdentifier] UTF8String];
+}
+
+/** Return the Resource path for the bundle or the directory containing the
+ *  executable if it isn't actually a bundle.
+
+
+ * @param self The GtkApplication. Not Used.
+ * @return path The absolute resource path
+ */
+const gchar*
+gtk_application_get_resource_path(GtkApplication *self)
+{
+  return [[[NSBundle mainBundle] resourcePath] UTF8String];
+}
+
+
+/** Return the executable path, including file name
+ * @param self The GtkApplication. Not Used.
+ * @return The path to the primary executable
+ */
+const gchar*
+gtk_application_get_executable_path(GtkApplication *self)
+{
+  return [[[NSBundle mainBundle] executablePath] UTF8String];
+}
+
+/** Return the NSObject pointed to by the provided key.
+
+ * Be careful with this! It returns a gpointer to an NSObject, so
+ * you'll need to check the object class before doing anything, and
+ * then cast it appropriately. Don't try this if you don't know Cocoa
+ * programming!
+
+ * @param self The GtkApplication. Not Used.
+ * @param key The key, as a normal UTF8 string.
+ * @return A pointer to the NSObject stored with that key.
+ */
+gpointer
+gtk_application_get_bundle_info(GtkApplication *self, const gchar *key)
+{
+  return (gpointer)[[NSBundle mainBundle] objectForInfoDictionaryKey:
+			  [NSString stringWithUTF8String: key]];
+}

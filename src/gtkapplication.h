@@ -106,12 +106,33 @@ gint gtk_application_attention_request(GtkApplication *self,
 				       GtkApplicationAttentionType type);
 void gtk_application_cancel_attention_request(GtkApplication *self, gint id);
 
-//Quartz event callbacks: Override these with real functions
-//FIXME: The class should register the callback so that applications don't need to create a derived class
+/* Bundle Functions */
+/* ige-mac-bundle included a bunch of silly stuff for setting up the
+ * environment. It's silly first because that's easier to do with a
+ * startup script, and even easier to do with an LCEnvironment
+ * dictionary in the bundle's Info.plist. 
+
+ * Gtk applications, at least when launched with a shell script, still
+ * return a bundle identifier and it's executable path is correct and
+ * useful.  Ige-mac-bundle had a "is it an application bundle"
+ * function, but NSBundle doesn't provide that; instead,
+ * gtk_application_get_bundle_id will return NULL if it's not really a
+ * bundle, there's no Info.plist, or if Info.plist doesn't have a
+ * CFBundleIdentifier key (So if you need to detect being in a bundle,
+ * make sure that your bundle has that key!) */
+const gchar *gtk_application_get_bundle_path(GtkApplication *self);
+const gchar *gtk_application_get_resource_path(GtkApplication *self);
+const gchar *gtk_application_get_executable_path(GtkApplication *self);
+const gchar *gtk_application_get_bundle_id(GtkApplication *self);
+gpointer gtk_application_get_bundle_info(GtkApplication *self, const gchar *key);
+
+//FIXME: These hard-coded functions should be replaced with a registry in GNSApplicationDelegate and GNSApplicationNotify
+
+/* NSNotification responders: Override with something useful */
 void gtk_application_activation_changed (GtkApplication *self, 
 					 gboolean changed);
-//Delegate callbacks: Override these with real functions
-//FIXME: The delegate should register callbacks so that applications don't need to override the class
+
+/* NSApplicationDelegate callbacks: Override these with real functions */
 void gtk_application_should_load (GtkApplication *self, const gchar *utf8_path);
 gboolean gtk_application_should_quit (GtkApplication *self);
 
