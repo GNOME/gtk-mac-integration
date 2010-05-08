@@ -20,16 +20,16 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GTK_APPLICATIONPRIVATE_H__
-#define __GTK_APPLICATIONPRIVATE_H__
+#ifndef __GTK_OSXAPPLICATIONPRIVATE_H__
+#define __GTK_OSXAPPLICATIONPRIVATE_H__
 #import <AppKit/NSMenu.h>
 #import <AppKit/NSApplication.h>
 
-#include "gtkapplication.h"
+#include "gtkosxapplication.h"
 
-#define  GTK_APPLICATION_GET_PRIVATE(obj)	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_APPLICATION, GtkApplicationPrivate))
+#define  GTK_OSXAPPLICATION_GET_PRIVATE(obj)	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_OSXAPPLICATION, GtkOSXApplicationPrivate))
 
-struct _GtkApplicationPrivate
+struct _GtkOSXApplicationPrivate
 {
   gboolean use_quartz_accelerators;
   NSMenu *dock_menu;

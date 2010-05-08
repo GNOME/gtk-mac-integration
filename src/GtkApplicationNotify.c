@@ -22,7 +22,7 @@
 
 #import "GtkApplicationNotify.h"
 #include <gtk/gtk.h>
-#include "gtkapplication.h"
+#include "gtkosxapplication.h"
 
 @implementation GtkApplicationNotificationObject
 - (GtkApplicationNotificationObject*) init
@@ -44,9 +44,9 @@
 
 - (void)appDidBecomeActive:(NSNotification *)notification
 {
-  GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
+  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
   guint sig = g_signal_lookup("NSApplicationDidBecomeActive", 
-			      GTK_TYPE_APPLICATION);
+			      GTK_TYPE_OSXAPPLICATION);
   if (sig)
       g_signal_emit(app, sig, 0);
   g_object_unref(app);
@@ -54,9 +54,9 @@
 
 - (void)appDidBecomeInactive:(NSNotification *)notification
 {
-  GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
+  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
   guint sig = g_signal_lookup("NSApplicationWillResignActive", 
-			      GTK_TYPE_APPLICATION);
+			      GTK_TYPE_OSXAPPLICATION);
   if (sig)
       g_signal_emit(app, sig, 0);
   g_object_unref(app);

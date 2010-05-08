@@ -58,7 +58,7 @@
 
 /* Uncomment ONE of these to test menu-mangling: */
 //#define IGEMACMENU
-#define GTKAPPLICATION
+#define GTKOSXAPPLICATION
 #define BUILT_UI
 #define QUARTZ_HANDLERS
 
@@ -71,8 +71,8 @@
 #include "ige-mac-dock.h"
 #include "ige-mac-bundle.h"
 #endif
-#ifdef GTKAPPLICATION
-#include "gtkapplication.h"
+#ifdef GTKOSXAPPLICATION
+#include "gtkosxapplication.h"
 #endif
 #include <config.h>
 
@@ -323,23 +323,23 @@ change_icon_cb (GtkWidget  *button,
 
   changed = !changed;
 }
-#elif defined GTKAPPLICATION
+#elif defined GTKOSXAPPLICATION
 typedef struct {
-  GtkApplication *app;
-  GtkApplicationAttentionType type;
+  GtkOSXApplication *app;
+  GtkOSXApplicationAttentionType type;
 } AttentionRequest;
 
 static gboolean
 attention_cb(AttentionRequest* req)
 {
-  gtk_application_attention_request(req->app, req->type);
+  gtk_osxapplication_attention_request(req->app, req->type);
   g_free(req);
   return FALSE;
 }
 
 static void
 bounce_cb (GtkWidget  *button,
-           GtkApplication *app)
+           GtkOSXApplication *app)
 {
   AttentionRequest *req = g_new0 (AttentionRequest, 1);
   req->app = app;
@@ -350,7 +350,7 @@ bounce_cb (GtkWidget  *button,
 
 static void
 change_icon_cb (GtkWidget  *button,
-                GtkApplication *app)
+                GtkOSXApplication *app)
 {
   static gboolean   changed;
   static GdkPixbuf *pixbuf;
@@ -362,9 +362,9 @@ change_icon_cb (GtkWidget  *button,
   }
 
   if (changed)
-    gtk_application_set_dock_icon_pixbuf (app, NULL);
+    gtk_osxapplication_set_dock_icon_pixbuf (app, NULL);
   else
-    gtk_application_set_dock_icon_pixbuf (app, pixbuf);
+    gtk_osxapplication_set_dock_icon_pixbuf (app, pixbuf);
 
   changed = !changed;
 }
@@ -405,7 +405,7 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
   static GtkActionGroup* view_action_group = NULL;
   GtkUIManager *mgr = user_data;
   GtkWidget *window = gtk_widget_get_toplevel(button);
-  GtkApplication *theApp = g_object_new(GTK_TYPE_APPLICATION, NULL);
+  GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
   GError *err = NULL;
   if (view_action_group == NULL) {
     view_action_group = gtk_action_group_new("ViewAction");
@@ -440,7 +440,7 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
 			     menu_cbdata_new ( "Freebish", item),
 			     (GClosureNotify) menu_cbdata_delete, 0);
       gtk_menu_append(menu, item);
-      gtk_application_set_dock_menu(theApp, GTK_MENU_SHELL(menu));
+      gtk_osxapplication_set_dock_menu(theApp, GTK_MENU_SHELL(menu));
     }
   }
   else if (mergeid) {
@@ -454,13 +454,13 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
 }
 
 static void
-app_active_cb (GtkApplication* app, gboolean* data)
+app_active_cb (GtkOSXApplication* app, gboolean* data)
 {
   g_print("Application became %s\n", *data ? "active" : "inactive");
 }
 
 static gboolean
-app_should_quit_cb (GtkApplication *app, gint flags, gpointer data)
+app_should_quit_cb (GtkOSXApplication *app, gpointer data)
 {
   static gboolean abort = TRUE;
   gboolean answer;
@@ -501,10 +501,10 @@ create_window(const gchar *title)
 #ifdef IGEMACMENU
   IgeMacMenuGroup *group;
 #endif //IGEMACMENU
-#ifdef GTKAPPLICATION
-  GtkApplicationMenuGroup *group;
-  GtkApplication *theApp = g_object_new(GTK_TYPE_APPLICATION, NULL);
-#endif //GTKAPPLICATION
+#ifdef GTKOSXAPPLICATION
+  GtkOSXApplicationMenuGroup *group;
+  GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
+#endif //GTKOSXAPPLICATION
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   if (title)
       gtk_window_set_title (GTK_WINDOW (window), title);
@@ -578,16 +578,16 @@ create_window(const gchar *title)
 		      FALSE, FALSE, 0);
 
   gtk_widget_show_all (window);
-#if defined IGE_MAC_MENU || defined GTKAPPLICATION
+#if defined IGE_MAC_MENU || defined GTKOSXAPPLICATION
   gtk_widget_hide (menubar);
-#ifdef GTKAPPLICATION
+#ifdef GTKOSXAPPLICATION
 /* Not really necessary unless quartz accelerator handling is turned off. */
 #if !defined QUARTZ_HANDLERS && !defined BUILT_UI
   g_signal_connect(menubar, "can-activate-accel", 
 		   G_CALLBACK(can_activate_cb), NULL);
 #endif // !defined QUARTZ_HANDLERS && !defined BUILT_UI
-#endif  //GTKAPPLICATION
-#endif //defined IGE_MAC_MENU || defined GTKAPPLICATION
+#endif  //GTKOSXAPPLICATION
+#endif //defined IGE_MAC_MENU || defined GTKOSXAPPLICATION
 #ifdef IGEMACMENU
   ige_mac_menu_set_menu_bar (GTK_MENU_SHELL (menubar));
   ige_mac_menu_set_quit_menu_item (GTK_MENU_ITEM (items->quit_item));
@@ -600,16 +600,16 @@ create_window(const gchar *title)
 				   GTK_MENU_ITEM (items->preferences_item),
 				   "Preferences");
 #endif //IGEMACMENU
-#ifdef GTKAPPLICATION
-  gtk_application_set_menu_bar(theApp, GTK_MENU_SHELL(menubar));
-  group = gtk_application_add_app_menu_group (theApp);
-  gtk_application_add_app_menu_item  (theApp, group,
+#ifdef GTKOSXAPPLICATION
+  gtk_osxapplication_set_menu_bar(theApp, GTK_MENU_SHELL(menubar));
+  group = gtk_osxapplication_add_app_menu_group (theApp);
+  gtk_osxapplication_add_app_menu_item  (theApp, group,
 				      GTK_MENU_ITEM (items->about_item));
 
-  group = gtk_application_add_app_menu_group (theApp);
-  gtk_application_add_app_menu_item  (theApp, group,
+  group = gtk_osxapplication_add_app_menu_group (theApp);
+  gtk_osxapplication_add_app_menu_item  (theApp, group,
 				      GTK_MENU_ITEM (items->preferences_item));
-#endif //GTKAPPLICATION
+#endif //GTKOSXAPPLICATION
   if (!menu_items_quark)
       menu_items_quark = g_quark_from_static_string("MenuItem");
   g_object_set_qdata_full(G_OBJECT(window), menu_items_quark, 
@@ -624,9 +624,9 @@ main (int argc, char **argv)
 #ifdef IGEMACMENU
   IgeMacDock      *dock;
 #endif //IGEMACMENU
-#ifdef GTKAPPLICATION
-  GtkApplication *theApp;
-#endif //GTKAPPLICATION
+#ifdef GTKOSXAPPLICATION
+  GtkOSXApplication *theApp;
+#endif //GTKOSXAPPLICATION
   gtk_init (&argc, &argv);
 #ifdef IGEMACMENU
   dock = ige_mac_dock_get_default ();
@@ -643,8 +643,8 @@ main (int argc, char **argv)
                     G_CALLBACK (gtk_main_quit),
                     window1);
 #endif //IGEMACMENU
-#ifdef GTKAPPLICATION
-  theApp  = g_object_new(GTK_TYPE_APPLICATION, NULL);
+#ifdef GTKOSXAPPLICATION
+  theApp  = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
   window1 = create_window("Test Integration Window 1");
   window2 = create_window("Test Integration Window 2");
   {
@@ -658,20 +658,20 @@ main (int argc, char **argv)
 		     G_CALLBACK(app_should_quit_cb), NULL);
   }
 #ifndef QUARTZ_HANDLERS
-  gtk_application_set_use_quartz_accelerators(theApp, FALSE);
+  gtk_osxapplication_set_use_quartz_accelerators(theApp, FALSE);
 #endif //QUARTZ_HANDLERS
-  gtk_application_ready(theApp);
+  gtk_osxapplication_ready(theApp);
   {
-    const gchar *id = gtk_application_get_bundle_id(theApp);
+    const gchar *id = gtk_osxapplication_get_bundle_id(theApp);
     if (id != NULL) {
       g_print ("Error! Bundle Has ID %s\n", id); 
     }
   }
-#endif //GTKAPPLICATION
+#endif //GTKOSXAPPLICATION
   gtk_main ();
 
-#ifdef GTKAPPLICATION
+#ifdef GTKOSXAPPLICATION
   g_object_unref(theApp);
-#endif //GTKAPPLICATION
+#endif //GTKOSXAPPLICATION
   return 0;
 }

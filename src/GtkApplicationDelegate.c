@@ -22,14 +22,14 @@
 
 #import "GtkApplicationDelegate.h"
 #include <gtk/gtk.h>
-#include "gtkapplication.h"
+#include "gtkosxapplication.h"
 
 @implementation GtkApplicationDelegate
 -(BOOL) application:(NSApplication*) theApplication openFile:(NSString*) file
 {
   const gchar *utf8_path =  [file UTF8String];
-  GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
-  gtk_application_should_load(app, utf8_path);
+  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
+  gtk_osxapplication_should_load(app, utf8_path);
   g_object_unref(app);
   return NO;
 }
@@ -37,9 +37,9 @@
 
 - (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *)sender
 {
-  GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
+  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
   guint sig = g_signal_lookup("NSApplicationBlockTermination", 
-			      GTK_TYPE_APPLICATION);
+			      GTK_TYPE_OSXAPPLICATION);
   gboolean result = FALSE;
   if (sig)
       g_signal_emit(app, sig, 0, &result);
@@ -54,10 +54,10 @@
 
 -(NSMenu *)applicationDockMenu: (NSApplication*) sender
 {
-    extern NSMenu* gtk_application_dock_menu(GtkApplication* app);
+    extern NSMenu* gtk_osxapplication_dock_menu(GtkOSXApplication* app);
     g_print("Dock requested a menu\n");
-    GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
-    return gtk_application_dock_menu(app);
+    GtkOSXApplication *app = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
+    return gtk_osxapplication_dock_menu(app);
 }
 
 @end

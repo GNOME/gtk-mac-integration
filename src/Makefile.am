@@ -17,9 +17,9 @@ libigemacintegration_la_SOURCES =			\
 	cocoa_menu.c					\
 	cocoa_menu_item.h				\
 	cocoa_menu_item.c				\
-	gtkapplication_quartz.c				\
-	gtkapplication.c				\
-	gtkapplicationprivate.h				\
+	gtkosxapplication_quartz.c				\
+	gtkosxapplication.c				\
+	gtkosxapplicationprivate.h				\
 	ige-mac-dock.c					\
 	ige-mac-bundle.c				\
 	ige-mac-menu.c					\
@@ -36,7 +36,7 @@ libigemacintegration_la_LDFLAGS = -framework Carbon -framework ApplicationServic
 integration_includedir = $(includedir)/igemacintegration
 integration_include_HEADERS =				\
 	ige-mac-integration.h				\
-	gtkapplication.h				\
+	gtkosxapplication.h				\
 	ige-mac-menu.h					\
 	ige-mac-dock.h					\
 	ige-mac-bundle.h

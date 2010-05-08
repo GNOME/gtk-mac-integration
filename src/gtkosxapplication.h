@@ -20,88 +20,91 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GTK_APPLICATION_H__
-#define __GTK_APPLICATION_H__
+#ifndef __GTK_OSXAPPLICATION_H__
+#define __GTK_OSXAPPLICATION_H__
 
 #include <gtk/gtk.h>
 #include <glib-object.h>
 
-/** GtkApplication exposes to the Gtk+ program important functions of
+/** GtkOSXApplication exposes to the Gtk+ program important functions of
  * OSX's NSApplication class for use by Gtk+ applications running with
  * the quartz Gdk backend and provides addtional functions for
  * integrating a Gtk+ program into the OSX user environment.
 
  * SIGNALS:
  * The "NSApplicationDidBecomeActive" signal
- * void user_function(GtkApplication *app,
+ * void user_function(GtkOSXApplication *app,
  *		      gpointer user_data)
  * The "NSApplicationWillResignActive" signal
- * void user_function(GtkApplication *app,
+ * void user_function(GtkOSXApplication *app,
  *		      gpointer user_data)
+ * The "NSApplicationBlockTermination" signal
+ * gboolean user_function(GtkOSXApplication *app,
+ * 			  gpointer user_data)
  */
 
 G_BEGIN_DECLS
-#define GTK_TYPE_APPLICATION	(gtk_application_get_type())
-#define GTK_APPLICATION(obj) 	(G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_APPLICATION, GtkApplication))
-#define GTK_IS_APPLICATION(obj)	(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_APPLICATION))
-#define GTK_APPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTK_TYPE_APPLICATION, GtkApplicationClass))
-#define GTK_IS_APPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTK_TYPE_APPLICATION))
-#define GTK_APPLICATION_GET_CLASS(obj) 	(G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_APPLICATION, GtkApplicationClass))
+#define GTK_TYPE_OSXAPPLICATION	(gtk_osxapplication_get_type())
+#define GTK_OSXAPPLICATION(obj) 	(G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_OSXAPPLICATION, GtkOSXApplication))
+#define GTK_IS_OSXAPPLICATION(obj)	(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_OSXAPPLICATION))
+#define GTK_OSXAPPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTK_TYPE_OSXAPPLICATION, GtkOSXApplicationClass))
+#define GTK_IS_OSXAPPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTK_TYPE_OSXAPPLICATION))
+#define GTK_OSXAPPLICATION_GET_CLASS(obj) 	(G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_OSXAPPLICATION, GtkOSXApplicationClass))
 
-typedef struct _GtkApplication GtkApplication;
-typedef struct _GtkApplicationPrivate GtkApplicationPrivate;
-typedef struct _GtkApplicationClass GtkApplicationClass;
-typedef struct _GtkApplicationMenuGroup GtkApplicationMenuGroup;
+typedef struct _GtkOSXApplication GtkOSXApplication;
+typedef struct _GtkOSXApplicationPrivate GtkOSXApplicationPrivate;
+typedef struct _GtkOSXApplicationClass GtkOSXApplicationClass;
+typedef struct _GtkOSXApplicationMenuGroup GtkOSXApplicationMenuGroup;
 
-struct _GtkApplication
+struct _GtkOSXApplication
 {
   GObject parent_instance;
   /*< private >*/
-  GtkApplicationPrivate *priv;
+  GtkOSXApplicationPrivate *priv;
 };
 
-struct _GtkApplicationClass
+struct _GtkOSXApplicationClass
 {
   GObjectClass parent_class;
-  void (*should_load) (GtkApplication *self, gchar *utf8_path);
+  void (*should_load) (GtkOSXApplication *self, gchar *utf8_path);
 };
 
-struct _GtkApplicationMenuGroup
+struct _GtkOSXApplicationMenuGroup
 {
   GList *items;
 };
 
 
-GType gtk_application_get_type (void);
-//GtkApplication *gtk_application_get (void);
+GType gtk_osxapplication_get_type (void);
+//GtkOSXApplication *gtk_osxapplication_get (void);
 
-//void gtk_application_init (GtkApplication *self);
-void gtk_application_ready (GtkApplication *self);
-void gtk_application_cleanup (GtkApplication *self);
+//void gtk_osxapplication_init (GtkOSXApplication *self);
+void gtk_osxapplication_ready (GtkOSXApplication *self);
+void gtk_osxapplication_cleanup (GtkOSXApplication *self);
 //Accelerator functions
-void gtk_application_set_use_quartz_accelerators(GtkApplication *self, 
+void gtk_osxapplication_set_use_quartz_accelerators(GtkOSXApplication *self, 
 						 gboolean use_accelerators);
-gboolean gtk_application_use_quartz_accelerators(GtkApplication *self);
+gboolean gtk_osxapplication_use_quartz_accelerators(GtkOSXApplication *self);
 //Menu functions
-void gtk_application_set_menu_bar       (GtkApplication *self, 
+void gtk_osxapplication_set_menu_bar       (GtkOSXApplication *self, 
 					 GtkMenuShell    *menu_shell);
-void gtk_application_sync_menubar( void );
-GtkApplicationMenuGroup * gtk_application_add_app_menu_group (GtkApplication*);
-void gtk_application_add_app_menu_item   (GtkApplication *self,
-					  GtkApplicationMenuGroup *group,
+void gtk_osxapplication_sync_menubar( void );
+GtkOSXApplicationMenuGroup * gtk_osxapplication_add_app_menu_group (GtkOSXApplication*);
+void gtk_osxapplication_add_app_menu_item   (GtkOSXApplication *self,
+					  GtkOSXApplicationMenuGroup *group,
 					  GtkMenuItem *menu_item);
 //Dock Functions:
 
 typedef enum {
   CRITICAL_REQUEST = 0,
   INFO_REQUEST = 10
-} GtkApplicationAttentionType;
+} GtkOSXApplicationAttentionType;
 
-void gtk_application_set_dock_menu(GtkApplication *self, 
+void gtk_osxapplication_set_dock_menu(GtkOSXApplication *self, 
 				   GtkMenuShell *menu_shell);
-void gtk_application_set_dock_icon_pixbuf(GtkApplication *self,
+void gtk_osxapplication_set_dock_icon_pixbuf(GtkOSXApplication *self,
 					  GdkPixbuf *pixbuf);
-void gtk_application_set_dock_icon_resource(GtkApplication *self,
+void gtk_osxapplication_set_dock_icon_resource(GtkOSXApplication *self,
 					    const gchar  *name,
 					    const gchar  *type,
 					    const gchar  *subdir);
@@ -114,9 +117,9 @@ void gtk_application_set_dock_icon_resource(GtkApplication *self,
  * icon. The interface to change this is a bit complex and will be
  * left up to the application rather than implemented here.
  */
-gint gtk_application_attention_request(GtkApplication *self,
-				       GtkApplicationAttentionType type);
-void gtk_application_cancel_attention_request(GtkApplication *self, gint id);
+gint gtk_osxapplication_attention_request(GtkOSXApplication *self,
+				       GtkOSXApplicationAttentionType type);
+void gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint id);
 
 /* Bundle Functions */
 /* ige-mac-bundle included a bunch of silly stuff for setting up the
@@ -132,18 +135,20 @@ void gtk_application_cancel_attention_request(GtkApplication *self, gint id);
  * bundle, there's no Info.plist, or if Info.plist doesn't have a
  * CFBundleIdentifier key (So if you need to detect being in a bundle,
  * make sure that your bundle has that key!) */
-const gchar *gtk_application_get_bundle_path(GtkApplication *self);
-const gchar *gtk_application_get_resource_path(GtkApplication *self);
-const gchar *gtk_application_get_executable_path(GtkApplication *self);
-const gchar *gtk_application_get_bundle_id(GtkApplication *self);
-gpointer gtk_application_get_bundle_info(GtkApplication *self, const gchar *key);
+const gchar *gtk_osxapplication_get_bundle_path(GtkOSXApplication *self);
+const gchar *gtk_osxapplication_get_resource_path(GtkOSXApplication *self);
+const gchar *gtk_osxapplication_get_executable_path(GtkOSXApplication *self);
+const gchar *gtk_osxapplication_get_bundle_id(GtkOSXApplication *self);
+gpointer gtk_osxapplication_get_bundle_info(GtkOSXApplication *self, 
+					    const gchar *key);
 
 //FIXME: These hard-coded functions should be replaced with a registry in GNSApplicationDelegate and GNSApplicationNotify
 
 
 /* NSApplicationDelegate callbacks: Override these with real functions */
-void gtk_application_should_load (GtkApplication *self, const gchar *utf8_path);
+void gtk_osxapplication_should_load (GtkOSXApplication *self,
+				     const gchar *utf8_path);
 
 G_END_DECLS
 
-#endif /* __GTK_APPLICATION_H__ */
+#endif /* __GTK_OSXAPPLICATION_H__ */

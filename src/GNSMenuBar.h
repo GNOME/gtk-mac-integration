@@ -20,7 +20,7 @@
  */
 #import <Cocoa/Cocoa.h>
 #include <gtk/gtk.h>
-#include "gtkapplication.h"
+#include "gtkosxapplication.h"
 
 @class GNSMenuItem;
 
@@ -47,7 +47,7 @@
 /** Create a new GtkApplicationMenuGroup, add it to the list, and
  * return a pointer to it.
  */
-- (GtkApplicationMenuGroup *) addGroup;
+- (GtkOSXApplicationMenuGroup *) addGroup;
 
 /** Get a pointer to the current head of the app_menu_groups list
  */
