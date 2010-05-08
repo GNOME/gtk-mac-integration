@@ -245,6 +245,58 @@ gtk_application_constructor (GType gtype,
 
 }
 
+static void
+g_cclosure_marshal_BOOLEAN__VOID (GClosure     *closure,
+                               GValue       *return_value G_GNUC_UNUSED,
+                               guint         n_param_values,
+                               const GValue *param_values,
+                               gpointer      invocation_hint G_GNUC_UNUSED,
+                               gpointer      marshal_data)
+{
+  typedef gboolean (*GMarshalFunc_BOOLEAN__VOID) (gpointer     data1,
+					      gpointer     data2);
+  register GMarshalFunc_BOOLEAN__VOID callback;
+  register GCClosure *cc = (GCClosure*) closure;
+  register gpointer data1, data2;
+  gboolean v_return;
+
+  g_return_if_fail (n_param_values == 1);
+
+  if (G_CCLOSURE_SWAP_DATA (closure))
+    {
+      data1 = closure->data;
+      data2 = g_value_peek_pointer (param_values + 0);
+    }
+  else
+    {
+      data1 = g_value_peek_pointer (param_values + 0);
+      data2 = closure->data;
+    }
+  callback = (GMarshalFunc_BOOLEAN__VOID) (marshal_data ? marshal_data : cc->callback);
+
+    v_return = callback (data1, data2);
+    g_value_set_boolean (return_value, v_return);
+}
+
+
+/* If a handler returns TRUE than we need to stop termination, so we
+   set the return value accumulator to TRUE and return FALSE (there's
+   no point in asking more handlers; we're going to abort the
+   shutdown). Otherwise, set the return value to FALSE (don't block
+   termination) and continue looking for handlers.
+ */
+static gboolean
+block_termination_accumulator(GSignalInvocationHint *ihint, GValue *accum,
+			const GValue *retval, gpointer data)
+{
+  if (g_value_get_boolean(retval)) {
+    g_value_set_boolean(accum, TRUE);
+    return FALSE; //Stop handling the signal
+  }
+  g_value_set_boolean(accum, FALSE);
+  return TRUE; //Continue handling the signal
+ }
+
 static GdkFilterReturn
 global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
                           gpointer  user_data)
@@ -279,17 +331,25 @@ gtk_application_init (GtkApplication *self)
 
   g_signal_new("NSApplicationDidBecomeActive",
 	       GTK_TYPE_APPLICATION,
-	       G_SIGNAL_RUN_FIRST | G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, NULL, NULL,
 	       g_cclosure_marshal_VOID__VOID,
 	       G_TYPE_NONE, 0);
 
   g_signal_new("NSApplicationWillResignActive",
 	       GTK_TYPE_APPLICATION,
-	       G_SIGNAL_RUN_FIRST | G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, NULL, NULL,
 	       g_cclosure_marshal_VOID__VOID,
 	       G_TYPE_NONE, 0);
+
+  g_signal_new("NSApplicationBlockTermination",
+	       GTK_TYPE_APPLICATION,
+	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+	       0, block_termination_accumulator, NULL,
+	       g_cclosure_marshal_BOOLEAN__VOID,
+	       G_TYPE_BOOLEAN, 0);
+
 
 
   /* this will stick around for ever ... is that OK ? */

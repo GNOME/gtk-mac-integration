@@ -38,9 +38,14 @@
 - (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *)sender
 {
   GtkApplication *app = g_object_new(GTK_TYPE_APPLICATION, NULL);
-  gboolean result = gtk_application_should_quit(app);
+  guint sig = g_signal_lookup("NSApplicationBlockTermination", 
+			      GTK_TYPE_APPLICATION);
+  gboolean result = FALSE;
+  if (sig)
+      g_signal_emit(app, sig, 0, &result);
+
   g_object_unref(app);
-  if (result)
+  if (!result)
     return NSTerminateNow;
   else
     return NSTerminateLater;

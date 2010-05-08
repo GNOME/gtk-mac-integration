@@ -64,7 +64,6 @@ struct _GtkApplicationClass
 {
   GObjectClass parent_class;
   void (*should_load) (GtkApplication *self, gchar *utf8_path);
-  void (*should_quit) (GtkApplication *self);
 };
 
 struct _GtkApplicationMenuGroup
@@ -141,13 +140,9 @@ gpointer gtk_application_get_bundle_info(GtkApplication *self, const gchar *key)
 
 //FIXME: These hard-coded functions should be replaced with a registry in GNSApplicationDelegate and GNSApplicationNotify
 
-/* NSNotification responders: Override with something useful */
-void gtk_application_activation_changed (GtkApplication *self, 
-					 gboolean changed);
 
 /* NSApplicationDelegate callbacks: Override these with real functions */
 void gtk_application_should_load (GtkApplication *self, const gchar *utf8_path);
-gboolean gtk_application_should_quit (GtkApplication *self);
 
 G_END_DECLS
 

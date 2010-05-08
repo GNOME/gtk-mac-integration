@@ -46,22 +46,6 @@ gtk_application_set_use_quartz_accelerators(GtkApplication *self,
     self->priv->use_quartz_accelerators = use_quartz_accelerators;
 }
 
-/** Override this function to load the indicated file.
- */
-void gtk_application_should_load (GtkApplication *self, const gchar *utf8_path)
-{
-  DEBUG("Should Load %s\n", utf8_path);
-}
-
-/** Override this function to check for open files or the like and to
- *  return FALSE if you're not ready to quit, or TRUE if you are.
- */
-
-gboolean gtk_application_should_quit (GtkApplication *self)
-{
-  DEBUG("Application Should Quit\n");
-  return TRUE;
-}
 
 
 /* Public GtkApplication Functions */

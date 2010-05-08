@@ -454,9 +454,21 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
 }
 
 static void
-app_active_cb (GtkApplication* app, gboolean user_data)
+app_active_cb (GtkApplication* app, gboolean* data)
 {
-  g_print("Application became %s\n", user_data ? "active" : "inactive");
+  g_print("Application became %s\n", *data ? "active" : "inactive");
+}
+
+static gboolean
+app_should_quit_cb (GtkApplication *app, gint flags, gpointer data)
+{
+  static gboolean abort = TRUE;
+  gboolean answer;
+  answer = abort;
+  abort = FALSE;
+  g_print ("Application has been requested to quit, %s\n", answer ? "but no!" :
+	   "it's OK.");
+  return answer;
 }
 
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
@@ -635,9 +647,16 @@ main (int argc, char **argv)
   theApp  = g_object_new(GTK_TYPE_APPLICATION, NULL);
   window1 = create_window("Test Integration Window 1");
   window2 = create_window("Test Integration Window 2");
-  g_signal_connect(theApp, "NSApplicationDidBecomeActive", app_active_cb, TRUE);
-  g_signal_connect(theApp, "NSApplicationWillResignActive",
-		   app_active_cb, FALSE);
+  {
+    gboolean falseval = FALSE;
+    gboolean trueval = TRUE;
+    g_signal_connect(theApp, "NSApplicationDidBecomeActive",
+		     G_CALLBACK(app_active_cb), &trueval);
+    g_signal_connect(theApp, "NSApplicationWillResignActive",
+		     G_CALLBACK(app_active_cb), &falseval);
+    g_signal_connect(theApp, "NSApplicationBlockTermination",
+		     G_CALLBACK(app_should_quit_cb), NULL);
+  }
 #ifndef QUARTZ_HANDLERS
   gtk_application_set_use_quartz_accelerators(theApp, FALSE);
 #endif //QUARTZ_HANDLERS
