@@ -37,6 +37,9 @@ class MacMenu:
     def add_app_menu_group(self):
         return MacMenuAppGroup(ige_mac_menu_add_app_menu_group())
 
+    def sync(self, menubar):
+        return ige_mac_menu_sync(menubar)
+
 class MacMenuAppGroup:
     def __init__(self, group):
         self._group = group
