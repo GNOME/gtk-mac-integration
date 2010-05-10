@@ -118,15 +118,19 @@ AC_DEFUN([IMENDIO_PYTHON_CHECK],
     AM_CHECK_PYTHON_HEADERS(,[AC_MSG_RESULT([Python headers not found])])
 
     dnl Check for PyGTK
-    PKG_CHECK_MODULES(PYGTK, pygtk-2.0 >= 2.12.0,,have_python=no)
-    if test $have_python == no; then
-      AC_MSG_RESULT([PyGTK 2.12.0 or newer])
+    PKG_CHECK_MODULES(PYGOBJECT, pygobject-2.0 >= 2.16.0,,have_pygobject=no)
+    if test $have_pygobject == no; then
+      AC_MSG_RESULT([PyGObject 2.16.0 or newer])
+    fi
+    PKG_CHECK_MODULES(PYGTK, pygtk-2.0 >= 2.14.0,,have_pygtk=no)
+    if test $have_pygtk == no; then
+      AC_MSG_RESULT([PyGTK 2.14.0 or newer])
     fi
 
-    AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
-    if test "x$PYGTK_CODEGEN" = xno; then
+    AC_PATH_PROG(PYGOBJECT_CODEGEN, pygobject-codegen-2.0, no)
+    if test "x$PYGOBJECT_CODEGEN" = xno; then
       have_python=no
-      AC_MSG_RESULT([pygtk-codegen-2.0 script not found])
+      AC_MSG_RESULT([pygobject-codegen-2.0 script not found])
     fi
 
     AC_MSG_CHECKING(for pygtk defs)
