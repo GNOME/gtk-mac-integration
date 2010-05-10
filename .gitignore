@@ -20,5 +20,8 @@ compile
 *.o
 *.lo
 *.loT
+*.pyc
+*.so
+*.defs
 gtk-doc.make
 py-compile
