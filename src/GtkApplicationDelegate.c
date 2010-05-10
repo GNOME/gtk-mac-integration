@@ -29,9 +29,13 @@
 {
   const gchar *utf8_path =  [file UTF8String];
   GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
-  gtk_osxapplication_should_load(app, utf8_path);
+  guint sig = g_signal_lookup("NSApplicationOpenFile", 
+			      GTK_TYPE_OSX_APPLICATION);
+  gboolean result = FALSE;
+  if (sig)
+      g_signal_emit(app, sig, 1, utf8_path, &result);
   g_object_unref(app);
-  return NO;
+  return result;
 }
 
 

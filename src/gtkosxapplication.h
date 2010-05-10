@@ -41,6 +41,10 @@
  * The "NSApplicationBlockTermination" signal
  * gboolean user_function(GtkOSXApplication *app,
  * 			  gpointer user_data)
+ * The "NSApplicationOpenFile" signal
+ * gboolean user_function(GtkOSXApplication *app,
+ * 			  gchar *path,
+ * 			  gpointer user_data)
  */
 
 G_BEGIN_DECLS
@@ -145,13 +149,6 @@ const gchar *gtk_osxapplication_get_executable_path(GtkOSXApplication *self);
 const gchar *gtk_osxapplication_get_bundle_id(GtkOSXApplication *self);
 gpointer gtk_osxapplication_get_bundle_info(GtkOSXApplication *self, 
 					    const gchar *key);
-
-//FIXME: These hard-coded functions should be replaced with a registry in GNSApplicationDelegate and GNSApplicationNotify
-
-
-/* NSApplicationDelegate callbacks: Override these with real functions */
-void gtk_osxapplication_should_load (GtkOSXApplication *self,
-				     const gchar *utf8_path);
 
 G_END_DECLS
 

@@ -279,6 +279,43 @@ g_cclosure_marshal_BOOLEAN__VOID (GClosure     *closure,
 }
 
 
+static void
+g_cclosure_marshal_BOOLEAN__STRING (GClosure     *closure,
+                               GValue       *return_value G_GNUC_UNUSED,
+                               guint         n_param_values,
+                               const GValue *param_values,
+                               gpointer      invocation_hint G_GNUC_UNUSED,
+                               gpointer      marshal_data)
+{
+  typedef gboolean (*GMarshalFunc_BOOLEAN__STRING) (gpointer     data1,
+						    const char     *arg1,
+						    gpointer     data2);
+  register GMarshalFunc_BOOLEAN__STRING callback;
+  register GCClosure *cc = (GCClosure*) closure;
+  register gpointer data1, data2;
+  gboolean v_return;
+
+  g_return_if_fail (n_param_values == 1);
+
+  if (G_CCLOSURE_SWAP_DATA (closure))
+    {
+      data1 = closure->data;
+      data2 = g_value_peek_pointer (param_values + 0);
+    }
+  else
+    {
+      data1 = g_value_peek_pointer (param_values + 0);
+      data2 = closure->data;
+    }
+  callback = (GMarshalFunc_BOOLEAN__STRING) (marshal_data ? marshal_data : cc->callback);
+
+    v_return = callback (data1,            
+			 g_value_get_string (param_values + 1),
+			 data2);
+    g_value_set_boolean (return_value, v_return);
+}
+
+
 /* If a handler returns TRUE than we need to stop termination, so we
    set the return value accumulator to TRUE and return FALSE (there's
    no point in asking more handlers; we're going to abort the
@@ -349,6 +386,13 @@ gtk_osxapplication_init (GtkOSXApplication *self)
 	       0, block_termination_accumulator, NULL,
 	       g_cclosure_marshal_BOOLEAN__VOID,
 	       G_TYPE_BOOLEAN, 0);
+
+  g_signal_new("NSApplicationOpenFile",
+	       GTK_TYPE_OSX_APPLICATION,
+	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+	       0, NULL, NULL,
+	       g_cclosure_marshal_BOOLEAN__STRING,
+	       G_TYPE_BOOLEAN, 1);
 
 
 
