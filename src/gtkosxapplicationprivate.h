@@ -20,14 +20,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GTK_OSXAPPLICATIONPRIVATE_H__
-#define __GTK_OSXAPPLICATIONPRIVATE_H__
+#ifndef __GTK_OSX_APPLICATIONPRIVATE_H__
+#define __GTK_OSX_APPLICATIONPRIVATE_H__
 #import <AppKit/NSMenu.h>
 #import <AppKit/NSApplication.h>
 
 #include "gtkosxapplication.h"
 
-#define  GTK_OSXAPPLICATION_GET_PRIVATE(obj)	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_OSXAPPLICATION, GtkOSXApplicationPrivate))
+#define  GTK_OSX_APPLICATION_GET_PRIVATE(obj)	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_OSX_APPLICATION, GtkOSXApplicationPrivate))
 
 struct _GtkOSXApplicationPrivate
 {

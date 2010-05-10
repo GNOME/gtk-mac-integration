@@ -405,7 +405,7 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
   static GtkActionGroup* view_action_group = NULL;
   GtkUIManager *mgr = user_data;
   GtkWidget *window = gtk_widget_get_toplevel(button);
-  GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
+  GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
   GError *err = NULL;
   if (view_action_group == NULL) {
     view_action_group = gtk_action_group_new("ViewAction");
@@ -503,7 +503,7 @@ create_window(const gchar *title)
 #endif //IGEMACMENU
 #ifdef GTKOSXAPPLICATION
   GtkOSXApplicationMenuGroup *group;
-  GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
+  GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
 #endif //GTKOSXAPPLICATION
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   if (title)
@@ -644,7 +644,7 @@ main (int argc, char **argv)
                     window1);
 #endif //IGEMACMENU
 #ifdef GTKOSXAPPLICATION
-  theApp  = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
+  theApp  = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
   window1 = create_window("Test Integration Window 1");
   window2 = create_window("Test Integration Window 2");
   {

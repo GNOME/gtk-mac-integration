@@ -324,27 +324,27 @@ static void
 gtk_osxapplication_init (GtkOSXApplication *self)
 {
   [NSApplication sharedApplication];
-  self->priv = GTK_OSXAPPLICATION_GET_PRIVATE (self);
+  self->priv = GTK_OSX_APPLICATION_GET_PRIVATE (self);
   self->priv->use_quartz_accelerators = TRUE;
   self->priv->dock_menu = NULL;
   gdk_window_add_filter (NULL, global_event_filter_func, (gpointer)self);
 
   g_signal_new("NSApplicationDidBecomeActive",
-	       GTK_TYPE_OSXAPPLICATION,
+	       GTK_TYPE_OSX_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, NULL, NULL,
 	       g_cclosure_marshal_VOID__VOID,
 	       G_TYPE_NONE, 0);
 
   g_signal_new("NSApplicationWillResignActive",
-	       GTK_TYPE_OSXAPPLICATION,
+	       GTK_TYPE_OSX_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, NULL, NULL,
 	       g_cclosure_marshal_VOID__VOID,
 	       G_TYPE_NONE, 0);
 
   g_signal_new("NSApplicationBlockTermination",
-	       GTK_TYPE_OSXAPPLICATION,
+	       GTK_TYPE_OSX_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, block_termination_accumulator, NULL,
 	       g_cclosure_marshal_BOOLEAN__VOID,

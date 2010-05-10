@@ -44,9 +44,9 @@
 
 - (void)appDidBecomeActive:(NSNotification *)notification
 {
-  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
+  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
   guint sig = g_signal_lookup("NSApplicationDidBecomeActive", 
-			      GTK_TYPE_OSXAPPLICATION);
+			      GTK_TYPE_OSX_APPLICATION);
   if (sig)
       g_signal_emit(app, sig, 0);
   g_object_unref(app);
@@ -54,9 +54,9 @@
 
 - (void)appDidBecomeInactive:(NSNotification *)notification
 {
-  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSXAPPLICATION, NULL);
+  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
   guint sig = g_signal_lookup("NSApplicationWillResignActive", 
-			      GTK_TYPE_OSXAPPLICATION);
+			      GTK_TYPE_OSX_APPLICATION);
   if (sig)
       g_signal_emit(app, sig, 0);
   g_object_unref(app);

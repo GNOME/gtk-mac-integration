@@ -20,8 +20,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GTK_OSXAPPLICATION_H__
-#define __GTK_OSXAPPLICATION_H__
+#ifndef __GTK_OSX_APPLICATION_H__
+#define __GTK_OSX_APPLICATION_H__
 
 #include <gtk/gtk.h>
 #include <glib-object.h>
@@ -44,12 +44,12 @@
  */
 
 G_BEGIN_DECLS
-#define GTK_TYPE_OSXAPPLICATION	(gtk_osxapplication_get_type())
-#define GTK_OSXAPPLICATION(obj) 	(G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_OSXAPPLICATION, GtkOSXApplication))
-#define GTK_IS_OSXAPPLICATION(obj)	(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_OSXAPPLICATION))
-#define GTK_OSXAPPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTK_TYPE_OSXAPPLICATION, GtkOSXApplicationClass))
-#define GTK_IS_OSXAPPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTK_TYPE_OSXAPPLICATION))
-#define GTK_OSXAPPLICATION_GET_CLASS(obj) 	(G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_OSXAPPLICATION, GtkOSXApplicationClass))
+#define GTK_TYPE_OSX_APPLICATION	(gtk_osxapplication_get_type())
+#define GTK_OSX_APPLICATION(obj) 	(G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_OSX_APPLICATION, GtkOSXApplication))
+#define GTK_IS_OSX_APPLICATION(obj)	(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_OSX_APPLICATION))
+#define GTK_OSX_APPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTK_TYPE_OSX_APPLICATION, GtkOSXApplicationClass))
+#define GTK_IS_OSX_APPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTK_TYPE_OSX_APPLICATION))
+#define GTK_OSX_APPLICATION_GET_CLASS(obj) 	(G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_OSX_APPLICATION, GtkOSXApplicationClass))
 
 typedef struct _GtkOSXApplication GtkOSXApplication;
 typedef struct _GtkOSXApplicationPrivate GtkOSXApplicationPrivate;
@@ -99,6 +99,10 @@ typedef enum {
   CRITICAL_REQUEST = 0,
   INFO_REQUEST = 10
 } GtkOSXApplicationAttentionType;
+
+//To satisfy h2defs.py:
+#define GTK_TYPE_OSX_APPLICATION_ATTENTION_TYPE	(gtk_type_osxapplication_attention_type_get_type())
+GType gtk_type_osxapplication_attention_type_get_type(void);
 
 void gtk_osxapplication_set_dock_menu(GtkOSXApplication *self, 
 				   GtkMenuShell *menu_shell);
@@ -151,4 +155,4 @@ void gtk_osxapplication_should_load (GtkOSXApplication *self,
 
 G_END_DECLS
 
-#endif /* __GTK_OSXAPPLICATION_H__ */
+#endif /* __GTK_OSX_APPLICATION_H__ */
