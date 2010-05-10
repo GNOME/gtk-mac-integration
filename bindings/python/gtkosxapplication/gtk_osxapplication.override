@@ -1,0 +1,19 @@
+/* -*- Mode: C; c-basic-offset: 4 -*- */
+%%
+headers
+#include <Python.h>
+#include <pygtk/pygtk.h>
+#include <gtkosxapplication.h>
+
+%%
+modulename gtk_osxapplication
+%%
+import gobject.GObject as PyGObject_Type
+import gtk.gdk.Pixbuf as PyGdkPixbuf_Type
+import gtk.MenuShell as PyGtkMenuShell_Type
+import gtk.MenuItem as PyGtkMenuItem_Type
+import gtk.Window as PyGtkWindow_Type
+%%
+ignore-glob
+  *_get_type
+%%
