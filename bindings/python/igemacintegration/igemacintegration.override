@@ -3,9 +3,9 @@
 headers
 #include <Python.h>
 #include <pygtk/pygtk.h>
-#include "../../src/ige-mac-menu.h"
-#include "../../src/ige-mac-dock.h"
-#include "../../src/ige-mac-bundle.h"
+#include <ige-mac-menu.h>
+#include <ige-mac-dock.h>
+#include <ige-mac-bundle.h>
 %%
 modulename igemacintegration
 %%

@@ -35,6 +35,8 @@ AC_OUTPUT([
 	src/Makefile
         bindings/Makefile
         bindings/python/Makefile
+	bindings/python/igemacintegration/Makefile
+	bindings/python/gtkosxapplication/Makefile
         data/Makefile
         data/ige-mac-integration.pc
 ])

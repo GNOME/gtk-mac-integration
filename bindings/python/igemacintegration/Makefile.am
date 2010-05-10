@@ -28,7 +28,7 @@ _igemacintegration_la_SOURCES =				\
 	igemacintegration-module.c
 
 .defs.c: 
-	($(PYGTK_CODEGEN)				\
+	($(PYGOBJECT_CODEGEN)				\
 	    --register $(PYGTK_DEFSDIR)/gdk-types.defs	\
 	    --register $(PYGTK_DEFSDIR)/gtk-types.defs	\
 	    --override $*.override			\

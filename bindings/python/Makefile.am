@@ -1,2 +1,1 @@
-SUBDIRS = igemacintegration \
-	  gtkosxapplication
+SUBDIRS= igemacintegration gtkosxapplication
