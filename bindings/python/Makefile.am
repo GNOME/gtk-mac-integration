@@ -1,1 +1,1 @@
-SUBDIRS= igemacintegration gtkosxapplication
+SUBDIRS= igemacintegration gtk_osxapplication
