@@ -33,7 +33,7 @@
 			      GTK_TYPE_OSX_APPLICATION);
   gboolean result = FALSE;
   if (sig)
-      g_signal_emit(app, sig, 1, utf8_path, &result);
+      g_signal_emit(app, sig, 0, utf8_path, &result);
   g_object_unref(app);
   return result;
 }
@@ -59,7 +59,6 @@ extern NSMenu* gtk_osxapplication_dock_menu(GtkOSXApplication* app);
 
 -(NSMenu *)applicationDockMenu: (NSApplication*) sender
 {
-    g_print("Dock requested a menu\n");
     GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
     return gtk_osxapplication_dock_menu(app);
 }
