@@ -550,7 +550,6 @@ gtk_osxapplication_add_app_menu_item (GtkOSXApplication *self,
 				    GTK_WIDGET(menu_item), index + 1);
 
 	  group->items = g_list_append (group->items, menu_item);
-	  gtk_widget_hide(GTK_WIDGET (menu_item));
 	  return;
 	}
     }
