@@ -17,3 +17,56 @@ import gtk.Window as PyGtkWindow_Type
 ignore-glob
   *_get_type
 %%
+override gtk_osxapplication_add_app_menu_group noargs
+static PyObject*
+_wrap_gtk_osxapplication_add_app_menu_group (PyGObject *self)
+{
+    GtkOSXApplicationMenuGroup *group;
+    PyObject *ret;
+
+    group = gtk_osxapplication_add_app_menu_group (GTK_OSX_APPLICATION(self->obj));
+
+    ret = PyCObject_FromVoidPtr ((void *) group, NULL);
+
+    return ret;
+}
+%%
+override gtk_osxapplication_add_app_menu_item kwargs
+static PyObject*
+_wrap_gtk_osxapplication_add_app_menu_item (PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "group", "item", NULL };
+    PyObject *pygroup;
+    PyObject *pyitem;
+    GtkOSXApplicationMenuGroup *group;
+    GtkMenuItem *item;
+   if (!PyArg_ParseTupleAndKeywords(args, kwargs, "OO!:add_app_menu_item", 
+				     kwlist,
+                                     &pygroup, 
+                                     &PyGtkMenuItem_Type,
+				     &pyitem))
+        return NULL;
+
+    Py_INCREF (Py_None);
+    group = PyCObject_AsVoidPtr (pygroup);
+    item = GTK_MENU_ITEM (pygobject_get (pyitem));
+    g_return_val_if_fail(group != NULL, Py_None);
+    gtk_osxapplication_add_app_menu_item (GTK_OSX_APPLICATION(self->obj), group, item);
+    return Py_None;
+}
+%%
+override gtk_osxapplication_get_bundle_info kwargs
+static PyObject*
+_wrap_gtk_osxapplication_get_bundle_info (PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "key", NULL };
+    char *key;
+    gpointer item;
+    PyObject *ret;
+
+    item = gtk_osxapplication_get_bundle_info (GTK_OSX_APPLICATION(self->obj), key);
+
+    ret = PyCObject_FromVoidPtr (item, NULL);
+
+    return ret;
+}
