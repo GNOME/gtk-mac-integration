@@ -8,7 +8,17 @@ AM_CONFIG_HEADER(config.h)
 
 AM_DISABLE_STATIC
 AM_PROG_LIBTOOL
-
+AC_MSG_CHECKING([Bitness])
+AC_PREPROC_IFELSE(
+    [AC_LANG_PROGRAM([[]],[[#ifndef __x86_64__
+#error
+#endif
+	]])],
+    [AC_MSG_RESULT([64-BIT])
+     sixty_four_bit=yes],
+    [AC_MSG_RESULT([32-Bit])
+     sixty_four_bit=no])
+AM_CONDITIONAL([SIXTY_FOUR_BIT], [test x$sixty_four_bit = xyes])
 AC_ISC_POSIX
 AC_PROG_CC
 AM_PROG_CC_STDC

@@ -1,1 +1,4 @@
-SUBDIRS= igemacintegration gtk_osxapplication
+SUBDIRS = gtk_osxapplication
+if !SIXTY_FOUR_BIT
+SUBDIRS += igemacintegration
+endif
