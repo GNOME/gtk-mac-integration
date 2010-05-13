@@ -57,16 +57,20 @@
  */
 
 /* Uncomment ONE of these to test menu-mangling: */
-//#define IGEMACMENU
+//#define IGEMACINTEGRATION
 #define GTKOSXAPPLICATION
 #define BUILT_UI
 #define QUARTZ_HANDLERS
+
+#ifdef __x86_64__
+#undef IGEMACINTEGRATION
+#endif //__x86_64__
 
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <gdk/gdkkeysyms.h>
 
-#ifdef IGEMACMENU
+#ifdef IGEMACINTEGRATION
 #include "ige-mac-menu.h"
 #include "ige-mac-dock.h"
 #include "ige-mac-bundle.h"
@@ -286,7 +290,7 @@ menu_item_activate_cb (GtkWidget *item,
   }
 }
 
-#ifdef IGEMACMENU
+#ifdef IGEMACINTEGRATION
 static void
 dock_clicked_cb (IgeMacDock *dock,
                  GtkWindow  *window)
@@ -473,7 +477,7 @@ app_should_quit_cb (GtkOSXApplication *app, gpointer data)
 
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
 
-#ifdef IGEMACMENU
+#ifdef IGEMACINTEGRATION
 static GtkWidget *
 create_window(IgeMacDock *dock, const gchar *title)
 {
@@ -498,9 +502,9 @@ create_window(const gchar *title)
 #else //not BUILT_UI
   GtkAccelGroup *accel_group = gtk_accel_group_new();
 #endif //not BUILT_UI
-#ifdef IGEMACMENU
+#ifdef IGEMACINTEGRATION
   IgeMacMenuGroup *group;
-#endif //IGEMACMENU
+#endif //IGEMACINTEGRATION
 #ifdef GTKOSXAPPLICATION
   GtkOSXApplicationMenuGroup *group;
   GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
@@ -588,7 +592,7 @@ create_window(const gchar *title)
 #endif // !defined QUARTZ_HANDLERS && !defined BUILT_UI
 #endif  //GTKOSXAPPLICATION
 #endif //defined IGE_MAC_MENU || defined GTKOSXAPPLICATION
-#ifdef IGEMACMENU
+#ifdef IGEMACINTEGRATION
   ige_mac_menu_set_menu_bar (GTK_MENU_SHELL (menubar));
   ige_mac_menu_set_quit_menu_item (GTK_MENU_ITEM (items->quit_item));
   group = ige_mac_menu_add_app_menu_group ();
@@ -599,7 +603,7 @@ create_window(const gchar *title)
   ige_mac_menu_add_app_menu_item  (group,
 				   GTK_MENU_ITEM (items->preferences_item),
 				   "Preferences");
-#endif //IGEMACMENU
+#endif //IGEMACINTEGRATION
 #ifdef GTKOSXAPPLICATION
   gtk_osxapplication_set_menu_bar(theApp, GTK_MENU_SHELL(menubar));
   group = gtk_osxapplication_add_app_menu_group (theApp);
@@ -621,14 +625,14 @@ int
 main (int argc, char **argv)
 {
   GtkWidget       *window1, *window2;
-#ifdef IGEMACMENU
+#ifdef IGEMACINTEGRATION
   IgeMacDock      *dock;
-#endif //IGEMACMENU
+#endif //IGEMACINTEGRATION
 #ifdef GTKOSXAPPLICATION
   GtkOSXApplication *theApp;
 #endif //GTKOSXAPPLICATION
   gtk_init (&argc, &argv);
-#ifdef IGEMACMENU
+#ifdef IGEMACINTEGRATION
   dock = ige_mac_dock_get_default ();
   window1 = create_window(dock, "Test Integration Window 1"); 
   window2 = create_window(dock, "Test Integration Window 2"); 
@@ -642,7 +646,7 @@ main (int argc, char **argv)
                     "quit-activate",
                     G_CALLBACK (gtk_main_quit),
                     window1);
-#endif //IGEMACMENU
+#endif //IGEMACINTEGRATION
 #ifdef GTKOSXAPPLICATION
   theApp  = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
   window1 = create_window("Test Integration Window 1");

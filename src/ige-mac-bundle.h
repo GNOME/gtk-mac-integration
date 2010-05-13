@@ -21,6 +21,7 @@
 #ifndef __IGE_MAC_BUNDLE_H__
 #define __IGE_MAC_BUNDLE_H__
 
+#ifndef __x86_64__
 #include <glib-object.h>
 
 G_BEGIN_DECLS
@@ -59,4 +60,5 @@ gchar *       ige_mac_bundle_get_resource_path (IgeMacBundle *bundle,
 
 G_END_DECLS
 
+#endif /* __x86_64__*/
 #endif /* __IGE_MAC_BUNDLE_H__ */

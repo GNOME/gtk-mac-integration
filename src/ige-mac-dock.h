@@ -23,6 +23,7 @@
 
 #ifndef __IGE_MAC_DOCK_H__
 #define __IGE_MAC_DOCK_H__
+#ifndef __x86_64__
 
 #include <gtk/gtk.h>
 #include <ige-mac-bundle.h>
@@ -83,4 +84,5 @@ GType                   ige_mac_attention_type_get_type        (void);
 
 G_END_DECLS
 
+#endif /* __x86_64__ */
 #endif /* __IGE_MAC_DOCK_H__ */

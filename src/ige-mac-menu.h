@@ -25,6 +25,7 @@
 
 #ifndef __IGE_MAC_MENU_H__
 #define __IGE_MAC_MENU_H__
+#ifndef __x86_64__
 
 #include <gtk/gtk.h>
 
@@ -45,4 +46,5 @@ void ige_mac_menu_connect_window_key_handler (GtkWindow *window);
 
 G_END_DECLS
 
+#endif /* __x86_64__ */
 #endif /* __IGE_MAC_MENU_H__ */

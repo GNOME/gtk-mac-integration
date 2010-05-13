@@ -22,6 +22,7 @@
  * -psn_... arguments?
  */
 
+#ifndef __x86_64__
 #include <gtk/gtk.h>
 #include <Carbon/Carbon.h>
 
@@ -375,3 +376,5 @@ ige_mac_bundle_get_resource_path (IgeMacBundle *bundle,
 
   return path;
 }
+
+#endif //__x86_64__
