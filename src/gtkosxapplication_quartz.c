@@ -392,7 +392,7 @@ gtk_osxapplication_init (GtkOSXApplication *self)
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, NULL, NULL,
 	       g_cclosure_marshal_BOOLEAN__STRING,
-	       G_TYPE_BOOLEAN, 1);
+	       G_TYPE_BOOLEAN, 1, G_TYPE_STRING);
 
 
 
