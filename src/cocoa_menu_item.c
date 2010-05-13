@@ -423,8 +423,6 @@ cocoa_menu_item_sync_state (GtkWidget* menu_item)
   GNSMenuItem *cocoa_item = cocoa_menu_item_get (menu_item);
   cocoa_menu_item_update_state (cocoa_item, menu_item);
 
-  [cocoa_item setHidden: (GTK_WIDGET_VISIBLE (menu_item) ? NO : YES)];
-	
   if (GTK_IS_CHECK_MENU_ITEM (menu_item))
     cocoa_menu_item_update_checked (cocoa_item, menu_item);
 	
