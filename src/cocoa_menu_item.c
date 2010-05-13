@@ -418,7 +418,7 @@ cocoa_menu_item_connect (GtkWidget*   menu_item,
 }
 
 static void
-cocoa_menu_item_sync_state (GtkWidget* menu_item)
+cocoa_menu_item_sync (GtkWidget* menu_item)
 {
   GNSMenuItem *cocoa_item = cocoa_menu_item_get (menu_item);
   cocoa_menu_item_update_state (cocoa_item, menu_item);
@@ -489,7 +489,7 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
   else 
     [ cocoa_menu addItem:cocoa_item];
 
-  cocoa_menu_item_sync_state(menu_item);
+  cocoa_menu_item_sync(menu_item);
 }
 
 void
@@ -528,7 +528,7 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
 	[cocoa_menu itemAtIndex:index] == cocoa_item) {
       /* This item is where it belongs, so unmark and update it */
       [cocoa_item unmark];
-      cocoa_menu_item_sync_state(menu_item);
+      cocoa_menu_item_sync(menu_item);
       ++index;
       continue;
     }
@@ -541,7 +541,7 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
       if ([cocoa_item respondsToSelector: @selector(isMarked)])
 	[cocoa_item unmark];
       [cocoa_item release];
-      cocoa_menu_item_sync_state(menu_item);
+      cocoa_menu_item_sync(menu_item);
       continue;
     }
     if (GTK_IS_SEPARATOR_MENU_ITEM (menu_item) && GTK_IS_MENU_BAR(menu_shell))
