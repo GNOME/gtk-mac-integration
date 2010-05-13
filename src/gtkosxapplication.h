@@ -90,7 +90,7 @@ void gtk_osxapplication_set_use_quartz_accelerators(GtkOSXApplication *self,
 gboolean gtk_osxapplication_use_quartz_accelerators(GtkOSXApplication *self);
 void gtk_osxapplication_set_menu_bar       (GtkOSXApplication *self, 
 					 GtkMenuShell    *menu_shell);
-void gtk_osxapplication_sync_menubar( void );
+void gtk_osxapplication_sync_menubar(GtkOSXApplication* self);
 GtkOSXApplicationMenuGroup * gtk_osxapplication_add_app_menu_group (GtkOSXApplication*);
 void gtk_osxapplication_add_app_menu_item   (GtkOSXApplication *self,
 					  GtkOSXApplicationMenuGroup *group,

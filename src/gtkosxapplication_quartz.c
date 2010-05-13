@@ -491,7 +491,7 @@ gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_she
 }
 
 void
-gtk_osxapplication_sync_menubar()
+gtk_osxapplication_sync_menubar (GtkOSXApplication *self)
 {
   [(GNSMenuBar*)[NSApp mainMenu] resync];
 }
