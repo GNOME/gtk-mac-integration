@@ -404,6 +404,15 @@ struct construction_args {
   GObjectConstructParam *props;
 };
 
+enum {
+    DidBecomeActive,
+    WillResignActive,
+    BlockTermination,
+    OpenFile,
+    LastSignal
+};
+
+static guint gtk_osxapplication_signals[LastSignal] = {0};
 /*
  * gtk_osxapplication_init:
  * @self: The GtkOSXApplication object.
@@ -419,80 +428,6 @@ gtk_osxapplication_init (GtkOSXApplication *self)
   self->priv->use_quartz_accelerators = TRUE;
   self->priv->dock_menu = NULL;
   gdk_window_add_filter (NULL, global_event_filter_func, (gpointer)self);
-
-/**
- * GtkOSXApplication::NSApplicationDidBecomeActive:
- * @app: The application object
- * #user_data: Data appended at connection
- *
- * Emitted by the Application Delegate when the application receives
- * an NSApplicationDidBecomeActive notification. Connect a handler if
- * there is anything you need to do when the application is activated.
- */
-  g_signal_new("NSApplicationDidBecomeActive",
-	       GTK_TYPE_OSX_APPLICATION,
-	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
-	       0, NULL, NULL,
-	       g_cclosure_marshal_VOID__VOID,
-	       G_TYPE_NONE, 0);
-/**
- * GtkOSXApplication::NSApplicationWillResignActive:
- * @app: The application object
- * @user_data: Data appended at connection
- *
- * This signal is emitted by the Application Delegate when the
- * application receives an NSApplicationWillResignActive
- * notification. Connect a handler to it if there's anything your
- * application needs to do to prepare for inactivity.
- */
-  g_signal_new("NSApplicationWillResignActive",
-	       GTK_TYPE_OSX_APPLICATION,
-	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
-	       0, NULL, NULL,
-	       g_cclosure_marshal_VOID__VOID,
-	       G_TYPE_NONE, 0);
-
-/**
- * GtkOSXApplication::NSApplicationBlockTermination:
- * @app: The application object
- * @user_data: Data appended at connection
- *
- * Emitted by the Application Delegate when the application reeeives
- * an NSApplicationShouldTerminate notification. Perform any cleanup
- * you need to do (e.g., saving files) before exiting. Returning FALSE
- * will allow further handlers to run and if none return TRUE, the
- * application to shut down. Returning TRUE will veto shutdown and
- * stop emission, so later handlers will not run.
- *
- * Returns: Boolean indicating that further emission and application
- * termination should be blocked.
- */
-  g_signal_new("NSApplicationBlockTermination",
-	       GTK_TYPE_OSX_APPLICATION,
-	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
-	       0, block_termination_accumulator, NULL,
-	       g_cclosure_marshal_BOOLEAN__VOID,
-	       G_TYPE_BOOLEAN, 0);
-
-/**
- * GtkOSXApplication::NSApplicationOpenFile:
- * @app: The application object
- * @path: A UTF8-encoded file path to open.
- * @user_data: Data attached at connection
- *
- * Emitted when a OpenFile, OpenFiles, or OpenEmptyFile event is
- * received from the operating system. This signal does not implement
- * drops, but it does implement "open with" events from Finder. An
- * OpenEmptyFile is received at launch in Python applications.
- *
- * Returns: Boolean indicating success at opening the file.
- */
-  g_signal_new("NSApplicationOpenFile",
-	       GTK_TYPE_OSX_APPLICATION,
-	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
-	       0, NULL, NULL,
-	       g_cclosure_marshal_BOOLEAN__STRING,
-	       G_TYPE_BOOLEAN, 1, G_TYPE_STRING);
 
 
 
@@ -514,6 +449,84 @@ gtk_osxapplication_class_init(GtkOSXApplicationClass *klass)
   GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
   g_type_class_add_private(klass, sizeof(GtkOSXApplicationPrivate));
   gobject_class->constructor = gtk_osxapplication_constructor;
+/**
+ * GtkOSXApplication::NSApplicationDidBecomeActive:
+ * @app: The application object
+ * #user_data: Data appended at connection
+ *
+ * Emitted by the Application Delegate when the application receives
+ * an NSApplicationDidBecomeActive notification. Connect a handler if
+ * there is anything you need to do when the application is activated.
+ */
+gtk_osxapplication_signals[DidBecomeActive] =
+    g_signal_new("NSApplicationDidBecomeActive",
+	       GTK_TYPE_OSX_APPLICATION,
+	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+	       0, NULL, NULL,
+	       g_cclosure_marshal_VOID__VOID,
+	       G_TYPE_NONE, 0);
+/**
+ * GtkOSXApplication::NSApplicationWillResignActive:
+ * @app: The application object
+ * @user_data: Data appended at connection
+ *
+ * This signal is emitted by the Application Delegate when the
+ * application receives an NSApplicationWillResignActive
+ * notification. Connect a handler to it if there's anything your
+ * application needs to do to prepare for inactivity.
+ */
+gtk_osxapplication_signals[WillResignActive] =
+    g_signal_new("NSApplicationWillResignActive",
+	       GTK_TYPE_OSX_APPLICATION,
+	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+	       0, NULL, NULL,
+	       g_cclosure_marshal_VOID__VOID,
+	       G_TYPE_NONE, 0);
+
+/**
+ * GtkOSXApplication::NSApplicationBlockTermination:
+ * @app: The application object
+ * @user_data: Data appended at connection
+ *
+ * Emitted by the Application Delegate when the application reeeives
+ * an NSApplicationShouldTerminate notification. Perform any cleanup
+ * you need to do (e.g., saving files) before exiting. Returning FALSE
+ * will allow further handlers to run and if none return TRUE, the
+ * application to shut down. Returning TRUE will veto shutdown and
+ * stop emission, so later handlers will not run.
+ *
+ * Returns: Boolean indicating that further emission and application
+ * termination should be blocked.
+ */
+gtk_osxapplication_signals[BlockTermination] =
+    g_signal_new("NSApplicationBlockTermination",
+	       GTK_TYPE_OSX_APPLICATION,
+	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+	       0, block_termination_accumulator, NULL,
+	       g_cclosure_marshal_BOOLEAN__VOID,
+	       G_TYPE_BOOLEAN, 0);
+
+/**
+ * GtkOSXApplication::NSApplicationOpenFile:
+ * @app: The application object
+ * @path: A UTF8-encoded file path to open.
+ * @user_data: Data attached at connection
+ *
+ * Emitted when a OpenFile, OpenFiles, or OpenEmptyFile event is
+ * received from the operating system. This signal does not implement
+ * drops, but it does implement "open with" events from Finder. An
+ * OpenEmptyFile is received at launch in Python applications.
+ *
+ * Returns: Boolean indicating success at opening the file.
+ */
+gtk_osxapplication_signals[OpenFile] =
+    g_signal_new("NSApplicationOpenFile",
+	       GTK_TYPE_OSX_APPLICATION,
+	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+	       0, NULL, NULL,
+	       g_cclosure_marshal_BOOLEAN__STRING,
+	       G_TYPE_BOOLEAN, 1, G_TYPE_STRING);
+
 }
 
 /**
