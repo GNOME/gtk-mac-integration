@@ -55,12 +55,12 @@
     return NSTerminateLater;
 }
 
-extern NSMenu* gtk_osxapplication_dock_menu(GtkOSXApplication* app);
+extern NSMenu* _gtk_osxapplication_dock_menu(GtkOSXApplication* app);
 
 -(NSMenu *)applicationDockMenu: (NSApplication*) sender
 {
     GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
-    return gtk_osxapplication_dock_menu(app);
+    return _gtk_osxapplication_dock_menu(app);
 }
 
 @end

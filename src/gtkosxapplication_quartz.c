@@ -561,10 +561,10 @@ gtk_osxapplication_add_app_menu_item (GtkOSXApplication *self,
 
 /* Dock support */
 /* A bogus prototype to shut up a compiler warning. This function is for GtkApplicationDelegate and is not public. */
-NSMenu* gtk_osxapplication_dock_menu(GtkOSXApplication *self);
+NSMenu* _gtk_osxapplication_dock_menu(GtkOSXApplication *self);
 
 NSMenu*
-gtk_osxapplication_dock_menu(GtkOSXApplication *self)
+_gtk_osxapplication_dock_menu(GtkOSXApplication *self)
 {
   return(self->priv->dock_menu);
 }
