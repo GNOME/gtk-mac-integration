@@ -29,16 +29,29 @@
 #define DEBUG(format, ...)
 
 
-/** Are we using Quartz or Gtk+ accelerator handling? */
+/** 
+ * gtk_osxapplication_use_quartz_accelerators:
+ * @self: The GtkOSXApplication pointer.
+ *
+ * Are we using Quartz or Gtk+ accelerator handling? 
+ *
+ * Returns: a gboolean
+ */
 gboolean
 gtk_osxapplication_use_quartz_accelerators(GtkOSXApplication *self)
 {
     return self->priv->use_quartz_accelerators;
 }
 
-/** Set quartz accelerator handling; TRUE (default) uses quartz; FALSE
+/** 
+ * gtk_osxapplication_set_use_quartz_accelerators:
+ * @self: The GtkOSXApplication pointer.
+ * @use_quartz_accelerators: Gboolean 
+ *
+ * Set quartz accelerator handling; TRUE (default) uses quartz; FALSE
  * uses Gtk+. Quartz accelerator handling is required for normal OSX
- * accelerators (e.g., command-q to quit) to work. */
+ * accelerators (e.g., command-q to quit) to work.
+ */
 void
 gtk_osxapplication_set_use_quartz_accelerators(GtkOSXApplication *self,
 					    gboolean use_quartz_accelerators)
@@ -46,6 +59,12 @@ gtk_osxapplication_set_use_quartz_accelerators(GtkOSXApplication *self,
     self->priv->use_quartz_accelerators = use_quartz_accelerators;
 }
 
+/*
+ * gtk_type_osxapplication_attention_type_get_type:
+ *
+ * A public enum used to set the parameter for attention
+ * requests. Exists soley to satisfy the PyGObject codegen system.
+ */
 GType
 gtk_type_osxapplication_attention_type_get_type(void)
 {

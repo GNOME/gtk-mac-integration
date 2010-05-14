@@ -54,26 +54,19 @@ extern NSWindow* gdk_quartz_window_get_nswindow(GdkWindow*);
  *
  */
 G_DEFINE_TYPE (GtkOSXApplication, gtk_osxapplication, G_TYPE_OBJECT)
-/**
-   @fn gboolean gdk_quartz_in_menu_event_handler (GtkOSXApplication *self)
-   @brief test whether GtkOSXApplication is handling a Mac event.
-
-   gtk/osx has a problem in that mac main menu events
-   are handled using an "internal" event handling system that 
-   doesn't pass things back to the glib/gtk main loop. if we call
-   gtk_main_iteration() block while in a menu event handler, then
-   glib gets confused and thinks there are two threads running
-   g_main_poll_func(). apps call call gdk_quartz_in_menu_event_handler()
-   if they need to check this.
-
-   @param GtkOSXApplication *self The application singleton item.
-   @return gboolean TRUE if in a Mac event handler
-*/
-
 
 
 static gulong emission_hook_id = 0;
 
+/*
+ * parent_set_emission_hook:
+ * @ihint: The signal hint confgigured when the signal was created.
+ * @n_param_values: The number of parameters passed in param_values
+ * @param_values: A GValue[] containing the parameters
+ * data: A gpointer to pass to the signal handler
+ *
+ * Sets an emission hook for all parent-set signals. 
+ */
 static gboolean
 parent_set_emission_hook (GSignalInvocationHint *ihint,
 			  guint                  n_param_values,
@@ -109,6 +102,14 @@ parent_set_emission_hook (GSignalInvocationHint *ihint,
   return TRUE;
 }
 
+/*
+ * parent_set_emission_hook_remove:
+ * @widget: A random widget. Not used.
+ * @data: A random gpointer. Not used.
+ *
+ * Removes the parent-set emission hook. This meets a particular
+ * template, which is the reason for the unused parameters.
+ */
 static void
 parent_set_emission_hook_remove (GtkWidget *widget,
 				 gpointer   data)
@@ -118,7 +119,15 @@ parent_set_emission_hook_remove (GtkWidget *widget,
 				 emission_hook_id);
 }
 
-/** Add a submenu to the currently active main menubar.
+/*
+ * add_to_menubar:
+ * @self: The GtkOSXApplication pointer.
+ * @menu: The cocoa menu to add
+ * pos: The position on the menubar to insert the new menu
+ *
+ * Add a submenu to the currently active main menubar.
+ *
+ * Returns: a pointer to the NSMenuItem now holding the menu.
  */
 static GNSMenuItem*
 add_to_menubar (GtkOSXApplication *self, NSMenu *menu, NSInteger pos)
@@ -135,30 +144,16 @@ add_to_menubar (GtkOSXApplication *self, NSMenu *menu, NSInteger pos)
   return dummyItem;
 }
 
-/* Not Used
-static int
-add_to_app_menu (GtkOSXApplication *self, NSMenu *menu)
-{
-  NSMenuItem *dummyItem = [[NSMenuItem alloc] initWithTitle:@""
-					      action:nil keyEquivalent:@""];
-  [dummyItem setSubmenu:menu];
-  [[[[NSApp mainMenu] itemAtIndex: 0] submenu] addItem:dummyItem];
-  [dummyItem release];
-  return 0;
-}
-*/
- /* Not used
-static int
-add_to_window_menu (GtkOSXApplication *self, NSMenu *menu)
-{
-  NSMenuItem *dummyItem = [[NSMenuItem alloc] initWithTitle:@""
-					      action:nil keyEquivalent:@""];
-  [dummyItem setSubmenu:menu];
-  [[NSApp windowsMenu] addItem:dummyItem];
-  [dummyItem release];
-  return 0;
-}
-*/
+/*
+ * create_apple_menu:
+ * @self: The GtkOSXApplication object.
+ *
+ * Creates the "app" menu -- the first one on the menubar with the
+ * application's name. The function is called create_apple_menu
+ * because of the undocumented Cocoa method to set it on the mainMenu.
+ *
+ * Returns: A pointer to the menu item.
+ */
 static GNSMenuItem*
 create_apple_menu (GtkOSXApplication *self)
 {
@@ -202,6 +197,16 @@ create_apple_menu (GtkOSXApplication *self)
   return add_to_menubar (self, app_menu, 0);
 }
 
+/*
+ * create_window_menu:
+ * @self: The pointer to the GtkOSXApplication object
+ * @window: The toplevel window for which the menu is being created
+ *
+ * Creates the Window menu, the one which tracks the application's windows.
+ * FIXME: We need an API to suppress this for single-window applications
+ *
+ * Returns: A pointer to the menu item on the mainMenu.
+ */
 static GNSMenuItem *
 create_window_menu (GtkOSXApplication *self, NSWindow* window)
 {   
@@ -220,7 +225,17 @@ create_window_menu (GtkOSXApplication *self, NSWindow* window)
   return add_to_menubar (self, window_menu, pos);
 }  
 
-
+/*
+ * gtk_osxapplication_constructor:
+ * @gtype: The GType of the new class
+ * @n_properties: The number of properties passed in the next parameter
+ * @properties: an array of construction properties
+ *
+ * Overrides the GObject (superclass) constructor to enforce a singleton
+ * The commented-out code is for thread safety, but doesn't yet work.
+ *
+ * Returns: A pointer to the new object.
+ */
 static GObject *
 gtk_osxapplication_constructor (GType gtype,
 			     guint n_properties,
@@ -245,6 +260,12 @@ gtk_osxapplication_constructor (GType gtype,
 
 }
 
+/*
+ * g_cclosure_marshal_BOOLEAN__VOID:
+ *
+ * A private marshaller for handlers which take no parameters and
+ * return a boolean.
+ */
 static void
 g_cclosure_marshal_BOOLEAN__VOID (GClosure     *closure,
                                GValue       *return_value G_GNUC_UNUSED,
@@ -279,6 +300,12 @@ g_cclosure_marshal_BOOLEAN__VOID (GClosure     *closure,
 }
 
 
+/*
+ * g_cclosure_marshal_BOOLEAN__STRING:
+ *
+ * A private marshaller for handlers which take a string parameter and
+ * return a boolean.
+ */
 static void
 g_cclosure_marshal_BOOLEAN__STRING (GClosure     *closure,
                                GValue       *return_value G_GNUC_UNUSED,
@@ -316,11 +343,19 @@ g_cclosure_marshal_BOOLEAN__STRING (GClosure     *closure,
 }
 
 
-/* If a handler returns TRUE than we need to stop termination, so we
-   set the return value accumulator to TRUE and return FALSE (there's
-   no point in asking more handlers; we're going to abort the
-   shutdown). Otherwise, set the return value to FALSE (don't block
-   termination) and continue looking for handlers.
+/* 
+ * block_termination_accumulator:
+ *
+ * A signal accumulator function for the NSApplicationShouldTerminate
+ * signal.
+ *
+ * If a handler returns TRUE than we need to stop termination, so we
+ * set the return value accumulator to TRUE and return FALSE (there's
+ * no point in asking more handlers; we're going to abort the
+ * shutdown). Otherwise, set the return value to FALSE (don't block
+ * termination) and continue looking for handlers.
+ *
+ * Returns: gboolean
  */
 static gboolean
 block_termination_accumulator(GSignalInvocationHint *ihint, GValue *accum,
@@ -334,6 +369,18 @@ block_termination_accumulator(GSignalInvocationHint *ihint, GValue *accum,
   return TRUE; //Continue handling the signal
  }
 
+/*
+ * global_event_filter_func
+ * @windowing_event: The event to process as a gpointer
+ * @event: The corresponding GdkEvent
+ * @user_data: Pointer registerd with the signal handler.
+ *
+ * Processes Cocoa KeyEquivalents which don't have Gtk or application
+ * implementations. In general, these must be KeyEquivalents like
+ * command-q which are provided by the Cocoa framework.
+ *
+ * Returns: Whether to continue event processing.
+ */
 static GdkFilterReturn
 global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
                           gpointer  user_data)
@@ -357,6 +404,13 @@ struct construction_args {
   GObjectConstructParam *props;
 };
 
+/*
+ * gtk_osxapplication_init:
+ * @self: The GtkOSXApplication object.
+ *
+ * Class initialization. Includes creating a bunch of special signals
+ * for echoing Cocoa signals through to the application.
+ */
 static void
 gtk_osxapplication_init (GtkOSXApplication *self)
 {
@@ -366,13 +420,31 @@ gtk_osxapplication_init (GtkOSXApplication *self)
   self->priv->dock_menu = NULL;
   gdk_window_add_filter (NULL, global_event_filter_func, (gpointer)self);
 
+/**
+ * GtkOSXApplication::NSApplicationDidBecomeActive:
+ * @app: The application object
+ * #user_data: Data appended at connection
+ *
+ * Emitted by the Application Delegate when the application receives
+ * an NSApplicationDidBecomeActive notification. Connect a handler if
+ * there is anything you need to do when the application is activated.
+ */
   g_signal_new("NSApplicationDidBecomeActive",
 	       GTK_TYPE_OSX_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, NULL, NULL,
 	       g_cclosure_marshal_VOID__VOID,
 	       G_TYPE_NONE, 0);
-
+/**
+ * GtkOSXApplication::NSApplicationWillResignActive:
+ * @app: The application object
+ * @user_data: Data appended at connection
+ *
+ * This signal is emitted by the Application Delegate when the
+ * application receives an NSApplicationWillResignActive
+ * notification. Connect a handler to it if there's anything your
+ * application needs to do to prepare for inactivity.
+ */
   g_signal_new("NSApplicationWillResignActive",
 	       GTK_TYPE_OSX_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
@@ -380,6 +452,21 @@ gtk_osxapplication_init (GtkOSXApplication *self)
 	       g_cclosure_marshal_VOID__VOID,
 	       G_TYPE_NONE, 0);
 
+/**
+ * GtkOSXApplication::NSApplicationBlockTermination:
+ * @app: The application object
+ * @user_data: Data appended at connection
+ *
+ * Emitted by the Application Delegate when the application reeeives
+ * an NSApplicationShouldTerminate notification. Perform any cleanup
+ * you need to do (e.g., saving files) before exiting. Returning FALSE
+ * will allow further handlers to run and if none return TRUE, the
+ * application to shut down. Returning TRUE will veto shutdown and
+ * stop emission, so later handlers will not run.
+ *
+ * Returns: Boolean indicating that further emission and application
+ * termination should be blocked.
+ */
   g_signal_new("NSApplicationBlockTermination",
 	       GTK_TYPE_OSX_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
@@ -387,6 +474,19 @@ gtk_osxapplication_init (GtkOSXApplication *self)
 	       g_cclosure_marshal_BOOLEAN__VOID,
 	       G_TYPE_BOOLEAN, 0);
 
+/**
+ * GtkOSXApplication::NSApplicationOpenFile:
+ * @app: The application object
+ * @path: A UTF8-encoded file path to open.
+ * @user_data: Data attached at connection
+ *
+ * Emitted when a OpenFile, OpenFiles, or OpenEmptyFile event is
+ * received from the operating system. This signal does not implement
+ * drops, but it does implement "open with" events from Finder. An
+ * OpenEmptyFile is received at launch in Python applications.
+ *
+ * Returns: Boolean indicating success at opening the file.
+ */
   g_signal_new("NSApplicationOpenFile",
 	       GTK_TYPE_OSX_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
@@ -402,7 +502,12 @@ gtk_osxapplication_init (GtkOSXApplication *self)
   [ NSApp setDelegate: [GtkApplicationDelegate new]];
 }
 
-
+/**
+ * gtk_osxapplication_class_init:
+ * @klass: The class type pointer
+ *
+ * Not normaly called directly; Use g_object_new(GTK_TYPE_OSXAPPLICATION)
+ */
 void 
 gtk_osxapplication_class_init(GtkOSXApplicationClass *klass)
 {
@@ -411,12 +516,25 @@ gtk_osxapplication_class_init(GtkOSXApplicationClass *klass)
   gobject_class->constructor = gtk_osxapplication_constructor;
 }
 
+/**
+ * gtk_osxapplication_ready:
+ * @self: The GtkOSXApplication object
+ *
+ * Inform Cocoa that application initialization is complete. 
+ */
 void
 gtk_osxapplication_ready (GtkOSXApplication *self)
 {
   [ NSApp finishLaunching ];
 }
 
+/**
+ * gtk_osxapplication_cleanup:
+ * @self: The GtkApplication object
+ *
+ * Destroy the GtkOSXApplication object. Not normally needed, as the
+ * object is expected to remain until the application quits.
+ */
 void
 gtk_osxapplication_cleanup(GtkOSXApplication *self)
 {
@@ -425,6 +543,17 @@ gtk_osxapplication_cleanup(GtkOSXApplication *self)
   
 }
 
+/*
+ * window_focus_cb:
+ * @window: The application window receiving focus
+ * @event: The GdkEvent. Not used.
+ * @menubar: The GNSMenubar associated with window
+ *
+ * Changes the active menubar when the application switches
+ * windows. If you switch window focus programmatically, make sure
+ * that the activate signal is emitted for the new window to trigger
+ * this handler.
+ */
 static gboolean
 window_focus_cb (GtkWindow* window, GdkEventFocus *event, GNSMenuBar *menubar)
 {
@@ -432,6 +561,17 @@ window_focus_cb (GtkWindow* window, GdkEventFocus *event, GNSMenuBar *menubar)
   return FALSE;
 }
 
+/**
+ * gtk_osxapplication_set_menu_bar:
+ * @self: The GtkOSXApplication object
+ * @menu_shell: The GtkMenuBar that you want to set.
+ *
+ * Set a window's menubar as the application menu bar. Call this once
+ * for each window as you create them. It works best if the menubar is
+ * reasonably fully populated before you call it. Once set, it will
+ * stay syncronized through signals as long as you don't disconnect or
+ * block them.
+ */
 void
 gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_shell)
 {
@@ -490,6 +630,14 @@ gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_she
 
 }
 
+/**
+ * gtk_osxapplication_sync_menubar:
+ * @self: The GtkOSXApplication object
+ *
+ * Syncornize the active window's GtkMenuBar with the OSX menu
+ * bar. You should only need this if you have programmatically changed
+ * the menus with signals blocked or disconnected.
+ */
 void
 gtk_osxapplication_sync_menubar (GtkOSXApplication *self)
 {
@@ -497,6 +645,17 @@ gtk_osxapplication_sync_menubar (GtkOSXApplication *self)
 }
 
 
+/**
+ * gtk_osxapplication_add_app_menu_group:
+ * @self: The GtkOSXApplication object
+ *
+ * GtkOSXApplicationMenuGroups are used to insert separators in the
+ * App menu and to ensure that they are displayed only if not the
+ * first item in the menu. Groups are added sequentially; there is no
+ * provision for inserting them at a particular position.
+ *
+ * Returns: A new GtkOSXApplicationMenuGroup
+ */
 GtkOSXApplicationMenuGroup *
 gtk_osxapplication_add_app_menu_group (GtkOSXApplication* self )
 {
@@ -505,6 +664,27 @@ gtk_osxapplication_add_app_menu_group (GtkOSXApplication* self )
     return group;
 }
 
+/**
+ * gtk_osxapplication_add_app_menu_item:
+ * @self: The GtkOSXApplication object
+ * @group: The GtkOSXApplicationMenuGroup to which the menu item should be 
+ * added.
+ * @menu_item: The GtkMenuItem to add to the group.
+ *
+ * Certain menu items (About, Check for updates, and Preferences in
+ * particular) are normally found in the so-called Application menu
+ * (the first one on the menubar, named after the application) in OSX
+ * applications. This function will create a menu entry for such a
+ * menu item, removing it from its original menu in the Gtk
+ * application.
+ *
+ * Use this after calling gtk_osxapplication_set_menu_bar(), first
+ * creating a GtkOSXApplicationMenuGroup to hold it with
+ * gtk_osxapplication_add_menu_group().
+ *
+ * Don't use it for Quit! A Quit menu item is created automatically
+ * along with the Application menu. Just hide your Gtk Quit menu item.
+ */
 void
 gtk_osxapplication_add_app_menu_item (GtkOSXApplication *self,
 				   GtkOSXApplicationMenuGroup *group,
@@ -563,24 +743,34 @@ gtk_osxapplication_add_app_menu_item (GtkOSXApplication *self,
 /* A bogus prototype to shut up a compiler warning. This function is for GtkApplicationDelegate and is not public. */
 NSMenu* _gtk_osxapplication_dock_menu(GtkOSXApplication *self);
 
+/**
+ * _gtk_osxapplication_dock_menu:
+ * @self: The GtkOSXApplication object.
+ *
+ * Return the dock menu to the Application Delegate; if not null, it
+ * will be added to the dock menu.
+ *
+ * Returns: NSMenu*
+ */
 NSMenu*
 _gtk_osxapplication_dock_menu(GtkOSXApplication *self)
 {
   return(self->priv->dock_menu);
 }
 
-/** Set a GtkMenu as the dock menu.  
-
+/**
+ * gtk_osxapplication_set_dock_menu:
+ * @self: The GtkOSXApplication object
+ * @menu_shell: A GtkMenu (cast it with GTK_MENU_SHELL() when you
+ * pass it in
+ *
+ * Set a GtkMenu as the dock menu.  
+ *
  * This menu does not have a "sync" function, so changes made while
  * signals are disconnected will not update the menu which appears in
  * the dock, and may produce strange results or crashes if a
  * GtkMenuItem or GtkAction associated with a dock menu item is
  * deallocated.
-
- * @param self The GtkOSXApplication
-
- * @param menu_shell A GtkMenu (cast it with GTK_MENU_SHELL() when you
- * pass it in
  */
 void
 gtk_osxapplication_set_dock_menu(GtkOSXApplication *self,
@@ -594,11 +784,16 @@ gtk_osxapplication_set_dock_menu(GtkOSXApplication *self,
   }
 }
 
-/** Retrieve an image file from the bundle and return an NSImage* of it.
- * @param name The filename
- * @param type The extension (e.g., jpg) of the filename
- * @param subdir The subdirectory of $Bundle/Contents/Resources in which to look for the file.
- * @return An autoreleased NSImage
+/*
+ * nsimage_from_resource:
+ * @name: The filename
+ * @type: The extension (e.g., jpg) of the filename
+ * @subdir: The subdirectory of $Bundle/Contents/Resources in which to
+ * look for the file.
+ *
+ * Retrieve an image file from the bundle and return an NSImage* of it.
+ *
+ * Returns: An autoreleased NSImage
  */
 static NSImage*
 nsimage_from_resource(const gchar *name, const gchar* type, const gchar* subdir)
@@ -627,10 +822,14 @@ nsimage_from_resource(const gchar *name, const gchar* type, const gchar* subdir)
   return image;
 }
 
-/** Create an NSImage from a CGImageRef.
+/*
+ * nsimage_from_pixbuf:
+ * @pixbuf: The GdkPixbuf* to convert
+ *
+ * Create an NSImage from a CGImageRef.
  * Lifted from http://www.cocoadev.com/index.pl?CGImageRef
- * @param pixbuf: The GdkPixbuf* to convert
- * @return An auto-released NSImage*
+ *
+ * Returns: An auto-released NSImage*
  */
 static NSImage*
 nsimage_from_pixbuf(GdkPixbuf *pixbuf)
@@ -674,11 +873,15 @@ gtk_osxapplication_set_dock_icon_pixbuf(GtkOSXApplication *self,
 
 }
 
-/** Set the dock icon from an image file in the bundle/
- * @param self The GtkOSXApplication
- * @param name The ame of the image file
- * @param type The extension (e.g., jpg) of the filename
- * @param subdir The subdirectory of $Bundle/Contents/Resources in which to look for the file.
+/**
+ * gtk_osxapplication_set_dock_icon_resource:
+ * @self: The GtkOSXApplication
+ * @name: The ame of the image file
+ * @type: The extension (e.g., jpg) of the filename
+ * @subdir: The subdirectory of $Bundle/Contents/Resources in which to
+ * look for the file.
+ *
+ * Set the dock icon from an image file in the bundle/
  */
 void
 gtk_osxapplication_set_dock_icon_resource(GtkOSXApplication *self,
@@ -691,14 +894,19 @@ gtk_osxapplication_set_dock_icon_resource(GtkOSXApplication *self,
   [image release];
 }
 
-/** Create an attention request.  If type is CRITICAL_REQUEST, the
+/**
+ * gtk_osxapplication_attention_request:
+ * @self: The GtkOSXApplication pointer
+ * @type: CRITICAL_REQUEST or INFO_REQUEST
+ *
+ * Create an attention request.  If type is CRITICAL_REQUEST, the
  * dock icon will bounce until cancelled the application receives
  * focus; otherwise it will bounce for 1 second -- but the attention
  * request will remain asserted until cancelled or the application
  * receives focus. This function has no effect if the application has focus.
- * @param self The GtkOSXApplication pointer
- * @param type CRITICAL_REQUEST or INFO_REQUEST
- * @return A the attention request ID. Pass this id to gtk_osxapplication_cancel_attention_request.
+ *
+ * Returns: A the attention request ID. Pass this id to
+ * gtk_osxapplication_cancel_attention_request.
  */
 gint
 gtk_osxapplication_attention_request(GtkOSXApplication *self,
@@ -707,9 +915,14 @@ gtk_osxapplication_attention_request(GtkOSXApplication *self,
   return (gint)[NSApp requestUserAttention: (NSRequestUserAttentionType)type];
 }
 
-/** Cancel an attention request created with gtk_osxapplication_attention_request.
- * @param self The application
- * @param id The integer attention request id returned from gtk_osxapplication_attention_request.
+/**
+ * gtk_osxapplication_cancel_attention_request:
+ * @self: The application
+ * @id: The integer attention request id returned from
+ * gtk_osxapplication_attention_request.
+ *
+ * Cancel an attention request created with
+ * gtk_osxapplication_attention_request.
  */
 void
 gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint id)
@@ -717,11 +930,14 @@ gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint id)
   [NSApp cancelUserAttentionRequest: (NSInteger)id];
 }
 
-/** Return the root path of the bundle or the directory containing the
+/**
+ * gtk_osxapplication_get_bundle_path:
+ * @self: The GtkOSXApplication. Not Used.
+ *
+ * Return the root path of the bundle or the directory containing the
  *  executable if it isn't actually a bundle.
-
- * @param self The GtkOSXApplication. Not Used.
- * @return path The bundle's absolute path
+ *
+ * Returnl path The bundle's absolute path
  */
 const gchar*
 gtk_osxapplication_get_bundle_path(GtkOSXApplication *self)
@@ -729,15 +945,18 @@ gtk_osxapplication_get_bundle_path(GtkOSXApplication *self)
   return [[[NSBundle mainBundle] bundlePath] UTF8String];
 }
 
-/** Return the value of the CFBundleIdentifier key from the bundle's Info.plist
-
+/**
+ * gtk_osxapplication_get_bundle_id:
+ * @self: The GtkOSXApplication. Not Used.
+ *
+ *Return the value of the CFBundleIdentifier key from the bundle's Info.plist
+ *
  * This will return NULL if it's not really a bundle, there's no
  * Info.plist, or if Info.plist doesn't have a CFBundleIdentifier key
  * (So if you need to detect being in a bundle, make sure that your
  * bundle has that key!)
-
- * @param self The GtkOSXApplication. Not Used.
- * @return The string value of CFBundleIdentifier, or NULL if there is none.
+ *
+ * Returns: The string value of CFBundleIdentifier, or NULL if there is none.
  */
 const gchar*
 gtk_osxapplication_get_bundle_id(GtkOSXApplication *self)
@@ -745,11 +964,13 @@ gtk_osxapplication_get_bundle_id(GtkOSXApplication *self)
   return [[[NSBundle mainBundle] bundleIdentifier] UTF8String];
 }
 
-/** Return the Resource path for the bundle or the directory containing the
+/**
+ * gtk_osxapplication_get_resource_path:
+ * @self: The GtkOSXApplication. Not Used.
+ *
+ * Return the Resource path for the bundle or the directory containing the
  *  executable if it isn't actually a bundle.
-
-
- * @param self The GtkOSXApplication. Not Used.
+ *
  * @return path The absolute resource path
  */
 const gchar*
@@ -759,9 +980,13 @@ gtk_osxapplication_get_resource_path(GtkOSXApplication *self)
 }
 
 
-/** Return the executable path, including file name
- * @param self The GtkOSXApplication. Not Used.
- * @return The path to the primary executable
+/**
+ * gtk_osxapplication_get_executable_path:
+ * @self: The GtkOSXApplication. Not Used.
+ *
+ * Return the executable path, including file name
+ *
+ * Returns: The path to the primary executable
  */
 const gchar*
 gtk_osxapplication_get_executable_path(GtkOSXApplication *self)
@@ -769,15 +994,18 @@ gtk_osxapplication_get_executable_path(GtkOSXApplication *self)
   return [[[NSBundle mainBundle] executablePath] UTF8String];
 }
 
-/** Return the NSObject pointed to by the provided key.
-
+/**
+ * gtk_osxapplication_get_bundle_info:
+ * @self: The GtkOSXApplication. Not Used.
+ * @key: The key, as a normal UTF8 string.
+ *
+ * Return the NSObject pointed to by the provided key.
+ *
  * Be careful with this! It returns a gpointer to an NSObject, so
  * you'll need to check the object class before doing anything, and
  * then cast it appropriately. Don't try this if you don't know Cocoa
  * programming!
-
- * @param self The GtkOSXApplication. Not Used.
- * @param key The key, as a normal UTF8 string.
+ *
  * @return A pointer to the NSObject stored with that key.
  */
 gpointer
