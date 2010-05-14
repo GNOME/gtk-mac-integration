@@ -29,7 +29,7 @@ SCANGOBJ_OPTIONS=
 
 # Extra options to supply to gtkdoc-scan.
 # e.g. SCAN_OPTIONS=--deprecated-guards="GTK_DISABLE_DEPRECATED"
-SCAN_OPTIONS=
+SCAN_OPTIONS=--rebuild-types
 
 # Extra options to supply to gtkdoc-mkdb.
 # e.g. MKDB_OPTIONS=--sgml-mode --output-format=xml
@@ -49,12 +49,22 @@ FIXXREF_OPTIONS=
 # Used for dependencies. The docs will be rebuilt if any of these change.
 # e.g. HFILE_GLOB=$(top_srcdir)/gtk/*.h
 # e.g. CFILE_GLOB=$(top_srcdir)/gtk/*.c
-HFILE_GLOB=
-CFILE_GLOB=
+HFILE_GLOB=$(top_srcdir)/src/*.h
+CFILE_GLOB=$(top_srcdir)/src/*.c
 
 # Header files to ignore when scanning.
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h
-IGNORE_HFILES=
+IGNORE_HFILES=				\
+	ige-mac-integration.h		\
+	ige-mac-bundle.h		\
+	ige-mac-dock.h			\
+	ige-mac-menu.h			\
+	ige-mac-image-utils.h 		\
+	ige-mac-private.h		\
+	getlabel.h			\
+	cocoa_menu.h			\
+	cocoa_menu_item.h		\
+	gtkosxapplicationprivate.h
 
 # Images to copy into HTML directory.
 # e.g. HTML_IMAGES=$(top_srcdir)/gtk/stock-icons/stock_about_24.png
@@ -74,9 +84,9 @@ expand_content_files=
 # signals and properties.
 # e.g. GTKDOC_CFLAGS=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
-GTKDOC_CFLAGS=
-GTKDOC_LIBS=
-
+GTKDOC_CFLAGS = $(GLIB_CFLAGS)
+GTKDOC_LIBS = $(top_srcdir)/src/libigemacintegration.la -lgobject-2.0
+DYLD_LOAD_PATH=$(top_srcdir)/src/.libs
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 include $(top_srcdir)/gtk-doc.make
 
