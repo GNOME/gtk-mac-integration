@@ -26,25 +26,15 @@
 #include <gtk/gtk.h>
 #include <glib-object.h>
 
-/** GtkOSXApplication exposes to the Gtk+ program important functions of
+/** 
+ * SECTION: GtkOSXApplication
+ * @Short_description: Base class for OSX integration
+ * @Title: GtkOSXApplication
+ *
+ * Exposes to the Gtk+ program important functions of
  * OSX's NSApplication class for use by Gtk+ applications running with
  * the quartz Gdk backend and provides addtional functions for
  * integrating a Gtk+ program into the OSX user environment.
-
- * SIGNALS:
- * The "NSApplicationDidBecomeActive" signal
- * void user_function(GtkOSXApplication *app,
- *		      gpointer user_data)
- * The "NSApplicationWillResignActive" signal
- * void user_function(GtkOSXApplication *app,
- *		      gpointer user_data)
- * The "NSApplicationBlockTermination" signal
- * gboolean user_function(GtkOSXApplication *app,
- * 			  gpointer user_data)
- * The "NSApplicationOpenFile" signal
- * gboolean user_function(GtkOSXApplication *app,
- * 			  gchar *path,
- * 			  gpointer user_data)
  */
 
 G_BEGIN_DECLS
@@ -86,7 +76,7 @@ GType gtk_osxapplication_get_type (void);
 void gtk_osxapplication_ready (GtkOSXApplication *self);
 void gtk_osxapplication_cleanup (GtkOSXApplication *self);
 void gtk_osxapplication_set_use_quartz_accelerators(GtkOSXApplication *self, 
-						 gboolean use_accelerators);
+					 gboolean use_quartz_accelerators);
 gboolean gtk_osxapplication_use_quartz_accelerators(GtkOSXApplication *self);
 void gtk_osxapplication_set_menu_bar       (GtkOSXApplication *self, 
 					 GtkMenuShell    *menu_shell);
