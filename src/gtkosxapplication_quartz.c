@@ -871,9 +871,12 @@ nsimage_from_pixbuf(GdkPixbuf *pixbuf)
   return newImage;
 }
 
-/** Set the dock icon from a GdkPixbuf
- * @param self The GtkOSXApplication
- * @param pixbuf The pixbuf. Pass NULL to reset the icon to its default.
+/**
+ * gtk_osxapplication_set_dock_icon_pixbuf:
+ * @self: The GtkOSXApplication
+ * @pixbuf: The pixbuf. Pass NULL to reset the icon to its default.
+ *
+ * Set the dock icon from a GdkPixbuf
  */
 void
 gtk_osxapplication_set_dock_icon_pixbuf(GtkOSXApplication *self,
@@ -950,7 +953,7 @@ gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint id)
  * Return the root path of the bundle or the directory containing the
  *  executable if it isn't actually a bundle.
  *
- * Returnl path The bundle's absolute path
+ * Returns: path The bundle's absolute path
  */
 const gchar*
 gtk_osxapplication_get_bundle_path(GtkOSXApplication *self)
@@ -984,7 +987,7 @@ gtk_osxapplication_get_bundle_id(GtkOSXApplication *self)
  * Return the Resource path for the bundle or the directory containing the
  *  executable if it isn't actually a bundle.
  *
- * @return path The absolute resource path
+ * Returns: path The absolute resource path
  */
 const gchar*
 gtk_osxapplication_get_resource_path(GtkOSXApplication *self)
@@ -1019,7 +1022,7 @@ gtk_osxapplication_get_executable_path(GtkOSXApplication *self)
  * then cast it appropriately. Don't try this if you don't know Cocoa
  * programming!
  *
- * @return A pointer to the NSObject stored with that key.
+ * Returns: A pointer to the NSObject stored with that key.
  */
 gpointer
 gtk_osxapplication_get_bundle_info(GtkOSXApplication *self, const gchar *key)
