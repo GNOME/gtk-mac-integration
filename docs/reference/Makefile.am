@@ -12,7 +12,7 @@ AUTOMAKE_OPTIONS = 1.6
 DOC_MODULE=ige-mac-integration
 
 # Uncomment for versioned docs and specify the version of the module, e.g. '2'.
-#DOC_MODULE_VERSION=2
+DOC_MODULE_VERSION=0.9
 
 
 # The top-level SGML file. You can change this if you want to.
@@ -29,7 +29,7 @@ SCANGOBJ_OPTIONS=
 
 # Extra options to supply to gtkdoc-scan.
 # e.g. SCAN_OPTIONS=--deprecated-guards="GTK_DISABLE_DEPRECATED"
-SCAN_OPTIONS=--rebuild-types
+SCAN_OPTIONS=--rebuild-types --rebuild-sections
 
 # Extra options to supply to gtkdoc-mkdb.
 # e.g. MKDB_OPTIONS=--sgml-mode --output-format=xml
@@ -44,7 +44,7 @@ MKHTML_OPTIONS=
 
 # Extra options to supply to gtkdoc-fixref. Not normally needed.
 # e.g. FIXXREF_OPTIONS=--extra-dir=../gdk-pixbuf/html --extra-dir=../gdk/html
-FIXXREF_OPTIONS=
+FIXXREF_OPTIONS=--extra-dir=html
 
 # Used for dependencies. The docs will be rebuilt if any of these change.
 # e.g. HFILE_GLOB=$(top_srcdir)/gtk/*.h
@@ -64,6 +64,10 @@ IGNORE_HFILES=				\
 	getlabel.h			\
 	cocoa_menu.h			\
 	cocoa_menu_item.h		\
+	GNSMenuItem.h			\
+	GNSMenuBar.h			\
+	GtkApplicationDelegate.h	\
+	GtkApplicationNotify.h		\
 	gtkosxapplicationprivate.h
 
 # Images to copy into HTML directory.

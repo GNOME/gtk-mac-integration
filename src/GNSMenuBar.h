@@ -24,7 +24,13 @@
 
 @class GNSMenuItem;
 
-/** GNSMenuBar is a wrapper class around NSMenu providing an extra
+/** 
+ * SECTION:GNSMenuBar
+ * @short_description: Wrapper class for NSMenubar
+ * #title: GNSMenuBar
+ * @stability: Private
+ *
+ * Wrapper class around NSMenu providing an extra
  * parameter for stashing the App menu groups.
  */
 
@@ -38,22 +44,42 @@
   GNSMenuItem *help_menu;
 }
 
-/** Override the designated initializer */
+/** 
+ * initWithTitle:
+ * @title: Title string with which to initialize the menubar. Normally @"".
+ *
+ * Override the designated initializer 
+ */
 - (id) initWithTitle: (NSString*) title;
 
-/** Provide the initializer we actually want to use */
+/**
+ * initWithGtkMenuBar:
+ * @menubar: A pointer to the menubar we're going to sync with
+ *
+ * Provide the initializer we actually want to use
+ */
 - (id) initWithGtkMenuBar: (GtkMenuBar*) menubar;
 
-/** Create a new GtkApplicationMenuGroup, add it to the list, and
+/** 
+ * addGroup:
+ *
+ * Create a new GtkApplicationMenuGroup, add it to the list, and
  * return a pointer to it.
  */
 - (GtkOSXApplicationMenuGroup *) addGroup;
 
-/** Get a pointer to the current head of the app_menu_groups list
+/**
+ * app_menu_groups:
+ *
+ * Get a pointer to the current head of the app_menu_groups list
  */
 - (GList *) app_menu_groups;
 
-/** Resynchronize ourself with out GtkMenuBar */
+/**
+ * resync:
+ *
+ *  Resynchronize ourself with out GtkMenuBar
+ */
 -(void) resync;
 
 - (void) setAppMenu: (GNSMenuItem*) menu_item;
@@ -63,6 +89,10 @@
 - (void) setHelpMenu: (GNSMenuItem*) menu_item;
 - (GNSMenuItem*) helpMenu;
 
-/** Destructor */
+/**
+ * dealloc:
+ *
+ * Destructor
+ */
 - (void) dealloc;
 @end

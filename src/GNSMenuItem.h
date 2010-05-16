@@ -28,9 +28,13 @@ typedef struct {
   gpointer data;
 } ClosureData;
 
-
 /**
- * GNSMenuItem is a wrapper class around NSMenuItem providing an
+ * SECTION:GNSMenuItem
+ * @Short_description: NSMenuItem Wrapper Class
+ * @Title: GNSMenuItem
+ * @stability: private
+ *
+ * Wrapper class around NSMenuItem providing an
  * action function which puts invocation of the provided GClosure onto
  * the gtk idle queue. 
  */
@@ -55,12 +59,27 @@ typedef struct {
 
 }
 
-/** Create a new GNSMenuItem with a GClosure and an additional arbitrary data struct */
+/** 
+ * initWithTitle:
+ * @title: The title (label) of the menu item.
+ * @closure: A gclosure containing the callback and associated data to
+ * run when the menu item is activated.
+ * @ptr: A gpointer to a data object to be passed with the closure
+ *
+ * Create a new GNSMenuItem with a GClosure and an additional
+ * arbitrary data struct
+ *
+ * Returns: A pointer to the new menu item.
+ */
 
 - (id) initWithTitle:(NSString*) title aGClosure:(GClosure*) closure andPointer:(gpointer) ptr;
 
-/** overrides the superclass function and puts (indirectly) the
- *  action_closure on the idle queue.
+/**
+ * activate:
+ * @sender: The GtkWidget originating the activation. Passed to the closure
+ *
+ * Overrides the superclass function and puts (indirectly) the
+ * action_closure on the idle queue.
  */
 
 - (void) activate:(id) sender;

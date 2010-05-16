@@ -26,16 +26,6 @@
 #include <gtk/gtk.h>
 #include <glib-object.h>
 
-/** 
- * SECTION: GtkOSXApplication
- * @Short_description: Base class for OSX integration
- * @Title: GtkOSXApplication
- *
- * Exposes to the Gtk+ program important functions of
- * OSX's NSApplication class for use by Gtk+ applications running with
- * the quartz Gdk backend and provides addtional functions for
- * integrating a Gtk+ program into the OSX user environment.
- */
 
 G_BEGIN_DECLS
 #define GTK_TYPE_OSX_APPLICATION	(gtk_osxapplication_get_type())
@@ -106,7 +96,7 @@ void gtk_osxapplication_set_dock_icon_resource(GtkOSXApplication *self,
 					    const gchar  *name,
 					    const gchar  *type,
 					    const gchar  *subdir);
-/** Ige-mac-dock provided two functions,
+/* Ige-mac-dock provided two functions,
  * ige_mac_dock_set_overlay_from_pixbuf and
  * ige_mac_doc_set_overlay_from_resource, but OSX 10.5 and later do
  * not support application dock tile overlays. Document dock tiles
