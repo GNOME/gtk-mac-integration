@@ -1015,18 +1015,18 @@ gtk_osxapplication_get_executable_path(GtkOSXApplication *self)
  * @self: The GtkOSXApplication. Not Used.
  * @key: The key, as a normal UTF8 string.
  *
- * Return the NSObject pointed to by the provided key.
+ * Queries the bundle's Info.plist with key. If the returned object is
+ * a string, returns that; otherwise returns a null string.
  *
- * Be careful with this! It returns a gpointer to an NSObject, so
- * you'll need to check the object class before doing anything, and
- * then cast it appropriately. Don't try this if you don't know Cocoa
- * programming!
- *
- * Returns: A pointer to the NSObject stored with that key.
+ * Returns: A UTF8-encoded string.
  */
-gpointer
+const gchar*
 gtk_osxapplication_get_bundle_info(GtkOSXApplication *self, const gchar *key)
 {
-  return (gpointer)[[NSBundle mainBundle] objectForInfoDictionaryKey:
-			  [NSString stringWithUTF8String: key]];
+  NSObject *id = [[NSBundle mainBundle] objectForInfoDictionaryKey:
+		  [NSString stringWithUTF8String: key]];
+  if ([id respondsToSelector: @selector(UTF8String)])
+      return [(NSString*)id UTF8String];
+  else
+      return "";
 }

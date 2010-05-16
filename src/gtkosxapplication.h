@@ -137,8 +137,8 @@ const gchar *gtk_osxapplication_get_bundle_path(GtkOSXApplication *self);
 const gchar *gtk_osxapplication_get_resource_path(GtkOSXApplication *self);
 const gchar *gtk_osxapplication_get_executable_path(GtkOSXApplication *self);
 const gchar *gtk_osxapplication_get_bundle_id(GtkOSXApplication *self);
-gpointer gtk_osxapplication_get_bundle_info(GtkOSXApplication *self, 
-					    const gchar *key);
+const gchar *gtk_osxapplication_get_bundle_info(GtkOSXApplication *self, 
+						const gchar *key);
 
 G_END_DECLS
 
