@@ -39,6 +39,11 @@
    name:NSApplicationWillResignActiveNotification 
    object:NSApp];
 
+  [[NSNotificationCenter defaultCenter] addObserver:self
+   selector:@selector(appWillTerminate:)
+   name:NSApplicationWillTerminateNotification
+   object:NSApp];
+
   return self;
 }
 
@@ -60,6 +65,13 @@
   if (sig)
       g_signal_emit(app, sig, 0);
   g_object_unref(app);
+}
+
+- (void)appWillTerminate:(NSNotification *)notification
+{
+  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+  gtk_osxapplication_cleanup(app);
 }
 
 @end
