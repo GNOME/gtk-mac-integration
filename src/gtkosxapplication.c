@@ -41,11 +41,11 @@
  * Using GtkOSXApplication is pretty simple.
  * First, create an instance at startup:
  * 
- * |[GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSXAPPLICATION);]|
+ * |[GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);]|
  * 
  * Do this early in your program, shortly after you run
  * |[gtk_init()]|. Don't forget to guard it, and all other calls into
- * the library, with |[#ifdef MACINTEGRATION]|. You don't want your
+ * the library, with |[#ifdef MAC_INTEGRATION]|. You don't want your
  * Linux users' builds failing because of this.  The application
  * object is a singleton, so you can call g_object_new as often as you
  * like. You'll always get the same pointer back. There's no need to
