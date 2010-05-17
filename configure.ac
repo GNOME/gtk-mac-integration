@@ -1,6 +1,6 @@
 AC_PREREQ(2.52)
  
-AC_INIT(ige-mac-integration, 0.8.6)
+AC_INIT(ige-mac-integration, 0.9.0)
 AC_CONFIG_SRCDIR(src/ige-mac-menu.c)
 AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
@@ -50,8 +50,6 @@ AC_OUTPUT([
 	bindings/python/gtk_osxapplication/Makefile
         data/Makefile
         data/ige-mac-integration.pc
-	docs/Makefile
-	docs/reference/Makefile
 ])
 
 echo
