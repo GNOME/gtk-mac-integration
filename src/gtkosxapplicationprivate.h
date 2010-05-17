@@ -26,6 +26,7 @@
 #import <AppKit/NSApplication.h>
 
 #include "gtkosxapplication.h"
+#import "GtkApplicationNotify.h"
 
 #define  GTK_OSX_APPLICATION_GET_PRIVATE(obj)	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_OSX_APPLICATION, GtkOSXApplicationPrivate))
 
@@ -33,6 +34,7 @@ struct _GtkOSXApplicationPrivate
 {
   gboolean use_quartz_accelerators;
   NSMenu *dock_menu;
+  GtkApplicationNotificationObject *notify;
 
 };
 

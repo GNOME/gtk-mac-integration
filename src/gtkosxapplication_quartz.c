@@ -428,12 +428,8 @@ gtk_osxapplication_init (GtkOSXApplication *self)
   self->priv->use_quartz_accelerators = TRUE;
   self->priv->dock_menu = NULL;
   gdk_window_add_filter (NULL, global_event_filter_func, (gpointer)self);
-
-
-
-  /* this will stick around for ever ... is that OK ? */
-
-  [ [GtkApplicationNotificationObject alloc] init];
+  self->priv->notify = [[GtkApplicationNotificationObject alloc] init];
+  [self->priv->notify retain];
   [ NSApp setDelegate: [GtkApplicationDelegate new]];
 }
 
@@ -546,14 +542,15 @@ gtk_osxapplication_ready (GtkOSXApplication *self)
  * @self: The GtkApplication object
  *
  * Destroy the GtkOSXApplication object. Not normally needed, as the
- * object is expected to remain until the application quits.
+ * object is expected to remain until the application quits, and this
+ * function is called by the notification object at that time.  Menu
+ * bars are released as the corresponding GtkMenuBars are destroyed.
  */
 void
 gtk_osxapplication_cleanup(GtkOSXApplication *self)
 {
-  //FIXME: release each window's menubar
   [self->priv->dock_menu release];
-  
+  [self->priv->notify release];
 }
 
 /*
