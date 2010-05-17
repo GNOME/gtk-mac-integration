@@ -130,7 +130,7 @@ parent_set_emission_hook_remove (GtkWidget *widget,
  * Returns: a pointer to the NSMenuItem now holding the menu.
  */
 static GNSMenuItem*
-add_to_menubar (GtkOSXApplication *self, NSMenu *menu, NSInteger pos)
+add_to_menubar (GtkOSXApplication *self, NSMenu *menu, int pos)
 {
   GNSMenuItem *dummyItem = [[GNSMenuItem alloc] initWithTitle:@""
 					      action:nil keyEquivalent:@""];
@@ -211,7 +211,7 @@ static GNSMenuItem *
 create_window_menu (GtkOSXApplication *self, NSWindow* window)
 {   
   NSMenu *window_menu = [[NSMenu alloc] initWithTitle: @"Window"];
-  NSInteger pos;
+  int pos;
   
   [window_menu addItemWithTitle:@"Minimize"
 		action:@selector(performMiniaturize:) keyEquivalent:@""];
@@ -943,7 +943,7 @@ gtk_osxapplication_attention_request(GtkOSXApplication *self,
 void
 gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint id)
 {
-  [NSApp cancelUserAttentionRequest: (NSInteger)id];
+  [NSApp cancelUserAttentionRequest: id];
 }
 
 /**

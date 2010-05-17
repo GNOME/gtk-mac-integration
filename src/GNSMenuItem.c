@@ -83,9 +83,9 @@ idle_call_activate (ClosureData *action)
     hidden = YES;
   }
   else if (hidden && !shouldHide) {
+    hidden = NO;
     [inMenu insertItem: self atIndex: index];
     [(GNSMenuBar*)[NSApp mainMenu] resync];
-    hidden = NO;
   }
   [self release];
 #endif

@@ -51,7 +51,7 @@ typedef struct {
   // The hidden parameter was introduced in 10.5; for earlier OSX
   // versions we need to emulate it.
   BOOL notUsed;
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
+#if !(MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4)
   BOOL hidden;
   uint index;
   NSMenu *inMenu;
