@@ -52,7 +52,7 @@
   if (!result)
     return NSTerminateNow;
   else
-    return NSTerminateLater;
+    return NSTerminateCancel;
 }
 
 extern NSMenu* _gtk_osxapplication_dock_menu(GtkOSXApplication* app);
