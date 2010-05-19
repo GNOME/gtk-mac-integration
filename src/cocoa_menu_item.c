@@ -27,7 +27,6 @@
 #include "cocoa_menu_item.h"
 #include "cocoa_menu.h"
 #include "getlabel.h"
-#import "GNSMenuItem.h"
 #import "GNSMenuBar.h"
 
 //#define DEBUG(format, ...) g_printerr ("%s: " format, G_STRFUNC, ## __VA_ARGS__)
@@ -64,7 +63,7 @@ cocoa_menu_item_free (gpointer *ptr)
   [item release];
 }
 
-static GNSMenuItem *
+GNSMenuItem *
 cocoa_menu_item_get (GtkWidget *widget)
 {
   return (GNSMenuItem*) g_object_get_qdata (G_OBJECT (widget), cocoa_menu_item_quark);

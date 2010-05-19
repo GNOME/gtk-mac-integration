@@ -26,6 +26,9 @@
 #import <Cocoa/Cocoa.h>
 #include <gtk/gtk.h>
 #include "cocoa_menu.h"
+#import "GNSMenuItem.h"
+
+GNSMenuItem *cocoa_menu_item_get(GtkWidget* menu_item);
 
 void cocoa_menu_item_add_item (NSMenu* cocoa_menu, 
 			       GtkWidget* menu_item, 
