@@ -50,6 +50,8 @@ AC_OUTPUT([
 	bindings/python/gtk_osxapplication/Makefile
         data/Makefile
         data/ige-mac-integration.pc
+	docs/Makefile
+	docs/reference/Makefile
 ])
 
 echo
