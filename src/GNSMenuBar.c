@@ -62,6 +62,11 @@
     }
 }
 
+- (GtkMenuBar*) menuBar
+{
+  return gtk_menubar;
+}
+
 - (void) setAppMenu: (GNSMenuItem*) menu_item
 {
   [app_menu release];

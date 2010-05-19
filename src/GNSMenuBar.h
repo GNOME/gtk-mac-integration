@@ -82,6 +82,7 @@
  */
 -(void) resync;
 
+- (GtkMenuBar*) menuBar;
 - (void) setAppMenu: (GNSMenuItem*) menu_item;
 - (GNSMenuItem*) appMenu;
 - (void) setWindowMenu: (GNSMenuItem*) menu_item;
