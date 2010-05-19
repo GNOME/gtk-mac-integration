@@ -64,7 +64,9 @@
 
 - (void) setAppMenu: (GNSMenuItem*) menu_item
 {
+  [app_menu release];
   app_menu = menu_item;
+  [app_menu retain];
 }
 
 - (GNSMenuItem*) appMenu {
@@ -73,7 +75,9 @@
 
 - (void) setWindowMenu: (GNSMenuItem*) menu_item 
 {
+  [window_menu release];
   window_menu = menu_item;
+  [window_menu retain];
 }
 
 - (GNSMenuItem*) windowMenu
@@ -83,7 +87,9 @@
 
 - (void) setHelpMenu: (GNSMenuItem*) menu_item
 {
+  [help_menu release];
   help_menu = menu_item;
+  [help_menu retain];
 }
 
 - (GNSMenuItem*) helpMenu
@@ -98,6 +104,9 @@
     if (list && list->data)
       g_list_free(list->data);
   }
+  [app_menu release];
+  [window_menu release];
+  [help_menu release];
   if (app_menu_groups)
     g_list_free(app_menu_groups);
   [super dealloc];
