@@ -78,15 +78,15 @@
 /**
  * resync:
  *
- *  Resynchronize ourself with out GtkMenuBar
+ *  Resynchronize ourself with our GtkMenuBar
  */
 -(void) resync;
 
 - (GtkMenuBar*) menuBar;
 - (void) setAppMenu: (GNSMenuItem*) menu_item;
 - (GNSMenuItem*) appMenu;
-- (void) setWindowMenu: (GNSMenuItem*) menu_item;
-- (GNSMenuItem*) windowMenu;
+- (void) setWindowsMenu: (GNSMenuItem*) menu_item;
+- (GNSMenuItem*) windowsMenu;
 - (void) setHelpMenu: (GNSMenuItem*) menu_item;
 - (GNSMenuItem*) helpMenu;
 

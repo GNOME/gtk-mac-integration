@@ -507,7 +507,7 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
   for (index = 0; index < count; index++) {
     GNSMenuItem *indexedItem = (GNSMenuItem*)[cocoa_menu itemAtIndex: index];
     if (GTK_IS_MENU_BAR(menu_shell) &&
-	(indexedItem == [(GNSMenuBar*)cocoa_menu windowMenu] || 
+	(indexedItem == [(GNSMenuBar*)cocoa_menu windowsMenu] || 
 	 indexedItem == [(GNSMenuBar*)cocoa_menu helpMenu] ||
 	 indexedItem == [(GNSMenuBar*)cocoa_menu appMenu]))
       continue;

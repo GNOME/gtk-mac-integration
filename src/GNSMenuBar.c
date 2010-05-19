@@ -78,14 +78,14 @@
   return app_menu;
 }
 
-- (void) setWindowMenu: (GNSMenuItem*) menu_item 
+- (void) setWindowsMenu: (GNSMenuItem*) menu_item 
 {
   [window_menu release];
   window_menu = menu_item;
   [window_menu retain];
 }
 
-- (GNSMenuItem*) windowMenu
+- (GNSMenuItem*) windowsMenu
 {
   return window_menu;
 }

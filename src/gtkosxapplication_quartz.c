@@ -636,7 +636,6 @@ gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_she
     [NSApp setHelpMenu: [cocoa_menubar helpMenu]];
   }
   if (![cocoa_menubar itemWithTitle: @"Window"]) 
-    [cocoa_menubar setWindowMenu:  create_window_menu (self, nswin)];
 
 }
 
@@ -749,6 +748,7 @@ gtk_osxapplication_add_app_menu_item (GtkOSXApplication *self,
 	       G_STRFUNC, group);
 }
 
+    [cocoa_menubar setWindowsMenu:  cocoa_item];
 /* Dock support */
 /* A bogus prototype to shut up a compiler warning. This function is for GtkApplicationDelegate and is not public. */
 NSMenu* _gtk_osxapplication_dock_menu(GtkOSXApplication *self);
