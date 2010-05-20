@@ -86,6 +86,7 @@ typedef struct {
   GtkWidget *edit_item;
   GtkWidget *copy_item;
   GtkWidget *quit_item;
+  GtkWidget *help_menu;
   GtkWidget *about_item;
   GtkWidget *preferences_item;
 } MenuItems;
@@ -246,6 +247,7 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), items->preferences_item);
 
   item = gtk_menu_item_new_with_label ("Help");
+  items->help_menu = item;
   gtk_menu_shell_append (GTK_MENU_SHELL (menubar), item);
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
@@ -529,6 +531,7 @@ create_window(const gchar *title)
   items->open_item = gtk_ui_manager_get_widget(mgr, "/menubar/File/Open");
   items->edit_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit");
   items->copy_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit/Copy");
+  items->help_menu = gtk_ui_manager_get_widget(mgr, "/menubar/Help");
   items->quit_item = gtk_ui_manager_get_widget(mgr, "/menubar/File/Quit");
   items->about_item = gtk_ui_manager_get_widget(mgr, "/menubar/Help/About");
   items->preferences_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit/Preferences");
@@ -613,6 +616,8 @@ create_window(const gchar *title)
   group = gtk_osxapplication_add_app_menu_group (theApp);
   gtk_osxapplication_add_app_menu_item  (theApp, group,
 				      GTK_MENU_ITEM (items->preferences_item));
+  gtk_osxapplication_set_help_menu(theApp, GTK_MENU_ITEM(items->help_menu));
+  gtk_osxapplication_set_window_menu(theApp, NULL);
 #endif //GTKOSXAPPLICATION
   if (!menu_items_quark)
       menu_items_quark = g_quark_from_static_string("MenuItem");

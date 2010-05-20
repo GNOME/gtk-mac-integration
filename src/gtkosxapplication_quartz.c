@@ -208,20 +208,33 @@ create_apple_menu (GtkOSXApplication *self)
  * Returns: A pointer to the menu item on the mainMenu.
  */
 static GNSMenuItem *
-create_window_menu (GtkOSXApplication *self, NSWindow* window)
+create_window_menu (GtkOSXApplication *self)
 {   
   NSMenu *window_menu = [[NSMenu alloc] initWithTitle: @"Window"];
+  GtkMenuBar *menubar = [(GNSMenuBar*)[NSApp mainMenu] menuBar];
+  GtkWidget *parent = NULL;
+  GdkWindow *win = NULL;
+  NSWindow *nswin = NULL;
   int pos;
-  
+
+  g_return_val_if_fail(menubar != NULL, NULL);
+  g_return_val_if_fail(GTK_IS_MENU_BAR(menubar), NULL);
+  parent = gtk_widget_get_toplevel(GTK_WIDGET(menubar));
+  if (parent && GTK_IS_WIDGET(parent))
+    win = gtk_widget_get_window(parent);
+  if (win && GDK_IS_WINDOW(win))
+    nswin = gdk_quartz_window_get_nswindow(win);
+
   [window_menu addItemWithTitle:@"Minimize"
-		action:@selector(performMiniaturize:) keyEquivalent:@""];
+		action:@selector(performMiniaturize:) keyEquivalent:@"M"];
   [window_menu addItem: [NSMenuItem separatorItem]];
   [window_menu addItemWithTitle:@"Bring All to Front"
 		action:@selector(arrangeInFront:) keyEquivalent:@""];
 
   [NSApp setWindowsMenu:window_menu];
-  [NSApp addWindowsItem: window title: [window title] filename: NO];
-  pos = [[NSApp mainMenu] indexOfItemWithTitle: @"Help"];
+  if (nswin)
+    [NSApp addWindowsItem: nswin title: [nswin title] filename: NO];
+  pos = [[NSApp mainMenu] indexOfItem: [(GNSMenuBar*)[NSApp mainMenu] helpMenu]];
   return add_to_menubar (self, window_menu, pos);
 }  
 
@@ -587,14 +600,8 @@ gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_she
 {
   GNSMenuBar* cocoa_menubar;
   GtkWidget *parent = gtk_widget_get_toplevel(GTK_WIDGET(menu_shell));
-  GdkWindow *win = gtk_widget_get_window(parent);
-  NSWindow *nswin; 
-
+ 
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
-  g_return_if_fail (win != NULL);
-  g_return_if_fail (GDK_IS_WINDOW(win));
-  nswin = gdk_quartz_window_get_nswindow(win);
-  g_return_if_fail(nswin != NULL);
 
   cocoa_menubar = (GNSMenuBar*)cocoa_menu_get(GTK_WIDGET (menu_shell));
   if (!cocoa_menubar) {
@@ -629,14 +636,6 @@ gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_she
 		    cocoa_menubar);
 
   cocoa_menu_item_add_submenu (menu_shell, cocoa_menubar, TRUE, FALSE);
-  if (![cocoa_menubar itemWithTitle: @"Help"]) {
-    [cocoa_menubar setHelpMenu: [[GNSMenuItem alloc] initWithTitle: @"Help"
-				 action: NULL keyEquivalent: @""]];
-    [cocoa_menubar addItem: [cocoa_menubar helpMenu]];
-    [NSApp setHelpMenu: [cocoa_menubar helpMenu]];
-  }
-  if (![cocoa_menubar itemWithTitle: @"Window"]) 
-
 }
 
 /**
@@ -748,7 +747,70 @@ gtk_osxapplication_add_app_menu_item (GtkOSXApplication *self,
 	       G_STRFUNC, group);
 }
 
+/**
+ * gtk_osxapplication_set_window_menu:
+ * @self: The application object
+ * @menu_item: The menu item which will be set as the Window menu
+ *
+ * Sets a designated menu item already on the menu bar as the Window
+ * menu. This is the menu which contains a list of open windows for
+ * the application; by default it also provides menu items to minimize
+ * and zoom the current window and to bring all windows to the
+ * front. Call this after gtk_osx_application_set_menu_bar(). It
+ * operates on the currently active menubar. If @nenu_item is NULL, it
+ * will create a new menu for you, which will not be gettext translatable. 
+ */
+void
+gtk_osxapplication_set_window_menu(GtkOSXApplication *self,
+				   GtkMenuItem *menu_item)
+{
+  GNSMenuBar *cocoa_menubar = (GNSMenuBar*)[NSApp mainMenu];
+  g_return_if_fail(cocoa_menubar != NULL);
+
+  if (menu_item) {
+    GNSMenuItem *cocoa_item = cocoa_menu_item_get(GTK_WIDGET(menu_item));
+     g_return_if_fail(cocoa_item != NULL);
+    [cocoa_menubar setWindowsMenu: cocoa_item];
+    [NSApp setWindowsMenu: [cocoa_item submenu]];
+  }
+  else { 
+    GNSMenuItem *cocoa_item = create_window_menu (self);
     [cocoa_menubar setWindowsMenu:  cocoa_item];
+  }
+}
+
+/**
+ * gtk_osxapplication_set_help_menu:
+ * @self: The application object
+ * @menu_item: The menu item which will be set as the Window menu
+ *
+ * Sets a designated menu item already on the menu bar as the Help
+ * menu. Call this after gtk_osx_application_set_menu_bar(), but
+ * before gtk_osx_application_window_menu(), especially if you're
+ * letting GtkOSXApplication create a Window menu for you (it helps
+ * position the Window menu correctly). It operates on the currently
+ * active menubar. If @nenu_item is %NULL, it will create a new menu
+ * for you, which will not be gettext translatable.
+ */
+void
+gtk_osxapplication_set_help_menu (GtkOSXApplication *self,
+				  GtkMenuItem *menu_item)
+{
+  GNSMenuBar *cocoa_menubar = (GNSMenuBar*)[NSApp mainMenu];
+  g_return_if_fail(cocoa_menubar != NULL);
+
+  if (menu_item) {
+    GNSMenuItem *cocoa_item = cocoa_menu_item_get(GTK_WIDGET(menu_item));
+     g_return_if_fail(cocoa_item != NULL);
+    [cocoa_menubar setHelpMenu: cocoa_item];
+  }
+  else {
+    [cocoa_menubar setHelpMenu: [[GNSMenuItem alloc] initWithTitle: @"Help"
+				 action: NULL keyEquivalent: @""]];
+    [cocoa_menubar addItem: [cocoa_menubar helpMenu]];
+  }
+}
+
 /* Dock support */
 /* A bogus prototype to shut up a compiler warning. This function is for GtkApplicationDelegate and is not public. */
 NSMenu* _gtk_osxapplication_dock_menu(GtkOSXApplication *self);
