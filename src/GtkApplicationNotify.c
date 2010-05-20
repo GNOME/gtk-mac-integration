@@ -71,7 +71,14 @@
 {
   GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
   [[NSNotificationCenter defaultCenter] removeObserver: self];
+  guint sig = g_signal_lookup("NSApplicationWillTerminate", 
+			      GTK_TYPE_OSX_APPLICATION);
+  if (sig)
+      g_signal_emit(app, sig, 0);
+
   gtk_osxapplication_cleanup(app);
+  g_object_unref(app);
+
 }
 
 @end

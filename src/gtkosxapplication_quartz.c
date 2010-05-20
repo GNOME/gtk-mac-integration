@@ -421,6 +421,7 @@ enum {
     DidBecomeActive,
     WillResignActive,
     BlockTermination,
+    WillTerminate,
     OpenFile,
     LastSignal
 };
@@ -514,6 +515,23 @@ gtk_osxapplication_signals[BlockTermination] =
 	       0, block_termination_accumulator, NULL,
 	       g_cclosure_marshal_BOOLEAN__VOID,
 	       G_TYPE_BOOLEAN, 0);
+
+/**
+ * GtkOSXApplication::NSApplicationWillTerminate:
+ * @app: The application object
+ * @user_data: Data appended at connection
+ *
+ * Emitted by the Application Delegate when the application reeeives
+ * an NSApplicationSWillTerminate notification. Connect your final
+ * shutdown routine (the one that calls gtk_main_quit() here.
+ */
+gtk_osxapplication_signals[WillTerminate] =
+    g_signal_new("NSApplicationWillTerminate",
+	       GTK_TYPE_OSX_APPLICATION,
+	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+	       0, NULL, NULL,
+	       g_cclosure_marshal_VOID__VOID,
+	       G_TYPE_NONE, 0);
 
 /**
  * GtkOSXApplication::NSApplicationOpenFile:

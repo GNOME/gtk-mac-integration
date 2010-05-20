@@ -665,6 +665,8 @@ main (int argc, char **argv)
 		     G_CALLBACK(app_active_cb), &falseval);
     g_signal_connect(theApp, "NSApplicationBlockTermination",
 		     G_CALLBACK(app_should_quit_cb), NULL);
+    g_signal_connect(theApp, "NSApplicationWillTerminate",
+		     G_CALLBACK(gtk_main_quit), NULL);
   }
 #ifndef QUARTZ_HANDLERS
   gtk_osxapplication_set_use_quartz_accelerators(theApp, FALSE);
