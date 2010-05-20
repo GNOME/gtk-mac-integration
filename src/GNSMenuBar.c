@@ -52,11 +52,14 @@
 - (void) resync
 {
   cocoa_menu_item_add_submenu(GTK_MENU_SHELL(gtk_menubar), self, TRUE, FALSE);
-    if (help_menu && [self indexOfItem: (NSMenuItem*)help_menu] < [self numberOfItems] - 1) {
+    if (help_menu && 
+	[help_menu menu] == self &&
+	[self indexOfItem: (NSMenuItem*)help_menu] < [self numberOfItems] - 1) {
     [self removeItem: (NSMenuItem*)help_menu];
     [self addItem: (NSMenuItem*)help_menu];
   }
-  if ([self indexOfItem: (NSMenuItem*)window_menu] != [self numberOfItems] - 2) {
+  if ([window_menu menu] == self &&
+      [self indexOfItem: (NSMenuItem*)window_menu] != [self numberOfItems] - 2) {
     [self removeItem: (NSMenuItem*)window_menu];
     [self insertItem: (NSMenuItem*)window_menu atIndex: [self numberOfItems] - 1];
     }
