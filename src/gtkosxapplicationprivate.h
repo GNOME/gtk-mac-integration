@@ -32,6 +32,7 @@
 
 struct _GtkOSXApplicationPrivate
 {
+  NSAutoreleasePool *pool;
   gboolean use_quartz_accelerators;
   NSMenu *dock_menu;
   GtkApplicationNotificationObject *notify;

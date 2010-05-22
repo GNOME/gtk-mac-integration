@@ -439,6 +439,7 @@ gtk_osxapplication_init (GtkOSXApplication *self)
 {
   [NSApplication sharedApplication];
   self->priv = GTK_OSX_APPLICATION_GET_PRIVATE (self);
+  self->priv->pool = [[NSAutoreleasePool alloc] init];
   self->priv->use_quartz_accelerators = TRUE;
   self->priv->dock_menu = NULL;
   gdk_window_add_filter (NULL, global_event_filter_func, (gpointer)self);
