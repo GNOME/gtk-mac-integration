@@ -75,7 +75,6 @@
 			      GTK_TYPE_OSX_APPLICATION);
   if (sig)
       g_signal_emit(app, sig, 0);
-
   gtk_osxapplication_cleanup(app);
   g_object_unref(app);
 

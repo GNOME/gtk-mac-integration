@@ -131,11 +131,11 @@ void gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint i
  * bundle, there's no Info.plist, or if Info.plist doesn't have a
  * CFBundleIdentifier key (So if you need to detect being in a bundle,
  * make sure that your bundle has that key!) */
-const gchar *gtk_osxapplication_get_bundle_path(GtkOSXApplication *self);
-const gchar *gtk_osxapplication_get_resource_path(GtkOSXApplication *self);
-const gchar *gtk_osxapplication_get_executable_path(GtkOSXApplication *self);
-const gchar *gtk_osxapplication_get_bundle_id(GtkOSXApplication *self);
-const gchar *gtk_osxapplication_get_bundle_info(GtkOSXApplication *self, 
+gchar *gtk_osxapplication_get_bundle_path(GtkOSXApplication *self);
+gchar *gtk_osxapplication_get_resource_path(GtkOSXApplication *self);
+gchar *gtk_osxapplication_get_executable_path(GtkOSXApplication *self);
+gchar *gtk_osxapplication_get_bundle_id(GtkOSXApplication *self);
+gchar *gtk_osxapplication_get_bundle_info(GtkOSXApplication *self, 
 						const gchar *key);
 
 G_END_DECLS

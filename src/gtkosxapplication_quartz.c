@@ -1030,12 +1030,19 @@ gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint id)
  * Return the root path of the bundle or the directory containing the
  *  executable if it isn't actually a bundle.
  *
- * Returns: path The bundle's absolute path
+ * Returns: path The bundle's absolute path or %NULL on error. g_free() it when done.
  */
-const gchar*
+gchar*
 gtk_osxapplication_get_bundle_path(GtkOSXApplication *self)
 {
-  return [[[NSBundle mainBundle] bundlePath] UTF8String];
+  NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+  gchar *str = NULL;
+  NSString *path = [[NSBundle mainBundle] bundlePath];
+  if (!path)
+    return NULL;
+  str = strdup([path UTF8String]);
+  [pool release];
+  return str;
 }
 
 /**
@@ -1049,12 +1056,19 @@ gtk_osxapplication_get_bundle_path(GtkOSXApplication *self)
  * (So if you need to detect being in a bundle, make sure that your
  * bundle has that key!)
  *
- * Returns: The string value of CFBundleIdentifier, or NULL if there is none.
+ * Returns: The string value of CFBundleIdentifier, or %NULL if there is none. g_free() it when done.
  */
-const gchar*
+gchar*
 gtk_osxapplication_get_bundle_id(GtkOSXApplication *self)
 {
-  return [[[NSBundle mainBundle] bundleIdentifier] UTF8String];
+  NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+  gchar *str = NULL;
+  NSString *path = [[NSBundle mainBundle] bundleIdentifier];
+  if (!path)
+    return NULL;
+  str = strdup([path UTF8String]);
+  [pool release];
+  return str;
 }
 
 /**
@@ -1062,14 +1076,21 @@ gtk_osxapplication_get_bundle_id(GtkOSXApplication *self)
  * @self: The GtkOSXApplication. Not Used.
  *
  * Return the Resource path for the bundle or the directory containing the
- *  executable if it isn't actually a bundle.
+ *  executable if it isn't actually a bundle. Use gtk_osxapplication_get_bundle_id() to check (it will return %NULL if it's not a bundle).
  *
- * Returns: path The absolute resource path
+ * Returns: path The absolute resource path. or %NULL on error. g_free() it when done.
  */
-const gchar*
+gchar*
 gtk_osxapplication_get_resource_path(GtkOSXApplication *self)
 {
-  return [[[NSBundle mainBundle] resourcePath] UTF8String];
+  NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+  gchar *str = NULL;
+  NSString *path = [[NSBundle mainBundle] resourcePath];
+  if (!path)
+    return NULL;
+  str = strdup([path UTF8String]);
+  [pool release];
+  return str;
 }
 
 
@@ -1079,12 +1100,19 @@ gtk_osxapplication_get_resource_path(GtkOSXApplication *self)
  *
  * Return the executable path, including file name
  *
- * Returns: The path to the primary executable
+ * Returns: The path to the primary executable, or %NULL if it can't find one. g_free() it when done
  */
-const gchar*
+gchar*
 gtk_osxapplication_get_executable_path(GtkOSXApplication *self)
 {
-  return [[[NSBundle mainBundle] executablePath] UTF8String];
+  NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+  gchar *str = NULL;
+  NSString *path = [[NSBundle mainBundle] executablePath];
+  if (!path)
+    return NULL;
+  str = strdup([path UTF8String]);
+  [pool release];
+  return str;
 }
 
 /**
@@ -1093,17 +1121,23 @@ gtk_osxapplication_get_executable_path(GtkOSXApplication *self)
  * @key: The key, as a normal UTF8 string.
  *
  * Queries the bundle's Info.plist with key. If the returned object is
- * a string, returns that; otherwise returns a null string.
+ * a string, returns that; otherwise returns %NULL.
  *
- * Returns: A UTF8-encoded string.
+ * Returns: A UTF8-encoded string. g_free() it when done.
  */
-const gchar*
+gchar*
 gtk_osxapplication_get_bundle_info(GtkOSXApplication *self, const gchar *key)
 {
+  NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   NSObject *id = [[NSBundle mainBundle] objectForInfoDictionaryKey:
 		  [NSString stringWithUTF8String: key]];
-  if ([id respondsToSelector: @selector(UTF8String)])
-      return [(NSString*)id UTF8String];
-  else
-      return "";
+  if ([id respondsToSelector: @selector(UTF8String)]) {
+    gchar *str = g_strdup( [(NSString*)id UTF8String]);
+    [id release];
+    [pool release];
+    return str;
+  }
+  [id release];
+  [pool release];
+  return NULL;
 }
