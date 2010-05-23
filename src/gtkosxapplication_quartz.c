@@ -152,6 +152,12 @@ add_to_menubar (GtkOSXApplication *self, NSMenu *menu, int pos)
  * application's name. The function is called create_apple_menu
  * because of the undocumented Cocoa method to set it on the mainMenu.
  *
+ * Note that the static strings are internationalized the Apple way,
+ * so you'll need to use the Apple localization tools if you need to
+ * translations other than the ones provided. The resource file will
+ * be GtkOSXApplication.strings, and must be installed in lang.proj in
+ * the application bundle's Resources directory.
+ *
  * Returns: A pointer to the menu item.
  */
 static GNSMenuItem*
@@ -161,33 +167,33 @@ create_apple_menu (GtkOSXApplication *self)
   // Create the application (Apple) menu.
   NSMenu *app_menu = [[NSMenu alloc] initWithTitle: @"Apple Menu"];
 
-  NSMenu *menuServices = [[NSMenu alloc] initWithTitle: @"Services"];
+  NSMenu *menuServices = [[NSMenu alloc] initWithTitle:  NSLocalizedStringFromTable(@"Services",  @"GtkOSXApplication", @"Services Menu title")];
   [NSApp setServicesMenu:menuServices];
 
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle: @"Services"
+  menuitem = [[NSMenuItem alloc] initWithTitle:  NSLocalizedStringFromTable(@"Services",  @"GtkOSXApplication", @"Services Menu Item title")
 				 action:nil keyEquivalent:@""];
   [menuitem setSubmenu:menuServices];
   [app_menu addItem: menuitem];
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle:@"Hide"
+  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Hide",  @"GtkOSXApplication", @"Hide menu item title")
 				 action:@selector(hide:) keyEquivalent:@""];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
-  menuitem = [[NSMenuItem alloc] initWithTitle:@"Hide Others"
+  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Hide Others",  @"GtkOSXApplication", @"Hide Others menu item title")
 				 action:@selector(hideOtherApplications:) keyEquivalent:@""];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
-  menuitem = [[NSMenuItem alloc] initWithTitle:@"Show All"
+  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable( @"Show All", @"GtkOSXApplication",  @"Show All menu item title")
 				 action:@selector(unhideAllApplications:) keyEquivalent:@""];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle:@"Quit"
+  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Quit",  @"GtkOSXApplication", @"Quit menu item title")
 				 action:@selector(terminate:) keyEquivalent:@"q"];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
@@ -203,14 +209,19 @@ create_apple_menu (GtkOSXApplication *self)
  * @window: The toplevel window for which the menu is being created
  *
  * Creates the Window menu, the one which tracks the application's windows.
- * FIXME: We need an API to suppress this for single-window applications
+ *
+ * Note that the static strings are internationalized the Apple way,
+ * so you'll need to use the Apple localization tools if you need to
+ * translations other than the ones provided. The resource file will
+ * be GtkOSXApplication.strings, and must be installed in lang.proj in
+ * the application bundle's Resources directory.
  *
  * Returns: A pointer to the menu item on the mainMenu.
  */
 static GNSMenuItem *
 create_window_menu (GtkOSXApplication *self)
 {   
-  NSMenu *window_menu = [[NSMenu alloc] initWithTitle: @"Window"];
+  NSMenu *window_menu = [[NSMenu alloc] initWithTitle: NSLocalizedStringFromTable(@"Window",  @"GtkOSXApplication", @"Window Menu title")];
   GtkMenuBar *menubar = [(GNSMenuBar*)[NSApp mainMenu] menuBar];
   GtkWidget *parent = NULL;
   GdkWindow *win = NULL;
@@ -225,10 +236,10 @@ create_window_menu (GtkOSXApplication *self)
   if (win && GDK_IS_WINDOW(win))
     nswin = gdk_quartz_window_get_nswindow(win);
 
-  [window_menu addItemWithTitle:@"Minimize"
+  [window_menu addItemWithTitle: NSLocalizedStringFromTable(@"Minimize", @"GtkOSXApplication", @"Windows|Minimize menu item")
 		action:@selector(performMiniaturize:) keyEquivalent:@"M"];
   [window_menu addItem: [NSMenuItem separatorItem]];
-  [window_menu addItemWithTitle:@"Bring All to Front"
+  [window_menu addItemWithTitle: NSLocalizedStringFromTable(@"Bring All to Front", @"GtkOSXApplication", @"Windows|Bring All To Front menu item title")
 		action:@selector(arrangeInFront:) keyEquivalent:@""];
 
   [NSApp setWindowsMenu:window_menu];
@@ -246,6 +257,12 @@ create_window_menu (GtkOSXApplication *self)
  *
  * Overrides the GObject (superclass) constructor to enforce a singleton
  * The commented-out code is for thread safety, but doesn't yet work.
+ *
+ * Note that the static strings are internationalized the Apple way,
+ * so you'll need to use the Apple localization tools if you need to
+ * translations other than the ones provided. The resource file will
+ * be GtkOSXApplication.strings, and must be installed in lang.proj in
+ * the application bundle's Resources directory.
  *
  * Returns: A pointer to the new object.
  */
