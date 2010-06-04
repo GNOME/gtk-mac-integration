@@ -53,6 +53,7 @@ AC_CONFIG_FILES(
         data/ige-mac-integration.pc
 	docs/Makefile
 	docs/reference/Makefile
+	strings/Makefile
 )
 
 AC_OUTPUT

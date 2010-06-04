@@ -1,4 +1,4 @@
-SUBDIRS = src data bindings docs
+SUBDIRS = src data bindings docs strings
 
 EXTRA_DIST = gtk-doc.make
 

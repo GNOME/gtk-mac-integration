@@ -1,0 +1,69 @@
+# Makefile for installing MacOSX translation files. The MacOSX
+# localization facilty uses human-readable text files; no compilation
+# is necessary.
+#
+# Copyright 2010 John Ralls
+
+
+PACKAGE = @PACKAGE@
+VERSION = @VERSION@
+
+SHELL = @SHELL@
+@SET_MAKE@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+subdir = strings
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+datadir = @datadir@
+libdir = @libdir@
+datarootdir = @datarootdir@
+localedir = ${datadir}/strings
+install_sh = @install_sh@
+mkdir_p = $(install_sh) -d
+
+STRING_FILES =  GtkOSXApplication.strings.ca    \
+		GtkOSXApplication.strings.cs    \
+		GtkOSXApplication.strings.da    \
+		GtkOSXApplication.strings.de    \
+		GtkOSXApplication.strings.en    \
+		GtkOSXApplication.strings.es    \
+		GtkOSXApplication.strings.eu    \
+		GtkOSXApplication.strings.fa    \
+		GtkOSXApplication.strings.fi    \
+		GtkOSXApplication.strings.fr    \
+		GtkOSXApplication.strings.he    \
+		GtkOSXApplication.strings.hu    \
+		GtkOSXApplication.strings.it    \
+		GtkOSXApplication.strings.ja    \
+		GtkOSXApplication.strings.ko    \
+		GtkOSXApplication.strings.lt    \
+		GtkOSXApplication.strings.lv_LV \
+		GtkOSXApplication.strings.nb    \
+		GtkOSXApplication.strings.nl    \
+		GtkOSXApplication.strings.pl    \
+		GtkOSXApplication.strings.pt    \
+		GtkOSXApplication.strings.ro    \
+		GtkOSXApplication.strings.ru    \
+		GtkOSXApplication.strings.sk    \
+		GtkOSXApplication.strings.sv    \
+		GtkOSXApplication.strings.tr    \
+		GtkOSXApplication.strings.uk    \
+		GtkOSXApplication.strings.vi    \
+		GtkOSXApplication.strings.zh_CN \
+		GtkOSXApplication.strings.zh_TW
+
+all: Makefile
+
+install: ${STRING_FILES}
+	${mkdir_p} ${localedir}; \
+	for file in ${STRING_FILES}; do \
+	  dir_pref=`echo $$file | cut -f 3 -d '.' -`; \
+	  dest_dir=${localedir}/$$dir_pref.lproj; \
+	  dest_name=`echo $$file | cut -f 1 -f 2 -d '.' -`; \
+	  ${mkdir_p} $$dest_dir; \
+	  ${install_sh} $$file $$dest_dir/$$dest_name; \
+	done
