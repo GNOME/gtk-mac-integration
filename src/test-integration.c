@@ -477,6 +477,13 @@ app_should_quit_cb (GtkOSXApplication *app, gpointer data)
   return answer;
 }
 
+static void
+app_will_quit_cb (GtkOSXApplication *app, gpointer data)
+{
+  g_print ("Quitting Now\n");
+  gtk_main_quit();
+}
+
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
 
 #ifdef IGEMACINTEGRATION
@@ -666,7 +673,7 @@ main (int argc, char **argv)
     g_signal_connect(theApp, "NSApplicationBlockTermination",
 		     G_CALLBACK(app_should_quit_cb), NULL);
     g_signal_connect(theApp, "NSApplicationWillTerminate",
-		     G_CALLBACK(gtk_main_quit), NULL);
+		     G_CALLBACK(app_will_quit_cb), NULL);
   }
 #ifndef QUARTZ_HANDLERS
   gtk_osxapplication_set_use_quartz_accelerators(theApp, FALSE);
