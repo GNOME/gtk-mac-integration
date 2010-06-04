@@ -42,7 +42,7 @@ ACLOCAL_AMFLAGS="\${ACLOCAL_FLAGS}"
 AC_SUBST(ACLOCAL_AMFLAGS)
 AC_DEFINE_UNQUOTED([PREFIX],["$prefix"], [Installation prefix (for making filenames)])
 
-AC_OUTPUT([
+AC_CONFIG_FILES(
 	Makefile 
 	src/Makefile
         bindings/Makefile
@@ -53,7 +53,9 @@ AC_OUTPUT([
         data/ige-mac-integration.pc
 	docs/Makefile
 	docs/reference/Makefile
-])
+)
+
+AC_OUTPUT
 
 echo
 echo "Prefix         : $prefix"
