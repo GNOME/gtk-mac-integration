@@ -20,7 +20,9 @@ will be found in their respective directories under bindings/python.
 GtkOSXApplication is well documented using Gtk-Doc. To build the
 documentation, pass --enable-gtk-doc to configure. A current copy may
 be found online at
-http://gtk-osx.sourceforge.net/ige-mac-integration/index.html.
+http://gtk-osx.sourceforge.net/ige-mac-integration/index.html. 
+Amplfying information is on the Integration page of the project wiki,
+https://sourceforge.net/apps/trac/gtk-osx/wiki/Integrate.
 
 Some documentation for ige-mac-integration may be found at
 http://live.gnome.org/GTK%2B/OSX/Integration.
