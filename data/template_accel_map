@@ -1,0 +1,63 @@
+; This is a template accelerator map file for OSX. The lexical scanner
+; thinks that it's scheme, so we might as well, too, at least as far
+; as using ';' as a comment indicator. There's no scheme interpreter
+; invoked on this, though, so don't think that you can set variables
+; or anything like that.
+;
+; The basic format of each line is exemplified by
+; (gtk_accel_path "<test-integration>/File/Open" "<Meta>o")
+; for a menu item accelerator and 
+; (gtk_accel_path "<Actions>/TestActions/OpenAction" "<Meta>o")
+; for an action item accelerator. 
+;  gtk_menu_set_accel_path(GTK_MENU(menu), "<test-integration>/File");
+; and in the second, it's 
+; gtk_action_group_new("TestActions");
+;
+; In the menu case, the accel_path is defined by the statement
+; gtk_menu_set_accel_path(GTK_MENU(menu), "<test-integration>/File");
+; in the program and then the "path" to the menu item with the
+; accelerator. In the actions case, it's the combination of the fixed
+; indicator <Actions>, the statement
+; gtk_action_group_new("TestActions");, and the action name supplied
+; to gtk_action_group_add_actions.
+;
+; The Gtk equivalent modifier keys are <Meta> for the Command Key;
+; <Alt> (or <Mod1>) for the Option Key. <Control> and <Shift> do what
+; you would expect. Note that if you use a capital letter for the key
+; name GtkOSXApplication will assume that the Shift key is a required
+; component of the modifier set.
+;
+; The following menu items are provided in Cocoa by GtkOSXApplication
+; and do not need to be mapped:
+; Hide: 		<Meta>h
+; Hide Others		<Meta><Alt>h
+; Minimize		<Meta>m
+; Quit			<Meta>q
+;
+; For this file to have an effect, you must include the statement
+; gtk_accel_map_load("file_path"); 
+; somewhere in your program.
+
+; File Menu
+(gtk_accel_path "@-ACTIONPATH-@/New" "<Meta>n")
+(gtk_accel_path "@-ACTIONPATH-@/Open" "<Meta>o")
+(gtk_accel_path "@-ACTIONPATH-@/Close" "<Meta>w")
+(gtk_accel_path "@-ACTIONPATH-@/Save" "<Meta>s")
+(gtk_accel_path "@-ACTIONPATH-@/SaveAs" "<Meta><Shift>s")
+(gtk_accel_path "@-ACTIONPATH-@/Print" "<Meta>p")
+(gtk_accel_path "@-ACTIONPATH-@/PrintSetup" "<Meta><Shift>p")
+
+; Edit Menu
+(gtk_accel_path "@-ACTIONPATH-@/Undo" "<Meta>z")
+(gtk_accel_path "@-ACTIONPATH-@/Redo" "<Meta><Shift>z")
+(gtk_accel_path "@-ACTIONPATH-@/Cut" "<Meta>x")
+(gtk_accel_path "@-ACTIONPATH-@/Copy" "<Meta>c")
+(gtk_accel_path "@-ACTIONPATH-@/Paste" "<Meta>p")
+(gtk_accel_path "@-ACTIONPATH-@/SelectAll" "<Meta>a")
+(gtk_accel_path "@-ACTIONPATH-@/Find" "<Meta>f")
+(gtk_accel_path "@-ACTIONPATH-@/FindNext" "<Meta>g")
+(gtk_accel_path "@-ACTIONPATH-@/FindPrevious" "<Meta><Shift>g")
+(gtk_accel_path "@-ACTIONPATH-@/CheckSpelling" "<Meta>;")
+
+;View Menu
+(gtk_accel_path "@-ACTIONPATH-@/Refresh" "<Meta>r")
