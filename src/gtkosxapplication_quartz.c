@@ -178,12 +178,13 @@ create_apple_menu (GtkOSXApplication *self)
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
   menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Hide",  @"GtkOSXApplication", @"Hide menu item title")
-				 action:@selector(hide:) keyEquivalent:@""];
+				 action:@selector(hide:) keyEquivalent:@"H"];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
   menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Hide Others",  @"GtkOSXApplication", @"Hide Others menu item title")
-				 action:@selector(hideOtherApplications:) keyEquivalent:@""];
+				 action:@selector(hideOtherApplications:) keyEquivalent:@"H"];
+  [menuitem setKeyEquivalentModifierMask: NSCommandKeyMask | NSAlternateKeyMask];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
