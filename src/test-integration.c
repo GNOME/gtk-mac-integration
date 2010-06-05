@@ -59,7 +59,7 @@
 /* Uncomment ONE of these to test menu-mangling: */
 //#define IGEMACINTEGRATION
 #define GTKOSXAPPLICATION
-#define BUILT_UI
+//#define BUILT_UI
 #define QUARTZ_HANDLERS
 
 #ifdef __x86_64__
@@ -123,6 +123,35 @@ menu_cbdata_delete (MenuCBData *datum) {
     g_slice_free (MenuCBData, datum);
 }
 
+static void
+menu_item_activate_cb (GtkWidget *item,
+                       MenuCBData  *datum)
+{
+  gboolean visible;
+  gboolean sensitive;
+  MenuItems *items = g_object_get_qdata (G_OBJECT(datum->item),
+					 menu_items_quark);
+  if (GTK_IS_WINDOW(G_OBJECT(datum->item)))
+      g_print ("Item activated: %s:%s\n",
+	       gtk_window_get_title(GTK_WINDOW(datum->item)),
+	       datum->label);
+  else
+    g_print ("Item activated %s\n", datum->label);
+
+  if (!items)
+    return;
+
+  g_object_get (G_OBJECT (items->copy_item),
+                "visible", &visible,
+                "sensitive", &sensitive,
+                NULL);
+
+  if (item == items->open_item) {
+    gtk_widget_set_sensitive (items->copy_item,
+			      !gtk_widget_get_sensitive(items->copy_item));
+  }
+}
+
 #ifdef BUILT_UI
 
 static void
@@ -174,6 +203,7 @@ static GtkRadioActionEntry view_actions[] =
     {"VerticalAction", NULL, "_Vertical", NULL, NULL, 0},
 };
 #else //not BUILT_UI
+#if !defined QUARTZ_HANDLERS 
 
 /* This is needed as a callback to enable accelerators when not using
  * the Quartz event handling path and using GtkMenuItems instead of
@@ -184,7 +214,7 @@ can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data)
 {
   return gtk_widget_is_sensitive(widget);
 }
-
+#endif //!QUARTZ_HANDLERS
 
 static GtkWidget *
 test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
@@ -262,35 +292,6 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   return menubar;
 }
 #endif //not BUILT_UI
-
-static void
-menu_item_activate_cb (GtkWidget *item,
-                       MenuCBData  *datum)
-{
-  gboolean visible;
-  gboolean sensitive;
-  MenuItems *items = g_object_get_qdata (G_OBJECT(datum->item),
-					 menu_items_quark);
-  if (GTK_IS_WINDOW(G_OBJECT(datum->item)))
-      g_print ("Item activated: %s:%s\n",
-	       gtk_window_get_title(GTK_WINDOW(datum->item)),
-	       datum->label);
-  else
-    g_print ("Item activated %s\n", datum->label);
-
-  if (!items)
-    return;
-
-  g_object_get (G_OBJECT (items->copy_item),
-                "visible", &visible,
-                "sensitive", &sensitive,
-                NULL);
-
-  if (item == items->open_item) {
-    gtk_widget_set_sensitive (items->copy_item,
-			      !gtk_widget_get_sensitive(items->copy_item));
-  }
-}
 
 #ifdef IGEMACINTEGRATION
 static void
@@ -405,8 +406,8 @@ change_menu_cb (GtkWidget  *button,
 static void
 view_menu_cb (GtkWidget *button, gpointer user_data)
 {
-  GtkToggleButton *toggle = GTK_TOGGLE_BUTTON(button);
 #ifdef BUILT_UI
+  GtkToggleButton *toggle = GTK_TOGGLE_BUTTON(button);
   static guint mergeid = 0;
   static GtkActionGroup* view_action_group = NULL;
   GtkUIManager *mgr = user_data;
