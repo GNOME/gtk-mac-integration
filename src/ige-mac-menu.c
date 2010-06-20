@@ -721,7 +721,7 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
     default:
 	break;
     }
-    return CallNextEventHandler (event_handler_call_ref, event_ref);
+    return eventNotHandledErr;
 }
 
 static gboolean
