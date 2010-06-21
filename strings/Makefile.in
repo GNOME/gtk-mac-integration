@@ -67,3 +67,8 @@ install: ${STRING_FILES}
 	  ${mkdir_p} $$dest_dir; \
 	  ${install_sh} $$file $$dest_dir/$$dest_name; \
 	done
+
+clean:
+	rm Makefile
+
+distclean: clean
