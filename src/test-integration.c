@@ -543,11 +543,10 @@ create_window(const gchar *title)
   items->quit_item = gtk_ui_manager_get_widget(mgr, "/menubar/File/Quit");
   items->about_item = gtk_ui_manager_get_widget(mgr, "/menubar/Help/About");
   items->preferences_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit/Preferences");
-  accel_group = gtk_ui_manager_get_accel_group(mgr);
 #else //not BUILT_UI
   menubar = test_setup_menu (items, accel_group);
-#endif //not BUILT_UI
   gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
+#endif //not BUILT_UI
   gtk_box_pack_start (GTK_BOX (vbox), 
                       menubar,
                       FALSE, TRUE, 0);
