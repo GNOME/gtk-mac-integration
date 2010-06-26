@@ -491,7 +491,8 @@ app_will_quit_cb (GtkOSXApplication *app, gpointer data)
   gtk_main_quit();
 }
 
-#elif defined IGEMACINTEGRATION
+#endif //GTKOSXAPPLICATION
+#ifdef IGEMACINTEGRATION
 
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
 
