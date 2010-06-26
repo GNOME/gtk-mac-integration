@@ -69,6 +69,7 @@ install: ${STRING_FILES}
 	done
 
 clean:
+
+distclean: 
 	rm Makefile
 
-distclean: clean
