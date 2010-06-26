@@ -34,7 +34,31 @@ GTK_DOC_CHECK([1.11], [--flavour no-tmpl])
 IMENDIO_COMPILE_WARNINGS
 IMENDIO_PYTHON_CHECK
 
-PKG_CHECK_MODULES(MAC, [gtk+-2.0 >= 2.13])
+AC_ARG_WITH([gtk], 
+	[AS_HELP_STRING([--with-gtk], 
+		[select gtk+-3.0 or gtk+-2.0. @<:@default=check@:>@])],
+	[],
+	[with_gtk=check])
+gtk_major=
+
+AS_ECHO(["Specified Gtk Version $with_gtk"])
+
+AS_IF([test "x$with_gtk" = xgtk+-3.0],
+         [PKG_CHECK_MODULES(MAC, [gtk+-3.0 >= 2.90], GTK_MAJOR="gtk+-3.0",
+           AC_MSG_ERROR([GTK+-3.0 specified but not found]))],
+      [test "x$with_gtk" = xgtk+-2.0],
+         [PKG_CHECK_MODULES(MAC, [gtk+-2.0 >= 2.10], GTK_MAJOR="gtk+-2.0",
+           AC_MSG_ERROR([GTK+-2.0 specified but not found]))],
+      [PKG_CHECK_MODULES(MAC, [gtk+-3.0 >= 2.90],GTK_MAJOR="gtk+-3.0",
+         PKG_CHECK_MODULES(MAC, [gtk+-2.0 >= 2.10], GTK_MAJOR="gtk+-2.0",
+	    AC_MSG_ERROR([GTK+-2.0 Wersion 2.10 or higher or GTK+-3.0 Version 2.90.0 or higher is required to build ige-mac-integration])))])
+
+AC_MSG_CHECKING([GTK+ Version])
+
+GTK_VERSION=`$PKG_CONFIG --modversion ${gtk_major}`
+AC_SUBST(GTK_MAJOR)
+AC_SUBST(GTK_VERSION)
+AC_MSG_RESULT("$GTK_VERSION")
 
 # This will cause the automake generated makefiles to pass the correct
 # flags to aclocal.
