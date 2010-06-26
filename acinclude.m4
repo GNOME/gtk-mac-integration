@@ -119,11 +119,11 @@ AC_DEFUN([IMENDIO_PYTHON_CHECK],
 
     dnl Check for PyGTK
     PKG_CHECK_MODULES(PYGOBJECT, pygobject-2.0 >= 2.16.0,,have_pygobject=no)
-    if test $have_pygobject == no; then
+    if test "x$have_pygobject" = xno; then
       AC_MSG_RESULT([PyGObject 2.16.0 or newer])
     fi
     PKG_CHECK_MODULES(PYGTK, pygtk-2.0 >= 2.14.0,,have_pygtk=no)
-    if test $have_pygtk == no; then
+    if test "x$have_pygtk" = xno; then
       AC_MSG_RESULT([PyGTK 2.14.0 or newer])
     fi
 
