@@ -59,11 +59,16 @@
 /* Uncomment ONE of these to test menu-mangling: */
 //#define IGEMACINTEGRATION
 #define GTKOSXAPPLICATION
+/* These others are optional */
 //#define BUILT_UI
 #define QUARTZ_HANDLERS
 
+/* IGEMACINTEGRATION uses Carbon, which isn't available for 64-bit builds. */
 #ifdef __x86_64__
 #undef IGEMACINTEGRATION
+#ifndef GTKOSXAPPLICATION
+#define GTKOSXAPPLICATION
+#endif
 #endif //__x86_64__
 
 #include <gtk/gtk.h>
@@ -460,6 +465,7 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
 #endif //BUILT_UI
 }
 
+#ifdef GTKOSXAPPLICATION
 static void
 app_active_cb (GtkOSXApplication* app, gboolean* data)
 {
@@ -485,9 +491,10 @@ app_will_quit_cb (GtkOSXApplication *app, gpointer data)
   gtk_main_quit();
 }
 
+#elif defined IGEMACINTEGRATION
+
 gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
 
-#ifdef IGEMACINTEGRATION
 static GtkWidget *
 create_window(IgeMacDock *dock, const gchar *title)
 {
