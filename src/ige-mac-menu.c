@@ -119,6 +119,14 @@ accel_find_func (GtkAccelKey *key, GClosure *closure, gpointer data) {
     return (GClosure *) data == closure;
 }
 
+static GClosure *
+_gtk_accel_label_get_closure (GtkAccelLabel *label) {
+  g_return_val_if_fail(GTK_IS_ACCEL_LABEL(label), NULL);
+
+  GClosure *closure = NULL;
+  g_object_get(G_OBJECT(label), "accel-closure", &closure, NULL);
+  return closure;
+}
 
 /*
  * CarbonMenu functions
@@ -356,6 +364,9 @@ carbon_menu_item_update_state (CarbonMenuItem *carbon_item, GtkWidget *widget) {
 	clear_attrs |= kMenuItemAttrHidden;
     err = ChangeMenuItemAttributes (carbon_item->menu, carbon_item->index,
 				    set_attrs, clear_attrs);
+    if (!err && carbon_item->submenu)
+	err = ChangeMenuAttributes (carbon_item->submenu, 
+				    set_attrs, clear_attrs);
     carbon_menu_warn(err, "Failed to update state");
 }
 
@@ -432,7 +443,7 @@ carbon_menu_item_update_accelerator (CarbonMenuItem *carbon_item,
 
     const gchar *label_txt = get_menu_label_text (widget, &label);
     if (!(GTK_IS_ACCEL_LABEL (label) 
-	  && GTK_ACCEL_LABEL (label)->accel_closure)) {
+	  && _gtk_accel_label_get_closure(GTK_ACCEL_LABEL (label)))) {
 // Clear the menu shortcut
 	err = SetMenuItemModifiers (carbon_item->menu, carbon_item->index,
 				    kMenuNoModifiers | kMenuNoCommandModifier);
@@ -445,9 +456,10 @@ carbon_menu_item_update_accelerator (CarbonMenuItem *carbon_item,
 	carbon_menu_warn_label(err, label_txt, "Failed to clear command key");
 	return;
     }
-    key = gtk_accel_group_find (GTK_ACCEL_LABEL (label)->accel_group,
+    GClosure *closure = _gtk_accel_label_get_closure(GTK_ACCEL_LABEL(label));
+    key = gtk_accel_group_find (gtk_accel_group_from_accel_closure(closure),
 				    accel_find_func,
-				    GTK_ACCEL_LABEL (label)->accel_closure);
+				    closure);
     if (!(key && key->accel_key && key->accel_flags & GTK_ACCEL_VISIBLE))
 	return;
     display = gtk_widget_get_display (widget);
@@ -489,8 +501,10 @@ carbon_menu_item_accel_changed (GtkAccelGroup *accel_group, guint keyval,
 	    g_printerr("%s: Bad carbon item for %s\n", G_STRFUNC, label_text);
 	return;
     }
+    if (gtk_accel_group_from_accel_closure(accel_closure) != accel_group)
+	return;
     if (GTK_IS_ACCEL_LABEL (label) &&
-	GTK_ACCEL_LABEL (label)->accel_closure == accel_closure)
+    	_gtk_accel_label_get_closure(GTK_ACCEL_LABEL(label)) == accel_closure)
 	carbon_menu_item_update_accelerator (carbon_item, widget);
 }
 
@@ -509,7 +523,7 @@ carbon_menu_item_update_accel_closure (CarbonMenuItem *carbon_item,
 	carbon_item->accel_closure = NULL;
     }
     if (GTK_IS_ACCEL_LABEL (label))
-	carbon_item->accel_closure = GTK_ACCEL_LABEL (label)->accel_closure;
+	carbon_item->accel_closure = _gtk_accel_label_get_closure(GTK_ACCEL_LABEL (label));
     if (carbon_item->accel_closure) {
 	g_closure_ref (carbon_item->accel_closure);
 	group = gtk_accel_group_from_accel_closure (carbon_item->accel_closure);
@@ -601,9 +615,9 @@ carbon_menu_item_create (GtkWidget *menu_item, MenuRef carbon_menu,
 					   kCFStringEncodingUTF8);
     if (GTK_IS_SEPARATOR_MENU_ITEM (menu_item))
 	attributes |= kMenuItemAttrSeparator;
-    if (!GTK_WIDGET_IS_SENSITIVE (menu_item))
+    if (!gtk_widget_get_sensitive(menu_item))
 	attributes |= kMenuItemAttrDisabled;
-    if (!GTK_WIDGET_VISIBLE (menu_item))
+    if (!gtk_widget_get_visible (menu_item))
 	attributes |= kMenuItemAttrHidden;
     err = InsertMenuItemTextWithCFString (carbon_menu, cfstr, index - 1,
 					  attributes, 0);
@@ -941,7 +955,7 @@ sync_menu_shell (GtkMenuShell *menu_shell, MenuRef carbon_menu,
  */
 	err = GetMenuAttributes( carbon_item->submenu, &attrs);
 	carbon_menu_warn(err, "Failed to get menu attributes");
-	if (!GTK_WIDGET_VISIBLE (menu_item)) {
+	if (!gtk_widget_get_visible (menu_item)) {
 	    if ((attrs & kMenuAttrHidden) == 0) {
 		if (debug)
 		    g_printerr("Hiding menu %s\n", label);
@@ -979,8 +993,8 @@ parent_set_emission_hook (GSignalInvocationHint *ihint, guint n_param_values,
     if (GTK_IS_MENU_SHELL (previous_parent)) {
 	menu_shell = previous_parent;
     }
-    else if (GTK_IS_MENU_SHELL (instance->parent)) {
-	menu_shell = instance->parent;
+    else if (GTK_IS_MENU_SHELL (gtk_widget_get_parent(instance))) {
+	menu_shell = gtk_widget_get_parent(instance);
     }
     if (!menu_shell) 
 	return TRUE;

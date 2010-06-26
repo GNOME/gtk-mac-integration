@@ -56,6 +56,16 @@ accel_find_func (GtkAccelKey *key,
   return (GClosure *) data == closure;
 }
 
+static GClosure *
+_gtk_accel_label_get_closure (GtkAccelLabel *label)
+{
+  g_return_val_if_fail(GTK_IS_ACCEL_LABEL(label), NULL);
+
+  GClosure *closure = NULL;
+  g_object_get(G_OBJECT(label), "accel-closure", &closure, NULL);
+  return closure;
+}
+
 static void
 cocoa_menu_item_free (gpointer *ptr)
 {
@@ -199,14 +209,15 @@ cocoa_menu_item_update_accelerator (GNSMenuItem *cocoa_item,
   //  const gchar* ltxt = 
   get_menu_label_text (widget, &label);
   
-  if (GTK_IS_ACCEL_LABEL (label) &&
-      GTK_ACCEL_LABEL (label)->accel_closure)
+  GClosure *closure = NULL;
+  g_object_get(label, "accel-closure", &closure, NULL);
+  if (GTK_IS_ACCEL_LABEL (label) && closure)
     {
       GtkAccelKey *key;
 		
-      key = gtk_accel_group_find (GTK_ACCEL_LABEL (label)->accel_group,
+      key = gtk_accel_group_find (gtk_accel_group_from_accel_closure(closure),
 				  accel_find_func,
-				  GTK_ACCEL_LABEL (label)->accel_closure);
+				  closure);
 		
       if (key            &&
 	  key->accel_key &&
@@ -291,9 +302,10 @@ cocoa_menu_item_accel_changed (GtkAccelGroup   *accel_group,
   GtkWidget      *label;
 
   get_menu_label_text (widget, &label);
-
+  if (gtk_accel_group_from_accel_closure(accel_closure) != accel_group)
+      return;
   if (GTK_IS_ACCEL_LABEL (label) &&
-      GTK_ACCEL_LABEL (label)->accel_closure == accel_closure)
+      _gtk_accel_label_get_closure((GtkAccelLabel *) label) == accel_closure)
     cocoa_menu_item_update_accelerator (cocoa_item, widget);
 }
 
@@ -319,7 +331,7 @@ cocoa_menu_item_update_accel_closure (GNSMenuItem *cocoa_item,
     }
 
   if (GTK_IS_ACCEL_LABEL (label)) {
-    cocoa_item->accel_closure = GTK_ACCEL_LABEL (label)->accel_closure;
+	cocoa_item->accel_closure = _gtk_accel_label_get_closure((GtkAccelLabel *) label);
   }
 
   if (cocoa_item->accel_closure)

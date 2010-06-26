@@ -440,13 +440,13 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
 			     G_CALLBACK (menu_item_activate_cb),
 			     menu_cbdata_new ( "Framish", item),
 			     (GClosureNotify) menu_cbdata_delete, 0);
-      gtk_menu_append(menu, item);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       item = gtk_menu_item_new_with_label("Freebish");
       g_signal_connect_data (item, "activate",
 			     G_CALLBACK (menu_item_activate_cb),
 			     menu_cbdata_new ( "Freebish", item),
 			     (GClosureNotify) menu_cbdata_delete, 0);
-      gtk_menu_append(menu, item);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       gtk_osxapplication_set_dock_menu(theApp, GTK_MENU_SHELL(menu));
     }
   }
@@ -558,7 +558,7 @@ create_window(const gchar *title)
 
   bbox = gtk_hbutton_box_new ();
   gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_CENTER);
-  gtk_button_box_set_spacing (GTK_BUTTON_BOX (bbox), 12);
+  gtk_box_set_spacing (GTK_BOX (bbox), 12);
 
   gtk_box_pack_start (GTK_BOX (vbox), 
                       bbox,

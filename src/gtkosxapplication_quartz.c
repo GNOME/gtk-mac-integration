@@ -82,8 +82,8 @@ parent_set_emission_hook (GSignalInvocationHint *ihint,
     if (GTK_IS_MENU_SHELL (previous_parent)) {
       menu_shell = previous_parent;
     }
-    else if (GTK_IS_MENU_SHELL (instance->parent)) {
-      menu_shell = instance->parent;
+    else if (GTK_IS_MENU_SHELL (gtk_widget_get_parent(instance))) {
+      menu_shell = gtk_widget_get_parent(instance);;
     }
 
     if (menu_shell) {
