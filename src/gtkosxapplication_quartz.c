@@ -257,8 +257,6 @@ create_window_menu (GtkOSXApplication *self)
  * @properties: an array of construction properties
  *
  * Overrides the GObject (superclass) constructor to enforce a singleton
- * The commented-out code is for thread safety, but doesn't yet work.
- *
  * Note that the static strings are internationalized the Apple way,
  * so you'll need to use the Apple localization tools if you need to
  * translations other than the ones provided. The resource file will
@@ -273,19 +271,15 @@ gtk_osxapplication_constructor (GType gtype,
 			     GObjectConstructParam *properties)
 {
   static GObject *self = NULL;
-  //static GOnce once = G_ONCE_INIT;
+  static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+  g_static_mutex_lock (&mutex);
   if (self == NULL)
     {
-/*       struct construction_args args; */
-/*       args.gtype = gtype; */
-/*       args.n_props = n_properties; */
-/*       args.props = properties; */
-/*       g_once (&once, _parent_constructor, &args); */
-/*       self = G_OBJECT_CLASS (once.retval); */
       self = G_OBJECT_CLASS(gtk_osxapplication_parent_class)->constructor(gtype, n_properties, properties);
       g_object_add_weak_pointer (self, (gpointer) &self);
-      return self;
+
     }
+  g_static_mutex_unlock (&mutex);
 
   return g_object_ref (self);
 
@@ -428,12 +422,6 @@ global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
       return GDK_FILTER_TRANSLATE;
   return GDK_FILTER_CONTINUE;
 }
-
-struct construction_args {
-  GType gtype;
-  guint n_props;
-  GObjectConstructParam *props;
-};
 
 enum {
     DidBecomeActive,
