@@ -264,22 +264,21 @@ cocoa_menu_item_update_accelerator (GNSMenuItem *cocoa_item,
 	      if (key->accel_mods & GDK_SHIFT_MASK) {
 		modifiers |= NSShiftKeyMask;
 	      }
-				
-	      /* gdk/quartz maps Alt/Option to Mod1 */
-				
-	      if (key->accel_mods & (GDK_MOD1_MASK)) {
-		modifiers |= NSAlternateKeyMask;
-	      }
-				
+
 	      if (key->accel_mods & GDK_CONTROL_MASK) {
 		modifiers |= NSControlKeyMask;
 	      }
+
+	      /* gdk/quartz maps Alt/Option to Mod5 */
+	      if (key->accel_mods & (GDK_MOD5_MASK)) {
+		modifiers |= NSAlternateKeyMask;
+	      }
 				
-	      /* gdk/quartz maps Command to Meta (XXX check this - it may move to SUPER at some point) */
-				
-	      if (key->accel_mods & GDK_META_MASK) {
+	      /* gdk/quartz maps Command to MOD1 */
+	      if (key->accel_mods & GDK_MOD1_MASK) {
 		modifiers |= NSCommandKeyMask;
 	      }
+
 	    }  
 			
 	  [cocoa_item setKeyEquivalentModifierMask:modifiers];

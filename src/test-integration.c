@@ -396,9 +396,9 @@ change_menu_cb (GtkWidget  *button,
   if (gtk_widget_get_visible(items->edit_item)) {
       gtk_widget_set_visible(items->edit_item, FALSE);
       gtk_accel_map_change_entry(open_accel_path, GDK_o,
-				 GDK_META_MASK, TRUE);
+				 GDK_MOD1_MASK, TRUE);
       gtk_accel_map_change_entry(quit_accel_path, GDK_q,
-				 GDK_META_MASK, TRUE);
+				 GDK_MOD1_MASK, TRUE);
   } else {
      gtk_widget_set_visible(items->edit_item, TRUE);
      gtk_accel_map_change_entry(open_accel_path, GDK_o,
