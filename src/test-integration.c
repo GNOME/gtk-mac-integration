@@ -524,7 +524,6 @@ create_window(const gchar *title)
   IgeMacMenuGroup *group;
 #endif //IGEMACINTEGRATION
 #ifdef GTKOSXAPPLICATION
-  GtkOSXApplicationMenuGroup *group;
   GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
 #endif //GTKOSXAPPLICATION
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -623,14 +622,20 @@ create_window(const gchar *title)
 				   "Preferences");
 #endif //IGEMACINTEGRATION
 #ifdef GTKOSXAPPLICATION
+  GtkWidget *sep;
   gtk_osxapplication_set_menu_bar(theApp, GTK_MENU_SHELL(menubar));
-  group = gtk_osxapplication_add_app_menu_group (theApp);
-  gtk_osxapplication_add_app_menu_item  (theApp, group,
-				      GTK_MENU_ITEM (items->about_item));
+  gtk_osxapplication_insert_app_menu_item  (theApp, items->about_item,
+					    0);
+  sep = gtk_separator_menu_item_new();
+  g_object_ref(sep);
+  gtk_osxapplication_insert_app_menu_item  (theApp, sep, 1);
+  gtk_osxapplication_insert_app_menu_item  (theApp,
+					    items->preferences_item,
+					    2);
+  sep = gtk_separator_menu_item_new();
+  g_object_ref(sep);
+  gtk_osxapplication_insert_app_menu_item  (theApp, sep, 3);
 
-  group = gtk_osxapplication_add_app_menu_group (theApp);
-  gtk_osxapplication_add_app_menu_item  (theApp, group,
-				      GTK_MENU_ITEM (items->preferences_item));
   gtk_osxapplication_set_help_menu(theApp, GTK_MENU_ITEM(items->help_menu));
   gtk_osxapplication_set_window_menu(theApp, NULL);
 #endif //GTKOSXAPPLICATION

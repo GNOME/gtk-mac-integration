@@ -76,10 +76,16 @@ gboolean gtk_osxapplication_use_quartz_accelerators(GtkOSXApplication *self);
 void gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, 
 				      GtkMenuShell *menu_shell);
 void gtk_osxapplication_sync_menubar (GtkOSXApplication *self);
+
+#ifndef GTK_DISABLE_DEPRECATED
 GtkOSXApplicationMenuGroup *gtk_osxapplication_add_app_menu_group (GtkOSXApplication* self);
 void gtk_osxapplication_add_app_menu_item (GtkOSXApplication *self,
 					   GtkOSXApplicationMenuGroup *group,
 					   GtkMenuItem *menu_item);
+#endif
+void gtk_osxapplication_insert_app_menu_item (GtkOSXApplication *self,
+					      GtkWidget *menu_item,
+					      gint index);
 void gtk_osxapplication_set_window_menu (GtkOSXApplication *self,
 					 GtkMenuItem *menu_item);
 void gtk_osxapplication_set_help_menu (GtkOSXApplication *self,
@@ -140,6 +146,7 @@ gchar *quartz_application_get_executable_path(void);
 gchar *quartz_application_get_bundle_id(void);
 gchar *quartz_application_get_bundle_info(const gchar *key);
 
+#ifndef GTK_DISABLE_DEPRECATED
 #define gtk_osxapplication_get_bundle_path(x) \
     quartz_application_get_bundle_path();
 #define gtk_osxapplication_get_resource_path(x) \
@@ -150,7 +157,7 @@ gchar *quartz_application_get_bundle_info(const gchar *key);
     quartz_application_get_bundle_id();
 #define gtk_osxapplication_get_bundle_info(x, y) \
     quartz_application_get_bundle_info(y);
-
+#endif
 G_END_DECLS
 
 #endif /* __GTK_OSX_APPLICATION_H__ */

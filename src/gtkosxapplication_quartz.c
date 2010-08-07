@@ -688,6 +688,9 @@ gtk_osxapplication_sync_menubar (GtkOSXApplication *self)
  * provision for inserting them at a particular position.
  *
  * Returns: A new GtkOSXApplicationMenuGroup
+ *
+ * Deperecated: 0.9.5: Use gtk_osxapplication_insert_menu_item and
+ * pass in a GtkSeparator at the index you want one.
  */
 GtkOSXApplicationMenuGroup *
 gtk_osxapplication_add_app_menu_group (GtkOSXApplication* self )
@@ -717,6 +720,8 @@ gtk_osxapplication_add_app_menu_group (GtkOSXApplication* self )
  *
  * Don't use it for Quit! A Quit menu item is created automatically
  * along with the Application menu. Just hide your Gtk Quit menu item.
+ *
+ * Deprecated: 0.9.5: Use gtk_osxapplication_insert_menu_item instead.
  */
 void
 gtk_osxapplication_add_app_menu_item (GtkOSXApplication *self,
@@ -770,6 +775,33 @@ gtk_osxapplication_add_app_menu_item (GtkOSXApplication *self,
   if (!list)
     g_warning ("%s: app menu group %p does not exist",
 	       G_STRFUNC, group);
+}
+
+/**
+ * gtk_osxapplication_insert_app_menu_item:
+ * @self: The GtkOSXApplication object
+ * @menu_item: The GtkMenuItem to add to the group.
+ * @index: The place in the app menu that you want the item
+ * inserted. The first item is 0.
+ *
+ * Certain menu items (About, Check for updates, and Preferences in
+ * particular) are normally found in the so-called Application menu
+ * (the first one on the menubar, named after the application) in OSX
+ * applications. This function will create a menu entry for such a
+ * menu item, removing it from its original menu in the Gtk
+ * application.
+ *
+ * To group your menu items, insert GtkSeparatorMenuItem*s where you want them.
+ *
+ * Don't use it for Quit! A Quit menu item is created automatically
+ * along with the Application menu. Just hide your Gtk Quit menu item.
+ */
+void
+gtk_osxapplication_insert_app_menu_item (GtkOSXApplication* self,
+					 GtkWidget* item,
+					 gint index) {
+    cocoa_menu_item_add_item ([[[NSApp mainMenu] itemAtIndex: 0] submenu],
+			      item, index);
 }
 
 /**
