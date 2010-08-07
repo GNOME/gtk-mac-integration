@@ -127,16 +127,29 @@ void gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint i
  * return a bundle identifier and it's executable path is correct and
  * useful.  Ige-mac-bundle had a "is it an application bundle"
  * function, but NSBundle doesn't provide that; instead,
- * gtk_application_get_bundle_id will return NULL if it's not really a
+ * quartz_application_get_bundle_id will return NULL if it's not really a
  * bundle, there's no Info.plist, or if Info.plist doesn't have a
  * CFBundleIdentifier key (So if you need to detect being in a bundle,
- * make sure that your bundle has that key!) */
-gchar *gtk_osxapplication_get_bundle_path(GtkOSXApplication *self);
-gchar *gtk_osxapplication_get_resource_path(GtkOSXApplication *self);
-gchar *gtk_osxapplication_get_executable_path(GtkOSXApplication *self);
-gchar *gtk_osxapplication_get_bundle_id(GtkOSXApplication *self);
-gchar *gtk_osxapplication_get_bundle_info(GtkOSXApplication *self, 
-						const gchar *key);
+ * make sure that your bundle has that key!) 
+
+ * Richard Proctor pointed out that these functions don't really need to be class functions: the self parameter isn't used, and making them "free" functions will often save one from having to call g_object_new(GTK_TYPE_OSX_APPLICATION) just to get it. For backwards compatibility, there's a define for the old version, but it will go away in 1.0, so clean up your code now.
+*/
+gchar *quartz_application_get_bundle_path(void);
+gchar *quartz_application_get_resource_path(void);
+gchar *quartz_application_get_executable_path(void);
+gchar *quartz_application_get_bundle_id(void);
+gchar *quartz_application_get_bundle_info(const gchar *key);
+
+#define gtk_osxapplication_get_bundle_path(x) \
+    quartz_application_get_bundle_path();
+#define gtk_osxapplication_get_resource_path(x) \
+    quartz_application_get_resource_path();
+#define gtk_osxapplication_get_executable_path(x) \
+    quartz_application_get_executable_path();
+#define gtk_osxapplication_get_bundle_id(x) \
+    quartz_application_get_bundle_id();
+#define gtk_osxapplication_get_bundle_info(x, y) \
+    quartz_application_get_bundle_info(y);
 
 G_END_DECLS
 

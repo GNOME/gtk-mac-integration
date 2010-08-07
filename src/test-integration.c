@@ -688,7 +688,7 @@ main (int argc, char **argv)
 #endif //QUARTZ_HANDLERS
   gtk_osxapplication_ready(theApp);
   {
-    const gchar *id = gtk_osxapplication_get_bundle_id(theApp);
+    const gchar *id = quartz_application_get_bundle_id();
     if (id != NULL) {
       g_print ("Error! Bundle Has ID %s\n", id); 
     }

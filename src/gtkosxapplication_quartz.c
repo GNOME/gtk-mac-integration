@@ -1031,7 +1031,7 @@ gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint id)
 }
 
 /**
- * gtk_osxapplication_get_bundle_path:
+ * quartz_application_get_bundle_path:
  * @self: The GtkOSXApplication. Not Used.
  *
  * Return the root path of the bundle or the directory containing the
@@ -1040,7 +1040,7 @@ gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint id)
  * Returns: path The bundle's absolute path or %NULL on error. g_free() it when done.
  */
 gchar*
-gtk_osxapplication_get_bundle_path(GtkOSXApplication *self)
+quartz_application_get_bundle_path(void)
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   gchar *str = NULL;
@@ -1053,7 +1053,7 @@ gtk_osxapplication_get_bundle_path(GtkOSXApplication *self)
 }
 
 /**
- * gtk_osxapplication_get_bundle_id:
+ * quartz_application_get_bundle_id:
  * @self: The GtkOSXApplication. Not Used.
  *
  *Return the value of the CFBundleIdentifier key from the bundle's Info.plist
@@ -1066,7 +1066,7 @@ gtk_osxapplication_get_bundle_path(GtkOSXApplication *self)
  * Returns: The string value of CFBundleIdentifier, or %NULL if there is none. g_free() it when done.
  */
 gchar*
-gtk_osxapplication_get_bundle_id(GtkOSXApplication *self)
+quartz_application_get_bundle_id(void)
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   gchar *str = NULL;
@@ -1079,16 +1079,16 @@ gtk_osxapplication_get_bundle_id(GtkOSXApplication *self)
 }
 
 /**
- * gtk_osxapplication_get_resource_path:
+ * quartz_application_get_resource_path:
  * @self: The GtkOSXApplication. Not Used.
  *
  * Return the Resource path for the bundle or the directory containing the
- *  executable if it isn't actually a bundle. Use gtk_osxapplication_get_bundle_id() to check (it will return %NULL if it's not a bundle).
+ *  executable if it isn't actually a bundle. Use quartz_application_get_bundle_id() to check (it will return %NULL if it's not a bundle).
  *
  * Returns: path The absolute resource path. or %NULL on error. g_free() it when done.
  */
 gchar*
-gtk_osxapplication_get_resource_path(GtkOSXApplication *self)
+quartz_application_get_resource_path(void)
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   gchar *str = NULL;
@@ -1102,7 +1102,7 @@ gtk_osxapplication_get_resource_path(GtkOSXApplication *self)
 
 
 /**
- * gtk_osxapplication_get_executable_path:
+ * quartz_application_get_executable_path:
  * @self: The GtkOSXApplication. Not Used.
  *
  * Return the executable path, including file name
@@ -1110,7 +1110,7 @@ gtk_osxapplication_get_resource_path(GtkOSXApplication *self)
  * Returns: The path to the primary executable, or %NULL if it can't find one. g_free() it when done
  */
 gchar*
-gtk_osxapplication_get_executable_path(GtkOSXApplication *self)
+quartz_application_get_executable_path(void)
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   gchar *str = NULL;
@@ -1123,7 +1123,7 @@ gtk_osxapplication_get_executable_path(GtkOSXApplication *self)
 }
 
 /**
- * gtk_osxapplication_get_bundle_info:
+ * quartz_application_get_bundle_info:
  * @self: The GtkOSXApplication. Not Used.
  * @key: The key, as a normal UTF8 string.
  *
@@ -1133,7 +1133,7 @@ gtk_osxapplication_get_executable_path(GtkOSXApplication *self)
  * Returns: A UTF8-encoded string. g_free() it when done.
  */
 gchar*
-gtk_osxapplication_get_bundle_info(GtkOSXApplication *self, const gchar *key)
+quartz_application_get_bundle_info(const gchar *key)
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   NSObject *id = [[NSBundle mainBundle] objectForInfoDictionaryKey:
