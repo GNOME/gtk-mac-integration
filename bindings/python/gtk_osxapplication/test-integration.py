@@ -49,21 +49,21 @@ class MainWindow(gtk.Window):
 
         # Add two groups with items in the application menu
 
-        group = macapp.add_app_menu_group()
         item = gtk.MenuItem("About")
         item.show()
         item.connect("activate", self.activate_cb)
-        macapp.add_app_menu_item(group, item)
+        macapp.insert_app_menu_item(item, 0)
         item = gtk.MenuItem("Check for updates...")
         item.connect("activate", self.activate_cb)
         item.show()
-        macapp.add_app_menu_item(group, item)
+        macapp.insert_app_menu_item(gtk.SeparatorMenuItem(), 1)
+        macapp.insert_app_menu_item(item, 2)
 
-        group = macapp.add_app_menu_group()
+        
         item = gtk.MenuItem("Preferences")
         item.connect("activate", self.activate_cb)
         item.show()
-        macapp.add_app_menu_item(group, item)
+        macapp.insert_app_menu_item(item, 3)
 
 #    def dock_clicked_cb(self, dock):
 #        print "Dock clicked"

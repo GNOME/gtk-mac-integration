@@ -13,6 +13,7 @@ import gtk.gdk.Pixbuf as PyGdkPixbuf_Type
 import gtk.MenuShell as PyGtkMenuShell_Type
 import gtk.MenuItem as PyGtkMenuItem_Type
 import gtk.Window as PyGtkWindow_Type
+import gtk.Widget as PyGtkWidget_Type
 %%
 ignore-glob
   *_get_type
@@ -55,16 +56,36 @@ _wrap_gtk_osxapplication_add_app_menu_item (PyGObject *self, PyObject *args, PyO
     return Py_None;
 }
 %%
-override gtk_osxapplication_get_bundle_info kwargs
+override gtk_osxapplication_insert_app_menu_item kwargs
 static PyObject*
-_wrap_gtk_osxapplication_get_bundle_info (PyGObject *self, PyObject *args, PyObject *kwargs)
+_wrap_gtk_osxapplication_insert_app_menu_item (PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "item", "index", NULL };
+    PyObject *pyitem;
+    GtkWidget *item;
+    gint index;
+   if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O!i:insert_app_menu_item",
+				    kwlist,
+				    &PyGtkWidget_Type,
+				    &pyitem, &index))
+        return NULL;
+
+    Py_INCREF (Py_None);
+    item = GTK_WIDGET (pygobject_get (pyitem));
+    gtk_osxapplication_insert_app_menu_item (GTK_OSX_APPLICATION(self->obj), item, index);
+    return Py_None;
+}
+%%
+override quartz_application_get_bundle_info kwargs
+static PyObject*
+_wrap_quartz_application_get_bundle_info (PyObject *args, PyObject *kwargs)
 {
     static char *kwlist[] = { "key", NULL };
     char *key;
     gpointer item;
     PyObject *ret;
 
-    item = gtk_osxapplication_get_bundle_info (GTK_OSX_APPLICATION(self->obj), key);
+    item = quartz_application_get_bundle_info (key);
 
     ret = PyCObject_FromVoidPtr (item, NULL);
 
