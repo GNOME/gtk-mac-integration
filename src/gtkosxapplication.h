@@ -148,15 +148,15 @@ gchar *quartz_application_get_bundle_info(const gchar *key);
 
 #ifndef GTK_DISABLE_DEPRECATED
 #define gtk_osxapplication_get_bundle_path(x) \
-    quartz_application_get_bundle_path();
+    quartz_application_get_bundle_path()
 #define gtk_osxapplication_get_resource_path(x) \
-    quartz_application_get_resource_path();
+    quartz_application_get_resource_path()
 #define gtk_osxapplication_get_executable_path(x) \
-    quartz_application_get_executable_path();
+    quartz_application_get_executable_path()
 #define gtk_osxapplication_get_bundle_id(x) \
-    quartz_application_get_bundle_id();
+    quartz_application_get_bundle_id()
 #define gtk_osxapplication_get_bundle_info(x, y) \
-    quartz_application_get_bundle_info(y);
+    quartz_application_get_bundle_info(y)
 #endif
 G_END_DECLS
 
