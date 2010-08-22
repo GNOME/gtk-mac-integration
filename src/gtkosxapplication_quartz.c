@@ -76,27 +76,38 @@ parent_set_emission_hook (GSignalInvocationHint *ihint,
   GtkWidget *instance = (GtkWidget*) g_value_get_object (param_values);
 
   if (GTK_IS_MENU_ITEM (instance)) {
-    GtkWidget *previous_parent = (GtkWidget*) g_value_get_object (param_values + 1);
-    GtkWidget *menu_shell      = NULL;
+    GtkWidget *old_parent = (GtkWidget*) g_value_get_object (param_values + 1);
+    GtkWidget *new_parent = gtk_widget_get_parent(instance);
+    GNSMenuItem *cocoa_item = cocoa_menu_item_get(instance);
+/* If neither the old parent or the new parent has a cocoa menu, then
+   we're not really interested in this. */
+    if (!( (old_parent && GTK_IS_WIDGET(old_parent) 
+	    && cocoa_menu_get(old_parent)) || 
+	   (new_parent && GTK_IS_WIDGET(new_parent)
+	    && cocoa_menu_get(new_parent))))
+      return TRUE;
 
-    if (GTK_IS_MENU_SHELL (previous_parent)) {
-      menu_shell = previous_parent;
-    }
-    else if (GTK_IS_MENU_SHELL (gtk_widget_get_parent(instance))) {
-      menu_shell = gtk_widget_get_parent(instance);;
-    }
+    if (GTK_IS_MENU_SHELL (old_parent)) {
+  	GNSMenuBar *cocoa_menu = (GNSMenuBar*)cocoa_menu_get (old_parent);
+	[cocoa_item removeFromMenu: cocoa_menu];
 
-    if (menu_shell) {
-      GNSMenuBar *cocoa_menu = (GNSMenuBar*)cocoa_menu_get (menu_shell);
-      if (GTK_IS_MENU_BAR(menu_shell) && cocoa_menu && 
-	  [cocoa_menu respondsToSelector: @selector(resync)]) {
-	[cocoa_menu resync];
-      }
-      else
-	cocoa_menu_item_add_submenu (GTK_MENU_SHELL (menu_shell),
-				     cocoa_menu,
-				     cocoa_menu == (NSMenu*) data,
-				     FALSE);
+    }
+    /*This would be considerably more efficient if we could just
+      insert it into the menu, but we can't easily get the item's
+      position in the GtkMenu and even if we could we don't know that
+      there isn't some other item in the menu that's been moved to the
+      app-menu for quartz.  */
+    if (GTK_IS_MENU_SHELL (new_parent) && cocoa_menu_get(new_parent)) {
+  	GNSMenuBar *cocoa_menu = (GNSMenuBar*)cocoa_menu_get (new_parent);
+	if (GTK_IS_MENU_BAR(new_parent) && cocoa_menu && 
+	    [cocoa_menu respondsToSelector: @selector(resync)]) {
+	  [cocoa_menu resync];
+	}
+	else
+	  cocoa_menu_item_add_submenu (GTK_MENU_SHELL (new_parent),
+				       cocoa_menu,
+				       cocoa_menu == (NSMenu*) data,
+				       FALSE);
     }
   }
   return TRUE;
