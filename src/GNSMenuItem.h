@@ -1,3 +1,4 @@
+/* --- objc-mode --- */
 /* GTK+ Integration with platform-specific application-wide features 
  * such as the OS X menubar and application delegate concepts.
  *
@@ -89,6 +90,7 @@ typedef struct {
 - (void) mark;
 - (void) unmark;
 - (BOOL) isMarked;
+- (void) removeFromMenu: (NSMenu*) old_menu;
 
 @end
 

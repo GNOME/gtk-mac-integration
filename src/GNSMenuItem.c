@@ -1,3 +1,4 @@
+/* --- objc-mode --- */
 /* GTK+ Integration with platform-specific application-wide features 
  * such as the OS X menubar and application delegate concepts.
  *
@@ -104,6 +105,19 @@ idle_call_activate (ClosureData *action)
 - (BOOL) isMarked
 {
   return notUsed;
+}
+
+- (void) removeFromMenu: (NSMenu*) old_menu {
+#if !(MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4)
+    if (old_menu != inMenu && old_menu != [self menu])
+      return;
+    [[self menu] removeItem: self];
+    inMenu = nil;
+    index = -1;
+#else
+    if (old_menu == [self menu])
+      [[self menu] removeItem: self];
+#endif
 }
 
 @end
