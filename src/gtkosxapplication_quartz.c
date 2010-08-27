@@ -813,6 +813,8 @@ gtk_osxapplication_insert_app_menu_item (GtkOSXApplication* self,
 					 gint index) {
     cocoa_menu_item_add_item ([[[NSApp mainMenu] itemAtIndex: 0] submenu],
 			      item, index);
+    [[[[[NSApp mainMenu] itemAtIndex: 0] submenu] 
+      itemAtIndex: index] setHidden: NO];
 }
 
 /**

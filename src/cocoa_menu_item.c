@@ -487,11 +487,10 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
       cocoa_item = [ [ GNSMenuItem alloc] initWithTitle:@"" 
 		     aGClosure:menu_action andPointer:NULL];
     DEBUG ("\tan item\n");
-    cocoa_menu_item_connect (menu_item, (GNSMenuItem*) cocoa_item, label);
-	
-    [ cocoa_item setEnabled:YES];
   }
-	
+  cocoa_menu_item_connect (menu_item, (GNSMenuItem*) cocoa_item, label);
+  [ cocoa_item setEnabled:YES];
+
   /* connect GtkMenuItem and GNSMenuItem so that we can notice changes
    * to accel/label/submenu etc. */
 
