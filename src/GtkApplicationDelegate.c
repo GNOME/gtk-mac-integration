@@ -45,10 +45,15 @@
   guint sig = g_signal_lookup("NSApplicationBlockTermination", 
 			      GTK_TYPE_OSX_APPLICATION);
   gboolean result = FALSE;
-  if (sig)
+  static gboolean inHandler = FALSE;
+  if (inHandler) return NSTerminateCancel;
+  if (sig) {
+      inHandler = TRUE;
       g_signal_emit(app, sig, 0, &result);
+  }
 
   g_object_unref(app);
+  inHandler = FALSE;
   if (!result)
     return NSTerminateNow;
   else
