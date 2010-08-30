@@ -275,7 +275,7 @@ cocoa_menu_item_update_accelerator (GNSMenuItem *cocoa_item,
 	      }
 				
 	      /* gdk/quartz maps Command to MOD1 */
-	      if (key->accel_mods & GDK_MOD1_MASK) {
+	      if (key->accel_mods & GDK_META_MASK) {
 		modifiers |= NSCommandKeyMask;
 	      }
 
