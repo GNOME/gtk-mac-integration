@@ -60,7 +60,7 @@
 //#define IGEMACINTEGRATION
 #define GTKOSXAPPLICATION
 /* These others are optional */
-//#define BUILT_UI
+#define BUILT_UI
 #define QUARTZ_HANDLERS
 
 /* IGEMACINTEGRATION uses Carbon, which isn't available for 64-bit builds. */
@@ -510,11 +510,11 @@ create_window(const gchar *title)
   GtkWidget       *menubar;
   GtkWidget       *bbox;
   GtkWidget       *button;
+  GtkWidget	  *textentry;
   MenuItems       *items = menu_items_new();
 #ifdef BUILT_UI
   GtkUIManager *mgr = gtk_ui_manager_new();
   GtkActionGroup *actions = gtk_action_group_new("TestActions");
-  GtkAccelGroup *accel_group;
   guint mergeid;
   GError *err = NULL;
 #else //not BUILT_UI
@@ -588,6 +588,8 @@ create_window(const gchar *title)
                       button,
                       FALSE, FALSE, 0);
   button = gtk_toggle_button_new_with_label("View Menu");
+  textentry = gtk_entry_new();
+  gtk_box_pack_start(GTK_BOX (vbox), textentry, TRUE, TRUE, 2);
 #ifdef BUILT_UI
   g_signal_connect(button, "toggled", G_CALLBACK (view_menu_cb), (gpointer)mgr);
 #else //not BUILT_UI
@@ -699,8 +701,8 @@ main (int argc, char **argv)
     }
   }
 #endif //GTKOSXAPPLICATION
+  gtk_accel_map_load("accel_map");
   gtk_main ();
-
 #ifdef GTKOSXAPPLICATION
   g_object_unref(theApp);
 #endif //GTKOSXAPPLICATION
