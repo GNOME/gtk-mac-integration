@@ -1,0 +1,13 @@
+; test-integration GtkAccelMap rc-file         -*- scheme -*-
+; this file is an automated accelerator map dump
+;
+; (gtk_accel_path "<Actions>/TestActions/AboutAction" "")
+ (gtk_accel_path "<Actions>/TestActions/HelpAction" "<Meta>h")
+ (gtk_accel_path "<Actions>/TestActions/OpenAction" "<Meta>o")
+ (gtk_accel_path "<Actions>/TestActions/CopyAction" "<Meta>c")
+ (gtk_accel_path "<Actions>/TestActions/PasteAction" "<Meta>v")
+; (gtk_accel_path "<Actions>/TestActions/QuitAction" "<Control>q")
+; (gtk_accel_path "<Actions>/TestActions/HelpMenuAction" "")
+; (gtk_accel_path "<Actions>/TestActions/EditMenuAction" "")
+; (gtk_accel_path "<Actions>/TestActions/PrefsAction" "")
+; (gtk_accel_path "<Actions>/TestActions/FileMenuAction" "")
