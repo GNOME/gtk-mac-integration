@@ -73,7 +73,11 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
+#if GTK_CHECK_VERSION(2,90,7)
+#include <gdk/gdkkeysyms-compat.h>
+#else
 #include <gdk/gdkkeysyms.h>
+#endif
 
 #ifdef IGEMACINTEGRATION
 #include "ige-mac-menu.h"

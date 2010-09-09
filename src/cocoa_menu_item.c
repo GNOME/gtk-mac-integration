@@ -22,7 +22,11 @@
 
 #import <Cocoa/Cocoa.h>
 #include <gtk/gtk.h>
+#if GTK_CHECK_VERSION(2,90,7)
+#include <gdk/gdkkeysyms-compat.h>
+#else
 #include <gdk/gdkkeysyms.h>
+#endif
 
 #include "cocoa_menu_item.h"
 #include "cocoa_menu.h"
