@@ -84,7 +84,10 @@ idle_call_activate (ClosureData *action)
     hidden = YES;
   }
   else if (hidden && !shouldHide) {
+      int maxIndex = [inMenu numberOfItems];
     hidden = NO;
+    if (index < 0) index = 0;
+    if (index > maxIndex) index = maxIndex;
     [inMenu insertItem: self atIndex: index];
     [(GNSMenuBar*)[NSApp mainMenu] resync];
   }
