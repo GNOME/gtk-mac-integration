@@ -60,7 +60,7 @@
 //#define IGEMACINTEGRATION
 #define GTKOSXAPPLICATION
 /* These others are optional */
-#define BUILT_UI
+//#define BUILT_UI
 #define QUARTZ_HANDLERS
 
 /* IGEMACINTEGRATION uses Carbon, which isn't available for 64-bit builds. */
@@ -495,6 +495,13 @@ app_will_quit_cb (GtkOSXApplication *app, gpointer data)
   gtk_main_quit();
 }
 
+static gboolean
+app_open_file_cb (GtkOSXApplication *app, gchar *path, gpointer user_data)
+{
+    g_print("File open event for %s", path);
+    return FALSE;
+}
+
 #endif //GTKOSXAPPLICATION
 #ifdef IGEMACINTEGRATION
 
@@ -693,6 +700,8 @@ main (int argc, char **argv)
 		     G_CALLBACK(app_should_quit_cb), NULL);
     g_signal_connect(theApp, "NSApplicationWillTerminate",
 		     G_CALLBACK(app_will_quit_cb), NULL);
+    g_signal_connect(theApp, "NSApplicationOpenFile",
+		     G_CALLBACK(app_open_file_cb), NULL);
   }
 #ifndef QUARTZ_HANDLERS
   gtk_osxapplication_set_use_quartz_accelerators(theApp, FALSE);
@@ -701,7 +710,7 @@ main (int argc, char **argv)
   {
     const gchar *id = quartz_application_get_bundle_id();
     if (id != NULL) {
-      g_print ("Error! Bundle Has ID %s\n", id); 
+      g_print ("TestIntegration Error! Bundle Has ID %s\n", id); 
     }
   }
 #endif //GTKOSXAPPLICATION
