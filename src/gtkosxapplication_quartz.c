@@ -358,7 +358,7 @@ g_cclosure_marshal_BOOLEAN__STRING (GClosure     *closure,
   register gpointer data1, data2;
   gboolean v_return;
 
-  g_return_if_fail (n_param_values == 1);
+  g_return_if_fail (n_param_values == 2);
 
   if (G_CCLOSURE_SWAP_DATA (closure))
     {
