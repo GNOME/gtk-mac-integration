@@ -60,8 +60,8 @@
 //#define IGEMACINTEGRATION
 #define GTKOSXAPPLICATION
 /* These others are optional */
-//#define BUILT_UI
-#define QUARTZ_HANDLERS
+#define BUILT_UI
+//#define QUARTZ_HANDLERS
 
 /* IGEMACINTEGRATION uses Carbon, which isn't available for 64-bit builds. */
 #ifdef __x86_64__
@@ -528,6 +528,7 @@ create_window(const gchar *title)
   GtkActionGroup *actions = gtk_action_group_new("TestActions");
   guint mergeid;
   GError *err = NULL;
+  GtkAccelGroup *accel_group;
 #else //not BUILT_UI
   GtkAccelGroup *accel_group = gtk_accel_group_new();
 #endif //not BUILT_UI
@@ -561,10 +562,11 @@ create_window(const gchar *title)
   items->quit_item = gtk_ui_manager_get_widget(mgr, "/menubar/File/Quit");
   items->about_item = gtk_ui_manager_get_widget(mgr, "/menubar/Help/About");
   items->preferences_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit/Preferences");
+  accel_group = gtk_ui_manager_get_accel_group(mgr);
 #else //not BUILT_UI
   menubar = test_setup_menu (items, accel_group);
-  gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
 #endif //not BUILT_UI
+  gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
   gtk_box_pack_start (GTK_BOX (vbox), 
                       menubar,
                       FALSE, TRUE, 0);
@@ -581,7 +583,7 @@ create_window(const gchar *title)
                       bbox,
                       TRUE, TRUE, 0);
 
-  button = gtk_button_new_with_label ("Bounce");
+  button = gtk_button_new_with_mnemonic ("B_ounce");
   g_signal_connect (button, "clicked", G_CALLBACK (bounce_cb), dock);
   gtk_box_pack_start (GTK_BOX (bbox), 
                       button,
