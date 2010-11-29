@@ -189,12 +189,12 @@ create_apple_menu (GtkOSXApplication *self)
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
   menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Hide",  @"GtkOSXApplication", @"Hide menu item title")
-				 action:@selector(hide:) keyEquivalent:@"H"];
+				 action:@selector(hide:) keyEquivalent:@"h"];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
   menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Hide Others",  @"GtkOSXApplication", @"Hide Others menu item title")
-				 action:@selector(hideOtherApplications:) keyEquivalent:@"H"];
+				 action:@selector(hideOtherApplications:) keyEquivalent:@"h"];
   [menuitem setKeyEquivalentModifierMask: NSCommandKeyMask | NSAlternateKeyMask];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
@@ -249,7 +249,7 @@ create_window_menu (GtkOSXApplication *self)
     nswin = gdk_quartz_window_get_nswindow(win);
 
   [window_menu addItemWithTitle: NSLocalizedStringFromTable(@"Minimize", @"GtkOSXApplication", @"Windows|Minimize menu item")
-		action:@selector(performMiniaturize:) keyEquivalent:@"M"];
+		action:@selector(performMiniaturize:) keyEquivalent:@"m"];
   [window_menu addItem: [NSMenuItem separatorItem]];
   [window_menu addItemWithTitle: NSLocalizedStringFromTable(@"Bring All to Front", @"GtkOSXApplication", @"Windows|Bring All To Front menu item title")
 		action:@selector(arrangeInFront:) keyEquivalent:@""];
