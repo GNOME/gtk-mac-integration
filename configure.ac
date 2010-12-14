@@ -34,8 +34,8 @@ GTK_DOC_CHECK([1.11], [--flavour no-tmpl])
 IMENDIO_COMPILE_WARNINGS
 IMENDIO_PYTHON_CHECK
 
-AC_ARG_WITH([gtk], 
-	[AS_HELP_STRING([--with-gtk], 
+AC_ARG_WITH([gtk],
+	[AS_HELP_STRING([--with-gtk],
 		[select gtk+-3.0 or gtk+-2.0. @<:@default=check@:>@])],
 	[],
 	[with_gtk=check])
@@ -67,7 +67,7 @@ AC_SUBST(ACLOCAL_AMFLAGS)
 AC_DEFINE_UNQUOTED([PREFIX],["$prefix"], [Installation prefix (for making filenames)])
 
 AC_CONFIG_FILES(
-	Makefile 
+	Makefile
 	src/Makefile
         bindings/Makefile
         bindings/python/Makefile
