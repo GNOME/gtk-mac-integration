@@ -212,7 +212,7 @@ static GtkRadioActionEntry view_actions[] =
     {"VerticalAction", NULL, "_Vertical", NULL, NULL, 0},
 };
 #else //not BUILT_UI
-#if !defined QUARTZ_HANDLERS 
+#if !defined QUARTZ_HANDLERS && defined GTKOSXAPPLICATION
 
 /* This is needed as a callback to enable accelerators when not using
  * the Quartz event handling path and using GtkMenuItems instead of
