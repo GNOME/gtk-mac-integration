@@ -209,9 +209,10 @@ cocoa_menu_item_update_accelerator (GNSMenuItem *cocoa_item,
    * handling depends on gtk_osxapplication_use_quartz_accelerators,
    * so this is more cosmetic than it may appear.
   */
-  // itxt isn't used, and this isn't C++ anymore, anyway.
-  //  const gchar* ltxt =
+  /* Return if there's no label; it's probably a separator which isn't
+   * going to get an accelerator anyway. */
   get_menu_label_text (widget, &label);
+  if (label == NULL) return;
 
   GClosure *closure = NULL;
   g_object_get(label, "accel-closure", &closure, NULL);
