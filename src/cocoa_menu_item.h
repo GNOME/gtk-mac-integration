@@ -1,4 +1,4 @@
-/* GTK+ Integration with platform-specific application-wide features 
+/* GTK+ Integration with platform-specific application-wide features
  * such as the OS X menubar and application delegate concepts.
  *
  * Copyright (C) 2009 Paul Davis
@@ -30,8 +30,8 @@
 
 GNSMenuItem *cocoa_menu_item_get(GtkWidget* menu_item);
 
-void cocoa_menu_item_add_item (NSMenu* cocoa_menu, 
-			       GtkWidget* menu_item, 
+void cocoa_menu_item_add_item (NSMenu* cocoa_menu,
+			       GtkWidget* menu_item,
 			       int index);
 
 void cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
