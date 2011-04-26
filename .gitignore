@@ -25,3 +25,4 @@ compile
 *.defs
 gtk-doc.make
 py-compile
+m4/
