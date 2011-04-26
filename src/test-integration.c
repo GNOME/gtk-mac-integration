@@ -95,6 +95,7 @@ typedef struct {
   GtkWidget *edit_item;
   GtkWidget *copy_item;
   GtkWidget *quit_item;
+  GtkWidget *window_menu;
   GtkWidget *help_menu;
   GtkWidget *about_item;
   GtkWidget *preferences_item;
@@ -162,6 +163,7 @@ menu_item_activate_cb (GtkWidget *item,
 }
 
 #ifdef BUILT_UI
+static GtkWidget *create_window(const gchar *title);
 
 static void
 action_activate_cb(GtkAction* action, gpointer data)
@@ -169,6 +171,29 @@ action_activate_cb(GtkAction* action, gpointer data)
   GtkWindow *window = data;
   g_print("Window %s, Action %s\n", gtk_window_get_title(window),
 	  gtk_action_get_name(action));
+}
+
+static void
+new_window_cb(GtkAction* action, gpointer data)
+{
+  static guint serial = 2;
+  gchar *title;
+  g_print("Create New Window\n");
+  title = g_strdup_printf( "Test Integration Window %d", serial++);
+  create_window(title); 
+  g_free(title);
+
+}
+
+static void
+minimize_cb (GtkAction *action, gpointer data) {
+  g_return_if_fail(data != NULL);
+  gtk_window_iconify(GTK_WINDOW(data));
+}
+
+static void
+front_cb (GtkAction *action, gpointer data) {
+  g_return_if_fail(data != NULL);
 }
 
 static GtkActionEntry test_actions[] = 
@@ -180,11 +205,16 @@ static GtkActionEntry test_actions[] =
     {"QuitAction", GTK_STOCK_QUIT, "_Quit", NULL, NULL,
      G_CALLBACK(gtk_main_quit)},
     {"EditMenuAction", NULL, "_Edit", NULL, NULL, NULL },
+    {"WindowsMenuAction", NULL, "_Window", NULL, NULL, NULL },
     {"CopyAction", GTK_STOCK_COPY, "_Copy", NULL, NULL,
      G_CALLBACK(action_activate_cb)},
     {"PasteAction", GTK_STOCK_PASTE, "_Paste", NULL, NULL,
      G_CALLBACK(action_activate_cb)},
     {"PrefsAction", GTK_STOCK_PREFERENCES, "Pr_eferences", NULL, NULL, NULL },
+    {"MinimizeAction", NULL, "_Minimize", "<meta>m", NULL, G_CALLBACK(minimize_cb)},
+    {"FrontAction", NULL, "Bring All to Front", NULL, NULL, G_CALLBACK(front_cb)},
+    {"AddWindowAction", NULL, "_Add Window", NULL, NULL,
+     G_CALLBACK(new_window_cb)},
     {"HelpMenuAction", NULL, "_Help", NULL, NULL, NULL },
     {"AboutAction", GTK_STOCK_ABOUT, "_About", NULL, NULL,
      G_CALLBACK(action_activate_cb)},
@@ -561,10 +591,12 @@ create_window(const gchar *title)
   items->help_menu = gtk_ui_manager_get_widget(mgr, "/menubar/Help");
   items->quit_item = gtk_ui_manager_get_widget(mgr, "/menubar/File/Quit");
   items->about_item = gtk_ui_manager_get_widget(mgr, "/menubar/Help/About");
+  items->window_menu = gtk_ui_manager_get_widget(mgr, "/menubar/Window");
   items->preferences_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit/Preferences");
   accel_group = gtk_ui_manager_get_accel_group(mgr);
 #else //not BUILT_UI
   menubar = test_setup_menu (items, accel_group);
+  items->window_menu = NULL;
 #endif //not BUILT_UI
   gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
   gtk_box_pack_start (GTK_BOX (vbox), 
@@ -652,7 +684,7 @@ create_window(const gchar *title)
   gtk_osxapplication_insert_app_menu_item  (theApp, sep, 3);
 
   gtk_osxapplication_set_help_menu(theApp, GTK_MENU_ITEM(items->help_menu));
-  gtk_osxapplication_set_window_menu(theApp, NULL);
+  gtk_osxapplication_set_window_menu(theApp, GTK_MENU_ITEM(items->window_menu));
 #endif //GTKOSXAPPLICATION
   if (!menu_items_quark)
       menu_items_quark = g_quark_from_static_string("MenuItem");
@@ -664,7 +696,10 @@ create_window(const gchar *title)
 int
 main (int argc, char **argv)
 {
-  GtkWidget       *window1, *window2;
+  GtkWidget       *window1;
+#ifndef BUILT_UI
+  GtkWidget *window2;
+#endif
 #ifdef IGEMACINTEGRATION
   IgeMacDock      *dock;
 #endif //IGEMACINTEGRATION
@@ -675,7 +710,6 @@ main (int argc, char **argv)
 #ifdef IGEMACINTEGRATION
   dock = ige_mac_dock_get_default ();
   window1 = create_window(dock, "Test Integration Window 1"); 
-  window2 = create_window(dock, "Test Integration Window 2"); 
   dock = ige_mac_dock_new ();
   g_signal_connect (dock,
                     "clicked",
@@ -690,7 +724,9 @@ main (int argc, char **argv)
 #ifdef GTKOSXAPPLICATION
   theApp  = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
   window1 = create_window("Test Integration Window 1");
+#ifndef BUILT_UI
   window2 = create_window("Test Integration Window 2");
+#endif
   {
     gboolean falseval = FALSE;
     gboolean trueval = TRUE;

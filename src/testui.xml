@@ -12,6 +12,13 @@
       <menuitem name="Preferences" action="PrefsAction"/>
     </menu>
     <placeholder name="ViewMenuPlace"/>
+    <menu name="Window" action="WindowsMenuAction">
+      <menuitem name="Minimize" action="MinimizeAction"/>
+      <menuitem name="Bring All to Front" action="FrontAction"/>
+      <menuitem name="Add" action="AddWindowAction"/>
+      <separator name="SepW1"/>
+      <placeholder name="WindowMenuPlace"/>
+    </menu>
     <menu name="Help" action="HelpMenuAction" >
       <menuitem name="About" action="AboutAction"/>
       <menuitem name="Help" action="HelpAction"/>
