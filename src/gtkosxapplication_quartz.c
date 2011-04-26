@@ -635,6 +635,7 @@ void
 gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_shell)
 {
   GNSMenuBar* cocoa_menubar;
+  NSMenu* old_menubar = [NSApp mainMenu];
   GtkWidget *parent = gtk_widget_get_toplevel(GTK_WIDGET(menu_shell));
  
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
@@ -672,13 +673,19 @@ gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_she
 		    cocoa_menubar);
 
   cocoa_menu_item_add_submenu (menu_shell, cocoa_menubar, TRUE, FALSE);
+  /* Stupid hack to force the menubar to look right when a window is
+     opened after starting the main loop. */
+  if (old_menubar != NULL) {
+    [NSApp setMainMenu: old_menubar];
+    [NSApp setMainMenu: cocoa_menubar];
+  }
 }
 
 /**
  * gtk_osxapplication_sync_menubar:
  * @self: The GtkOSXApplication object
  *
- * Syncornize the active window's GtkMenuBar with the OSX menu
+ * Syncronize the active window's GtkMenuBar with the OSX menu
  * bar. You should only need this if you have programmatically changed
  * the menus with signals blocked or disconnected.
  */
