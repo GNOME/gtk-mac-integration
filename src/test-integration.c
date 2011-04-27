@@ -615,7 +615,7 @@ create_window(const gchar *title)
                       bbox,
                       TRUE, TRUE, 0);
 
-  button = gtk_button_new_with_mnemonic ("B_ounce");
+  button = gtk_button_new_with_mnemonic ("Bo_unce");
   g_signal_connect (button, "clicked", G_CALLBACK (bounce_cb), dock);
   gtk_box_pack_start (GTK_BOX (bbox), 
                       button,
