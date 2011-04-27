@@ -424,13 +424,21 @@ global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
   NSEvent *nsevent = windowing_event;
   GtkOSXApplication* app = user_data;
 
-  /* Handle menu events with no window, since they won't go through the
-   * regular event processing.
+  /* Handle menu events with no window, since they won't go through
+   * the regular event processing. We have to release the gdk mutex so
+   * that we can recquire it when we invoke the gtk handler. Note well
+   * that handlers need to wrap any calls into gtk in
+   * gdk_threads_enter() and gdk_threads_leave() in a multi-threaded
+   * environment!
    */
-  if ([nsevent type] == NSKeyDown && 
-      gtk_osxapplication_use_quartz_accelerators(app) )
-    if ([[NSApp mainMenu] performKeyEquivalent: nsevent])
-      return GDK_FILTER_TRANSLATE;
+  if ([nsevent type] == NSKeyDown &&
+      gtk_osxapplication_use_quartz_accelerators(app) ) {
+    gboolean result;
+    gdk_threads_leave();
+    result = [[NSApp mainMenu] performKeyEquivalent: nsevent];
+    gdk_threads_enter();
+    if (result) return GDK_FILTER_TRANSLATE;
+  }
   return GDK_FILTER_CONTINUE;
 }
 

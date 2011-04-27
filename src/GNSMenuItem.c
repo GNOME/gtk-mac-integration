@@ -59,7 +59,8 @@ idle_call_activate (ClosureData *action)
 
 - (void) activate:(id) sender
 {
-    g_idle_add ((GSourceFunc)idle_call_activate, &action);
+/* Add an idle in a thread-safe way: */
+    gdk_threads_add_idle ((GSourceFunc)idle_call_activate, &action);
 }
 
 - (BOOL) isHidden
