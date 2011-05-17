@@ -31,15 +31,12 @@ AM_PATH_GLIB_2_0
 
 GTK_DOC_CHECK([1.11], [--flavour no-tmpl])
 
-IMENDIO_COMPILE_WARNINGS
-IMENDIO_PYTHON_CHECK
-
 AC_ARG_WITH([gtk],
 	[AS_HELP_STRING([--with-gtk],
 		[select gtk+-3.0 or gtk+-2.0. @<:@default=check@:>@])],
 	[],
 	[with_gtk=check])
-gtk_major=
+dnl gtk_major=
 
 AS_ECHO(["Specified Gtk Version $with_gtk"])
 
@@ -55,10 +52,13 @@ AS_IF([test "x$with_gtk" = xgtk+-3.0],
 
 AC_MSG_CHECKING([GTK+ Version])
 
-GTK_VERSION=`$PKG_CONFIG --modversion ${gtk_major}`
+GTK_VERSION=`$PKG_CONFIG --modversion ${GTK_MAJOR}`
 AC_SUBST(GTK_MAJOR)
 AC_SUBST(GTK_VERSION)
 AC_MSG_RESULT("$GTK_VERSION")
+AM_CONDITIONAL([INTROSPECTION], [test x$GTK_MAJOR = "xgtk+-3.0"])
+
+GTK_PYTHON_CHECK
 
 # This will cause the automake generated makefiles to pass the correct
 # flags to aclocal.
@@ -73,6 +73,7 @@ AC_CONFIG_FILES(
         bindings/python/Makefile
 	bindings/python/igemacintegration/Makefile
 	bindings/python/gtk_osxapplication/Makefile
+	bindings/python/gtk3_osxapplication/Makefile
         data/Makefile
         data/ige-mac-integration.pc
 	docs/Makefile
