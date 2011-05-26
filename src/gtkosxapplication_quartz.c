@@ -862,19 +862,6 @@ gtk_osxapplication_set_window_menu(GtkOSXApplication *self,
      g_return_if_fail(cocoa_item != NULL);
     [cocoa_menubar setWindowsMenu: cocoa_item];
     [NSApp setWindowsMenu: [cocoa_item submenu]];
-    parent = gtk_widget_get_toplevel(GTK_WIDGET(menubar));
-    if (parent && GTK_IS_WIDGET(parent))
-      win = gtk_widget_get_window(parent);
-    else
-      g_print("No Parent\n");
-    if (win && GDK_IS_WINDOW(win))
-      nswin = gdk_quartz_window_get_nswindow(win);
-    else
-      g_print("No GDK Window\n");
-    if (nswin)
-      [NSApp addWindowsItem: nswin title: [nswin title] filename: NO];
-    else
-      g_print ("No NSWindow\n");
  }
   else {
     GNSMenuItem *cocoa_item = create_window_menu (self);
