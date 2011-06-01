@@ -55,8 +55,7 @@ extern NSWindow* gdk_quartz_window_get_nswindow(GdkWindow*);
  */
 G_DEFINE_TYPE (GtkOSXApplication, gtk_osxapplication, G_TYPE_OBJECT)
 
-
-static gulong emission_hook_id = 0;
+static GQuark emission_hook_quark = 0;
 
 /*
  * parent_set_emission_hook:
@@ -125,9 +124,11 @@ static void
 parent_set_emission_hook_remove (GtkWidget *widget,
 				 gpointer   data)
 {
+  gulong hook_id = (gulong)g_object_get_qdata(G_OBJECT(widget), emission_hook_quark);
+  if (hook_id == 0) return;
   g_signal_remove_emission_hook (g_signal_lookup ("parent-set",
 						  GTK_TYPE_WIDGET),
-				 emission_hook_id);
+				 hook_id);
 }
 
 /*
@@ -645,6 +646,7 @@ gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_she
   GNSMenuBar* cocoa_menubar;
   NSMenu* old_menubar = [NSApp mainMenu];
   GtkWidget *parent = gtk_widget_get_toplevel(GTK_WIDGET(menu_shell));
+  gulong emission_hook_id;
  
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
 
@@ -670,11 +672,10 @@ gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_she
 				0,
 				parent_set_emission_hook,
 				cocoa_menubar, NULL);
-
-
-  g_signal_connect (menu_shell, "destroy",
-		    G_CALLBACK (parent_set_emission_hook_remove),
-		    NULL);
+  if (emission_hook_quark == 0)
+    emission_hook_quark = g_quark_from_static_string("GtkOSXApplicationEmissionHook");
+  g_object_set_qdata(G_OBJECT(menu_shell), emission_hook_quark,
+		     (gpointer)emission_hook_id);
 
   g_signal_connect (parent, "focus-in-event", 
 		    G_CALLBACK(window_focus_cb),
@@ -861,19 +862,6 @@ gtk_osxapplication_set_window_menu(GtkOSXApplication *self,
      g_return_if_fail(cocoa_item != NULL);
     [cocoa_menubar setWindowsMenu: cocoa_item];
     [NSApp setWindowsMenu: [cocoa_item submenu]];
-    parent = gtk_widget_get_toplevel(GTK_WIDGET(menubar));
-    if (parent && GTK_IS_WIDGET(parent))
-      win = gtk_widget_get_window(parent);
-    else
-      g_print("No Parent\n");
-    if (win && GDK_IS_WINDOW(win))
-      nswin = gdk_quartz_window_get_nswindow(win);
-    else
-      g_print("No GDK Window\n");
-    if (nswin)
-      [NSApp addWindowsItem: nswin title: [nswin title] filename: NO];
-    else
-      g_print ("No NSWindow\n");
  }
   else {
     GNSMenuItem *cocoa_item = create_window_menu (self);
