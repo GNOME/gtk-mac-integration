@@ -58,7 +58,7 @@ AC_DEFUN([GTK_PYTHON_CHECK],
     dnl Check for Python
     AM_PATH_PYTHON(2.3.5,,[AC_MSG_RESULT([Python 2.3.5 or newer is required])])
     AM_CHECK_PYTHON_HEADERS(,[AC_MSG_RESULT([Python headers not found])])
-    AS_IF([ test x$GTK_MAJOR = "xgtk-2.0"],
+    AS_IF([ test x$GTK_MAJOR = "xgtk+-2.0"],
     dnl Check for PyGTK
       [ PKG_CHECK_MODULES(PYGOBJECT, pygobject-2.0 >= 2.16.0,,have_pygobject=no)
     	if test "x$have_pygobject" = xno; then
