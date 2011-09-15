@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:gnome="http://api.gnome.org/doap-extensions#"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <name xml:lang="en">gtk-mac-integration</name>
+  <shortname>gtk-mac-integration</shortname>
+  <shortdesc xml:lang="en">Mac menubar and Dock menu integration</shortdesc>
+  <description xml:lang="en">Gtk-mac-integration provides an add-on
+  library which Gtk+ applications can use to better integrate
+  themselves into the Mac user environment, including placing their
+  menus on the Mac's single menubar, adding items to the Dock menu,
+  and bouncing the Dock icon for notifications.
+
+  Gtk-mac-integration is licensed under the Gnu Lesser General Public
+  License, the same terms under whic Gtk+ is licensed.</description>
+  <homepage rdf:resource="http://www.gtk+.org/" />
+  <license rdf:resource="http://usefulinc.com/doap/licenses/gpl" />
+  <bug-database rdf:resource="https://sourceforge.net/apps/trac/gtk-osx/newticket" />
+  <download-page rdf:resource="https://sourceforge.net/projects/gtk-osx/files/" />
+  <mailing-list rdf:resource="https://lists.sourceforge.net/lists/listinfo/gtk-osx-users" />
+  <mailing-list rdf:resource="https://lists.sourceforge.net/lists/listinfo/gtk-osx-devs" />
+
+
+  <programming-language>C</programming-language>
+
+  <repository>
+    <GitRepository>
+        <browse rdf:resource="http://git.gnome.org/browse/gtk-mac-integration/"/>
+      <location rdf:resource="git://git.gnome.org/gtk-mac-integration"/>
+    </GitRepository>
+  </repository>
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>John Ralls</foaf:name>
+      <foaf:mbox rdf:resource="mailto:jralls@ceridwen.us"/>
+      <gnome:userid>jralls</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+
+</Project>
