@@ -15,9 +15,9 @@ test -z "$srcdir" && srcdir=.
 
 ORIGDIR=`pwd`
 cd $srcdir
-PROJECT=ige-mac-integration
+PROJECT=gtk-mac-integration
 TEST_TYPE=-f
-FILE=src/ige-mac-menu.c
+FILE=src/gtk-mac-menu.c
 CONFIGURE=configure.ac
 
 DIE=0

@@ -1,7 +1,7 @@
 AC_PREREQ(2.52)
 
-AC_INIT(ige-mac-integration, 0.9.8)
-AC_CONFIG_SRCDIR(src/ige-mac-menu.c)
+AC_INIT(gtk-mac-integration, 1.0.0)
+AC_CONFIG_SRCDIR(src/gtk-mac-menu.c)
 AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
@@ -48,7 +48,7 @@ AS_IF([test "x$with_gtk" = xgtk+-3.0],
            AC_MSG_ERROR([GTK+-2.0 specified but not found]))],
       [PKG_CHECK_MODULES(MAC, [gtk+-3.0 >= 2.90],GTK_MAJOR="gtk+-3.0",
          PKG_CHECK_MODULES(MAC, [gtk+-2.0 >= 2.10], GTK_MAJOR="gtk+-2.0",
-	    AC_MSG_ERROR([GTK+-2.0 Wersion 2.10 or higher or GTK+-3.0 Version 2.90.0 or higher is required to build ige-mac-integration])))])
+	    AC_MSG_ERROR([GTK+-2.0 Wersion 2.10 or higher or GTK+-3.0 Version 2.90.0 or higher is required to build gtk-mac-integration])))])
 
 AC_MSG_CHECKING([GTK+ Version])
 
@@ -71,11 +71,11 @@ AC_CONFIG_FILES(
 	src/Makefile
         bindings/Makefile
         bindings/python/Makefile
-	bindings/python/igemacintegration/Makefile
+	bindings/python/gtkmacintegration/Makefile
 	bindings/python/gtk_osxapplication/Makefile
 	bindings/python/gtk3_osxapplication/Makefile
         data/Makefile
-        data/ige-mac-integration.pc
+        data/gtk-mac-integration.pc
 	docs/Makefile
 	docs/reference/Makefile
 	strings/Makefile

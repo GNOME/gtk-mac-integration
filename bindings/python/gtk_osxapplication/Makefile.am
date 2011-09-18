@@ -19,7 +19,7 @@ _gtk_osxapplication_la_LDFLAGS = -module -avoid-version -export-symbols-regex in
 _gtk_osxapplication_la_LIBADD =				\
 	$(MAC_LIBS)					\
 	$(PYGTK_LIBS)					\
-	$(top_builddir)/src/libigemacintegration.la
+	$(top_builddir)/src/libgtkmacintegration.la
 _gtk_osxapplication_la_SOURCES =				\
 	gtk_osxapplication.c				\
 	gtk_osxapplication-module.c

@@ -110,9 +110,9 @@ void gtk_osxapplication_set_dock_icon_resource(GtkOSXApplication *self,
 					    const gchar  *name,
 					    const gchar  *type,
 					    const gchar  *subdir);
-/* Ige-mac-dock provided two functions,
- * ige_mac_dock_set_overlay_from_pixbuf and
- * ige_mac_doc_set_overlay_from_resource, but OSX 10.5 and later do
+/* Gtk-mac-dock provided two functions,
+ * gtk_mac_dock_set_overlay_from_pixbuf and
+ * gtk_mac_doc_set_overlay_from_resource, but OSX 10.5 and later do
  * not support application dock tile overlays. Document dock tiles
  * will by default represent a miniaturized view of the document's
  * contents badged with an even more miniaturized application
@@ -124,14 +124,14 @@ gint gtk_osxapplication_attention_request(GtkOSXApplication *self,
 void gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint id);
 
 /* Bundle Functions */
-/* ige-mac-bundle included a bunch of silly stuff for setting up the
+/* gtk-mac-bundle included a bunch of silly stuff for setting up the
  * environment. It's silly first because that's easier to do with a
  * startup script, and even easier to do with an LCEnvironment
  * dictionary in the bundle's Info.plist. 
 
  * Gtk applications, at least when launched with a shell script, still
  * return a bundle identifier and it's executable path is correct and
- * useful.  Ige-mac-bundle had a "is it an application bundle"
+ * useful.  Gtk-mac-bundle had a "is it an application bundle"
  * function, but NSBundle doesn't provide that; instead,
  * quartz_application_get_bundle_id will return NULL if it's not really a
  * bundle, there's no Info.plist, or if Info.plist doesn't have a

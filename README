@@ -2,14 +2,14 @@ GTK+ Integration for the Mac OS X desktop, like the menubar, dock and
 app bundles.
 
 This library provides two implementations: An older Carbon
-implementation (ige-mac-integration) and a new implementation in Cocoa
+implementation (gtk-mac-integration) and a new implementation in Cocoa
 (GtkOSXApplication). PyGtk bindings are provided for both.
 
 GtkOSXApplication compiles and works with x86_64, a major failing of
 the Carbon implementation, as well as resolving some other glaring
 bugs. Since Apple has deperecated Carbon in OSX 10.6 (Snow Leopard)
 and is likely to remove it from a future version of the operating
-system, Ige-mac-integration is also deprecated. New ports of Gtk+
+system, Gtk-mac-integration is also deprecated. New ports of Gtk+
 applications should use GtkOSXApplication and maintainers of older
 ports are strongly encouraged to convert as soon as practical.
 
@@ -20,11 +20,11 @@ will be found in their respective directories under bindings/python.
 GtkOSXApplication is well documented using Gtk-Doc. To build the
 documentation, pass --enable-gtk-doc to configure. A current copy may
 be found online at
-http://gtk-osx.sourceforge.net/ige-mac-integration/index.html. 
-Amplfying information is on the Integration page of the project wiki,
+http://gtk-osx.sourceforge.net/gtk-mac-integration/index.html. 
+Amplifying information is on the Integration page of the project wiki,
 https://sourceforge.net/apps/trac/gtk-osx/wiki/Integrate.
 
-Some documentation for ige-mac-integration may be found at
+Some documentation for gtk-mac-integration may be found at
 http://live.gnome.org/GTK%2B/OSX/Integration.
 
 For more information about the Gtk-OSX project, please visit our

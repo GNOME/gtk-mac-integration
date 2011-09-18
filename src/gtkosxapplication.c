@@ -185,7 +185,7 @@
  * along with their non-standard dependencies and their resources
  * (graphical elements, translations, and such) in special directory
  * structures called "bundles". To easily package your Gtk+
- * application, have a look at ige-mac-bundler, also available from
+ * application, have a look at gtk-mac-bundler, also available from
  * the Gtk-OSX project.
  *
  * OSX provides a variety of functions pertaining to bundles, most of which are not likely to interest someone porting a Gtk+ application. GtkOSXApplication has wrapped a few that might be:

@@ -17,7 +17,7 @@ _gtk_osxapplication_la_CFLAGS =			\
 _gtk_osxapplication_la_LDFLAGS = -module -export-symbols-regex init_gtk_osxapplication
 _gtk_osxapplication_la_LIBADD =			\
 	$(MAC_LIBS)					\
-	$(top_builddir)/src/libigemacintegration.la
+	$(top_builddir)/src/libgtkmacintegration.la
 
 _gtk_osxapplication_la_SOURCES =			\
 	gtk_osxapplication.c				\

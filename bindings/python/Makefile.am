@@ -1,9 +1,9 @@
 if INTROSPECTION
-  GTK_DIR = gtk3_osxapplication
+  GTK3_COCOA_DIR = gtk3_osxapplication
 else
-  GTK_DIR = gtk_osxapplication
+  GTK_COCOA_DIR = gtk_osxapplication
 if !SIXTY_FOUR_BIT
-  IGE_DIR = igemacintegration
+  GTK_CARBON_DIR = gtkmacintegration
 endif
 endif
-SUBDIRS = $(GTK_DIR) $(IGE_DIR)
+SUBDIRS = $(GTK3_COCOA_DIR) $(GTK_COCOA_DIR) $(GTK_CARBON_DIR)

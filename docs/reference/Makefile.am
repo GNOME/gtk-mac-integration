@@ -9,7 +9,7 @@ AUTOMAKE_OPTIONS = 1.6
 # of using the various options.
 
 # The name of the module, e.g. 'glib'.
-DOC_MODULE=ige-mac-integration
+DOC_MODULE=gtk-mac-integration
 
 # Uncomment for versioned docs and specify the version of the module, e.g. '2'.
 DOC_MODULE_VERSION=0.9
@@ -55,12 +55,12 @@ CFILE_GLOB=$(top_srcdir)/src/*.c
 # Header files to ignore when scanning.
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h
 IGNORE_HFILES=				\
-	ige-mac-integration.h		\
-	ige-mac-bundle.h		\
-	ige-mac-dock.h			\
-	ige-mac-menu.h			\
-	ige-mac-image-utils.h 		\
-	ige-mac-private.h		\
+	gtk-mac-integration.h		\
+	gtk-mac-bundle.h		\
+	gtk-mac-dock.h			\
+	gtk-mac-menu.h			\
+	gtk-mac-image-utils.h 		\
+	gtk-mac-private.h		\
 	getlabel.h			\
 	cocoa_menu.h			\
 	cocoa_menu_item.h		\

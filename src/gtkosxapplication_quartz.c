@@ -36,7 +36,7 @@
 #include "cocoa_menu_item.h"
 #include "cocoa_menu.h"
 #include "getlabel.h"
-#include "ige-mac-image-utils.h"
+#include "gtk-mac-image-utils.h"
 
 /* This is a private function in libgdk; we need to have is so that we
    can force new windows onto the Window menu */
@@ -1002,7 +1002,7 @@ nsimage_from_pixbuf(GdkPixbuf *pixbuf)
   NSImage* newImage = nil;
 
   g_return_val_if_fail (pixbuf !=  NULL, NULL);
-  image = ige_mac_image_from_pixbuf (pixbuf);
+  image = gtk_mac_image_from_pixbuf (pixbuf);
   // Get the image dimensions.
   imageRect.size.height = CGImageGetHeight(image);
   imageRect.size.width = CGImageGetWidth(image);
