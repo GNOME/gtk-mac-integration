@@ -77,12 +77,6 @@ void gtk_osxapplication_set_menu_bar (GtkOSXApplication *self,
 				      GtkMenuShell *menu_shell);
 void gtk_osxapplication_sync_menubar (GtkOSXApplication *self);
 
-#ifndef GTK_DISABLE_DEPRECATED
-GtkOSXApplicationMenuGroup *gtk_osxapplication_add_app_menu_group (GtkOSXApplication* self);
-void gtk_osxapplication_add_app_menu_item (GtkOSXApplication *self,
-					   GtkOSXApplicationMenuGroup *group,
-					   GtkMenuItem *menu_item);
-#endif
 void gtk_osxapplication_insert_app_menu_item (GtkOSXApplication *self,
 					      GtkWidget *menu_item,
 					      gint index);
@@ -138,26 +132,16 @@ void gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint i
  * CFBundleIdentifier key (So if you need to detect being in a bundle,
  * make sure that your bundle has that key!) 
 
- * Richard Proctor pointed out that these functions don't really need to be class functions: the self parameter isn't used, and making them "free" functions will often save one from having to call g_object_new(GTK_TYPE_OSX_APPLICATION) just to get it. For backwards compatibility, there's a define for the old version, but it will go away in 1.0, so clean up your code now.
-*/
+ * Richard Proctor pointed out that these functions don't really need
+ * to be class functions: the self parameter isn't used, and making
+ * them "free" functions will often save one from having to call
+ * g_object_new(GTK_TYPE_OSX_APPLICATION) just to get it. */
+
 gchar *quartz_application_get_bundle_path(void);
 gchar *quartz_application_get_resource_path(void);
 gchar *quartz_application_get_executable_path(void);
 gchar *quartz_application_get_bundle_id(void);
 gchar *quartz_application_get_bundle_info(const gchar *key);
 
-#ifndef GTK_DISABLE_DEPRECATED
-#define gtk_osxapplication_get_bundle_path(x) \
-    quartz_application_get_bundle_path()
-#define gtk_osxapplication_get_resource_path(x) \
-    quartz_application_get_resource_path()
-#define gtk_osxapplication_get_executable_path(x) \
-    quartz_application_get_executable_path()
-#define gtk_osxapplication_get_bundle_id(x) \
-    quartz_application_get_bundle_id()
-#define gtk_osxapplication_get_bundle_info(x, y) \
-    quartz_application_get_bundle_info(y)
-#endif
-G_END_DECLS
 
 #endif /* __GTK_OSX_APPLICATION_H__ */
