@@ -5,27 +5,7 @@
 # Copyright 2010 John Ralls
 
 
-PACKAGE = @PACKAGE@
-VERSION = @VERSION@
-
-SHELL = @SHELL@
-@SET_MAKE@
-
-srcdir = @srcdir@
-top_srcdir = @top_srcdir@
-VPATH = @srcdir@
-subdir = strings
-
-prefix = @prefix@
-exec_prefix = @exec_prefix@
-datadir = @datadir@
-libdir = @libdir@
-datarootdir = @datarootdir@
-localedir = ${datadir}/strings
-install_sh = @install_sh@
-mkdir_p = $(install_sh) -d
-
-STRING_FILES =  GtkOSXApplication.strings.ca    \
+dist_string_DATA =  GtkOSXApplication.strings.ca    \
 		GtkOSXApplication.strings.cs    \
 		GtkOSXApplication.strings.da    \
 		GtkOSXApplication.strings.de    \
@@ -56,20 +36,21 @@ STRING_FILES =  GtkOSXApplication.strings.ca    \
 		GtkOSXApplication.strings.zh_CN \
 		GtkOSXApplication.strings.zh_TW
 
-all: Makefile
 
-install: ${STRING_FILES}
-	${mkdir_p} ${localedir}; \
-	for file in ${STRING_FILES}; do \
+stringdir = ${datadir}/strings
+
+install-dist_stringDATA: ${dist_string_DATA}
+	${mkdir_p} ${am_installdirs}; \
+	for file in ${dist_string_DATA}; do \
 	  dir_pref=`echo $$file | cut -f 3 -d '.' -`; \
-	  dest_dir=${localedir}/$$dir_pref.lproj; \
+	  dest_dir=${am_installdirs}/$$dir_pref.lproj; \
 	  dest_name=`echo $$file | cut -f 1 -f 2 -d '.' -`; \
 	  ${mkdir_p} $$dest_dir; \
-	  ${install_sh} $$file $$dest_dir/$$dest_name; \
+	  ${install_sh} $(srcdir)/$$file $$dest_dir/$$dest_name; \
 	done
 
-clean:
+uninstall-dist_stringDATA:
+	rm -rf ${am_installdirs}
 
-distclean: 
-	rm Makefile
+
 
