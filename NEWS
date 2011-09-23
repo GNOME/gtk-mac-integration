@@ -1,0 +1,26 @@
+gtk-mac-integration-1.0.0:
+
+* The major change here is the project name, from ige-mac-integration,
+  part of moving the project to Gnome.org. All functons and symbols
+  that started with ige now start with gtk instead.
+
+* Deprecated forms of bundle access functions removed.
+
+* Making distribution tarballs with make dist now works. See the
+  maintainer note in README.
+
+* The annoying bug typo which caused the python bindings to not build
+  against Gtk2 is fixed.
+
+ige-mac-integration-0.9.8:
+
+* Gtk3 Support added. Includes a new PyGObject introspection binding,
+  gtk3_osxapplication.
+
+* Fixed a crash when using Quartz accelerator handlers with
+  multi-threaded applications.
+
+* Fixed a bug which caused the menubar to display two Apple icons.
+
+
+

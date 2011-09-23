@@ -1,4 +1,71 @@
+2011-09-22  John Ralls <jralls@ceridwen.us>
+
+  * Makefile.am, acinclude.m4, strings/Makefile.am, strings/Makefile.in: Make
+  package work with "make dist"  This took a couple of changes:
+  strings/Makefile had to be redone to use automake instead of having a
+  hand-written Makefile.in Provision had to be made for building all three
+  python binding directories. For this to work, it's necessary to have both
+  gtk+-2 and gtk+-3 installed along with pygobject-2, pygobject-3 and pygtk
+  (and all the other pygtk dependencies), and to pass --enable-python=all to
+  configure.
+
+  * bindings/python/.gitignore, docs/reference/Makefile.am: More changes to
+  reflect project name change
+
+2011-09-20  John Ralls <jralls@ceridwen.us>
+
+  * src/gtkosxapplication.h, src/gtkosxapplication_quartz.c: Remove
+  deprecations for Gtk-mac-integration release 1.0.0
+
+2011-09-17  John Ralls <jralls@ceridwen.us>
+
+  * README, autogen.sh, bindings/python/Makefile.am,
+  bindings/python/gtk3_osxapplication/Makefile.am,
+  bindings/python/gtk_osxapplication/Makefile.am,
+  bindings/python/igemacintegration/Makefile.am,
+  bindings/python/igemacintegration/__init__.py,
+  .../igemacintegration/igemacintegration-module.c,
+  .../igemacintegration/igemacintegration.override,
+  .../python/igemacintegration/test-integration.py, configure.ac,
+  data/Makefile.am, data/ige-mac-integration.pc.in, docs/reference/Makefile.am,
+  docs/reference/ige-mac-integration-docs.sgml, src/Makefile.am,
+  src/gtkosxapplication.c, src/gtkosxapplication.h,
+  src/gtkosxapplication_quartz.c, src/ige-mac-bundle.c, src/ige-mac-bundle.h,
+  src/ige-mac-dock.c, src/ige-mac-dock.h, src/ige-mac-image-utils.c,
+  src/ige-mac-image-utils.h, src/ige-mac-integration.h, src/ige-mac-menu.c,
+  src/ige-mac-menu.h, src/ige-mac-private.h, src/test-integration.c: Rename the
+  module from ige-mac-integration to gtk-mac-integration
+
+2011-09-15  John Ralls <jralls@ceridwen.us>
+
+  * gtk-mac-integration.doap: Add doap file for git.gnome.org
+
+2011-06-05  John Ralls <jralls@ceridwen.us>
+
+  * strings/GtkOSXApplication.strings.fr: Bug 56: Better French Translations,
+  thanks to gegeweb
+
+2011-06-01  John Ralls <jralls@ceridwen.us>
+
+  * acinclude.m4: Fix a dumb typo which prevented building with Gtk+2
+
+2011-05-26  John Ralls <jralls@ceridwen.us>
+
+  * src/gtkosxapplication_quartz.c: Remove the attempt to add the window title
+  to the window menu.  First off, it's unnecessary: AppKit takes care of it.
+  Second, it doesn't work because there's no GDK window until the window is
+  realized, and most applications will call this during menu setup, before that
+  happens.
+
+  * src/gtkosxapplication_quartz.c: Replace the single static emission_hook_id
+  with stuffing the id for each main menu as a qdata on the menu shell.  This
+  caused crit errors because only the last hook id created could be removed;
+  when earlier-created windows were destroyed, parent_emission_hook_remove
+  would try to remove the already-removed hook, throwing a critical error.
+
 2011-05-20  John Ralls <jralls@ceridwen.us>
+
+  * ChangeLog: Update Changelog for 0.9.8 Release
 
   * configure.ac: Bump version to 0.9.8
 
@@ -31,7 +98,7 @@
   * src/gtkosxapplication_quartz.c: Force addition of the current window to the
   Window menu when a window menu is passed in. This is mostly needed for for
   the first window; the windows list gets created after the window, so it's not
-  no the list.
+  on the list.
 
   * src/gtkosxapplication_quartz.c: Bug #53: Force a double menubar switch to
   suppress a second system menu icon (with no attached menu) from appearing in

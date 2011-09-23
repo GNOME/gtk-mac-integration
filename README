@@ -20,12 +20,27 @@ will be found in their respective directories under bindings/python.
 GtkOSXApplication is well documented using Gtk-Doc. To build the
 documentation, pass --enable-gtk-doc to configure. A current copy may
 be found online at
-http://gtk-osx.sourceforge.net/gtk-mac-integration/index.html. 
-Amplifying information is on the Integration page of the project wiki,
-https://sourceforge.net/apps/trac/gtk-osx/wiki/Integrate.
+http://gtk-osx.sourceforge.net/gtk-mac-integration/index.html.
 
-Some documentation for gtk-mac-integration may be found at
+Some documentation for gtk-mac-integration along with more about
+gtk-osxapplication may be found at
 http://live.gnome.org/GTK%2B/OSX/Integration.
 
 For more information about the Gtk-OSX project, please visit our
 webpage at http://gtk-osx.sourceforge.net/
+
+MAINTAINER NOTE:
+
+Tarballs for distribution may be made with `make dist`, but in order
+to include all three versions of python bindings this requires special
+preparation:
+
+* Build both Gtk2 and Gtk3
+
+* Build PyGObject2 and PyGObject3. PyGObject2 must be built with
+  --disable-introspection in order for it to be installed in parallel
+  with PyGObject3.
+
+* Build PyGtk.
+
+* Configure gtk-mac-integration with --python=all.
