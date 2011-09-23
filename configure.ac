@@ -1,6 +1,6 @@
 AC_PREREQ(2.52)
 
-AC_INIT(gtk-mac-integration, 1.0.0)
+AC_INIT(gtk-mac-integration, 1.0.1)
 AC_CONFIG_SRCDIR(src/gtk-mac-menu.c)
 AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
