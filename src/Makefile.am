@@ -46,3 +46,5 @@ noinst_PROGRAMS = test-integration
 test_integration_SOURCES = test-integration.c
 test_integration_CFLAGS = $(MAC_CFLAGS)
 test_integration_LDADD =  $(MAC_LIBS) libgtkmacintegration.la
+
+EXTRA_DIST = testui.xml
