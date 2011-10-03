@@ -50,7 +50,7 @@ install-dist_stringDATA: ${dist_string_DATA}
 	done
 
 uninstall-dist_stringDATA:
-	rm -rf ${am_installdirs}
+	rm -rf ${am__installdirs}
 
 
 
