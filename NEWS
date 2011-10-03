@@ -1,3 +1,11 @@
+gtk-mac-integration-1.0.1:
+
+* Add two files to extra_dist: Both are necessary for testing, but not
+  otherwise.
+
+* Fix strings/Makefile.am so that the strings files are installed
+  where they belong rather than in /strings.
+
 gtk-mac-integration-1.0.0:
 
 * The major change here is the project name, from ige-mac-integration,

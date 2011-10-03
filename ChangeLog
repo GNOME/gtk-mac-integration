@@ -1,3 +1,58 @@
+2011-10-03  John Ralls <jralls@ceridwen.us>
+
+  * strings/Makefile.am: strings: Fix the same error in the uninstall script.
+
+  * bindings/python/gtkmacintegration/Makefile.am,
+  bindings/python/gtkmacintegration/__init__.py,
+  .../gtkmacintegration/gtkmacintegration-module.c,
+  .../gtkmacintegration/gtkmacintegration.override,
+  data/gtk-mac-integration.pc.in, src/gtk-mac-bundle.c, src/gtk-mac-bundle.h,
+  src/gtk-mac-dock.c, src/gtk-mac-dock.h, src/gtk-mac-image-utils.c,
+  src/gtk-mac-image-utils.h, src/gtk-mac-integration.h, src/gtk-mac-menu.c,
+  src/gtk-mac-menu.h, src/gtk-mac-private.h: Update internals of former
+  ige-mac-foo files
+
+  * bindings/python/gtkmacintegration/Makefile.am,
+  bindings/python/gtkmacintegration/__init__.py,
+  .../gtkmacintegration/gtkmacintegration-module.c,
+  .../gtkmacintegration/gtkmacintegration.override,
+  .../python/gtkmacintegration/test-integration.py,
+  bindings/python/igemacintegration/Makefile.am,
+  bindings/python/igemacintegration/__init__.py,
+  .../igemacintegration/gtkmacintegration-module.c,
+  .../igemacintegration/gtkmacintegration.override,
+  .../python/igemacintegration/test-integration.py: Rename
+  bindings/python/igemacintegration to bindings/python/gtkmacintegration
+
+  * .../igemacintegration/gtkmacintegration-module.c,
+  .../igemacintegration/gtkmacintegration.override,
+  .../igemacintegration/igemacintegration-module.c,
+  .../igemacintegration/igemacintegration.override,
+  data/gtk-mac-integration.pc.in, data/ige-mac-integration.pc.in,
+  docs/reference/gtk-mac-integration-docs.sgml,
+  docs/reference/ige-mac-integration-docs.sgml, src/gtk-mac-bundle.c,
+  src/gtk-mac-bundle.h, src/gtk-mac-dock.c, src/gtk-mac-dock.h,
+  src/gtk-mac-image-utils.c, src/gtk-mac-image-utils.h,
+  src/gtk-mac-integration.h, src/gtk-mac-menu.c, src/gtk-mac-menu.h,
+  src/gtk-mac-private.h, src/ige-mac-bundle.c, src/ige-mac-bundle.h,
+  src/ige-mac-dock.c, src/ige-mac-dock.h, src/ige-mac-image-utils.c,
+  src/ige-mac-image-utils.h, src/ige-mac-integration.h, src/ige-mac-menu.c,
+  src/ige-mac-menu.h, src/ige-mac-private.h: Rename ige-mac-foo files to
+  gtk-mac-foo
+
+  * strings/Makefile.am: Strings: Fix error in install script.
+
+2011-09-26  John Ralls <jralls@ceridwen.us>
+
+  * Makefile.am, src/Makefile.am: Add to extra-dist the test data files
+  accel_map and src/testui.xml
+
+2011-09-23  John Ralls <jralls@ceridwen.us>
+
+  * configure.ac: Bump version to 1.0.1
+
+  * ChangeLog, NEWS, README: Documentation updates for 1.0.0 Release
+
 2011-09-22  John Ralls <jralls@ceridwen.us>
 
   * Makefile.am, acinclude.m4, strings/Makefile.am, strings/Makefile.in: Make
@@ -98,7 +153,7 @@
   * src/gtkosxapplication_quartz.c: Force addition of the current window to the
   Window menu when a window menu is passed in. This is mostly needed for for
   the first window; the windows list gets created after the window, so it's not
-  on the list.
+  no the list.
 
   * src/gtkosxapplication_quartz.c: Bug #53: Force a double menubar switch to
   suppress a second system menu icon (with no attached menu) from appearing in
