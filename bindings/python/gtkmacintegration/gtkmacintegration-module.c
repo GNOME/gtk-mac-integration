@@ -1,24 +1,24 @@
 #include <pygobject.h>
- 
-void igemacintegration_register_classes (PyObject *d); 
 
-extern PyMethodDef igemacintegration_functions[];
- 
+void gtkmacintegration_register_classes (PyObject *d);
+
+extern PyMethodDef gtkmacintegration_functions[];
+
 DL_EXPORT(void)
-init_igemacintegration (void)
+init_gtkmacintegration (void)
 {
   PyObject *m, *d;
 
   init_pygobject ();
 
-  m = Py_InitModule ("igemacintegration._igemacintegration", 
-                     igemacintegration_functions);
+  m = Py_InitModule ("gtkmacintegration._gtkmacintegration",
+                     gtkmacintegration_functions);
   d = PyModule_GetDict (m);
 
-  igemacintegration_register_classes (d);
+  gtkmacintegration_register_classes (d);
 
-  if (PyErr_Occurred ()) { 
+  if (PyErr_Occurred ()) {
     PyErr_Print();
-    Py_FatalError ("can't initialize module igemacintegration:");
+    Py_FatalError ("can't initialize module gtkmacintegration:");
   }
 }

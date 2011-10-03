@@ -38,10 +38,10 @@
 #include <sys/param.h>
 #include <gtk/gtk.h>
 
-#include "ige-mac-dock.h"
-#include "ige-mac-bundle.h"
-#include "ige-mac-image-utils.h"
-#include "ige-mac-private.h"
+#include "gtk-mac-dock.h"
+#include "gtk-mac-bundle.h"
+#include "gtk-mac-image-utils.h"
+#include "gtk-mac-private.h"
 
 enum {
   CLICKED,
@@ -52,9 +52,9 @@ enum {
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
-typedef struct IgeMacDockPriv IgeMacDockPriv;
+typedef struct GtkMacDockPriv GtkMacDockPriv;
 
-struct IgeMacDockPriv {
+struct GtkMacDockPriv {
   glong id;
 };
 
@@ -72,15 +72,15 @@ static OSErr mac_dock_handle_reopen_application (const AppleEvent *inAppleEvent,
                                                  AppleEvent       *outAppleEvent,
                                                  long              inHandlerRefcon);
 
-G_DEFINE_TYPE (IgeMacDock, ige_mac_dock, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GtkMacDock, gtk_mac_dock, G_TYPE_OBJECT)
 
-#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), IGE_TYPE_MAC_DOCK, IgeMacDockPriv))
+#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_MAC_DOCK, GtkMacDockPriv))
 
 static GList      *handlers;
-static IgeMacDock *global_dock;
+static GtkMacDock *global_dock;
 
 static void
-ige_mac_dock_class_init (IgeMacDockClass *class)
+gtk_mac_dock_class_init (GtkMacDockClass *class)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (class);
 
@@ -88,7 +88,7 @@ ige_mac_dock_class_init (IgeMacDockClass *class)
 
   signals[CLICKED] =
     g_signal_new ("clicked",
-                  IGE_TYPE_MAC_DOCK,
+                  GTK_TYPE_MAC_DOCK,
                   G_SIGNAL_RUN_LAST,
                   0,
                   NULL, NULL,
@@ -98,7 +98,7 @@ ige_mac_dock_class_init (IgeMacDockClass *class)
   /* FIXME: Need marshaller. */
   signals[OPEN_DOCUMENTS] =
     g_signal_new ("open-documents",
-                  IGE_TYPE_MAC_DOCK,
+                  GTK_TYPE_MAC_DOCK,
                   G_SIGNAL_RUN_LAST,
                   0,
                   NULL, NULL,
@@ -107,14 +107,14 @@ ige_mac_dock_class_init (IgeMacDockClass *class)
 
   signals[QUIT_ACTIVATE] =
     g_signal_new ("quit-activate",
-                  IGE_TYPE_MAC_DOCK,
+                  GTK_TYPE_MAC_DOCK,
                   G_SIGNAL_RUN_LAST,
                   0,
                   NULL, NULL,
                   g_cclosure_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
 
-  g_type_class_add_private (object_class, sizeof (IgeMacDockPriv));
+  g_type_class_add_private (object_class, sizeof (GtkMacDockPriv));
 
   /* FIXME: Just testing with triggering Carbon to take control over
    * the dock menu events instead of Cocoa (which happens when the
@@ -134,9 +134,9 @@ ige_mac_dock_class_init (IgeMacDockClass *class)
 }
 
 static void
-ige_mac_dock_init (IgeMacDock *dock)
+gtk_mac_dock_init (GtkMacDock *dock)
 {
-  IgeMacDockPriv *priv = GET_PRIV (dock);
+  GtkMacDockPriv *priv = GET_PRIV (dock);
   static glong    id;
 
   priv->id = ++id;
@@ -160,7 +160,7 @@ ige_mac_dock_init (IgeMacDock *dock)
 static void
 mac_dock_finalize (GObject *object)
 {
-  IgeMacDockPriv *priv;
+  GtkMacDockPriv *priv;
 
   priv = GET_PRIV (object);
 
@@ -175,20 +175,20 @@ mac_dock_finalize (GObject *object)
 
   handlers = g_list_remove (handlers, object);
 
-  G_OBJECT_CLASS (ige_mac_dock_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gtk_mac_dock_parent_class)->finalize (object);
 }
 
-IgeMacDock *
-ige_mac_dock_new (void)
+GtkMacDock *
+gtk_mac_dock_new (void)
 {
-  return g_object_new (IGE_TYPE_MAC_DOCK, NULL);
+  return g_object_new (GTK_TYPE_MAC_DOCK, NULL);
 }
 
-IgeMacDock *
-ige_mac_dock_get_default (void)
+GtkMacDock *
+gtk_mac_dock_get_default (void)
 {
   if (!global_dock)
-    global_dock = g_object_new (IGE_TYPE_MAC_DOCK, NULL);
+    global_dock = g_object_new (GTK_TYPE_MAC_DOCK, NULL);
 
   return global_dock;
 }
@@ -197,16 +197,16 @@ ige_mac_dock_get_default (void)
  * Quit dock menu item (i.e. if there is a dock instance alive).
  */
 gboolean
-_ige_mac_dock_is_quit_menu_item_handled (void)
+_gtk_mac_dock_is_quit_menu_item_handled (void)
 {
   return handlers != NULL;
 }
 
-static IgeMacDock *
+static GtkMacDock *
 mac_dock_get_from_id (gulong id)
 {
   GList      *l;
-  IgeMacDock *dock = NULL;
+  GtkMacDock *dock = NULL;
 
   for (l = handlers; l; l = l->next)
     {
@@ -225,7 +225,7 @@ mac_dock_handle_quit (const AppleEvent *inAppleEvent,
                       AppleEvent       *outAppleEvent, 
                       long              inHandlerRefcon)
 {
-  IgeMacDock *dock;
+  GtkMacDock *dock;
 
   dock = mac_dock_get_from_id (inHandlerRefcon);
 
@@ -250,7 +250,7 @@ mac_dock_handle_reopen_application (const AppleEvent *inAppleEvent,
                                     AppleEvent       *outAppleEvent, 
                                     long              inHandlerRefcon)
 {
-  IgeMacDock *dock;
+  GtkMacDock *dock;
 
   dock = mac_dock_get_from_id (inHandlerRefcon);
 
@@ -265,7 +265,7 @@ mac_dock_handle_open_documents (const AppleEvent *inAppleEvent,
                                 AppleEvent       *outAppleEvent,
                                 long              inHandlerRefCon)
 {
-  IgeMacDock *dock;
+  GtkMacDock *dock;
   OSStatus    status;
   AEDescList  documents;
   gchar       path[MAXPATHLEN];
@@ -307,7 +307,7 @@ mac_dock_handle_open_documents (const AppleEvent *inAppleEvent,
 }
 
 void
-ige_mac_dock_set_icon_from_pixbuf (IgeMacDock *dock,
+gtk_mac_dock_set_icon_from_pixbuf (GtkMacDock *dock,
                                    GdkPixbuf  *pixbuf)
 {
   if (!pixbuf)
@@ -316,25 +316,25 @@ ige_mac_dock_set_icon_from_pixbuf (IgeMacDock *dock,
     {
       CGImageRef image;
 
-      image = ige_mac_image_from_pixbuf (pixbuf);
+      image = gtk_mac_image_from_pixbuf (pixbuf);
       SetApplicationDockTileImage (image);
       CGImageRelease (image);
     }
 }
 
 void
-ige_mac_dock_set_icon_from_resource (IgeMacDock   *dock,
-                                     IgeMacBundle *bundle,
+gtk_mac_dock_set_icon_from_resource (GtkMacDock   *dock,
+                                     GtkMacBundle *bundle,
                                      const gchar  *name,
                                      const gchar  *type,
                                      const gchar  *subdir)
 {
   gchar *path;
 
-  g_return_if_fail (IGE_IS_MAC_DOCK (dock));
+  g_return_if_fail (GTK_IS_MAC_DOCK (dock));
   g_return_if_fail (name != NULL);
 
-  path = ige_mac_bundle_get_resource_path (bundle, name, type, subdir);
+  path = gtk_mac_bundle_get_resource_path (bundle, name, type, subdir);
   if (path)
     {
       GdkPixbuf *pixbuf;
@@ -342,7 +342,7 @@ ige_mac_dock_set_icon_from_resource (IgeMacDock   *dock,
       pixbuf = gdk_pixbuf_new_from_file (path, NULL);
       if (pixbuf)
         {
-          ige_mac_dock_set_icon_from_pixbuf (dock, pixbuf);
+          gtk_mac_dock_set_icon_from_pixbuf (dock, pixbuf);
           g_object_unref (pixbuf);
         }
 
@@ -351,17 +351,17 @@ ige_mac_dock_set_icon_from_resource (IgeMacDock   *dock,
 }
 
 void
-ige_mac_dock_set_overlay_from_pixbuf (IgeMacDock  *dock,
+gtk_mac_dock_set_overlay_from_pixbuf (GtkMacDock  *dock,
                                       GdkPixbuf   *pixbuf)
 {
   CGImageRef image;
 
-  g_return_if_fail (IGE_IS_MAC_DOCK (dock));
+  g_return_if_fail (GTK_IS_MAC_DOCK (dock));
   g_return_if_fail (pixbuf == NULL || GDK_IS_PIXBUF (pixbuf));
 
   if (pixbuf)
     {
-      image = ige_mac_image_from_pixbuf (pixbuf);
+      image = gtk_mac_image_from_pixbuf (pixbuf);
       OverlayApplicationDockTileImage (image);
       CGImageRelease (image);
     }
@@ -370,18 +370,18 @@ ige_mac_dock_set_overlay_from_pixbuf (IgeMacDock  *dock,
 }
 
 void
-ige_mac_dock_set_overlay_from_resource (IgeMacDock   *dock,
-                                        IgeMacBundle *bundle,
+gtk_mac_dock_set_overlay_from_resource (GtkMacDock   *dock,
+                                        GtkMacBundle *bundle,
                                         const gchar  *name,
                                         const gchar  *type,
                                         const gchar  *subdir)
 {
   gchar *path;
 
-  g_return_if_fail (IGE_IS_MAC_DOCK (dock));
+  g_return_if_fail (GTK_IS_MAC_DOCK (dock));
   g_return_if_fail (name != NULL);
 
-  path = ige_mac_bundle_get_resource_path (bundle, name, type, subdir);
+  path = gtk_mac_bundle_get_resource_path (bundle, name, type, subdir);
   if (path)
     {
       GdkPixbuf *pixbuf;
@@ -389,7 +389,7 @@ ige_mac_dock_set_overlay_from_resource (IgeMacDock   *dock,
       pixbuf = gdk_pixbuf_new_from_file (path, NULL);
       if (pixbuf)
         {
-          ige_mac_dock_set_overlay_from_pixbuf (dock, pixbuf);
+          gtk_mac_dock_set_overlay_from_pixbuf (dock, pixbuf);
           g_object_unref (pixbuf);
         }
 
@@ -397,14 +397,14 @@ ige_mac_dock_set_overlay_from_resource (IgeMacDock   *dock,
     }
 }
 
-struct _IgeMacAttentionRequest {
+struct _GtkMacAttentionRequest {
   NMRec    nm_request;
   guint    timeout_id;
   gboolean is_cancelled;
 };
 
 static gboolean
-mac_dock_attention_cb (IgeMacAttentionRequest *request)
+mac_dock_attention_cb (GtkMacAttentionRequest *request)
 {
   request->timeout_id = 0;
   request->is_cancelled = TRUE;
@@ -418,13 +418,13 @@ mac_dock_attention_cb (IgeMacAttentionRequest *request)
 /* FIXME: Add listener for "application activated" and cancel any
  * requests.
  */
-IgeMacAttentionRequest *
-ige_mac_dock_attention_request (IgeMacDock          *dock,
-                                IgeMacAttentionType  type)
+GtkMacAttentionRequest *
+gtk_mac_dock_attention_request (GtkMacDock          *dock,
+                                GtkMacAttentionType  type)
 {
-  IgeMacAttentionRequest *request;
+  GtkMacAttentionRequest *request;
 
-  request = g_new0 (IgeMacAttentionRequest, 1);
+  request = g_new0 (GtkMacAttentionRequest, 1);
 
   request->nm_request.nmMark = 1;
   request->nm_request.qType = nmType;
@@ -435,7 +435,7 @@ ige_mac_dock_attention_request (IgeMacDock          *dock,
       return NULL;
     }
 
-  if (type == IGE_MAC_ATTENTION_INFO)
+  if (type == GTK_MAC_ATTENTION_INFO)
     request->timeout_id = gdk_threads_add_timeout (
             1000,
             (GSourceFunc) mac_dock_attention_cb,
@@ -445,8 +445,8 @@ ige_mac_dock_attention_request (IgeMacDock          *dock,
 }
 
 void
-ige_mac_dock_attention_cancel (IgeMacDock             *dock,
-                               IgeMacAttentionRequest *request)
+gtk_mac_dock_attention_cancel (GtkMacDock             *dock,
+                               GtkMacAttentionRequest *request)
 {
   if (request->timeout_id)
     g_source_remove (request->timeout_id);
@@ -458,7 +458,7 @@ ige_mac_dock_attention_cancel (IgeMacDock             *dock,
 }
 
 GType
-ige_mac_attention_type_get_type (void)
+gtk_mac_attention_type_get_type (void)
 {
   /* FIXME */
   return 0;

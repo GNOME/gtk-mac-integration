@@ -18,42 +18,42 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __IGE_MAC_BUNDLE_H__
-#define __IGE_MAC_BUNDLE_H__
+#ifndef __GTK_MAC_BUNDLE_H__
+#define __GTK_MAC_BUNDLE_H__
 
 #ifndef __x86_64__
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define IGE_TYPE_MAC_BUNDLE            (ige_mac_bundle_get_type ())
-#define IGE_MAC_BUNDLE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), IGE_TYPE_MAC_BUNDLE, IgeMacBundle))
-#define IGE_MAC_BUNDLE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), IGE_TYPE_MAC_BUNDLE, IgeMacBundleClass))
-#define IGE_IS_MAC_BUNDLE(obj)	       (G_TYPE_CHECK_INSTANCE_TYPE ((obj), IGE_TYPE_MAC_BUNDLE))
-#define IGE_IS_MAC_BUNDLE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), IGE_TYPE_MAC_BUNDLE))
-#define IGE_MAC_BUNDLE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), IGE_TYPE_MAC_BUNDLE, IgeMacBundleClass))
+#define GTK_TYPE_MAC_BUNDLE            (gtk_mac_bundle_get_type ())
+#define GTK_MAC_BUNDLE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_MAC_BUNDLE, GtkMacBundle))
+#define GTK_MAC_BUNDLE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GTK_TYPE_MAC_BUNDLE, GtkMacBundleClass))
+#define GTK_IS_MAC_BUNDLE(obj)	       (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_MAC_BUNDLE))
+#define GTK_IS_MAC_BUNDLE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_MAC_BUNDLE))
+#define GTK_MAC_BUNDLE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_MAC_BUNDLE, GtkMacBundleClass))
 
-typedef struct _IgeMacBundle      IgeMacBundle;
-typedef struct _IgeMacBundleClass IgeMacBundleClass;
+typedef struct _GtkMacBundle      GtkMacBundle;
+typedef struct _GtkMacBundleClass GtkMacBundleClass;
 
-struct _IgeMacBundle {
+struct _GtkMacBundle {
   GObject parent_instance;
 };
 
-struct _IgeMacBundleClass {
+struct _GtkMacBundleClass {
   GObjectClass parent_class;
 };
 
-GType         ige_mac_bundle_get_type          (void);
-IgeMacBundle *ige_mac_bundle_new               (void);
-IgeMacBundle *ige_mac_bundle_get_default       (void);
-void          ige_mac_bundle_setup_environment (IgeMacBundle *bundle);
-const gchar * ige_mac_bundle_get_id            (IgeMacBundle *bundle);
-const gchar * ige_mac_bundle_get_path          (IgeMacBundle *bundle);
-gboolean      ige_mac_bundle_get_is_app_bundle (IgeMacBundle *bundle);
-const gchar * ige_mac_bundle_get_localedir     (IgeMacBundle *bundle);
-const gchar * ige_mac_bundle_get_datadir       (IgeMacBundle *bundle);
-gchar *       ige_mac_bundle_get_resource_path (IgeMacBundle *bundle,
+GType         gtk_mac_bundle_get_type          (void);
+GtkMacBundle *gtk_mac_bundle_new               (void);
+GtkMacBundle *gtk_mac_bundle_get_default       (void);
+void          gtk_mac_bundle_setup_environment (GtkMacBundle *bundle);
+const gchar * gtk_mac_bundle_get_id            (GtkMacBundle *bundle);
+const gchar * gtk_mac_bundle_get_path          (GtkMacBundle *bundle);
+gboolean      gtk_mac_bundle_get_is_app_bundle (GtkMacBundle *bundle);
+const gchar * gtk_mac_bundle_get_localedir     (GtkMacBundle *bundle);
+const gchar * gtk_mac_bundle_get_datadir       (GtkMacBundle *bundle);
+gchar *       gtk_mac_bundle_get_resource_path (GtkMacBundle *bundle,
                                                 const gchar  *name,
                                                 const gchar  *type,
                                                 const gchar  *subdir);
@@ -61,4 +61,4 @@ gchar *       ige_mac_bundle_get_resource_path (IgeMacBundle *bundle,
 G_END_DECLS
 
 #endif /* __x86_64__*/
-#endif /* __IGE_MAC_BUNDLE_H__ */
+#endif /* __GTK_MAC_BUNDLE_H__ */

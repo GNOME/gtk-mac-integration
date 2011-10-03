@@ -21,10 +21,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __IGE_MAC_INTEGRATION_H__
-#define __IGE_MAC_INTEGRATION_H__
+#ifndef __GTK_MAC_INTEGRATION_H__
+#define __GTK_MAC_INTEGRATION_H__
 
-#include <ige-mac-menu.h>
-#include <ige-mac-dock.h>
+#include <gtk-mac-menu.h>
+#include <gtk-mac-dock.h>
 
-#endif /* __IGE_MAC_INTEGRATION_H__ */
+#endif /* __GTK_MAC_INTEGRATION_H__ */

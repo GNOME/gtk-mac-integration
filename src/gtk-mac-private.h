@@ -21,14 +21,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __IGE_MAC_PRIVATE_H__
-#define __IGE_MAC_PRIVATE_H__
+#ifndef __GTK_MAC_PRIVATE_H__
+#define __GTK_MAC_PRIVATE_H__
 
 G_BEGIN_DECLS
 
-gboolean _ige_mac_menu_is_quit_menu_item_handled (void);
-gboolean _ige_mac_dock_is_quit_menu_item_handled (void);
+gboolean _gtk_mac_menu_is_quit_menu_item_handled (void);
+gboolean _gtk_mac_dock_is_quit_menu_item_handled (void);
 
 G_END_DECLS
 
-#endif /* __IGE_MAC_PRIVATE_H__ */
+#endif /* __GTK_MAC_PRIVATE_H__ */

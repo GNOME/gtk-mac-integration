@@ -21,68 +21,68 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __IGE_MAC_DOCK_H__
-#define __IGE_MAC_DOCK_H__
+#ifndef __GTK_MAC_DOCK_H__
+#define __GTK_MAC_DOCK_H__
 #ifndef __x86_64__
 
 #include <gtk/gtk.h>
-#include <ige-mac-bundle.h>
+#include <gtk-mac-bundle.h>
 
 G_BEGIN_DECLS
 
-#define IGE_TYPE_MAC_DOCK            (ige_mac_dock_get_type ())
-#define IGE_MAC_DOCK(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), IGE_TYPE_MAC_DOCK, IgeMacDock))
-#define IGE_MAC_DOCK_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), IGE_TYPE_MAC_DOCK, IgeMacDockClass))
-#define IGE_IS_MAC_DOCK(obj)	     (G_TYPE_CHECK_INSTANCE_TYPE ((obj), IGE_TYPE_MAC_DOCK))
-#define IGE_IS_MAC_DOCK_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), IGE_TYPE_MAC_DOCK))
-#define IGE_MAC_DOCK_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), IGE_TYPE_MAC_DOCK, IgeMacDockClass))
+#define GTK_TYPE_MAC_DOCK            (gtk_mac_dock_get_type ())
+#define GTK_MAC_DOCK(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_MAC_DOCK, GtkMacDock))
+#define GTK_MAC_DOCK_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GTK_TYPE_MAC_DOCK, GtkMacDockClass))
+#define GTK_IS_MAC_DOCK(obj)	     (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_MAC_DOCK))
+#define GTK_IS_MAC_DOCK_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_MAC_DOCK))
+#define GTK_MAC_DOCK_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_MAC_DOCK, GtkMacDockClass))
 
-typedef struct _IgeMacDock      IgeMacDock;
-typedef struct _IgeMacDockClass IgeMacDockClass;
+typedef struct _GtkMacDock      GtkMacDock;
+typedef struct _GtkMacDockClass GtkMacDockClass;
 
-typedef struct _IgeMacAttentionRequest IgeMacAttentionRequest;
+typedef struct _GtkMacAttentionRequest GtkMacAttentionRequest;
 
-struct _IgeMacDock
+struct _GtkMacDock
 {
   GObject parent_instance;
 };
 
-struct _IgeMacDockClass
+struct _GtkMacDockClass
 {
   GObjectClass parent_class;
 };
 
 typedef enum {
-        IGE_MAC_ATTENTION_CRITICAL,
-        IGE_MAC_ATTENTION_INFO
-} IgeMacAttentionType;
+        GTK_MAC_ATTENTION_CRITICAL,
+        GTK_MAC_ATTENTION_INFO
+} GtkMacAttentionType;
 
-GType                   ige_mac_dock_get_type                  (void);
-IgeMacDock *            ige_mac_dock_new                       (void);
-IgeMacDock *            ige_mac_dock_get_default               (void);
-void                    ige_mac_dock_set_icon_from_pixbuf      (IgeMacDock             *dock,
+GType                   gtk_mac_dock_get_type                  (void);
+GtkMacDock *            gtk_mac_dock_new                       (void);
+GtkMacDock *            gtk_mac_dock_get_default               (void);
+void                    gtk_mac_dock_set_icon_from_pixbuf      (GtkMacDock             *dock,
                                                                 GdkPixbuf              *pixbuf);
-void                    ige_mac_dock_set_icon_from_resource    (IgeMacDock             *dock,
-                                                                IgeMacBundle           *bundle,
+void                    gtk_mac_dock_set_icon_from_resource    (GtkMacDock             *dock,
+                                                                GtkMacBundle           *bundle,
                                                                 const gchar            *name,
                                                                 const gchar            *type,
                                                                 const gchar            *subdir);
-void                    ige_mac_dock_set_overlay_from_pixbuf   (IgeMacDock             *dock,
+void                    gtk_mac_dock_set_overlay_from_pixbuf   (GtkMacDock             *dock,
                                                                 GdkPixbuf              *pixbuf);
-void                    ige_mac_dock_set_overlay_from_resource (IgeMacDock             *dock,
-                                                                IgeMacBundle           *bundle,
+void                    gtk_mac_dock_set_overlay_from_resource (GtkMacDock             *dock,
+                                                                GtkMacBundle           *bundle,
                                                                 const gchar            *name,
                                                                 const gchar            *type,
                                                                 const gchar            *subdir);
-IgeMacAttentionRequest *ige_mac_dock_attention_request         (IgeMacDock             *dock,
-                                                                IgeMacAttentionType     type);
-void                    ige_mac_dock_attention_cancel          (IgeMacDock             *dock,
-                                                                IgeMacAttentionRequest *request);
+GtkMacAttentionRequest *gtk_mac_dock_attention_request         (GtkMacDock             *dock,
+                                                                GtkMacAttentionType     type);
+void                    gtk_mac_dock_attention_cancel          (GtkMacDock             *dock,
+                                                                GtkMacAttentionRequest *request);
 
-#define IGE_TYPE_MAC_ATTENTION_TYPE (ige_mac_attention_type_get_type())
-GType                   ige_mac_attention_type_get_type        (void);
+#define GTK_TYPE_MAC_ATTENTION_TYPE (gtk_mac_attention_type_get_type())
+GType                   gtk_mac_attention_type_get_type        (void);
 
 G_END_DECLS
 
 #endif /* __x86_64__ */
-#endif /* __IGE_MAC_DOCK_H__ */
+#endif /* __GTK_MAC_DOCK_H__ */

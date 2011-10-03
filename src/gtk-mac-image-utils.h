@@ -17,16 +17,16 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __IGE_MAC_IMAGE_UTILS_H__
-#define __IGE_MAC_IMAGE_UTILS_H__
+#ifndef __GTK_MAC_IMAGE_UTILS_H__
+#define __GTK_MAC_IMAGE_UTILS_H__
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <Carbon/Carbon.h>
 
 G_BEGIN_DECLS
 
-CGImageRef ige_mac_image_from_pixbuf (GdkPixbuf *pixbuf);
+CGImageRef gtk_mac_image_from_pixbuf (GdkPixbuf *pixbuf);
 
 G_END_DECLS
 
-#endif /* __IGE_MAC_IMAGE_UTILS_H__ */
+#endif /* __GTK_MAC_IMAGE_UTILS_H__ */

@@ -23,10 +23,10 @@
 #include <gtk/gtk.h>
 #include <Carbon/Carbon.h>
 
-#include "ige-mac-image-utils.h"
+#include "gtk-mac-image-utils.h"
 
 CGImageRef
-ige_mac_image_from_pixbuf (GdkPixbuf *pixbuf)
+gtk_mac_image_from_pixbuf (GdkPixbuf *pixbuf)
 {
   CGColorSpaceRef   colorspace;
   CGDataProviderRef data_provider;
@@ -35,7 +35,7 @@ ige_mac_image_from_pixbuf (GdkPixbuf *pixbuf)
   gint              rowstride;
   gint              pixbuf_width, pixbuf_height;
   gboolean          has_alpha;
- 
+
   pixbuf_width = gdk_pixbuf_get_width (pixbuf);
   pixbuf_height = gdk_pixbuf_get_height (pixbuf);
   rowstride = gdk_pixbuf_get_rowstride (pixbuf);
@@ -44,15 +44,15 @@ ige_mac_image_from_pixbuf (GdkPixbuf *pixbuf)
   data = gdk_pixbuf_get_pixels (pixbuf);
 
   colorspace = CGColorSpaceCreateDeviceRGB ();
-  data_provider = CGDataProviderCreateWithData (NULL, data, 
-                                                pixbuf_height * rowstride, 
+  data_provider = CGDataProviderCreateWithData (NULL, data,
+                                                pixbuf_height * rowstride,
                                                 NULL);
 
   image = CGImageCreate (pixbuf_width, pixbuf_height, 8,
-                         has_alpha ? 32 : 24, rowstride, 
-                         colorspace, 
+                         has_alpha ? 32 : 24, rowstride,
+                         colorspace,
                          has_alpha ? kCGImageAlphaLast : 0,
-                         data_provider, NULL, FALSE, 
+                         data_provider, NULL, FALSE,
                          kCGRenderingIntentDefault);
 
   CGDataProviderRelease (data_provider);

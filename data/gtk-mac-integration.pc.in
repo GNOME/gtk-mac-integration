@@ -3,9 +3,9 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: ige-mac-integration
+Name: gtk-mac-integration
 Description: Mac menu bar and dock integration for GTK+
 Requires: @GTK_MAJOR@
 Version: @VERSION@
-Libs: -L${libdir} -ligemacintegration
-Cflags: -I${includedir}/igemacintegration -DMAC_INTEGRATION
+Libs: -L${libdir} -lgtkmacintegration
+Cflags: -I${includedir}/gtkmacintegration -DMAC_INTEGRATION

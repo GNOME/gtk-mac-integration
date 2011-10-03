@@ -1,31 +1,31 @@
 INCLUDES = -I$(top_srcdir)/src $(PYTHON_INCLUDES)
 
-igemacintegrationdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/igemacintegration
+gtkmacintegrationdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/gtkmacintegration
 
-igemacintegration_PYTHON = __init__.py
-igemacintegration_LTLIBRARIES = _igemacintegration.la
+gtkmacintegration_PYTHON = __init__.py
+gtkmacintegration_LTLIBRARIES = _gtkmacintegration.la
 
 headers =						\
-	$(top_srcdir)/src/ige-mac-menu.h		\
-	$(top_srcdir)/src/ige-mac-dock.h		\
-	$(top_srcdir)/src/ige-mac-bundle.h
+	$(top_srcdir)/src/gtk-mac-menu.h		\
+	$(top_srcdir)/src/gtk-mac-dock.h		\
+	$(top_srcdir)/src/gtk-mac-bundle.h
 
-igemacintegration.defs: $(headers)
+gtkmacintegration.defs: $(headers)
 	$(PYTHON) $(datadir)/pygobject/2.0/codegen/h2def.py $(headers) > $@
 
-igemacintegration.c: igemacintegration.defs igemacintegration.override
+gtkmacintegration.c: gtkmacintegration.defs gtkmacintegration.override
 
-_igemacintegration_la_CFLAGS =				\
+_gtkmacintegration_la_CFLAGS =				\
 	$(MAC_CFLAGS)					\
 	$(PYGTK_CFLAGS)
-_igemacintegration_la_LDFLAGS = -module -avoid-version -export-symbols-regex init_igemacintegration
-_igemacintegration_la_LIBADD =				\
+_gtkmacintegration_la_LDFLAGS = -module -avoid-version -export-symbols-regex init_gtkmacintegration
+_gtkmacintegration_la_LIBADD =				\
 	$(MAC_LIBS)					\
 	$(PYGTK_LIBS)					\
-	$(top_builddir)/src/libigemacintegration.la
-_igemacintegration_la_SOURCES =				\
-	igemacintegration.c				\
-	igemacintegration-module.c
+	$(top_builddir)/src/libgtkmacintegration.la
+_gtkmacintegration_la_SOURCES =				\
+	gtkmacintegration.c				\
+	gtkmacintegration-module.c
 
 .defs.c: 
 	($(PYGOBJECT_CODEGEN)				\
@@ -37,9 +37,9 @@ _igemacintegration_la_SOURCES =				\
 	&& rm -f gen-$*.c
 
 CLEANFILES =						\
-	igemacintegration.defs				\
-	igemacintegration.c
+	gtkmacintegration.defs				\
+	gtkmacintegration.c
 
 EXTRA_DIST =						\
-	igemacintegration.defs				\
-	igemacintegration.override
+	gtkmacintegration.defs				\
+	gtkmacintegration.override

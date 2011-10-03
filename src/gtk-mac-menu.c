@@ -32,8 +32,8 @@
 #include <Carbon/Carbon.h>
 #import <Cocoa/Cocoa.h>
 
-#include "ige-mac-menu.h"
-#include "ige-mac-private.h"
+#include "gtk-mac-menu.h"
+#include "gtk-mac-private.h"
 
 /* TODO
  *
@@ -45,10 +45,10 @@
  * - Deleting a menu item that is not the last one in a menu doesn't work
  */
 
-#define IGE_QUARTZ_MENU_CREATOR 'IGEC'
-#define IGE_QUARTZ_ITEM_WIDGET  'IWID'
+#define GTK_QUARTZ_MENU_CREATOR 'GTKC'
+#define GTK_QUARTZ_ITEM_WIDGET  'IWID'
 
-#define IGE_MAC_KEY_HANDLER     "ige-mac-key-handler"
+#define GTK_MAC_KEY_HANDLER     "gtk-mac-key-handler"
 
 #define DEBUG FALSE
 #define DEBUG_SET FALSE
@@ -320,8 +320,8 @@ carbon_menu_item_get_checked (GtkWidget *widget) {
 
     /* Get any GtkWidget associated with the item. */
     err = GetMenuItemProperty (carbon_item->menu, carbon_item->index,
-			       IGE_QUARTZ_MENU_CREATOR,
-			       IGE_QUARTZ_ITEM_WIDGET,
+			       GTK_QUARTZ_MENU_CREATOR,
+			       GTK_QUARTZ_ITEM_WIDGET,
 			       sizeof (checkWidget), 0, &checkWidget);
     if (err) {
 	if (DEBUG_CARBON)
@@ -624,8 +624,8 @@ carbon_menu_item_create (GtkWidget *menu_item, MenuRef carbon_menu,
     carbon_menu_err_return_label_val(err, label_text, 
 				     "Failed to insert menu item", NULL);
     err = SetMenuItemProperty (carbon_menu, index,
-			       IGE_QUARTZ_MENU_CREATOR,
-			       IGE_QUARTZ_ITEM_WIDGET,
+			       GTK_QUARTZ_MENU_CREATOR,
+			       GTK_QUARTZ_ITEM_WIDGET,
 			       sizeof (menu_item), &menu_item);
 
     if (cfstr)
@@ -705,8 +705,8 @@ menu_event_handler_func (EventHandlerCallRef  event_handler_call_ref,
 	/* Get any GtkWidget associated with the item. */
 	err = GetMenuItemProperty (command.menu.menuRef,
 				   command.menu.menuItemIndex,
-				   IGE_QUARTZ_MENU_CREATOR,
-				   IGE_QUARTZ_ITEM_WIDGET,
+				   GTK_QUARTZ_MENU_CREATOR,
+				   GTK_QUARTZ_ITEM_WIDGET,
 				   sizeof (widget), 0, &widget);
 	if (err != noErr) {
 	    carbon_menu_warn(err, "Failed to retrieve the widget associated with the menu item");
@@ -775,7 +775,7 @@ nsevent_handle_menu_key (NSEvent *nsevent) {
 }
 
 gboolean
-ige_mac_menu_handle_menu_event (GdkEventKey *event) {
+gtk_mac_menu_handle_menu_event (GdkEventKey *event) {
     NSEvent *nsevent;
 
     /* FIXME: If the event here is unallocated, we crash. */
@@ -814,7 +814,7 @@ global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
 	 * modal dialog...
 	 */
 	if (!focus 
-	    || !g_object_get_data (G_OBJECT (focus), IGE_MAC_KEY_HANDLER)) {
+	    || !g_object_get_data (G_OBJECT (focus), GTK_MAC_KEY_HANDLER)) {
 	    if (nsevent_handle_menu_key (nsevent))
 		return GDK_FILTER_REMOVE;
         }
@@ -833,7 +833,7 @@ key_press_event (GtkWidget   *widget, GdkEventKey *event, gpointer user_data) {
 	handled = gtk_window_propagate_key_event (window, event);
 
     if (!handled)
-	handled = ige_mac_menu_handle_menu_event (event);
+	handled = gtk_mac_menu_handle_menu_event (event);
 
     /* Invoke control/alt accelerators. */
     if (!handled && event->state & (GDK_CONTROL_MASK | GDK_MOD1_MASK))
@@ -1049,7 +1049,7 @@ window_focus(GtkWindow *window, GdkEventFocus *event, CarbonMenu *menu) {
  */
 
 void
-ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell) {
+gtk_mac_menu_set_menu_bar (GtkMenuShell *menu_shell) {
     CarbonMenu *current_menu;
     MenuRef     carbon_menubar;
     OSStatus    err;
@@ -1093,7 +1093,7 @@ ige_mac_menu_set_menu_bar (GtkMenuShell *menu_shell) {
 }
 
 void
-ige_mac_menu_set_quit_menu_item (GtkMenuItem *menu_item) {
+gtk_mac_menu_set_quit_menu_item (GtkMenuItem *menu_item) {
     MenuRef       appmenu;
     MenuItemIndex index;
     OSStatus err;
@@ -1106,8 +1106,8 @@ ige_mac_menu_set_quit_menu_item (GtkMenuItem *menu_item) {
     err = SetMenuItemCommandID (appmenu, index, 0);
     carbon_menu_err_return(err, 
 			   "Failed to set Quit menu command id");
-    err = SetMenuItemProperty (appmenu, index, IGE_QUARTZ_MENU_CREATOR,
-			       IGE_QUARTZ_ITEM_WIDGET, sizeof (menu_item), 
+    err = SetMenuItemProperty (appmenu, index, GTK_QUARTZ_MENU_CREATOR,
+			       GTK_QUARTZ_ITEM_WIDGET, sizeof (menu_item), 
 			       &menu_item);
     carbon_menu_err_return(err, 
 			   "Failed to associate Quit menu item");
@@ -1116,15 +1116,15 @@ ige_mac_menu_set_quit_menu_item (GtkMenuItem *menu_item) {
 }
 
 void
-ige_mac_menu_connect_window_key_handler (GtkWindow *window) {
-    if (g_object_get_data (G_OBJECT (window), IGE_MAC_KEY_HANDLER)) {
+gtk_mac_menu_connect_window_key_handler (GtkWindow *window) {
+    if (g_object_get_data (G_OBJECT (window), GTK_MAC_KEY_HANDLER)) {
 	g_warning ("Window %p is already connected", window);
 	return;
     }
 
     g_signal_connect (window, "key-press-event", 
 		      G_CALLBACK (key_press_event), NULL);
-    g_object_set_data (G_OBJECT (window), IGE_MAC_KEY_HANDLER, 
+    g_object_set_data (G_OBJECT (window), GTK_MAC_KEY_HANDLER, 
 		       GINT_TO_POINTER (1));
 }
 
@@ -1133,7 +1133,7 @@ ige_mac_menu_connect_window_key_handler (GtkWindow *window) {
  * global handling can be disabled.
  */
 void
-ige_mac_menu_set_global_key_handler_enabled (gboolean enabled) {
+gtk_mac_menu_set_global_key_handler_enabled (gboolean enabled) {
     global_key_handler_enabled = enabled;
 }
 
@@ -1141,7 +1141,7 @@ ige_mac_menu_set_global_key_handler_enabled (gboolean enabled) {
  * the Quit menu item.
  */
 gboolean
-_ige_mac_menu_is_quit_menu_item_handled (void) {
+_gtk_mac_menu_is_quit_menu_item_handled (void) {
     MenuRef       appmenu;
     MenuItemIndex index;
     OSStatus err = GetIndMenuItemWithCommandID (NULL, kHICommandQuit, 1,
@@ -1159,18 +1159,18 @@ _ige_mac_menu_is_quit_menu_item_handled (void) {
  * (and others, if they want) from their Gtk locations to the app
  * menu.
  */
-struct _IgeMacMenuGroup {
+struct _GtkMacMenuGroup {
     GList *items;
 };
-/* app_menu_groups is a list of IgeMacMenuGroups, itself a list of
+/* app_menu_groups is a list of GtkMacMenuGroups, itself a list of
  * menu_items. They're provided to insert separators into the app
  * menu, grouping the items. 
 */
 static GList *app_menu_groups = NULL;
 
-IgeMacMenuGroup *
-ige_mac_menu_add_app_menu_group (void) {
-    IgeMacMenuGroup *group = g_slice_new0 (IgeMacMenuGroup);
+GtkMacMenuGroup *
+gtk_mac_menu_add_app_menu_group (void) {
+    GtkMacMenuGroup *group = g_slice_new0 (GtkMacMenuGroup);
 
     app_menu_groups = g_list_append (app_menu_groups, group);
     return group;
@@ -1184,7 +1184,7 @@ ige_mac_menu_add_app_menu_group (void) {
  * function.
  */
 void
-ige_mac_menu_add_app_menu_item (IgeMacMenuGroup *group, GtkMenuItem *menu_item,
+gtk_mac_menu_add_app_menu_item (GtkMacMenuGroup *group, GtkMenuItem *menu_item,
 				const gchar *label) {
     MenuRef  appmenu;
     GList   *list;
@@ -1199,7 +1199,7 @@ ige_mac_menu_add_app_menu_item (IgeMacMenuGroup *group, GtkMenuItem *menu_item,
 				       &appmenu, NULL);
     carbon_menu_err_return(err, "retrieving app menu failed");
     for (list = app_menu_groups; list; list = g_list_next (list)) {
-	IgeMacMenuGroup *list_group = list->data;
+	GtkMacMenuGroup *list_group = list->data;
 
 	index += g_list_length (list_group->items);
 	/*  adjust index for the separator between groups, but not
@@ -1227,8 +1227,8 @@ ige_mac_menu_add_app_menu_item (IgeMacMenuGroup *group, GtkMenuItem *menu_item,
 	err = InsertMenuItemTextWithCFString (appmenu, cfstr, index, 0, 0);
 	carbon_menu_err_return(err, "Failed to add menu item");
 	err = SetMenuItemProperty (appmenu, index + 1,
-				   IGE_QUARTZ_MENU_CREATOR,
-				   IGE_QUARTZ_ITEM_WIDGET,
+				   GTK_QUARTZ_MENU_CREATOR,
+				   GTK_QUARTZ_ITEM_WIDGET,
 				   sizeof (menu_item), &menu_item);
 	CFRelease (cfstr);
 	carbon_menu_err_return(err, "Failed to associate Gtk Widget");
@@ -1243,11 +1243,11 @@ ige_mac_menu_add_app_menu_item (IgeMacMenuGroup *group, GtkMenuItem *menu_item,
 	g_warning ("%s: app menu group %p does not exist", G_STRFUNC, group);
 }
 /** Syncronize changes in the GtkMenuBar to an already-created Mac
- * MenuBar. You must have already run ige_mac_menu_set_menu_bar on the
+ * MenuBar. You must have already run gtk_mac_menu_set_menu_bar on the
  * GtkMenuBar to be synced.
  */
 void
-ige_mac_menu_sync(GtkMenuShell *menu_shell) {
+gtk_mac_menu_sync(GtkMenuShell *menu_shell) {
     CarbonMenu *carbon_menu = carbon_menu_get (GTK_WIDGET(menu_shell));
     g_return_if_fail(carbon_menu != NULL);
 #if DEBUG_SYNC

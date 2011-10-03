@@ -26,11 +26,11 @@
 #include <gtk/gtk.h>
 #include <Carbon/Carbon.h>
 
-#include "ige-mac-bundle.h"
+#include "gtk-mac-bundle.h"
 
-typedef struct IgeMacBundlePriv IgeMacBundlePriv;
+typedef struct GtkMacBundlePriv GtkMacBundlePriv;
 
-struct IgeMacBundlePriv {
+struct GtkMacBundlePriv {
   CFBundleRef  cf_bundle; 
   gchar       *path;
   gchar       *id;
@@ -42,30 +42,30 @@ struct IgeMacBundlePriv {
 
 static void   mac_bundle_finalize              (GObject      *object);
 static gchar *cf_string_to_utf8                (CFStringRef   str);
-static void   mac_bundle_set_environment_value (IgeMacBundle *bundle,
+static void   mac_bundle_set_environment_value (GtkMacBundle *bundle,
                                                 const gchar  *key,
                                                 const gchar  *value);
 
-static IgeMacBundle *global_bundle;
+static GtkMacBundle *global_bundle;
 
-G_DEFINE_TYPE (IgeMacBundle, ige_mac_bundle, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GtkMacBundle, gtk_mac_bundle, G_TYPE_OBJECT)
 
-#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), IGE_TYPE_MAC_BUNDLE, IgeMacBundlePriv))
+#define GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_MAC_BUNDLE, GtkMacBundlePriv))
 
 static void
-ige_mac_bundle_class_init (IgeMacBundleClass *class)
+gtk_mac_bundle_class_init (GtkMacBundleClass *class)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (class);
 
   object_class->finalize = mac_bundle_finalize;
 
-  g_type_class_add_private (object_class, sizeof (IgeMacBundlePriv));
+  g_type_class_add_private (object_class, sizeof (GtkMacBundlePriv));
 }
 
 static void
-ige_mac_bundle_init (IgeMacBundle *bundle)
+gtk_mac_bundle_init (GtkMacBundle *bundle)
 {
-  IgeMacBundlePriv *priv = GET_PRIV (bundle);
+  GtkMacBundlePriv *priv = GET_PRIV (bundle);
   CFURLRef          cf_url;
   CFStringRef       cf_string;
   CFDictionaryRef   cf_dict;
@@ -133,7 +133,7 @@ ige_mac_bundle_init (IgeMacBundle *bundle)
 static void
 mac_bundle_finalize (GObject *object)
 {
-  IgeMacBundlePriv *priv;
+  GtkMacBundlePriv *priv;
 
   priv = GET_PRIV (object);
 
@@ -144,20 +144,20 @@ mac_bundle_finalize (GObject *object)
 
   CFRelease (priv->cf_bundle);
 
-  G_OBJECT_CLASS (ige_mac_bundle_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gtk_mac_bundle_parent_class)->finalize (object);
 }
 
-IgeMacBundle *
-ige_mac_bundle_new (void)
+GtkMacBundle *
+gtk_mac_bundle_new (void)
 {
-  return g_object_new (IGE_TYPE_MAC_BUNDLE, NULL);
+  return g_object_new (GTK_TYPE_MAC_BUNDLE, NULL);
 }
 
-IgeMacBundle *
-ige_mac_bundle_get_default (void)
+GtkMacBundle *
+gtk_mac_bundle_get_default (void)
 {
   if (!global_bundle)
-    global_bundle = ige_mac_bundle_new ();
+    global_bundle = gtk_mac_bundle_new ();
 
   return global_bundle;
 }
@@ -182,11 +182,11 @@ cf_string_to_utf8 (CFStringRef str)
 }
 
 static void
-mac_bundle_set_environment_value (IgeMacBundle *bundle,
+mac_bundle_set_environment_value (GtkMacBundle *bundle,
                                   const gchar  *key, 
                                   const gchar  *value)
 {
-  IgeMacBundlePriv *priv = GET_PRIV (bundle);
+  GtkMacBundlePriv *priv = GET_PRIV (bundle);
   GRegex           *regex;
   gchar            *new_value;
 
@@ -212,35 +212,35 @@ mac_bundle_set_environment_value (IgeMacBundle *bundle,
 }
 
 const gchar *
-ige_mac_bundle_get_id (IgeMacBundle *bundle)
+gtk_mac_bundle_get_id (GtkMacBundle *bundle)
 {
-  IgeMacBundlePriv *priv = GET_PRIV (bundle);
+  GtkMacBundlePriv *priv = GET_PRIV (bundle);
 
   return priv->id;
 }
 
 const gchar *
-ige_mac_bundle_get_path (IgeMacBundle *bundle)
+gtk_mac_bundle_get_path (GtkMacBundle *bundle)
 {
-  IgeMacBundlePriv *priv = GET_PRIV (bundle);
+  GtkMacBundlePriv *priv = GET_PRIV (bundle);
 
   return priv->path;
 }
 
 gboolean
-ige_mac_bundle_get_is_app_bundle (IgeMacBundle *bundle)
+gtk_mac_bundle_get_is_app_bundle (GtkMacBundle *bundle)
 {
-  IgeMacBundlePriv *priv = GET_PRIV (bundle);
+  GtkMacBundlePriv *priv = GET_PRIV (bundle);
 
   return (priv->type == 'APPL' && priv->id);
 }
 
 const gchar *
-ige_mac_bundle_get_datadir (IgeMacBundle *bundle)
+gtk_mac_bundle_get_datadir (GtkMacBundle *bundle)
 {
-  IgeMacBundlePriv *priv = GET_PRIV (bundle);
+  GtkMacBundlePriv *priv = GET_PRIV (bundle);
 
-  if (!ige_mac_bundle_get_is_app_bundle (bundle))
+  if (!gtk_mac_bundle_get_is_app_bundle (bundle))
     return NULL;
 
   if (!priv->datadir)
@@ -256,11 +256,11 @@ ige_mac_bundle_get_datadir (IgeMacBundle *bundle)
 }
 
 const gchar *
-ige_mac_bundle_get_localedir (IgeMacBundle *bundle)
+gtk_mac_bundle_get_localedir (GtkMacBundle *bundle)
 {
-  IgeMacBundlePriv *priv = GET_PRIV (bundle);
+  GtkMacBundlePriv *priv = GET_PRIV (bundle);
 
-  if (!ige_mac_bundle_get_is_app_bundle (bundle))
+  if (!gtk_mac_bundle_get_is_app_bundle (bundle))
     return NULL;
 
   if (!priv->localedir)
@@ -277,16 +277,16 @@ ige_mac_bundle_get_localedir (IgeMacBundle *bundle)
 }
 
 void
-ige_mac_bundle_setup_environment (IgeMacBundle *bundle)
+gtk_mac_bundle_setup_environment (GtkMacBundle *bundle)
 {
-  IgeMacBundlePriv *priv = GET_PRIV (bundle);
+  GtkMacBundlePriv *priv = GET_PRIV (bundle);
   gchar            *resources;
   gchar            *share, *lib, *etc;
   gchar            *etc_xdg, *etc_immodules, *etc_gtkrc;
   gchar            *etc_pixbuf, *etc_pangorc;
   const gchar      *rc_files;
 
-  if (!ige_mac_bundle_get_is_app_bundle (bundle))
+  if (!gtk_mac_bundle_get_is_app_bundle (bundle))
     return;
 
   resources = g_build_filename (priv->path,
@@ -346,18 +346,18 @@ ige_mac_bundle_setup_environment (IgeMacBundle *bundle)
 }
 
 gchar *
-ige_mac_bundle_get_resource_path (IgeMacBundle *bundle,
+gtk_mac_bundle_get_resource_path (GtkMacBundle *bundle,
                                   const gchar  *name,
                                   const gchar  *type,
                                   const gchar  *subdir)
 {
-  IgeMacBundlePriv *priv;
+  GtkMacBundlePriv *priv;
   CFURLRef          cf_url;
   CFStringRef       cf_string;
   gchar            *path;
 
   if (!bundle)
-    bundle = ige_mac_bundle_get_default ();
+    bundle = gtk_mac_bundle_get_default ();
 
   priv = GET_PRIV (bundle);
 

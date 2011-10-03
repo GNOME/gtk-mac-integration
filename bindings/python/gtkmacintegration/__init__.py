@@ -19,30 +19,30 @@
 
 import sys
 
-if 'igemacintegration._igemacintegration' in sys.modules:
-    _igemacintegration = sys.modules['igemacintegration._igemacintegration']
+if 'gtkmacintegration._gtkmacintegration' in sys.modules:
+    _gtkmacintegration = sys.modules['gtkmacintegration._gtkmacintegration']
 else:
-    from igemacintegration import _igemacintegration
+    from gtkmacintegration import _gtkmacintegration
 
-from igemacintegration._igemacintegration import *
+from gtkmacintegration._gtkmacintegration import *
 
 # Wrapper class for the menu
 class MacMenu:
     def set_menu_bar(self, menubar):
-        ige_mac_menu_set_menu_bar(menubar)
+        gtk_mac_menu_set_menu_bar(menubar)
 
     def set_quit_menu_item(self, item):
-        ige_mac_menu_set_quit_menu_item(item)
+        gtk_mac_menu_set_quit_menu_item(item)
 
     def add_app_menu_group(self):
-        return MacMenuAppGroup(ige_mac_menu_add_app_menu_group())
+        return MacMenuAppGroup(gtk_mac_menu_add_app_menu_group())
 
     def sync(self, menubar):
-        return ige_mac_menu_sync(menubar)
+        return gtk_mac_menu_sync(menubar)
 
 class MacMenuAppGroup:
     def __init__(self, group):
         self._group = group
 
     def add_app_menu_item(self, item, label=None):
-        ige_mac_menu_add_app_menu_item(self._group, item, label)
+        gtk_mac_menu_add_app_menu_item(self._group, item, label)

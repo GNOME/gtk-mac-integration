@@ -3,11 +3,11 @@
 headers
 #include <Python.h>
 #include <pygtk/pygtk.h>
-#include <ige-mac-menu.h>
-#include <ige-mac-dock.h>
-#include <ige-mac-bundle.h>
+#include <gtk-mac-menu.h>
+#include <gtk-mac-dock.h>
+#include <gtk-mac-bundle.h>
 %%
-modulename igemacintegration
+modulename gtkmacintegration
 %%
 import gobject.GObject as PyGObject_Type
 import gtk.gdk.Pixbuf as PyGdkPixbuf_Type
@@ -18,33 +18,33 @@ import gtk.Window as PyGtkWindow_Type
 ignore-glob
   *_get_type
 %%
-override ige_mac_menu_add_app_menu_group noargs
+override gtk_mac_menu_add_app_menu_group noargs
 static PyObject*
-_wrap_ige_mac_menu_add_app_menu_group (PyGObject *self)
+_wrap_gtk_mac_menu_add_app_menu_group (PyGObject *self)
 {
-    IgeMacMenuGroup *group;
+    GtkMacMenuGroup *group;
     PyObject *ret;
 
-    group = ige_mac_menu_add_app_menu_group ();
+    group = gtk_mac_menu_add_app_menu_group ();
 
     ret = PyCObject_FromVoidPtr ((void *) group, NULL);
 
     return ret;
 }
 %%
-override ige_mac_menu_add_app_menu_item kwargs
+override gtk_mac_menu_add_app_menu_item kwargs
 static PyObject*
-_wrap_ige_mac_menu_add_app_menu_item (PyGObject *self, PyObject *args, PyObject *kwargs)
+_wrap_gtk_mac_menu_add_app_menu_item (PyGObject *self, PyObject *args, PyObject *kwargs)
 {
     static char *kwlist[] = { "group", "item", "label", NULL };
     PyObject *pygroup;
     PyObject *pyitem;
     char *label = NULL;
-    IgeMacMenuGroup *group;
+    GtkMacMenuGroup *group;
     GtkMenuItem *item;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs, "OO!z:add_app_menu_item", kwlist,
-                                     &pygroup, 
+                                     &pygroup,
                                      &PyGtkMenuItem_Type, &pyitem,
                                      &label))
         return NULL;
@@ -52,7 +52,7 @@ _wrap_ige_mac_menu_add_app_menu_item (PyGObject *self, PyObject *args, PyObject 
     group = PyCObject_AsVoidPtr (pygroup);
     item = GTK_MENU_ITEM (pygobject_get (pyitem));
 
-    ige_mac_menu_add_app_menu_item (group, item, label);
+    gtk_mac_menu_add_app_menu_item (group, item, label);
 
     Py_INCREF (Py_None);
     return Py_None;
