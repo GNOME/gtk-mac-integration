@@ -9,5 +9,5 @@
 ; (gtk_accel_path "<Actions>/TestActions/QuitAction" "<Control>q")
 ; (gtk_accel_path "<Actions>/TestActions/HelpMenuAction" "")
 ; (gtk_accel_path "<Actions>/TestActions/EditMenuAction" "")
-; (gtk_accel_path "<Actions>/TestActions/PrefsAction" "")
+ (gtk_accel_path "<Actions>/TestActions/PrefsAction" "<control><alt>p")
 ; (gtk_accel_path "<Actions>/TestActions/FileMenuAction" "")

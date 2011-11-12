@@ -275,7 +275,7 @@ cocoa_menu_item_update_accelerator (GNSMenuItem *cocoa_item,
 	      }
 
 	      /* gdk/quartz maps Alt/Option to Mod5 */
-	      if (key->accel_mods & (GDK_MOD5_MASK)) {
+	      if (key->accel_mods & (GDK_MOD1_MASK)) {
 		modifiers |= NSAlternateKeyMask;
 	      }
 
