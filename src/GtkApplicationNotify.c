@@ -49,9 +49,9 @@
 
 - (void)appDidBecomeActive:(NSNotification *)notification
 {
-  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
+  GtkosxApplication *app = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
   guint sig = g_signal_lookup("NSApplicationDidBecomeActive", 
-			      GTK_TYPE_OSX_APPLICATION);
+			      GTKOSX_TYPE_APPLICATION);
   if (sig)
       g_signal_emit(app, sig, 0);
   g_object_unref(app);
@@ -59,9 +59,9 @@
 
 - (void)appDidBecomeInactive:(NSNotification *)notification
 {
-  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
+  GtkosxApplication *app = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
   guint sig = g_signal_lookup("NSApplicationWillResignActive", 
-			      GTK_TYPE_OSX_APPLICATION);
+			      GTKOSX_TYPE_APPLICATION);
   if (sig)
       g_signal_emit(app, sig, 0);
   g_object_unref(app);
@@ -69,13 +69,13 @@
 
 - (void)appWillTerminate:(NSNotification *)notification
 {
-  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
+  GtkosxApplication *app = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
   [[NSNotificationCenter defaultCenter] removeObserver: self];
   guint sig = g_signal_lookup("NSApplicationWillTerminate", 
-			      GTK_TYPE_OSX_APPLICATION);
+			      GTKOSX_TYPE_APPLICATION);
   if (sig)
       g_signal_emit(app, sig, 0);
-  gtk_osxapplication_cleanup(app);
+  gtkosx_application_cleanup(app);
   g_object_unref(app);
 
 }

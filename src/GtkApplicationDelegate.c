@@ -28,9 +28,9 @@
 -(BOOL) application:(NSApplication*) theApplication openFile:(NSString*) file
 {
   const gchar *utf8_path =  [file UTF8String];
-  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
+  GtkosxApplication *app = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
   guint sig = g_signal_lookup("NSApplicationOpenFile", 
-			      GTK_TYPE_OSX_APPLICATION);
+			      GTKOSX_TYPE_APPLICATION);
   gboolean result = FALSE;
   if (sig)
       g_signal_emit(app, sig, 0, utf8_path, &result);
@@ -41,9 +41,9 @@
 
 - (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *)sender
 {
-  GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
+  GtkosxApplication *app = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
   guint sig = g_signal_lookup("NSApplicationBlockTermination", 
-			      GTK_TYPE_OSX_APPLICATION);
+			      GTKOSX_TYPE_APPLICATION);
   gboolean result = FALSE;
   static gboolean inHandler = FALSE;
   if (inHandler) return NSTerminateCancel;
@@ -60,12 +60,12 @@
     return NSTerminateCancel;
 }
 
-extern NSMenu* _gtk_osxapplication_dock_menu(GtkOSXApplication* app);
+extern NSMenu* _gtkosx_application_dock_menu(GtkosxApplication* app);
 
 -(NSMenu *)applicationDockMenu: (NSApplication*) sender
 {
-    GtkOSXApplication *app = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
-    return _gtk_osxapplication_dock_menu(app);
+    GtkosxApplication *app = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
+    return _gtkosx_application_dock_menu(app);
 }
 
 @end

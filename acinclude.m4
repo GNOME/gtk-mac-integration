@@ -87,17 +87,22 @@ AC_DEFUN([GTK_PYTHON_CHECK],
      ],
      [ test x$GTK_MAJOR = "xgtk+-3.0" -o x$enable_python = "xall"],
 dnl Check that pygobject and gtk-3.0.gir are present
-     [ PKG_CHECK_MODULES(PYGOBJECT, pygobject-2.0 >= 2.28.0,,have_pygobject=no)
-        AC_MSG_CHECKING([PyGObject 3.0])
-    	if test "x$have_pygobject" = xno; then
-      	   AC_MSG_RESULT([PyGObject 3.0.0 or newer])
-    	fi
+     [ PKG_CHECK_MODULES(PYGOBJECT_2, pygobject-2.0 >= 2.28.0,[
 	AC_MSG_CHECKING([PyGObject-Codegen-2.0])
     	AC_PATH_PROG([PYGOBJECT_CODEGEN], [pygobject-codegen-2.0], [no])
     	if test "x$PYGOBJECT_CODEGEN" = xno; then
       	   have_python=no
       	   AC_MSG_RESULT([pygobject-codegen-2.0 script not found])
     	fi
+	],
+	[
+	    AC_MSG_CHECKING([PyGObject 3.0])
+	    PKG_CHECK_MODULES([PYGOBJECT_3], [pygobject-3.0],,
+	    [
+	        AC_MSG_RESULT([No pygobject found])
+		have_python=no
+	    ])
+	])
 	AC_MSG_CHECKING([Gtk GIR])
 	GIR_PATH="$PREFIX/share/gir-1.0/Gtk-3.0.gir"
 	AC_CHECK_FILE($GIR_PATH,,have_python=no)

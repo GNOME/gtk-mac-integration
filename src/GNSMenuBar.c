@@ -37,9 +37,9 @@
   return self;
 }
 
-- (GtkOSXApplicationMenuGroup*) addGroup
+- (GtkosxApplicationMenuGroup*) addGroup
 {
-  GtkOSXApplicationMenuGroup *group = g_slice_new0 (GtkOSXApplicationMenuGroup);
+  GtkosxApplicationMenuGroup *group = g_slice_new0 (GtkosxApplicationMenuGroup);
   app_menu_groups = g_list_append (app_menu_groups, group);
   return group;
 }

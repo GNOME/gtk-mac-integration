@@ -66,7 +66,7 @@
  * Create a new GtkApplicationMenuGroup, add it to the list, and
  * return a pointer to it.
  */
-- (GtkOSXApplicationMenuGroup *) addGroup;
+- (GtkosxApplicationMenuGroup *) addGroup;
 
 /**
  * app_menu_groups:

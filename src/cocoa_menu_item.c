@@ -206,7 +206,7 @@ cocoa_menu_item_update_accelerator (GNSMenuItem *cocoa_item,
   /* Important note: this function doesn't do anything to actually
    * change key handling. Its goal is to get Cocoa to display the
    * correct accelerator as part of a menu item. Actual accelerator
-   * handling depends on gtk_osxapplication_use_quartz_accelerators,
+   * handling depends on gtkosx_application_use_quartz_accelerators,
    * so this is more cosmetic than it may appear.
   */
   /* Return if there's no label; it's probably a separator which isn't

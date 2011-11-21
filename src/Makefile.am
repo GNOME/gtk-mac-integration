@@ -1,5 +1,7 @@
 AM_CPPFLAGS = -I$(top_srcdir) $(WARN_CFLAGS)
 
+-include $(INTROSPECTION_MAKEFILE)
+
 lib_LTLIBRARIES = libgtkmacintegration.la
 
 libgtkmacintegration_la_SOURCES =			\
@@ -48,3 +50,28 @@ test_integration_CFLAGS = $(MAC_CFLAGS)
 test_integration_LDADD =  $(MAC_LIBS) libgtkmacintegration.la
 
 EXTRA_DIST = testui.xml
+if HAVE_INTROSPECTION
+GtkosxApplication-1.0.gir: $(INTROSPECTION_SCANNER) libgtkmacintegration.la
+GtkosxApplication_1_0_gir_SCANNERFLAGS = \
+	--identifier-prefix=Gtkosx \
+	--warn-all
+
+GtkosxApplication_1_0_gir_INCLUDES = Atk-1.0 GLib-2.0 Gtk-3.0
+
+GtkosxApplication_1_0_gir_CFLAGS = \
+		$(AM_CPPFLAGS)
+GtkosxApplication_1_0_gir_LIBS = libgtkmacintegration.la
+GtkosxApplication_1_0_gir_FILES = \
+	gtkosxapplication.h \
+	gtkosxapplication.c
+
+INTROSPECTION_GIRS = GtkosxApplication-1.0.gir
+
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibsdir = $(libdir)/girepository-1.0
+typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+
+CLEANFILES = $(gir_DATA) $(typelibs_DATA)
+endif

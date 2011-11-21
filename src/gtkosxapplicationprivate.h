@@ -20,17 +20,17 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GTK_OSX_APPLICATIONPRIVATE_H__
-#define __GTK_OSX_APPLICATIONPRIVATE_H__
+#ifndef __GTKOSX_APPLICATIONPRIVATE_H__
+#define __GTKOSX_APPLICATIONPRIVATE_H__
 #import <AppKit/NSMenu.h>
 #import <AppKit/NSApplication.h>
 
 #include "gtkosxapplication.h"
 #import "GtkApplicationNotify.h"
 
-#define  GTK_OSX_APPLICATION_GET_PRIVATE(obj)	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTK_TYPE_OSX_APPLICATION, GtkOSXApplicationPrivate))
+#define  GTKOSX_APPLICATION_GET_PRIVATE(obj)	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTKOSX_TYPE_APPLICATION, GtkosxApplicationPrivate))
 
-struct _GtkOSXApplicationPrivate
+struct _GtkosxApplicationPrivate
 {
   NSAutoreleasePool *pool;
   gboolean use_quartz_accelerators;

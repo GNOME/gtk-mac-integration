@@ -53,7 +53,7 @@ extern NSWindow* gdk_quartz_window_get_nswindow(GdkWindow*);
  * - Figure out what to do per app/window...
  *
  */
-G_DEFINE_TYPE (GtkOSXApplication, gtk_osxapplication, G_TYPE_OBJECT)
+G_DEFINE_TYPE (GtkosxApplication, gtkosx_application, G_TYPE_OBJECT)
 
 static GQuark emission_hook_quark = 0;
 
@@ -133,7 +133,7 @@ parent_set_emission_hook_remove (GtkWidget *widget,
 
 /*
  * add_to_menubar:
- * @self: The GtkOSXApplication pointer.
+ * @self: The GtkosxApplication pointer.
  * @menu: The cocoa menu to add
  * pos: The position on the menubar to insert the new menu
  *
@@ -142,7 +142,7 @@ parent_set_emission_hook_remove (GtkWidget *widget,
  * Returns: a pointer to the NSMenuItem now holding the menu.
  */
 static GNSMenuItem*
-add_to_menubar (GtkOSXApplication *self, NSMenu *menu, int pos)
+add_to_menubar (GtkosxApplication *self, NSMenu *menu, int pos)
 {
   GNSMenuItem *dummyItem = [[GNSMenuItem alloc] initWithTitle:@""
 					      action:nil keyEquivalent:@""];
@@ -158,7 +158,7 @@ add_to_menubar (GtkOSXApplication *self, NSMenu *menu, int pos)
 
 /*
  * create_apple_menu:
- * @self: The GtkOSXApplication object.
+ * @self: The GtkosxApplication object.
  *
  * Creates the "app" menu -- the first one on the menubar with the
  * application's name. The function is called create_apple_menu
@@ -167,46 +167,46 @@ add_to_menubar (GtkOSXApplication *self, NSMenu *menu, int pos)
  * Note that the static strings are internationalized the Apple way,
  * so you'll need to use the Apple localization tools if you need to
  * translations other than the ones provided. The resource file will
- * be GtkOSXApplication.strings, and must be installed in lang.proj in
+ * be GtkosxApplication.strings, and must be installed in lang.proj in
  * the application bundle's Resources directory.
  *
  * Returns: A pointer to the menu item.
  */
 static GNSMenuItem*
-create_apple_menu (GtkOSXApplication *self)
+create_apple_menu (GtkosxApplication *self)
 {
   NSMenuItem *menuitem;
   // Create the application (Apple) menu.
   NSMenu *app_menu = [[NSMenu alloc] initWithTitle: @"Apple Menu"];
 
-  NSMenu *menuServices = [[NSMenu alloc] initWithTitle:  NSLocalizedStringFromTable(@"Services",  @"GtkOSXApplication", @"Services Menu title")];
+  NSMenu *menuServices = [[NSMenu alloc] initWithTitle:  NSLocalizedStringFromTable(@"Services",  @"GtkosxApplication", @"Services Menu title")];
   [NSApp setServicesMenu:menuServices];
 
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle:  NSLocalizedStringFromTable(@"Services",  @"GtkOSXApplication", @"Services Menu Item title")
+  menuitem = [[NSMenuItem alloc] initWithTitle:  NSLocalizedStringFromTable(@"Services",  @"GtkosxApplication", @"Services Menu Item title")
 				 action:nil keyEquivalent:@""];
   [menuitem setSubmenu:menuServices];
   [app_menu addItem: menuitem];
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Hide",  @"GtkOSXApplication", @"Hide menu item title")
+  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Hide",  @"GtkosxApplication", @"Hide menu item title")
 				 action:@selector(hide:) keyEquivalent:@"h"];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
-  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Hide Others",  @"GtkOSXApplication", @"Hide Others menu item title")
+  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Hide Others",  @"GtkosxApplication", @"Hide Others menu item title")
 				 action:@selector(hideOtherApplications:) keyEquivalent:@"h"];
   [menuitem setKeyEquivalentModifierMask: NSCommandKeyMask | NSAlternateKeyMask];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
-  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable( @"Show All", @"GtkOSXApplication",  @"Show All menu item title")
+  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable( @"Show All", @"GtkosxApplication",  @"Show All menu item title")
 				 action:@selector(unhideAllApplications:) keyEquivalent:@""];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Quit",  @"GtkOSXApplication", @"Quit menu item title")
+  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Quit",  @"GtkosxApplication", @"Quit menu item title")
 				 action:@selector(terminate:) keyEquivalent:@"q"];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
@@ -218,7 +218,7 @@ create_apple_menu (GtkOSXApplication *self)
 
 /*
  * create_window_menu:
- * @self: The pointer to the GtkOSXApplication object
+ * @self: The pointer to the GtkosxApplication object
  * @window: The toplevel window for which the menu is being created
  *
  * Creates the Window menu, the one which tracks the application's windows.
@@ -226,15 +226,15 @@ create_apple_menu (GtkOSXApplication *self)
  * Note that the static strings are internationalized the Apple way,
  * so you'll need to use the Apple localization tools if you need to
  * translations other than the ones provided. The resource file will
- * be GtkOSXApplication.strings, and must be installed in lang.proj in
+ * be GtkosxApplication.strings, and must be installed in lang.proj in
  * the application bundle's Resources directory.
  *
  * Returns: A pointer to the menu item on the mainMenu.
  */
 static GNSMenuItem *
-create_window_menu (GtkOSXApplication *self)
+create_window_menu (GtkosxApplication *self)
 {   
-  NSMenu *window_menu = [[NSMenu alloc] initWithTitle: NSLocalizedStringFromTable(@"Window",  @"GtkOSXApplication", @"Window Menu title")];
+  NSMenu *window_menu = [[NSMenu alloc] initWithTitle: NSLocalizedStringFromTable(@"Window",  @"GtkosxApplication", @"Window Menu title")];
   GtkMenuBar *menubar = [(GNSMenuBar*)[NSApp mainMenu] menuBar];
   GtkWidget *parent = NULL;
   GdkWindow *win = NULL;
@@ -249,10 +249,10 @@ create_window_menu (GtkOSXApplication *self)
   if (win && GDK_IS_WINDOW(win))
     nswin = gdk_quartz_window_get_nswindow(win);
 
-  [window_menu addItemWithTitle: NSLocalizedStringFromTable(@"Minimize", @"GtkOSXApplication", @"Windows|Minimize menu item")
+  [window_menu addItemWithTitle: NSLocalizedStringFromTable(@"Minimize", @"GtkosxApplication", @"Windows|Minimize menu item")
 		action:@selector(performMiniaturize:) keyEquivalent:@"m"];
   [window_menu addItem: [NSMenuItem separatorItem]];
-  [window_menu addItemWithTitle: NSLocalizedStringFromTable(@"Bring All to Front", @"GtkOSXApplication", @"Windows|Bring All To Front menu item title")
+  [window_menu addItemWithTitle: NSLocalizedStringFromTable(@"Bring All to Front", @"GtkosxApplication", @"Windows|Bring All To Front menu item title")
 		action:@selector(arrangeInFront:) keyEquivalent:@""];
 
   [NSApp setWindowsMenu:window_menu];
@@ -263,7 +263,7 @@ create_window_menu (GtkOSXApplication *self)
 }  
 
 /*
- * gtk_osxapplication_constructor:
+ * gtkosx_application_constructor:
  * @gtype: The GType of the new class
  * @n_properties: The number of properties passed in the next parameter
  * @properties: an array of construction properties
@@ -272,13 +272,13 @@ create_window_menu (GtkOSXApplication *self)
  * Note that the static strings are internationalized the Apple way,
  * so you'll need to use the Apple localization tools if you need to
  * translations other than the ones provided. The resource file will
- * be GtkOSXApplication.strings, and must be installed in lang.proj in
+ * be GtkosxApplication.strings, and must be installed in lang.proj in
  * the application bundle's Resources directory.
  *
  * Returns: A pointer to the new object.
  */
 static GObject *
-gtk_osxapplication_constructor (GType gtype,
+gtkosx_application_constructor (GType gtype,
 			     guint n_properties,
 			     GObjectConstructParam *properties)
 {
@@ -287,7 +287,7 @@ gtk_osxapplication_constructor (GType gtype,
   g_static_mutex_lock (&mutex);
   if (self == NULL)
     {
-      self = G_OBJECT_CLASS(gtk_osxapplication_parent_class)->constructor(gtype, n_properties, properties);
+      self = G_OBJECT_CLASS(gtkosx_application_parent_class)->constructor(gtype, n_properties, properties);
       g_object_add_weak_pointer (self, (gpointer) &self);
 
     }
@@ -423,7 +423,7 @@ global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
                           gpointer  user_data)
 {
   NSEvent *nsevent = windowing_event;
-  GtkOSXApplication* app = user_data;
+  GtkosxApplication* app = user_data;
 
   /* Handle menu events with no window, since they won't go through
    * the regular event processing. We have to release the gdk mutex so
@@ -433,7 +433,7 @@ global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
    * environment!
    */
   if ([nsevent type] == NSKeyDown &&
-      gtk_osxapplication_use_quartz_accelerators(app) ) {
+      gtkosx_application_use_quartz_accelerators(app) ) {
     gboolean result;
     gdk_threads_leave();
     result = [[NSApp mainMenu] performKeyEquivalent: nsevent];
@@ -452,19 +452,19 @@ enum {
     LastSignal
 };
 
-static guint gtk_osxapplication_signals[LastSignal] = {0};
+static guint gtkosx_application_signals[LastSignal] = {0};
 /*
- * gtk_osxapplication_init:
- * @self: The GtkOSXApplication object.
+ * gtkosx_application_init:
+ * @self: The GtkosxApplication object.
  *
  * Class initialization. Includes creating a bunch of special signals
  * for echoing Cocoa signals through to the application.
  */
 static void
-gtk_osxapplication_init (GtkOSXApplication *self)
+gtkosx_application_init (GtkosxApplication *self)
 {
   [NSApplication sharedApplication];
-  self->priv = GTK_OSX_APPLICATION_GET_PRIVATE (self);
+  self->priv = GTKOSX_APPLICATION_GET_PRIVATE (self);
   self->priv->pool = [[NSAutoreleasePool alloc] init];
   self->priv->use_quartz_accelerators = TRUE;
   self->priv->dock_menu = NULL;
@@ -475,19 +475,19 @@ gtk_osxapplication_init (GtkOSXApplication *self)
 }
 
 /**
- * gtk_osxapplication_class_init:
+ * gtkosx_application_class_init:
  * @klass: The class type pointer
  *
  * Not normaly called directly; Use g_object_new(GTK_TYPE_OSXAPPLICATION)
  */
 void 
-gtk_osxapplication_class_init(GtkOSXApplicationClass *klass)
+gtkosx_application_class_init(GtkosxApplicationClass *klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
-  g_type_class_add_private(klass, sizeof(GtkOSXApplicationPrivate));
-  gobject_class->constructor = gtk_osxapplication_constructor;
+  g_type_class_add_private(klass, sizeof(GtkosxApplicationPrivate));
+  gobject_class->constructor = gtkosx_application_constructor;
 /**
- * GtkOSXApplication::NSApplicationDidBecomeActive:
+ * GtkosxApplication::NSApplicationDidBecomeActive:
  * @app: The application object
  * #user_data: Data appended at connection
  *
@@ -495,15 +495,15 @@ gtk_osxapplication_class_init(GtkOSXApplicationClass *klass)
  * an NSApplicationDidBecomeActive notification. Connect a handler if
  * there is anything you need to do when the application is activated.
  */
-gtk_osxapplication_signals[DidBecomeActive] =
+gtkosx_application_signals[DidBecomeActive] =
     g_signal_new("NSApplicationDidBecomeActive",
-	       GTK_TYPE_OSX_APPLICATION,
+	       GTKOSX_TYPE_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, NULL, NULL,
 	       g_cclosure_marshal_VOID__VOID,
 	       G_TYPE_NONE, 0);
 /**
- * GtkOSXApplication::NSApplicationWillResignActive:
+ * GtkosxApplication::NSApplicationWillResignActive:
  * @app: The application object
  * @user_data: Data appended at connection
  *
@@ -512,16 +512,16 @@ gtk_osxapplication_signals[DidBecomeActive] =
  * notification. Connect a handler to it if there's anything your
  * application needs to do to prepare for inactivity.
  */
-gtk_osxapplication_signals[WillResignActive] =
+gtkosx_application_signals[WillResignActive] =
     g_signal_new("NSApplicationWillResignActive",
-	       GTK_TYPE_OSX_APPLICATION,
+	       GTKOSX_TYPE_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, NULL, NULL,
 	       g_cclosure_marshal_VOID__VOID,
 	       G_TYPE_NONE, 0);
 
 /**
- * GtkOSXApplication::NSApplicationBlockTermination:
+ * GtkosxApplication::NSApplicationBlockTermination:
  * @app: The application object
  * @user_data: Data appended at connection
  *
@@ -535,16 +535,16 @@ gtk_osxapplication_signals[WillResignActive] =
  * Returns: Boolean indicating that further emission and application
  * termination should be blocked.
  */
-gtk_osxapplication_signals[BlockTermination] =
+gtkosx_application_signals[BlockTermination] =
     g_signal_new("NSApplicationBlockTermination",
-	       GTK_TYPE_OSX_APPLICATION,
+	       GTKOSX_TYPE_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, block_termination_accumulator, NULL,
 	       g_cclosure_marshal_BOOLEAN__VOID,
 	       G_TYPE_BOOLEAN, 0);
 
 /**
- * GtkOSXApplication::NSApplicationWillTerminate:
+ * GtkosxApplication::NSApplicationWillTerminate:
  * @app: The application object
  * @user_data: Data appended at connection
  *
@@ -552,16 +552,16 @@ gtk_osxapplication_signals[BlockTermination] =
  * an NSApplicationSWillTerminate notification. Connect your final
  * shutdown routine (the one that calls gtk_main_quit() here.
  */
-gtk_osxapplication_signals[WillTerminate] =
+gtkosx_application_signals[WillTerminate] =
     g_signal_new("NSApplicationWillTerminate",
-	       GTK_TYPE_OSX_APPLICATION,
+	       GTKOSX_TYPE_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, NULL, NULL,
 	       g_cclosure_marshal_VOID__VOID,
 	       G_TYPE_NONE, 0);
 
 /**
- * GtkOSXApplication::NSApplicationOpenFile:
+ * GtkosxApplication::NSApplicationOpenFile:
  * @app: The application object
  * @path: A UTF8-encoded file path to open.
  * @user_data: Data attached at connection
@@ -573,9 +573,9 @@ gtk_osxapplication_signals[WillTerminate] =
  *
  * Returns: Boolean indicating success at opening the file.
  */
-gtk_osxapplication_signals[OpenFile] =
+gtkosx_application_signals[OpenFile] =
     g_signal_new("NSApplicationOpenFile",
-	       GTK_TYPE_OSX_APPLICATION,
+	       GTKOSX_TYPE_APPLICATION,
 	       G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
 	       0, NULL, NULL,
 	       g_cclosure_marshal_BOOLEAN__STRING,
@@ -584,28 +584,28 @@ gtk_osxapplication_signals[OpenFile] =
 }
 
 /**
- * gtk_osxapplication_ready:
- * @self: The GtkOSXApplication object
+ * gtkosx_application_ready:
+ * @self: The GtkosxApplication object
  *
  * Inform Cocoa that application initialization is complete. 
  */
 void
-gtk_osxapplication_ready (GtkOSXApplication *self)
+gtkosx_application_ready (GtkosxApplication *self)
 {
   [ NSApp finishLaunching ];
 }
 
 /**
- * gtk_osxapplication_cleanup:
+ * gtkosx_application_cleanup:
  * @self: The GtkApplication object
  *
- * Destroy the GtkOSXApplication object. Not normally needed, as the
+ * Destroy the GtkosxApplication object. Not normally needed, as the
  * object is expected to remain until the application quits, and this
  * function is called by the notification object at that time.  Menu
  * bars are released as the corresponding GtkMenuBars are destroyed.
  */
 void
-gtk_osxapplication_cleanup(GtkOSXApplication *self)
+gtkosx_application_cleanup(GtkosxApplication *self)
 {
   [self->priv->dock_menu release];
   [self->priv->notify release];
@@ -630,8 +630,8 @@ window_focus_cb (GtkWindow* window, GdkEventFocus *event, GNSMenuBar *menubar)
 }
 
 /**
- * gtk_osxapplication_set_menu_bar:
- * @self: The GtkOSXApplication object
+ * gtkosx_application_set_menu_bar:
+ * @self: The GtkosxApplication object
  * @menu_shell: The GtkMenuBar that you want to set.
  *
  * Set a window's menubar as the application menu bar. Call this once
@@ -641,7 +641,7 @@ window_focus_cb (GtkWindow* window, GdkEventFocus *event, GNSMenuBar *menubar)
  * block them.
  */
 void
-gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_shell)
+gtkosx_application_set_menu_bar (GtkosxApplication *self, GtkMenuShell *menu_shell)
 {
   GNSMenuBar* cocoa_menubar;
   NSMenu* old_menubar = [NSApp mainMenu];
@@ -673,7 +673,7 @@ gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_she
 				parent_set_emission_hook,
 				cocoa_menubar, NULL);
   if (emission_hook_quark == 0)
-    emission_hook_quark = g_quark_from_static_string("GtkOSXApplicationEmissionHook");
+    emission_hook_quark = g_quark_from_static_string("GtkosxApplicationEmissionHook");
   g_object_set_qdata(G_OBJECT(menu_shell), emission_hook_quark,
 		     (gpointer)emission_hook_id);
 
@@ -691,23 +691,23 @@ gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, GtkMenuShell *menu_she
 }
 
 /**
- * gtk_osxapplication_sync_menubar:
- * @self: The GtkOSXApplication object
+ * gtkosx_application_sync_menubar:
+ * @self: The GtkosxApplication object
  *
  * Syncronize the active window's GtkMenuBar with the OSX menu
  * bar. You should only need this if you have programmatically changed
  * the menus with signals blocked or disconnected.
  */
 void
-gtk_osxapplication_sync_menubar (GtkOSXApplication *self)
+gtkosx_application_sync_menubar (GtkosxApplication *self)
 {
   [(GNSMenuBar*)[NSApp mainMenu] resync];
 }
 
 
 /**
- * gtk_osxapplication_insert_app_menu_item:
- * @self: The GtkOSXApplication object
+ * gtkosx_application_insert_app_menu_item:
+ * @self: The GtkosxApplication object
  * @menu_item: The GtkMenuItem to add to the group.
  * @index: The place in the app menu that you want the item
  * inserted. The first item is 0.
@@ -725,7 +725,7 @@ gtk_osxapplication_sync_menubar (GtkOSXApplication *self)
  * along with the Application menu. Just hide your Gtk Quit menu item.
  */
 void
-gtk_osxapplication_insert_app_menu_item (GtkOSXApplication* self,
+gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
 					 GtkWidget* item,
 					 gint index) {
     cocoa_menu_item_add_item ([[[NSApp mainMenu] itemAtIndex: 0] submenu],
@@ -735,7 +735,7 @@ gtk_osxapplication_insert_app_menu_item (GtkOSXApplication* self,
 }
 
 /**
- * gtk_osxapplication_set_window_menu:
+ * gtkosx_application_set_window_menu:
  * @self: The application object
  * @menu_item: The menu item which will be set as the Window menu
  *
@@ -748,7 +748,7 @@ gtk_osxapplication_insert_app_menu_item (GtkOSXApplication* self,
  * will create a new menu for you, which will not be gettext translatable. 
  */
 void
-gtk_osxapplication_set_window_menu(GtkOSXApplication *self,
+gtkosx_application_set_window_menu(GtkosxApplication *self,
 				   GtkMenuItem *menu_item)
 {
   GNSMenuBar *cocoa_menubar = (GNSMenuBar*)[NSApp mainMenu];
@@ -771,20 +771,20 @@ gtk_osxapplication_set_window_menu(GtkOSXApplication *self,
 }
 
 /**
- * gtk_osxapplication_set_help_menu:
+ * gtkosx_application_set_help_menu:
  * @self: The application object
  * @menu_item: The menu item which will be set as the Window menu
  *
  * Sets a designated menu item already on the menu bar as the Help
  * menu. Call this after gtk_osx_application_set_menu_bar(), but
  * before gtk_osx_application_window_menu(), especially if you're
- * letting GtkOSXApplication create a Window menu for you (it helps
+ * letting GtkosxApplication create a Window menu for you (it helps
  * position the Window menu correctly). It operates on the currently
  * active menubar. If @nenu_item is %NULL, it will create a new menu
  * for you, which will not be gettext translatable.
  */
 void
-gtk_osxapplication_set_help_menu (GtkOSXApplication *self,
+gtkosx_application_set_help_menu (GtkosxApplication *self,
 				  GtkMenuItem *menu_item)
 {
   GNSMenuBar *cocoa_menubar = (GNSMenuBar*)[NSApp mainMenu];
@@ -804,11 +804,11 @@ gtk_osxapplication_set_help_menu (GtkOSXApplication *self,
 
 /* Dock support */
 /* A bogus prototype to shut up a compiler warning. This function is for GtkApplicationDelegate and is not public. */
-NSMenu* _gtk_osxapplication_dock_menu(GtkOSXApplication *self);
+NSMenu* _gtkosx_application_dock_menu(GtkosxApplication *self);
 
 /**
- * _gtk_osxapplication_dock_menu:
- * @self: The GtkOSXApplication object.
+ * _gtkosx_application_dock_menu:
+ * @self: The GtkosxApplication object.
  *
  * Return the dock menu to the Application Delegate; if not null, it
  * will be added to the dock menu.
@@ -816,14 +816,14 @@ NSMenu* _gtk_osxapplication_dock_menu(GtkOSXApplication *self);
  * Returns: NSMenu*
  */
 NSMenu*
-_gtk_osxapplication_dock_menu(GtkOSXApplication *self)
+_gtkosx_application_dock_menu(GtkosxApplication *self)
 {
   return(self->priv->dock_menu);
 }
 
 /**
- * gtk_osxapplication_set_dock_menu:
- * @self: The GtkOSXApplication object
+ * gtkosx_application_set_dock_menu:
+ * @self: The GtkosxApplication object
  * @menu_shell: A GtkMenu (cast it with GTK_MENU_SHELL() when you
  * pass it in
  *
@@ -836,7 +836,7 @@ _gtk_osxapplication_dock_menu(GtkOSXApplication *self)
  * deallocated.
  */
 void
-gtk_osxapplication_set_dock_menu(GtkOSXApplication *self,
+gtkosx_application_set_dock_menu(GtkosxApplication *self,
 			      GtkMenuShell *menu_shell)
 {
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
@@ -922,14 +922,14 @@ nsimage_from_pixbuf(GdkPixbuf *pixbuf)
 }
 
 /**
- * gtk_osxapplication_set_dock_icon_pixbuf:
- * @self: The GtkOSXApplication
+ * gtkosx_application_set_dock_icon_pixbuf:
+ * @self: The GtkosxApplication
  * @pixbuf: The pixbuf. Pass NULL to reset the icon to its default.
  *
  * Set the dock icon from a GdkPixbuf
  */
 void
-gtk_osxapplication_set_dock_icon_pixbuf(GtkOSXApplication *self,
+gtkosx_application_set_dock_icon_pixbuf(GtkosxApplication *self,
 					  GdkPixbuf *pixbuf)
 {
   if (!pixbuf)
@@ -940,8 +940,8 @@ gtk_osxapplication_set_dock_icon_pixbuf(GtkOSXApplication *self,
 }
 
 /**
- * gtk_osxapplication_set_dock_icon_resource:
- * @self: The GtkOSXApplication
+ * gtkosx_application_set_dock_icon_resource:
+ * @self: The GtkosxApplication
  * @name: The ame of the image file
  * @type: The extension (e.g., jpg) of the filename
  * @subdir: The subdirectory of $Bundle/Contents/Resources in which to
@@ -950,7 +950,7 @@ gtk_osxapplication_set_dock_icon_pixbuf(GtkOSXApplication *self,
  * Set the dock icon from an image file in the bundle/
  */
 void
-gtk_osxapplication_set_dock_icon_resource(GtkOSXApplication *self,
+gtkosx_application_set_dock_icon_resource(GtkosxApplication *self,
 					    const gchar  *name,
 					    const gchar  *type,
 					    const gchar  *subdir)
@@ -961,8 +961,8 @@ gtk_osxapplication_set_dock_icon_resource(GtkOSXApplication *self,
 }
 
 /**
- * gtk_osxapplication_attention_request:
- * @self: The GtkOSXApplication pointer
+ * gtkosx_application_attention_request:
+ * @self: The GtkosxApplication pointer
  * @type: CRITICAL_REQUEST or INFO_REQUEST
  *
  * Create an attention request.  If type is CRITICAL_REQUEST, the
@@ -972,33 +972,33 @@ gtk_osxapplication_set_dock_icon_resource(GtkOSXApplication *self,
  * receives focus. This function has no effect if the application has focus.
  *
  * Returns: A the attention request ID. Pass this id to
- * gtk_osxapplication_cancel_attention_request.
+ * gtkosx_application_cancel_attention_request.
  */
 gint
-gtk_osxapplication_attention_request(GtkOSXApplication *self,
-				  GtkOSXApplicationAttentionType type)
+gtkosx_application_attention_request(GtkosxApplication *self,
+				  GtkosxApplicationAttentionType type)
 {
   return (gint)[NSApp requestUserAttention: (NSRequestUserAttentionType)type];
 }
 
 /**
- * gtk_osxapplication_cancel_attention_request:
+ * gtkosx_application_cancel_attention_request:
  * @self: The application
  * @id: The integer attention request id returned from
- * gtk_osxapplication_attention_request.
+ * gtkosx_application_attention_request.
  *
  * Cancel an attention request created with
- * gtk_osxapplication_attention_request.
+ * gtkosx_application_attention_request.
  */
 void
-gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint id)
+gtkosx_application_cancel_attention_request(GtkosxApplication *self, gint id)
 {
   [NSApp cancelUserAttentionRequest: id];
 }
 
 /**
  * quartz_application_get_bundle_path:
- * @self: The GtkOSXApplication. Not Used.
+ * @self: The GtkosxApplication. Not Used.
  *
  * Return the root path of the bundle or the directory containing the
  *  executable if it isn't actually a bundle.
@@ -1020,7 +1020,7 @@ quartz_application_get_bundle_path(void)
 
 /**
  * quartz_application_get_bundle_id:
- * @self: The GtkOSXApplication. Not Used.
+ * @self: The GtkosxApplication. Not Used.
  *
  *Return the value of the CFBundleIdentifier key from the bundle's Info.plist
  *
@@ -1046,7 +1046,7 @@ quartz_application_get_bundle_id(void)
 
 /**
  * quartz_application_get_resource_path:
- * @self: The GtkOSXApplication. Not Used.
+ * @self: The GtkosxApplication. Not Used.
  *
  * Return the Resource path for the bundle or the directory containing the
  *  executable if it isn't actually a bundle. Use quartz_application_get_bundle_id() to check (it will return %NULL if it's not a bundle).
@@ -1069,7 +1069,7 @@ quartz_application_get_resource_path(void)
 
 /**
  * quartz_application_get_executable_path:
- * @self: The GtkOSXApplication. Not Used.
+ * @self: The GtkosxApplication. Not Used.
  *
  * Return the executable path, including file name
  *
@@ -1090,7 +1090,7 @@ quartz_application_get_executable_path(void)
 
 /**
  * quartz_application_get_bundle_info:
- * @self: The GtkOSXApplication. Not Used.
+ * @self: The GtkosxApplication. Not Used.
  * @key: The key, as a normal UTF8 string.
  *
  * Queries the bundle's Info.plist with key. If the returned object is

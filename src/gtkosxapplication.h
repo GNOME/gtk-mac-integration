@@ -28,61 +28,60 @@
 
 
 G_BEGIN_DECLS
-#define GTK_TYPE_OSX_APPLICATION	(gtk_osxapplication_get_type())
-#define GTK_OSX_APPLICATION(obj) 	(G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_OSX_APPLICATION, GtkOSXApplication))
-#define GTK_IS_OSX_APPLICATION(obj)	(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_OSX_APPLICATION))
-#define GTK_OSX_APPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTK_TYPE_OSX_APPLICATION, GtkOSXApplicationClass))
-#define GTK_IS_OSX_APPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTK_TYPE_OSX_APPLICATION))
-#define GTK_OSX_APPLICATION_GET_CLASS(obj) 	(G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_OSX_APPLICATION, GtkOSXApplicationClass))
+#define GTKOSX_TYPE_APPLICATION	(gtkosx_application_get_type())
+#define GTKOSX_APPLICATION(obj) 	(G_TYPE_CHECK_INSTANCE_CAST ((obj), GTKOSX_TYPE_APPLICATION, GtkosxApplication))
+#define GTKOSX_IS_APPLICATION(obj)	(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTKOSX_TYPE_APPLICATION))
+#define GTKOSX_APPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTKOSX_TYPE_APPLICATION, GtkosxApplicationClass))
+#define GTKOSX_IS_APPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTKOSX_TYPE_APPLICATION))
+#define GTKOSX_APPLICATION_GET_CLASS(obj) 	(G_TYPE_INSTANCE_GET_CLASS ((obj), GTKOSX_TYPE_APPLICATION, GtkosxApplicationClass))
 
-typedef struct _GtkOSXApplication GtkOSXApplication;
-typedef struct _GtkOSXApplicationPrivate GtkOSXApplicationPrivate;
-typedef struct _GtkOSXApplicationClass GtkOSXApplicationClass;
-typedef struct _GtkOSXApplicationMenuGroup GtkOSXApplicationMenuGroup;
+typedef struct _GtkosxApplication GtkosxApplication;
+typedef struct _GtkosxApplicationPrivate GtkosxApplicationPrivate;
+typedef struct _GtkosxApplicationClass GtkosxApplicationClass;
+typedef struct _GtkosxApplicationMenuGroup GtkosxApplicationMenuGroup;
 
-struct _GtkOSXApplication
+struct _GtkosxApplication
 {
   GObject parent_instance;
   /*< private >*/
-  GtkOSXApplicationPrivate *priv;
+  GtkosxApplicationPrivate *priv;
 };
 
-struct _GtkOSXApplicationClass
+struct _GtkosxApplicationClass
 {
   GObjectClass parent_class;
-  void (*should_load) (GtkOSXApplication *self, gchar *utf8_path);
 };
 
-struct _GtkOSXApplicationMenuGroup
+struct _GtkosxApplicationMenuGroup
 {
   GList *items;
 };
 
 
-GType gtk_osxapplication_get_type (void);
-//GtkOSXApplication *gtk_osxapplication_get (void);
+GType gtkosx_application_get_type (void);
+GtkosxApplication *gtkosx_application_get (void);
 
-//void gtk_osxapplication_init (GtkOSXApplication *self);
-void gtk_osxapplication_ready (GtkOSXApplication *self);
-void gtk_osxapplication_cleanup (GtkOSXApplication *self);
+//void gtkosx_application_init (GtkosxApplication *self);
+void gtkosx_application_ready (GtkosxApplication *self);
+void gtkosx_application_cleanup (GtkosxApplication *self);
 
 /*Accelerator functions*/
 
-void gtk_osxapplication_set_use_quartz_accelerators(GtkOSXApplication *self, 
+void gtkosx_application_set_use_quartz_accelerators(GtkosxApplication *self, 
 					 gboolean use_quartz_accelerators);
-gboolean gtk_osxapplication_use_quartz_accelerators(GtkOSXApplication *self);
+gboolean gtkosx_application_use_quartz_accelerators(GtkosxApplication *self);
 
 /*Menu functions*/
-void gtk_osxapplication_set_menu_bar (GtkOSXApplication *self, 
+void gtkosx_application_set_menu_bar (GtkosxApplication *self, 
 				      GtkMenuShell *menu_shell);
-void gtk_osxapplication_sync_menubar (GtkOSXApplication *self);
+void gtkosx_application_sync_menubar (GtkosxApplication *self);
 
-void gtk_osxapplication_insert_app_menu_item (GtkOSXApplication *self,
+void gtkosx_application_insert_app_menu_item (GtkosxApplication *self,
 					      GtkWidget *menu_item,
 					      gint index);
-void gtk_osxapplication_set_window_menu (GtkOSXApplication *self,
+void gtkosx_application_set_window_menu (GtkosxApplication *self,
 					 GtkMenuItem *menu_item);
-void gtk_osxapplication_set_help_menu (GtkOSXApplication *self,
+void gtkosx_application_set_help_menu (GtkosxApplication *self,
 				       GtkMenuItem *menu_item);
 
 /*Dock Functions*/
@@ -90,17 +89,17 @@ void gtk_osxapplication_set_help_menu (GtkOSXApplication *self,
 typedef enum {
   CRITICAL_REQUEST = 0,
   INFO_REQUEST = 10
-} GtkOSXApplicationAttentionType;
+} GtkosxApplicationAttentionType;
 
 /*To satisfy h2defs.py */
-#define GTK_TYPE_OSX_APPLICATION_ATTENTION_TYPE	(gtk_type_osxapplication_attention_type_get_type())
-GType gtk_type_osxapplication_attention_type_get_type(void);
+// #define GTKOSX_TYPE_APPLICATION_ATTENTION_TYPE	(gtkosx_type_application_attention_type_get_type())
+// GType gtkosx_type_application_attention_type_get_type(void);
 
-void gtk_osxapplication_set_dock_menu(GtkOSXApplication *self, 
+void gtkosx_application_set_dock_menu(GtkosxApplication *self, 
 				   GtkMenuShell *menu_shell);
-void gtk_osxapplication_set_dock_icon_pixbuf(GtkOSXApplication *self,
+void gtkosx_application_set_dock_icon_pixbuf(GtkosxApplication *self,
 					  GdkPixbuf *pixbuf);
-void gtk_osxapplication_set_dock_icon_resource(GtkOSXApplication *self,
+void gtkosx_application_set_dock_icon_resource(GtkosxApplication *self,
 					    const gchar  *name,
 					    const gchar  *type,
 					    const gchar  *subdir);
@@ -113,9 +112,9 @@ void gtk_osxapplication_set_dock_icon_resource(GtkOSXApplication *self,
  * icon. The interface to change this is a bit complex and will be
  * left up to the application rather than implemented here.
  */
-gint gtk_osxapplication_attention_request(GtkOSXApplication *self,
-				       GtkOSXApplicationAttentionType type);
-void gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint id);
+gint gtkosx_application_attention_request(GtkosxApplication *self,
+				       GtkosxApplicationAttentionType type);
+void gtkosx_application_cancel_attention_request(GtkosxApplication *self, gint id);
 
 /* Bundle Functions */
 /* gtk-mac-bundle included a bunch of silly stuff for setting up the
@@ -135,7 +134,7 @@ void gtk_osxapplication_cancel_attention_request(GtkOSXApplication *self, gint i
  * Richard Proctor pointed out that these functions don't really need
  * to be class functions: the self parameter isn't used, and making
  * them "free" functions will often save one from having to call
- * g_object_new(GTK_TYPE_OSX_APPLICATION) just to get it. */
+ * g_object_new(GTKOSX_TYPE_APPLICATION) just to get it. */
 
 gchar *quartz_application_get_bundle_path(void);
 gchar *quartz_application_get_resource_path(void);

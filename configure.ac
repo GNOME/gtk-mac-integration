@@ -60,6 +60,8 @@ AM_CONDITIONAL([INTROSPECTION], [test x$GTK_MAJOR = "xgtk+-3.0"])
 
 GTK_PYTHON_CHECK
 
+GOBJECT_INTROSPECTION_CHECK([0.10.1])
+
 # This will cause the automake generated makefiles to pass the correct
 # flags to aclocal.
 ACLOCAL_AMFLAGS="\${ACLOCAL_FLAGS}"

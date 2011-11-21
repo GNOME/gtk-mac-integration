@@ -30,7 +30,7 @@
 /**
  * SECTION:gtkosxapplication
  * @short_description: Base class for OSX integration
- * @title: GtkOSXApplication
+ * @title: GtkosxApplication
  * @include: gtkosxapplication.h
  *
  * Exposes to the Gtk+ program important functions of
@@ -38,10 +38,10 @@
  * the quartz Gdk backend and provides addtional functions for
  * integrating a Gtk+ program into the OSX user environment.
  *
- * Using GtkOSXApplication is pretty simple.
+ * Using GtkosxApplication is pretty simple.
  * First, create an instance at startup:
  * 
- * |[GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);]|
+ * |[GtkosxApplication *theApp = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);]|
  * 
  * Do this early in your program, shortly after you run
  * |[gtk_init()]|. Don't forget to guard it, and all other calls into
@@ -50,7 +50,7 @@
  * object is a singleton, so you can call g_object_new as often as you
  * like. You'll always get the same pointer back. There's no need to
  * pass it around as an argument. Do note that all of the
- * GtkOSXApplication functions take theApp as an argument, even if
+ * GtkosxApplication functions take theApp as an argument, even if
  * they don't use it. This seems silly in C, and perhaps it is, but
  * it's needed to make the Python binding logic recognize that they're
  * class methods.
@@ -65,20 +65,20 @@
  * around because you needed it to add the menus to. With GtkBuilder,
  * you need to ask the GtkUIManager for a pointer. Once everything is
  * more-or-less set up on the Gtk+ side, you need only hide the menu
- * and call gtk_osxapplication_set_main_menu(). Here's an example with
+ * and call gtkosx_application_set_main_menu(). Here's an example with
  * GtkBuilder:
  *
  * <example>
  * <title>Setting the MenuBar</title>
  * <programlisting>
  *   GtkUIManager *mgr = gtk_ui_manager_new();
- *   GtkOSXApplication *theApp = g_object_new(GTK_TYPE_OSX_APPLICATION, NULL);
+ *   GtkosxApplication *theApp = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
  *   ...
  *   mergeid = gtk_ui_manager_add_ui_from_file(mgr, "src/testui.xml", &err);
  *   ...
  *   menubar = gtk_ui_manager_get_widget(mgr, "/menubar");
  *   gtk_widget_hide (menubar);
- *   gtk_osxapplication_set_menu_bar(theApp, GTK_MENU_SHELL(menubar));
+ *   gtkosx_application_set_menu_bar(theApp, GTK_MENU_SHELL(menubar));
  * </programlisting>
  * </example>
  *
@@ -88,8 +88,8 @@
  * the menu item action event is placed on the event queue by OSX, or
  * Gtk, where the accelerator key event is passed through to Gtk to
  * recognize. This is controlled by
- * gtk_osxapplication_set_use_quartz_accelerators() (you can test the
- * value with gtk_osxapplication_use_quartz_accelerators()), and the
+ * gtkosx_application_set_use_quartz_accelerators() (you can test the
+ * value with gtkosx_application_use_quartz_accelerators()), and the
  * default is to use Quartz handling. This has two advantages:
  * <itemizedlist>
  * <listitem><para>It works without any extra steps</para></listitem>
@@ -135,32 +135,32 @@
  * items to the groups. Here's an example:
  * <example>
  * <programlisting>
- *  GtkOSXApplicationMenuGroup *group;
+ *  GtkosxApplicationMenuGroup *group;
  *  GtkMenuItem *about_item, *preferences_item;
  *  about_item = gtk_ui_manager_get_widget(mgr, "/menubar/Help/About");
  *  preferences_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit/Preferences");
  *
- *  group = gtk_osxapplication_add_app_menu_group (theApp);
- *  gtk_osxapplication_add_app_menu_item  (theApp, group,
+ *  group = gtkosx_application_add_app_menu_group (theApp);
+ *  gtkosx_application_add_app_menu_item  (theApp, group,
  *                                         GTK_MENU_ITEM (about_item));
  *
- *  group = gtk_osxapplication_add_app_menu_group (theApp);
- *  gtk_osxapplication_add_app_menu_item  (theApp, group,
+ *  group = gtkosx_application_add_app_menu_group (theApp);
+ *  gtkosx_application_add_app_menu_item  (theApp, group,
  *                                         GTK_MENU_ITEM (preferences_item));
  * </programlisting>
  * </example>
  * Once we have everything set up for as many windows as we're going
  * to open before we call gtk_main_loop(), we need to tell OSX that
  * we're ready:
- * |[gtk_osxapplication_ready(theApp);]|
+ * |[gtkosx_application_ready(theApp);]|
  *
  * If you add other windows later, you must do everything above for
  * each one's menubar. Most of the time the internal notifictations
- * will ensure that the GtkOSXApplication is able to keep everything
+ * will ensure that the GtkosxApplication is able to keep everything
  * in sync. However, if you at any time disconnect or block signals
  * and change the menu (perhaps because of a context change within a
  * window, as with changing pages in a GtkNotebook) you need to call
- * |[gtk_osxapplication_sync_menubar(theApp)]|
+ * |[gtkosx_application_sync_menubar(theApp)]|
  * 
  * 
  * * The dock is that bar of icons that normally lives at the bottom of
@@ -170,9 +170,9 @@
  * an icon on the dock. Users can, if they like, add application (or
  * document) icons to the dock, and those can be used to launch the
  * application. Apple allows limited customization of the dock tile,
- * and GtkOSXApplication has an interface for adding to the dock's
+ * and GtkosxApplication has an interface for adding to the dock's
  * menu and for changing the icon that is displayed for the the
- * application. GtkOSXApplication also provides an interface to
+ * application. GtkosxApplication also provides an interface to
  * AttentionRequest, which bounces the dock tile if the application
  * doesn't have focus. You might want to do that at the end of a long
  * task so that the user will know that it's finished if she's
@@ -180,7 +180,7 @@
  * They're all pretty simple, so you can just read the details below.
  * 
  * 
- * * The last feature to which GtkOSXApplication provides an interface
+ * * The last feature to which GtkosxApplication provides an interface
  * is the bundle. Normally in OSX, graphical applications are packaged
  * along with their non-standard dependencies and their resources
  * (graphical elements, translations, and such) in special directory
@@ -188,20 +188,20 @@
  * application, have a look at gtk-mac-bundler, also available from
  * the Gtk-OSX project.
  *
- * OSX provides a variety of functions pertaining to bundles, most of which are not likely to interest someone porting a Gtk+ application. GtkOSXApplication has wrapped a few that might be:
+ * OSX provides a variety of functions pertaining to bundles, most of which are not likely to interest someone porting a Gtk+ application. GtkosxApplication has wrapped a few that might be:
  * <itemizedlist>
- * <listitem><para>gtk_osxapplication_get_bundle_path()</para></listitem>
- * <listitem><para>gtk_osxapplication_get_resource_path()</para></listitem>
- * <listitem><para>gtk_osxapplication_get_executable_path()</para></listitem>
- * <listitem><para>gtk_osxapplication_get_bundle_id()</para></listitem>
- * <listitem><para>gtk_osxapplication_get_bundle_info()</para></listitem>
+ * <listitem><para>gtkosx_application_get_bundle_path()</para></listitem>
+ * <listitem><para>gtkosx_application_get_resource_path()</para></listitem>
+ * <listitem><para>gtkosx_application_get_executable_path()</para></listitem>
+ * <listitem><para>gtkosx_application_get_bundle_id()</para></listitem>
+ * <listitem><para>gtkosx_application_get_bundle_info()</para></listitem>
  * </itemizedlist>
  *
  * The first three just get a UTF8-encoded path. An interesting note
  * is that they'll return the path to the executable or the folder
  * it's in regardless of whether it's actually in a bundle. To find
  * out if one is actually dealing with a bundle,
- * gtk_osxapplication_get_bundle_id() will return "" if it can't find
+ * gtkosx_application_get_bundle_id() will return "" if it can't find
  * the key %CFBundleIdentifier from the bundle's Info.plist -- which it
  * won't if the application isn't in a bundle or wasn't launched by
  * opening the bundle. (In other words, even if you have your
@@ -209,20 +209,20 @@
  * line as
  *|[$ Foo.app/Contents/MacOS/Foo]|
  * the Info.plist won't have been opened and
- * gtk_osxapplication_get_bundle_id() will return "". Of course, it
+ * gtkosx_application_get_bundle_id() will return "". Of course, it
  * will also return "" if you didn't set %CFBundleIdentifier in the
  * Info.plist, so make sure that you do!
  *
- * The last function, gtk_osxapplication_get_bundle_info(), will
+ * The last function, gtkosx_application_get_bundle_info(), will
  * return the value associated with an arbitrary key from Info.plist
  * as long as that value is a string. If it isn't, then the function
  * returns a null string ("").
  * 
  * Finally, notice the signals. These are emitted in response to the
  * indicated OSX notifications. Except for
- * #GtkOSXApplication::NSApplicationBlockTermination, most programs
+ * #GtkosxApplication::NSApplicationBlockTermination, most programs
  * won't need to do anything with
- * them. #GtkOSXApplication::NSApplicationBlockTermination is telling
+ * them. #GtkosxApplication::NSApplicationBlockTermination is telling
  * you that OSX is planning to shut down your program. If you have any
  * cleanup to do (like saving open files), or if you want to ask the
  * user if it's OK, you should connect to the signal and do your
@@ -230,24 +230,30 @@
  * from quitting.
  */
 
+GtkosxApplication *
+gtkosx_application_get (void)
+{
+  return g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
+}
+
 
 /** 
- * gtk_osxapplication_use_quartz_accelerators:
- * @self: The GtkOSXApplication pointer.
+ * gtkosx_application_use_quartz_accelerators:
+ * @self: The GtkosxApplication pointer.
  *
  * Are we using Quartz or Gtk+ accelerator handling? 
  *
  * Returns: a gboolean
  */
 gboolean
-gtk_osxapplication_use_quartz_accelerators(GtkOSXApplication *self)
+gtkosx_application_use_quartz_accelerators(GtkosxApplication *self)
 {
     return self->priv->use_quartz_accelerators;
 }
 
 /** 
- * gtk_osxapplication_set_use_quartz_accelerators:
- * @self: The GtkOSXApplication pointer.
+ * gtkosx_application_set_use_quartz_accelerators:
+ * @self: The GtkosxApplication pointer.
  * @use_quartz_accelerators: Gboolean 
  *
  * Set quartz accelerator handling; TRUE (default) uses quartz; FALSE
@@ -255,7 +261,7 @@ gtk_osxapplication_use_quartz_accelerators(GtkOSXApplication *self)
  * accelerators (e.g., command-q to quit) to work.
  */
 void
-gtk_osxapplication_set_use_quartz_accelerators(GtkOSXApplication *self,
+gtkosx_application_set_use_quartz_accelerators(GtkosxApplication *self,
 					    gboolean use_quartz_accelerators)
 {
     self->priv->use_quartz_accelerators = use_quartz_accelerators;
@@ -268,8 +274,8 @@ gtk_osxapplication_set_use_quartz_accelerators(GtkOSXApplication *self,
  * requests. Exists soley to satisfy the PyGObject codegen system.
  */
 GType
-gtk_type_osxapplication_attention_type_get_type(void)
+gtkosx_type_application_attention_type_get_type(void)
 {
   //Bogus GType, but there's no good reason to register this; it's only an enum
-  return 0;
+  return GTKOSX_TYPE_APPLICATION;
 }
