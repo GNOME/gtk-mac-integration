@@ -6,7 +6,7 @@ headers
 #include <gtkosxapplication.h>
 
 %%
-modulename gtk_osxapplication
+modulename gtkosx_application
 %%
 import gobject.GObject as PyGObject_Type
 import gtk.gdk.Pixbuf as PyGdkPixbuf_Type
@@ -18,23 +18,23 @@ import gtk.Widget as PyGtkWidget_Type
 ignore-glob
   *_get_type
 %%
-override gtk_osxapplication_add_app_menu_group noargs
+override gtkosx_application_add_app_menu_group noargs
 static PyObject*
-_wrap_gtk_osxapplication_add_app_menu_group (PyGObject *self)
+_wrap_gtkosx_application_add_app_menu_group (PyGObject *self)
 {
     GtkOSXApplicationMenuGroup *group;
     PyObject *ret;
 
-    group = gtk_osxapplication_add_app_menu_group (GTK_OSX_APPLICATION(self->obj));
+    group = gtkosx_application_add_app_menu_group (GTKOSX__APPLICATION(self->obj));
 
     ret = PyCObject_FromVoidPtr ((void *) group, NULL);
 
     return ret;
 }
 %%
-override gtk_osxapplication_add_app_menu_item kwargs
+override gtkosx_application_add_app_menu_item kwargs
 static PyObject*
-_wrap_gtk_osxapplication_add_app_menu_item (PyGObject *self, PyObject *args, PyObject *kwargs)
+_wrap_gtkosx_application_add_app_menu_item (PyGObject *self, PyObject *args, PyObject *kwargs)
 {
     static char *kwlist[] = { "group", "item", NULL };
     PyObject *pygroup;
@@ -52,13 +52,13 @@ _wrap_gtk_osxapplication_add_app_menu_item (PyGObject *self, PyObject *args, PyO
     group = PyCObject_AsVoidPtr (pygroup);
     item = GTK_MENU_ITEM (pygobject_get (pyitem));
     g_return_val_if_fail(group != NULL, Py_None);
-    gtk_osxapplication_add_app_menu_item (GTK_OSX_APPLICATION(self->obj), group, item);
+    gtkosx_application_add_app_menu_item (GTKOSX__APPLICATION(self->obj), group, item);
     return Py_None;
 }
 %%
-override gtk_osxapplication_insert_app_menu_item kwargs
+override gtkosx_application_insert_app_menu_item kwargs
 static PyObject*
-_wrap_gtk_osxapplication_insert_app_menu_item (PyGObject *self, PyObject *args, PyObject *kwargs)
+_wrap_gtkosx_application_insert_app_menu_item (PyGObject *self, PyObject *args, PyObject *kwargs)
 {
     static char *kwlist[] = { "item", "index", NULL };
     PyObject *pyitem;
@@ -72,7 +72,7 @@ _wrap_gtk_osxapplication_insert_app_menu_item (PyGObject *self, PyObject *args, 
 
     Py_INCREF (Py_None);
     item = GTK_WIDGET (pygobject_get (pyitem));
-    gtk_osxapplication_insert_app_menu_item (GTK_OSX_APPLICATION(self->obj), item, index);
+    gtkosx_application_insert_app_menu_item (GTKOSX__APPLICATION(self->obj), item, index);
     return Py_None;
 }
 %%
