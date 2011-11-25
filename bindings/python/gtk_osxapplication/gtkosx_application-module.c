@@ -1,5 +1,4 @@
-#define NO_IMPORT_PYGOBJECT
-#include <pygtk-2.0/pygobject.h>
+#include <pygobject.h>
  
 void gtk_osxapplication_register_classes (PyObject *d); 
 void pygtk_osxapplication_add_constants(PyObject *module, const gchar *strip_prefix);
