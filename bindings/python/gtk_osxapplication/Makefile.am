@@ -1,28 +1,28 @@
 INCLUDES = -I$(top_srcdir)/src $(PYTHON_INCLUDES)
 
-gtk_osxapplicationdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/gtk_osxapplication
+gtkosx_applicationdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/gtkosx_application
 
-gtk_osxapplication_PYTHON = __init__.py
-gtk_osxapplication_LTLIBRARIES = _gtk_osxapplication.la
+gtkosx_application_PYTHON = __init__.py
+gtkosx_application_LTLIBRARIES = _gtkosx_application.la
 
 headers = $(top_srcdir)/src/gtkosxapplication.h
 
-gtk_osxapplication.defs: $(headers)
+gtkosx_application.defs: $(headers)
 	$(PYTHON) $(datadir)/pygobject/2.0/codegen/h2def.py $(headers) > $@
 
-gtk_osxapplication.c: gtk_osxapplication.defs gtk_osxapplication.override
+gtkosx_application.c: gtkosx_application.defs gtkosx_application.override
 
-_gtk_osxapplication_la_CFLAGS =				\
+_gtkosx_application_la_CFLAGS =				\
 	$(MAC_CFLAGS)					\
 	$(PYGTK_CFLAGS)
-_gtk_osxapplication_la_LDFLAGS = -module -avoid-version -export-symbols-regex init_gtk_osxapplication
-_gtk_osxapplication_la_LIBADD =				\
+_gtkosx_application_la_LDFLAGS = -module -avoid-version -export-symbols-regex init_gtkosx_application
+_gtkosx_application_la_LIBADD =				\
 	$(MAC_LIBS)					\
 	$(PYGTK_LIBS)					\
 	$(top_builddir)/src/libgtkmacintegration.la
-_gtk_osxapplication_la_SOURCES =				\
-	gtk_osxapplication.c				\
-	gtk_osxapplication-module.c
+_gtkosx_application_la_SOURCES =				\
+	gtkosx_application.c				\
+	gtkosx_application-module.c
 
 .defs.c: 
 	($(PYGOBJECT_CODEGEN)				\
@@ -34,9 +34,9 @@ _gtk_osxapplication_la_SOURCES =				\
 	&& rm -f gen-$*.c
 
 CLEANFILES =						\
-	gtk_osxapplication.defs				\
-	gtk_osxapplication.c
+	gtkosx_application.defs				\
+	gtkosx_application.c
 
 EXTRA_DIST =						\
-	gtk_osxapplication.defs				\
-	gtk_osxapplication.override
+	gtkosx_application.defs				\
+	gtkosx_application.override

@@ -19,10 +19,10 @@
 
 import sys
 
-if 'gtk_osxapplication._gtk_osxapplication' in sys.modules:
-    _gtk_osxapplication = sys.modules['gtk_osxapplication._gtk_osxapplication']
+if 'gtkosx_application._gtkosx_application' in sys.modules:
+    _gtkosx_application = sys.modules['gtkosx_application._gtkosx_application']
 else:
-    from gtk_osxapplication import _gtk_osxapplication
+    from gtkosx_application import _gtkosx_application
 
-from gtk_osxapplication._gtk_osxapplication import *
+from gtkosx_application._gtkosx_application import *
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import gtk
-from gtk_osxapplication import *
+from gtkosx_application import *
 
 class MainWindow(gtk.Window):
     def __init__(self, macapp):
