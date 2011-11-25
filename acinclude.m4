@@ -125,5 +125,6 @@ dnl Check that pygobject and gtk-3.0.gir are present
   AC_MSG_RESULT($enable_python)
 
   AM_CONDITIONAL([ENABLE_PYTHON], [test x$enable_python = xyes])
+  AM_CONDITIONAL([GTK_VERSION_2], [test "x$GTK_MAJOR" = "xgtk+-2.0" -o x$enable_python = "xall"])
 ])
 dnl -----------------------------------------------------------
