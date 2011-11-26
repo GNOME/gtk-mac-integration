@@ -997,8 +997,7 @@ gtkosx_application_cancel_attention_request(GtkosxApplication *self, gint id)
 }
 
 /**
- * quartz_application_get_bundle_path:
- * @self: The GtkosxApplication. Not Used.
+ * gtkosx_application_get_bundle_path:
  *
  * Return the root path of the bundle or the directory containing the
  *  executable if it isn't actually a bundle.
@@ -1006,7 +1005,7 @@ gtkosx_application_cancel_attention_request(GtkosxApplication *self, gint id)
  * Returns: path The bundle's absolute path or %NULL on error. g_free() it when done.
  */
 gchar*
-quartz_application_get_bundle_path(void)
+gtkosx_application_get_bundle_path(void)
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   gchar *str = NULL;
@@ -1019,8 +1018,7 @@ quartz_application_get_bundle_path(void)
 }
 
 /**
- * quartz_application_get_bundle_id:
- * @self: The GtkosxApplication. Not Used.
+ * gtkosx_application_get_bundle_id:
  *
  *Return the value of the CFBundleIdentifier key from the bundle's Info.plist
  *
@@ -1032,7 +1030,7 @@ quartz_application_get_bundle_path(void)
  * Returns: The string value of CFBundleIdentifier, or %NULL if there is none. g_free() it when done.
  */
 gchar*
-quartz_application_get_bundle_id(void)
+gtkosx_application_get_bundle_id(void)
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   gchar *str = NULL;
@@ -1045,16 +1043,15 @@ quartz_application_get_bundle_id(void)
 }
 
 /**
- * quartz_application_get_resource_path:
- * @self: The GtkosxApplication. Not Used.
+ * gtkosx_application_get_resource_path:
  *
  * Return the Resource path for the bundle or the directory containing the
- *  executable if it isn't actually a bundle. Use quartz_application_get_bundle_id() to check (it will return %NULL if it's not a bundle).
+ *  executable if it isn't actually a bundle. Use gtkosx_application_get_bundle_id() to check (it will return %NULL if it's not a bundle).
  *
  * Returns: path The absolute resource path. or %NULL on error. g_free() it when done.
  */
 gchar*
-quartz_application_get_resource_path(void)
+gtkosx_application_get_resource_path(void)
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   gchar *str = NULL;
@@ -1068,15 +1065,14 @@ quartz_application_get_resource_path(void)
 
 
 /**
- * quartz_application_get_executable_path:
- * @self: The GtkosxApplication. Not Used.
+ * gtkosx_application_get_executable_path:
  *
  * Return the executable path, including file name
  *
  * Returns: The path to the primary executable, or %NULL if it can't find one. g_free() it when done
  */
 gchar*
-quartz_application_get_executable_path(void)
+gtkosx_application_get_executable_path(void)
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   gchar *str = NULL;
@@ -1089,8 +1085,7 @@ quartz_application_get_executable_path(void)
 }
 
 /**
- * quartz_application_get_bundle_info:
- * @self: The GtkosxApplication. Not Used.
+ * gtkosx_application_get_bundle_info:
  * @key: The key, as a normal UTF8 string.
  *
  * Queries the bundle's Info.plist with key. If the returned object is
@@ -1099,7 +1094,7 @@ quartz_application_get_executable_path(void)
  * Returns: A UTF8-encoded string. g_free() it when done.
  */
 gchar*
-quartz_application_get_bundle_info(const gchar *key)
+gtkosx_application_get_bundle_info(const gchar *key)
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   NSObject *id = [[NSBundle mainBundle] objectForInfoDictionaryKey:

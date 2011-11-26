@@ -136,11 +136,11 @@ void gtkosx_application_cancel_attention_request(GtkosxApplication *self, gint i
  * them "free" functions will often save one from having to call
  * g_object_new(GTKOSX_TYPE_APPLICATION) just to get it. */
 
-gchar *quartz_application_get_bundle_path(void);
-gchar *quartz_application_get_resource_path(void);
-gchar *quartz_application_get_executable_path(void);
-gchar *quartz_application_get_bundle_id(void);
-gchar *quartz_application_get_bundle_info(const gchar *key);
+gchar *gtkosx_application_get_bundle_path(void);
+gchar *gtkosx_application_get_resource_path(void);
+gchar *gtkosx_application_get_executable_path(void);
+gchar *gtkosx_application_get_bundle_id(void);
+gchar *gtkosx_application_get_bundle_info(const gchar *key);
 
 G_END_DECLS
 

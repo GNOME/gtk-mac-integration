@@ -749,7 +749,7 @@ main (int argc, char **argv)
 #endif //QUARTZ_HANDLERS
   gtkosx_application_ready(theApp);
   {
-    const gchar *id = quartz_application_get_bundle_id();
+    const gchar *id = gtkosx_application_get_bundle_id();
     if (id != NULL) {
       g_print ("TestIntegration Error! Bundle Has ID %s\n", id);
     }
