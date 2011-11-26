@@ -1176,7 +1176,13 @@ gtk_mac_menu_add_app_menu_group (void) {
     return group;
 }
 
-/** Move a menu item to the App menu (the one named with the
+/**
+ * gtk_mac_menu_add_app_menu_item:
+ * @group: Application menu group; helps place separators
+ * @menu_item: Menu Item to add to app menu
+ * @label: The label name for the menu item
+ *
+ * Move a menu item to the App menu (the one named with the
  * application's name). This has issues with multiple window menubars,
  * because the menu items are tied to a particular window's menu and
  * because there's only one App menu in Carbon regardless of how many
@@ -1242,7 +1248,10 @@ gtk_mac_menu_add_app_menu_item (GtkMacMenuGroup *group, GtkMenuItem *menu_item,
     if (!list)
 	g_warning ("%s: app menu group %p does not exist", G_STRFUNC, group);
 }
-/** Syncronize changes in the GtkMenuBar to an already-created Mac
+/**
+ * gtk_mac_menu_sync:
+ * @menu_shell: The menubar to sync to the main menu.
+ * Syncronize changes in the GtkMenuBar to an already-created Mac
  * MenuBar. You must have already run gtk_mac_menu_set_menu_bar on the
  * GtkMenuBar to be synced.
  */
