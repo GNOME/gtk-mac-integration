@@ -2,7 +2,7 @@
 
 from gi.repository import Gtk
 from gi.repository import GObject
-from gtk_osxapplication import *
+from gi.repository import GtkosxApplication
 
 class MainWindow(Gtk.Window):
     def __init__(self, macapp):
@@ -76,11 +76,11 @@ class MainWindow(Gtk.Window):
             print widget
             
 if __name__ == '__main__':
-    macapp = OSXApplication()
+    macapp = GtkosxApplication.Application()
     window = MainWindow(macapp)
     window.connect("destroy", Gtk.main_quit)
     macapp.ready()
-#    window.show()
-
+#Just to illustrate using the qtkosx_application_get... functions
+    print macapp.get_resource_path()
     Gtk.main()
 
