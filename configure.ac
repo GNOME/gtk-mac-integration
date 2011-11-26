@@ -74,8 +74,7 @@ AC_CONFIG_FILES(
         bindings/Makefile
         bindings/python/Makefile
 	bindings/python/gtkmacintegration/Makefile
-	bindings/python/gtk_osxapplication/Makefile
-	bindings/python/gtk3_osxapplication/Makefile
+	bindings/python/gtkosx_application/Makefile
         data/Makefile
         data/gtk-mac-integration.pc
 	docs/Makefile
