@@ -707,7 +707,9 @@ main (int argc, char **argv)
 #ifdef GTKOSXAPPLICATION
   GtkosxApplication *theApp;
 #endif //GTKOSXAPPLICATION
+#ifndef HAVE_GLIB_2_31
     g_thread_init(NULL);
+#endif
     gdk_threads_init();
   gtk_init (&argc, &argv);
 #ifdef GTKMACINTEGRATION
