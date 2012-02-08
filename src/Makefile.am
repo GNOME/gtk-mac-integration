@@ -50,6 +50,8 @@ test_integration_CFLAGS = $(MAC_CFLAGS)
 test_integration_LDADD =  $(MAC_LIBS) libgtkmacintegration.la
 
 EXTRA_DIST = testui.xml
+
+if INTROSPECTION
 if HAVE_INTROSPECTION
 GtkosxApplication-1.0.gir: $(INTROSPECTION_SCANNER) libgtkmacintegration.la
 GtkosxApplication_1_0_gir_SCANNERFLAGS = \
@@ -74,4 +76,5 @@ typelibsdir = $(libdir)/girepository-1.0
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
 CLEANFILES = $(gir_DATA) $(typelibs_DATA)
+endif
 endif
