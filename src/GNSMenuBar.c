@@ -21,7 +21,7 @@
 #import "GNSMenuBar.h"
 #include "cocoa_menu_item.h"
 
-@implementation GNSMenuBar
+@implementation _GNSMenuBar
 
 - (id) initWithTitle:(NSString*) title
 {
@@ -70,37 +70,37 @@
   return gtk_menubar;
 }
 
-- (void) setAppMenu: (GNSMenuItem*) menu_item
+- (void) setAppMenu: (_GNSMenuItem*) menu_item
 {
   [app_menu release];
   app_menu = menu_item;
   [app_menu retain];
 }
 
-- (GNSMenuItem*) appMenu {
+- (_GNSMenuItem*) appMenu {
   return app_menu;
 }
 
-- (void) setWindowsMenu: (GNSMenuItem*) menu_item 
+- (void) setWindowsMenu: (_GNSMenuItem*) menu_item 
 {
   [window_menu release];
   window_menu = menu_item;
   [window_menu retain];
 }
 
-- (GNSMenuItem*) windowsMenu
+- (_GNSMenuItem*) windowsMenu
 {
   return window_menu;
 }
 
-- (void) setHelpMenu: (GNSMenuItem*) menu_item
+- (void) setHelpMenu: (_GNSMenuItem*) menu_item
 {
   [help_menu release];
   help_menu = menu_item;
   [help_menu retain];
 }
 
-- (GNSMenuItem*) helpMenu
+- (_GNSMenuItem*) helpMenu
 {
   return help_menu;
 }

@@ -22,26 +22,26 @@
 #include <gtk/gtk.h>
 #include "gtkosxapplication.h"
 
-@class GNSMenuItem;
+@class _GNSMenuItem;
 
 /** 
- * SECTION:GNSMenuBar
+ * SECTION:_GNSMenuBar
  * @short_description: Wrapper class for NSMenubar
- * #title: GNSMenuBar
+ * #title: _GNSMenuBar
  * @stability: Private
  *
  * Wrapper class around NSMenu providing an extra
  * parameter for stashing the App menu groups.
  */
 
-@interface GNSMenuBar : NSMenu
+@interface _GNSMenuBar : NSMenu
 {
 @private
   GList *app_menu_groups;
   GtkMenuBar *gtk_menubar;
-  GNSMenuItem *app_menu;
-  GNSMenuItem *window_menu;
-  GNSMenuItem *help_menu;
+  _GNSMenuItem *app_menu;
+  _GNSMenuItem *window_menu;
+  _GNSMenuItem *help_menu;
 }
 
 /** 
@@ -83,12 +83,12 @@
 -(void) resync;
 
 - (GtkMenuBar*) menuBar;
-- (void) setAppMenu: (GNSMenuItem*) menu_item;
-- (GNSMenuItem*) appMenu;
-- (void) setWindowsMenu: (GNSMenuItem*) menu_item;
-- (GNSMenuItem*) windowsMenu;
-- (void) setHelpMenu: (GNSMenuItem*) menu_item;
-- (GNSMenuItem*) helpMenu;
+- (void) setAppMenu: (_GNSMenuItem*) menu_item;
+- (_GNSMenuItem*) appMenu;
+- (void) setWindowsMenu: (_GNSMenuItem*) menu_item;
+- (_GNSMenuItem*) windowsMenu;
+- (void) setHelpMenu: (_GNSMenuItem*) menu_item;
+- (_GNSMenuItem*) helpMenu;
 
 /**
  * dealloc:

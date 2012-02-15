@@ -77,7 +77,7 @@ parent_set_emission_hook (GSignalInvocationHint *ihint,
   if (GTK_IS_MENU_ITEM (instance)) {
     GtkWidget *old_parent = (GtkWidget*) g_value_get_object (param_values + 1);
     GtkWidget *new_parent = gtk_widget_get_parent(instance);
-    GNSMenuItem *cocoa_item = cocoa_menu_item_get(instance);
+    _GNSMenuItem *cocoa_item = cocoa_menu_item_get(instance);
 /* If neither the old parent or the new parent has a cocoa menu, then
    we're not really interested in this. */
     if (!( (old_parent && GTK_IS_WIDGET(old_parent) 
@@ -87,7 +87,7 @@ parent_set_emission_hook (GSignalInvocationHint *ihint,
       return TRUE;
 
     if (GTK_IS_MENU_SHELL (old_parent)) {
-  	GNSMenuBar *cocoa_menu = (GNSMenuBar*)cocoa_menu_get (old_parent);
+  	_GNSMenuBar *cocoa_menu = (_GNSMenuBar*)cocoa_menu_get (old_parent);
 	[cocoa_item removeFromMenu: cocoa_menu];
 
     }
@@ -97,7 +97,7 @@ parent_set_emission_hook (GSignalInvocationHint *ihint,
       there isn't some other item in the menu that's been moved to the
       app-menu for quartz.  */
     if (GTK_IS_MENU_SHELL (new_parent) && cocoa_menu_get(new_parent)) {
-  	GNSMenuBar *cocoa_menu = (GNSMenuBar*)cocoa_menu_get (new_parent);
+  	_GNSMenuBar *cocoa_menu = (_GNSMenuBar*)cocoa_menu_get (new_parent);
 	if (GTK_IS_MENU_BAR(new_parent) && cocoa_menu && 
 	    [cocoa_menu respondsToSelector: @selector(resync)]) {
 	  [cocoa_menu resync];
@@ -141,10 +141,10 @@ parent_set_emission_hook_remove (GtkWidget *widget,
  *
  * Returns: a pointer to the NSMenuItem now holding the menu.
  */
-static GNSMenuItem*
+static _GNSMenuItem*
 add_to_menubar (GtkosxApplication *self, NSMenu *menu, int pos)
 {
-  GNSMenuItem *dummyItem = [[GNSMenuItem alloc] initWithTitle:@""
+  _GNSMenuItem *dummyItem = [[_GNSMenuItem alloc] initWithTitle:@""
 					      action:nil keyEquivalent:@""];
   NSMenu *menubar = [NSApp mainMenu];
 
@@ -172,7 +172,7 @@ add_to_menubar (GtkosxApplication *self, NSMenu *menu, int pos)
  *
  * Returns: A pointer to the menu item.
  */
-static GNSMenuItem*
+static _GNSMenuItem*
 create_apple_menu (GtkosxApplication *self)
 {
   NSMenuItem *menuitem;
@@ -233,14 +233,14 @@ create_apple_menu (GtkosxApplication *self)
  *
  * Returns: A pointer to the menu item on the mainMenu.
  */
-static GNSMenuItem *
+static _GNSMenuItem *
 create_window_menu (GtkosxApplication *self)
 {
   NSString *title = NSLocalizedStringFromTable(@"Window",
                                                @"GtkOSXApplication",
                                                @"Window Menu title");
   NSMenu *window_menu = [[[NSMenu alloc] initWithTitle: title] autorelease];
-  GtkMenuBar *menubar = [(GNSMenuBar*)[NSApp mainMenu] menuBar];
+  GtkMenuBar *menubar = [(_GNSMenuBar*)[NSApp mainMenu] menuBar];
   GtkWidget *parent = NULL;
   GdkWindow *win = NULL;
   NSWindow *nswin = NULL;
@@ -263,7 +263,7 @@ create_window_menu (GtkosxApplication *self)
   [NSApp setWindowsMenu:window_menu];
   if (nswin)
     [NSApp addWindowsItem: nswin title: [nswin title] filename: NO];
-  pos = [[NSApp mainMenu] indexOfItem: [(GNSMenuBar*)[NSApp mainMenu] helpMenu]];
+  pos = [[NSApp mainMenu] indexOfItem: [(_GNSMenuBar*)[NSApp mainMenu] helpMenu]];
   return add_to_menubar (self, window_menu, pos);
 }  
 
@@ -620,7 +620,7 @@ gtkosx_application_cleanup(GtkosxApplication *self)
  * window_focus_cb:
  * @window: The application window receiving focus
  * @event: The GdkEvent. Not used.
- * @menubar: The GNSMenubar associated with window
+ * @menubar: The _GNSMenubar associated with window
  *
  * Changes the active menubar when the application switches
  * windows. If you switch window focus programmatically, make sure
@@ -628,7 +628,7 @@ gtkosx_application_cleanup(GtkosxApplication *self)
  * this handler.
  */
 static gboolean
-window_focus_cb (GtkWindow* window, GdkEventFocus *event, GNSMenuBar *menubar)
+window_focus_cb (GtkWindow* window, GdkEventFocus *event, _GNSMenuBar *menubar)
 {
   [NSApp setMainMenu: menubar];
   return FALSE;
@@ -648,16 +648,16 @@ window_focus_cb (GtkWindow* window, GdkEventFocus *event, GNSMenuBar *menubar)
 void
 gtkosx_application_set_menu_bar (GtkosxApplication *self, GtkMenuShell *menu_shell)
 {
-  GNSMenuBar* cocoa_menubar;
+  _GNSMenuBar* cocoa_menubar;
   NSMenu* old_menubar = [NSApp mainMenu];
   GtkWidget *parent = gtk_widget_get_toplevel(GTK_WIDGET(menu_shell));
   gulong emission_hook_id;
  
   g_return_if_fail (GTK_IS_MENU_SHELL (menu_shell));
 
-  cocoa_menubar = (GNSMenuBar*)cocoa_menu_get(GTK_WIDGET (menu_shell));
+  cocoa_menubar = (_GNSMenuBar*)cocoa_menu_get(GTK_WIDGET (menu_shell));
   if (!cocoa_menubar) {
-    cocoa_menubar = [[[GNSMenuBar alloc] initWithGtkMenuBar: 
+    cocoa_menubar = [[[_GNSMenuBar alloc] initWithGtkMenuBar: 
                       GTK_MENU_BAR(menu_shell)] autorelease];
     cocoa_menu_connect(GTK_WIDGET (menu_shell), cocoa_menubar);
   /* turn off auto-enabling for the menu - its silly and slow and
@@ -706,7 +706,7 @@ gtkosx_application_set_menu_bar (GtkosxApplication *self, GtkMenuShell *menu_she
 void
 gtkosx_application_sync_menubar (GtkosxApplication *self)
 {
-  [(GNSMenuBar*)[NSApp mainMenu] resync];
+  [(_GNSMenuBar*)[NSApp mainMenu] resync];
 }
 
 
@@ -735,7 +735,7 @@ gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
 					 gint index) {
     cocoa_menu_item_add_item ([[[NSApp mainMenu] itemAtIndex: 0] submenu],
 			      item, index);
-    [(GNSMenuItem*)[[[[NSApp mainMenu] itemAtIndex: 0] submenu] 
+    [(_GNSMenuItem*)[[[[NSApp mainMenu] itemAtIndex: 0] submenu] 
       itemAtIndex: index] setHidden: NO];
 }
 
@@ -756,20 +756,20 @@ void
 gtkosx_application_set_window_menu(GtkosxApplication *self,
 				   GtkMenuItem *menu_item)
 {
-  GNSMenuBar *cocoa_menubar = (GNSMenuBar*)[NSApp mainMenu];
+  _GNSMenuBar *cocoa_menubar = (_GNSMenuBar*)[NSApp mainMenu];
   g_return_if_fail(cocoa_menubar != NULL);
 
   if (menu_item) {
     GtkWidget *parent = NULL;
     GdkWindow *win = NULL;
     NSWindow *nswin = NULL;
-    GNSMenuItem *cocoa_item = cocoa_menu_item_get(GTK_WIDGET(menu_item));
+    _GNSMenuItem *cocoa_item = cocoa_menu_item_get(GTK_WIDGET(menu_item));
      g_return_if_fail(cocoa_item != NULL);
     [cocoa_menubar setWindowsMenu: cocoa_item];
     [NSApp setWindowsMenu: [cocoa_item submenu]];
  }
   else {
-    GNSMenuItem *cocoa_item = create_window_menu (self);
+    _GNSMenuItem *cocoa_item = create_window_menu (self);
     [cocoa_menubar setWindowsMenu:  cocoa_item];
   }
 }
@@ -791,16 +791,16 @@ void
 gtkosx_application_set_help_menu (GtkosxApplication *self,
 				  GtkMenuItem *menu_item)
 {
-  GNSMenuBar *cocoa_menubar = (GNSMenuBar*)[NSApp mainMenu];
+  _GNSMenuBar *cocoa_menubar = (_GNSMenuBar*)[NSApp mainMenu];
   g_return_if_fail(cocoa_menubar != NULL);
 
   if (menu_item) {
-    GNSMenuItem *cocoa_item = cocoa_menu_item_get(GTK_WIDGET(menu_item));
+    _GNSMenuItem *cocoa_item = cocoa_menu_item_get(GTK_WIDGET(menu_item));
      g_return_if_fail(cocoa_item != NULL);
     [cocoa_menubar setHelpMenu: cocoa_item];
   }
   else {
-    GNSMenuItem *menuitem = [[[GNSMenuItem alloc] initWithTitle: @"Help"
+    _GNSMenuItem *menuitem = [[[_GNSMenuItem alloc] initWithTitle: @"Help"
                               action: NULL keyEquivalent: @""] autorelease];
     [cocoa_menubar setHelpMenu: menuitem];
     [cocoa_menubar addItem: [cocoa_menubar helpMenu]];

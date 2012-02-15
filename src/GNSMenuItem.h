@@ -30,16 +30,16 @@ typedef struct {
 } ClosureData;
 
 /**
- * SECTION:GNSMenuItem
+ * SECTION:_GNSMenuItem
  * @Short_description: NSMenuItem Wrapper Class
- * @Title: GNSMenuItem
+ * @Title: _GNSMenuItem
  * @stability: private
  *
  * Wrapper class around NSMenuItem providing an
  * action function which puts invocation of the provided GClosure onto
  * the gtk idle queue. 
  */
-@interface GNSMenuItem : NSMenuItem
+@interface _GNSMenuItem : NSMenuItem
 {
 @public
   //accel_closure is manipulated directly by
@@ -67,7 +67,7 @@ typedef struct {
  * run when the menu item is activated.
  * @ptr: A gpointer to a data object to be passed with the closure
  *
- * Create a new GNSMenuItem with a GClosure and an additional
+ * Create a new _GNSMenuItem with a GClosure and an additional
  * arbitrary data struct
  *
  * Returns: A pointer to the new menu item.

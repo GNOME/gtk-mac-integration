@@ -73,18 +73,18 @@ _gtk_accel_label_get_closure (GtkAccelLabel *label)
 static void
 cocoa_menu_item_free (gpointer *ptr)
 {
-  GNSMenuItem* item = (GNSMenuItem*) ptr;
+  _GNSMenuItem* item = (_GNSMenuItem*) ptr;
   [item release];
 }
 
-GNSMenuItem *
+_GNSMenuItem *
 cocoa_menu_item_get (GtkWidget *widget)
 {
-  return (GNSMenuItem*) g_object_get_qdata (G_OBJECT (widget), cocoa_menu_item_quark);
+  return (_GNSMenuItem*) g_object_get_qdata (G_OBJECT (widget), cocoa_menu_item_quark);
 }
 
 static void
-cocoa_menu_item_update_state (GNSMenuItem* cocoa_item,
+cocoa_menu_item_update_state (_GNSMenuItem* cocoa_item,
 			      GtkWidget      *widget)
 {
   gboolean sensitive;
@@ -107,7 +107,7 @@ cocoa_menu_item_update_state (GNSMenuItem* cocoa_item,
 }
 
 static void
-cocoa_menu_item_update_checked (GNSMenuItem *cocoa_item,
+cocoa_menu_item_update_checked (_GNSMenuItem *cocoa_item,
 			       GtkWidget  *widget)
 {
   gboolean active, inconsistent;
@@ -126,7 +126,7 @@ cocoa_menu_item_update_checked (GNSMenuItem *cocoa_item,
 }
 
 static void
-cocoa_menu_item_update_submenu (GNSMenuItem *cocoa_item,
+cocoa_menu_item_update_submenu (_GNSMenuItem *cocoa_item,
 				GtkWidget      *widget)
 {
   GtkWidget *submenu;
@@ -177,7 +177,7 @@ cocoa_menu_item_update_submenu (GNSMenuItem *cocoa_item,
 }
 
 static void
-cocoa_menu_item_update_label (GNSMenuItem *cocoa_item,
+cocoa_menu_item_update_label (_GNSMenuItem *cocoa_item,
 			      GtkWidget      *widget)
 {
   g_return_if_fail (cocoa_item != NULL);
@@ -191,7 +191,7 @@ cocoa_menu_item_update_label (GNSMenuItem *cocoa_item,
 }
 
 static void
-cocoa_menu_item_update_accelerator (GNSMenuItem *cocoa_item,
+cocoa_menu_item_update_accelerator (_GNSMenuItem *cocoa_item,
 				    GtkWidget *widget)
 {
   GtkWidget *label;
@@ -298,7 +298,7 @@ cocoa_menu_item_accel_changed (GtkAccelGroup   *accel_group,
 			       GClosure        *accel_closure,
 			       GtkWidget       *widget)
 {
-  GNSMenuItem *cocoa_item = cocoa_menu_item_get (widget);
+  _GNSMenuItem *cocoa_item = cocoa_menu_item_get (widget);
   GtkWidget      *label;
 
   get_menu_label_text (widget, &label);
@@ -310,7 +310,7 @@ cocoa_menu_item_accel_changed (GtkAccelGroup   *accel_group,
 }
 
 static void
-cocoa_menu_item_update_accel_closure (GNSMenuItem *cocoa_item,
+cocoa_menu_item_update_accel_closure (_GNSMenuItem *cocoa_item,
 				      GtkWidget      *widget)
 {
   GtkAccelGroup *group;
@@ -353,7 +353,7 @@ cocoa_menu_item_notify_label (GObject    *object,
 			      GParamSpec *pspec,
 			      gpointer    data)
 {
-  GNSMenuItem *cocoa_item = cocoa_menu_item_get (GTK_WIDGET (object));
+  _GNSMenuItem *cocoa_item = cocoa_menu_item_get (GTK_WIDGET (object));
 
   if (!strcmp (pspec->name, "label"))
     {
@@ -370,7 +370,7 @@ cocoa_menu_item_notify_label (GObject    *object,
 static void
 cocoa_menu_item_notify (GObject        *object,
 			GParamSpec     *pspec,
-			GNSMenuItem *cocoa_item)
+			_GNSMenuItem *cocoa_item)
 {
   if (!strcmp (pspec->name, "sensitive") ||
       !strcmp (pspec->name, "visible"))
@@ -390,10 +390,10 @@ cocoa_menu_item_notify (GObject        *object,
 
 static void
 cocoa_menu_item_connect (GtkWidget*   menu_item,
-			 GNSMenuItem* cocoa_item,
+			 _GNSMenuItem* cocoa_item,
 			 GtkWidget     *label)
 {
-  GNSMenuItem* old_item = cocoa_menu_item_get (menu_item);
+  _GNSMenuItem* old_item = cocoa_menu_item_get (menu_item);
 
   if (old_item == cocoa_item)
       return;
@@ -401,7 +401,7 @@ cocoa_menu_item_connect (GtkWidget*   menu_item,
   [cocoa_item retain];
 
   if (cocoa_menu_item_quark == 0)
-    cocoa_menu_item_quark = g_quark_from_static_string ("GNSMenuItem");
+    cocoa_menu_item_quark = g_quark_from_static_string ("_GNSMenuItem");
 
   g_object_set_qdata_full (G_OBJECT (menu_item), cocoa_menu_item_quark,
 			   cocoa_item,
@@ -431,7 +431,7 @@ cocoa_menu_item_connect (GtkWidget*   menu_item,
 static void
 cocoa_menu_item_sync (GtkWidget* menu_item)
 {
-  GNSMenuItem *cocoa_item = cocoa_menu_item_get (menu_item);
+  _GNSMenuItem *cocoa_item = cocoa_menu_item_get (menu_item);
   cocoa_menu_item_update_state (cocoa_item, menu_item);
 
   if (GTK_IS_CHECK_MENU_ITEM (menu_item))
@@ -453,7 +453,7 @@ void
 cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
 {
   GtkWidget* label      = NULL;
-  GNSMenuItem *cocoa_item;
+  _GNSMenuItem *cocoa_item;
 
   DEBUG ("add %s to menu %s separator ? %d\n",
 	 get_menu_label_text (menu_item, NULL),
@@ -469,7 +469,7 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
   }
 
   if (GTK_IS_SEPARATOR_MENU_ITEM (menu_item)) {
-    cocoa_item = (GNSMenuItem*)[GNSMenuItem separatorItem];
+    cocoa_item = (_GNSMenuItem*)[_GNSMenuItem separatorItem];
     DEBUG ("\ta separator\n");
   } else {
     const gchar* text = get_menu_label_text (menu_item, &label);
@@ -480,16 +480,16 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
 				 G_OBJECT(menu_item));
     g_closure_set_marshal(menu_action, g_cclosure_marshal_VOID__VOID);
 
-    cocoa_item = [[GNSMenuItem alloc]
+    cocoa_item = [[_GNSMenuItem alloc]
                    initWithTitle: title
                    aGClosure:menu_action andPointer:NULL];
     
     DEBUG ("\tan item\n");
   }
-  cocoa_menu_item_connect (menu_item, (GNSMenuItem*) cocoa_item, label);
+  cocoa_menu_item_connect (menu_item, (_GNSMenuItem*) cocoa_item, label);
   [ cocoa_item setEnabled:YES];
 
-  /* connect GtkMenuItem and GNSMenuItem so that we can notice changes
+  /* connect GtkMenuItem and _GNSMenuItem so that we can notice changes
    * to accel/label/submenu etc. */
 
   if (index >= 0 && index < [cocoa_menu numberOfItems])
@@ -513,21 +513,21 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
   count = [cocoa_menu numberOfItems];
   /* First go through the cocoa menu and mark all of the items unused. */
   for (index = 0; index < count; index++) {
-    GNSMenuItem *indexedItem = (GNSMenuItem*)[cocoa_menu itemAtIndex: index];
+    _GNSMenuItem *indexedItem = (_GNSMenuItem*)[cocoa_menu itemAtIndex: index];
     if (GTK_IS_MENU_BAR(menu_shell) &&
-	(indexedItem == [(GNSMenuBar*)cocoa_menu windowsMenu] ||
-	 indexedItem == [(GNSMenuBar*)cocoa_menu helpMenu] ||
-	 indexedItem == [(GNSMenuBar*)cocoa_menu appMenu]))
+	(indexedItem == [(_GNSMenuBar*)cocoa_menu windowsMenu] ||
+	 indexedItem == [(_GNSMenuBar*)cocoa_menu helpMenu] ||
+	 indexedItem == [(_GNSMenuBar*)cocoa_menu appMenu]))
       continue;
     if ([[cocoa_menu itemAtIndex: index] respondsToSelector: @selector(mark)])
-      [(GNSMenuItem*)[cocoa_menu itemAtIndex: index] mark];
+      [(_GNSMenuItem*)[cocoa_menu itemAtIndex: index] mark];
   }
   index = toplevel ? 1 : 0; //Skip the 0th menu item on the menu bar
   /* Now iterate over the menu shell and check it against the cocoa menu */
   children = gtk_container_get_children (GTK_CONTAINER (menu_shell));
   for (l = children; l; l = l->next) {
     GtkWidget   *menu_item = (GtkWidget*) l->data;
-    GNSMenuItem *cocoa_item =  cocoa_menu_item_get (menu_item);
+    _GNSMenuItem *cocoa_item =  cocoa_menu_item_get (menu_item);
     if ([cocoa_item menu] && [cocoa_item menu] != cocoa_menu)
       /* This item has been moved to another menu; skip it */
       continue;
@@ -568,7 +568,7 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
   }
   /* Iterate over the cocoa menu again removing anything that's still marked */
   for (index = 0; index < [cocoa_menu numberOfItems]; index++) {
-    GNSMenuItem *item = (GNSMenuItem*)[cocoa_menu itemAtIndex: index];
+    _GNSMenuItem *item = (_GNSMenuItem*)[cocoa_menu itemAtIndex: index];
     if (([item respondsToSelector: @selector(isMarked)]) && [item isMarked])
       [cocoa_menu removeItem: item];
   }

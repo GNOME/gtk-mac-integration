@@ -35,7 +35,7 @@ idle_call_activate (ClosureData *action)
   return FALSE;
 }
 
-@implementation GNSMenuItem
+@implementation _GNSMenuItem
 
 - (id) initWithTitle:(NSString*) title aGClosure:(GClosure*) closure andPointer:(gpointer) ptr
 {
@@ -90,7 +90,7 @@ idle_call_activate (ClosureData *action)
     if (index < 0) index = 0;
     if (index > maxIndex) index = maxIndex;
     [inMenu insertItem: self atIndex: index];
-    [(GNSMenuBar*)[NSApp mainMenu] resync];
+    [(_GNSMenuBar*)[NSApp mainMenu] resync];
   }
   [self release];
 #endif
