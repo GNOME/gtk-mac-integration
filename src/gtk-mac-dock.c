@@ -316,7 +316,7 @@ gtk_mac_dock_set_icon_from_pixbuf (GtkMacDock *dock,
     {
       CGImageRef image;
 
-      image = gtk_create_cgimage_from_pixbuf (pixbuf);
+      image = gtkosx_create_cgimage_from_pixbuf (pixbuf);
       SetApplicationDockTileImage (image);
       CGImageRelease (image);
     }
@@ -361,7 +361,7 @@ gtk_mac_dock_set_overlay_from_pixbuf (GtkMacDock  *dock,
 
   if (pixbuf)
     {
-      image = gtk_create_cgimage_from_pixbuf (pixbuf);
+      image = gtkosx_create_cgimage_from_pixbuf (pixbuf);
       OverlayApplicationDockTileImage (image);
       CGImageRelease (image);
     }

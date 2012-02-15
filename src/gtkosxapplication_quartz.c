@@ -901,7 +901,7 @@ nsimage_from_pixbuf(GdkPixbuf *pixbuf)
   NSImage* newImage = nil;
 
   g_return_val_if_fail (pixbuf !=  NULL, NULL);
-  image = gtk_create_cgimage_from_pixbuf (pixbuf);
+  image = gtkosx_create_cgimage_from_pixbuf (pixbuf);
   // Get the image dimensions.
   imageRect.size.height = CGImageGetHeight(image);
   imageRect.size.width = CGImageGetWidth(image);

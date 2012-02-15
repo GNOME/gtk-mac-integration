@@ -25,7 +25,7 @@
 
 G_BEGIN_DECLS
 
-CGImageRef gtk_create_cgimage_from_pixbuf (GdkPixbuf *pixbuf);
+CGImageRef gtkosx_create_cgimage_from_pixbuf (GdkPixbuf *pixbuf);
 
 G_END_DECLS
 

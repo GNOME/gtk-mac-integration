@@ -26,7 +26,7 @@
 #include "gtk-mac-image-utils.h"
 
 CGImageRef
-gtk_create_cgimage_from_pixbuf (GdkPixbuf *pixbuf)
+gtkosx_create_cgimage_from_pixbuf (GdkPixbuf *pixbuf)
 {
   CGColorSpaceRef   colorspace;
   CGDataProviderRef data_provider;
