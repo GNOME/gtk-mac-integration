@@ -177,9 +177,11 @@ create_apple_menu (GtkosxApplication *self)
 {
   NSMenuItem *menuitem;
   // Create the application (Apple) menu.
-  NSMenu *app_menu = [[NSMenu alloc] initWithTitle: @"Apple Menu"];
-
-  NSMenu *menuServices = [[NSMenu alloc] initWithTitle:  NSLocalizedStringFromTable(@"Services",  @"GtkosxApplication", @"Services Menu title")];
+  NSMenu *app_menu = [[[NSMenu alloc] initWithTitle: @"Apple Menu"] autorelease];
+  NSString *title = NSLocalizedStringFromTable(@"Services",
+                                               @"GtkOSXApplication",
+                                               @"Services Menu title");
+  NSMenu *menuServices = [[[NSMenu alloc] initWithTitle: title] autorelease];
   [NSApp setServicesMenu:menuServices];
 
   [app_menu addItem: [NSMenuItem separatorItem]];
@@ -233,8 +235,11 @@ create_apple_menu (GtkosxApplication *self)
  */
 static GNSMenuItem *
 create_window_menu (GtkosxApplication *self)
-{   
-  NSMenu *window_menu = [[NSMenu alloc] initWithTitle: NSLocalizedStringFromTable(@"Window",  @"GtkosxApplication", @"Window Menu title")];
+{
+  NSString *title = NSLocalizedStringFromTable(@"Window",
+                                               @"GtkOSXApplication",
+                                               @"Window Menu title");
+  NSMenu *window_menu = [[[NSMenu alloc] initWithTitle: title] autorelease];
   GtkMenuBar *menubar = [(GNSMenuBar*)[NSApp mainMenu] menuBar];
   GtkWidget *parent = NULL;
   GdkWindow *win = NULL;
@@ -652,8 +657,8 @@ gtkosx_application_set_menu_bar (GtkosxApplication *self, GtkMenuShell *menu_she
 
   cocoa_menubar = (GNSMenuBar*)cocoa_menu_get(GTK_WIDGET (menu_shell));
   if (!cocoa_menubar) {
-    cocoa_menubar = [[GNSMenuBar alloc] initWithGtkMenuBar: 
-		     GTK_MENU_BAR(menu_shell)];
+    cocoa_menubar = [[[GNSMenuBar alloc] initWithGtkMenuBar: 
+                      GTK_MENU_BAR(menu_shell)] autorelease];
     cocoa_menu_connect(GTK_WIDGET (menu_shell), cocoa_menubar);
   /* turn off auto-enabling for the menu - its silly and slow and
      doesn't really make sense for a Gtk/Cocoa hybrid menu.
@@ -758,7 +763,6 @@ gtkosx_application_set_window_menu(GtkosxApplication *self,
     GtkWidget *parent = NULL;
     GdkWindow *win = NULL;
     NSWindow *nswin = NULL;
-    GtkMenuBar *menubar = [cocoa_menubar menuBar];
     GNSMenuItem *cocoa_item = cocoa_menu_item_get(GTK_WIDGET(menu_item));
      g_return_if_fail(cocoa_item != NULL);
     [cocoa_menubar setWindowsMenu: cocoa_item];
@@ -796,8 +800,9 @@ gtkosx_application_set_help_menu (GtkosxApplication *self,
     [cocoa_menubar setHelpMenu: cocoa_item];
   }
   else {
-    [cocoa_menubar setHelpMenu: [[GNSMenuItem alloc] initWithTitle: @"Help"
-				 action: NULL keyEquivalent: @""]];
+    GNSMenuItem *menuitem = [[[GNSMenuItem alloc] initWithTitle: @"Help"
+                              action: NULL keyEquivalent: @""] autorelease];
+    [cocoa_menubar setHelpMenu: menuitem];
     [cocoa_menubar addItem: [cocoa_menubar helpMenu]];
   }
 }
@@ -862,26 +867,19 @@ static NSImage*
 nsimage_from_resource(const gchar *name, const gchar* type, const gchar* subdir)
 {
   NSString *ns_name, *ns_type, *ns_subdir, *path;
-  NSImage *image;
+  NSImage *image = NULL; 
   g_return_val_if_fail(name != NULL, NULL);
   g_return_val_if_fail(type != NULL, NULL);
   g_return_val_if_fail(subdir != NULL, NULL);
+
   ns_name = [NSString stringWithUTF8String: name];
   ns_type = [NSString stringWithUTF8String: type];
   ns_subdir = [NSString stringWithUTF8String: subdir];
   path = [[NSApp mainBundle] pathForResource: ns_name
 		     ofType: ns_type inDirectory: ns_subdir];
-  if (!path) {
-    [ns_name release];
-    [ns_type release];
-    [ns_subdir release];
-    return NULL;
-  }
+  if (path) 
   image = [[[NSImage alloc] initWithContentsOfFile: path] autorelease];
-  [ns_name release];
-  [ns_type release];
-  [ns_subdir release];
-  [path release];
+
   return image;
 }
 
@@ -903,7 +901,7 @@ nsimage_from_pixbuf(GdkPixbuf *pixbuf)
   NSImage* newImage = nil;
 
   g_return_val_if_fail (pixbuf !=  NULL, NULL);
-  image = gtk_mac_image_from_pixbuf (pixbuf);
+  image = gtk_create_cgimage_from_pixbuf (pixbuf);
   // Get the image dimensions.
   imageRect.size.height = CGImageGetHeight(image);
   imageRect.size.width = CGImageGetWidth(image);
@@ -1096,16 +1094,15 @@ gtkosx_application_get_executable_path(void)
 gchar*
 gtkosx_application_get_bundle_info(const gchar *key)
 {
+  gchar *result = NULL;
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   NSObject *id = [[NSBundle mainBundle] objectForInfoDictionaryKey:
 		  [NSString stringWithUTF8String: key]];
+
   if ([id respondsToSelector: @selector(UTF8String)]) {
-    gchar *str = g_strdup( [(NSString*)id UTF8String]);
-    [id release];
-    [pool release];
-    return str;
+    result = g_strdup( [(NSString*)id UTF8String]);
   }
-  [id release];
+
   [pool release];
-  return NULL;
+  return result;
 }

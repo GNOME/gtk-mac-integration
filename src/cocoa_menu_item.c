@@ -157,12 +157,10 @@ cocoa_menu_item_update_submenu (GNSMenuItem *cocoa_item,
     cocoa_menu_connect (submenu, cocoa_submenu);
   }
   else { //no submenu anywhere, so create one
-    const gchar *label_text = get_menu_label_text (widget, &label);
-    if (label_text)
-      cocoa_submenu = [ [ NSMenu alloc ] initWithTitle:
-			[[ NSString alloc] initWithUTF8String:label_text]];
-    else
-      cocoa_submenu = [ [ NSMenu alloc ] initWithTitle:@""];
+    const gchar *text = get_menu_label_text (widget, &label);
+    NSString *title = [NSString stringWithUTF8String: text ? text : ""];
+
+    cocoa_submenu = [[[NSMenu alloc] initWithTitle: title] autorelease];
 
     [cocoa_submenu setAutoenablesItems:NO];
     cocoa_menu_connect (submenu, cocoa_submenu);
@@ -182,16 +180,14 @@ static void
 cocoa_menu_item_update_label (GNSMenuItem *cocoa_item,
 			      GtkWidget      *widget)
 {
-  const gchar *label_text;
-
   g_return_if_fail (cocoa_item != NULL);
   g_return_if_fail (widget != NULL);
 
-  label_text = get_menu_label_text (widget, NULL);
-  if (label_text)
-    [cocoa_item setTitle:[ [ NSString alloc] initWithCString:label_text encoding:NSUTF8StringEncoding]];
-  else
-    [cocoa_item setTitle:@""];
+  {
+    const gchar *text = get_menu_label_text (widget, NULL);
+    NSString *title = [NSString stringWithUTF8String: text ? text : ""];
+    [cocoa_item setTitle: title];
+  }
 }
 
 static void
@@ -476,21 +472,18 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
     cocoa_item = (GNSMenuItem*)[GNSMenuItem separatorItem];
     DEBUG ("\ta separator\n");
   } else {
-    const gchar* label_text = get_menu_label_text (menu_item, &label);
+    const gchar* text = get_menu_label_text (menu_item, &label);
+    NSString *title = [NSString stringWithUTF8String:(text ? text : @"")];
+
     GClosure *menu_action =
       g_cclosure_new_object_swap(G_CALLBACK(gtk_menu_item_activate),
 				 G_OBJECT(menu_item));
     g_closure_set_marshal(menu_action, g_cclosure_marshal_VOID__VOID);
 
-    if (label_text)
-      cocoa_item = [ [ GNSMenuItem alloc]
-		     initWithTitle:[ [ NSString alloc]
-				     initWithCString:label_text
-				     encoding:NSUTF8StringEncoding]
-		     aGClosure:menu_action andPointer:NULL];
-    else
-      cocoa_item = [ [ GNSMenuItem alloc] initWithTitle:@""
-		     aGClosure:menu_action andPointer:NULL];
+    cocoa_item = [[GNSMenuItem alloc]
+                   initWithTitle: title
+                   aGClosure:menu_action andPointer:NULL];
+    
     DEBUG ("\tan item\n");
   }
   cocoa_menu_item_connect (menu_item, (GNSMenuItem*) cocoa_item, label);

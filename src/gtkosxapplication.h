@@ -63,7 +63,6 @@ GtkosxApplication *gtkosx_application_get (void);
 
 //void gtkosx_application_init (GtkosxApplication *self);
 void gtkosx_application_ready (GtkosxApplication *self);
-void gtkosx_application_cleanup (GtkosxApplication *self);
 
 /*Accelerator functions*/
 
