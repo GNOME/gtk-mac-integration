@@ -27,16 +27,16 @@
 
 #include "gtkosxapplication.h"
 #import "GtkApplicationNotify.h"
+#import "GtkApplicationDelegate.h"
 
 #define  GTKOSX_APPLICATION_GET_PRIVATE(obj)	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTKOSX_TYPE_APPLICATION, GtkosxApplicationPrivate))
 
 struct _GtkosxApplicationPrivate
 {
-  NSAutoreleasePool *pool;
   gboolean use_quartz_accelerators;
   NSMenu *dock_menu;
   GtkApplicationNotificationObject *notify;
-
+  GtkApplicationDelegate *delegate;
 };
 
 #endif

@@ -470,13 +470,22 @@ gtkosx_application_init (GtkosxApplication *self)
 {
   [NSApplication sharedApplication];
   self->priv = GTKOSX_APPLICATION_GET_PRIVATE (self);
-  self->priv->pool = [[NSAutoreleasePool alloc] init];
   self->priv->use_quartz_accelerators = TRUE;
   self->priv->dock_menu = NULL;
   gdk_window_add_filter (NULL, global_event_filter_func, (gpointer)self);
   self->priv->notify = [[GtkApplicationNotificationObject alloc] init];
-  [self->priv->notify retain];
   [ NSApp setDelegate: [GtkApplicationDelegate new]];
+  self->priv->delegate = [NSApp delegate];
+}
+
+static void
+gtkosx_application_dispose (GObject *obj)
+{
+  GtkosxApplication *self = GTKOSX_APPLICATION (obj);
+  [self->priv->dock_menu release];
+  [self->priv->notify release];
+  [self->priv->delegate release];
+  G_OBJECT_CLASS(gtkosx_application_parent_class)->dispose (obj);
 }
 
 /**
@@ -598,22 +607,6 @@ void
 gtkosx_application_ready (GtkosxApplication *self)
 {
   [ NSApp finishLaunching ];
-}
-
-/**
- * gtkosx_application_cleanup:
- * @self: The GtkApplication object
- *
- * Destroy the GtkosxApplication object. Not normally needed, as the
- * object is expected to remain until the application quits, and this
- * function is called by the notification object at that time.  Menu
- * bars are released as the corresponding GtkMenuBars are destroyed.
- */
-void
-gtkosx_application_cleanup(GtkosxApplication *self)
-{
-  [self->priv->dock_menu release];
-  [self->priv->notify release];
 }
 
 /*

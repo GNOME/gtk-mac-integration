@@ -75,7 +75,6 @@
 			      GTKOSX_TYPE_APPLICATION);
   if (sig)
       g_signal_emit(app, sig, 0);
-  gtkosx_application_cleanup(app);
   g_object_unref(app);
 
 }
