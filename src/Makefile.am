@@ -19,9 +19,11 @@ libgtkmacintegration_la_SOURCES =			\
 	cocoa_menu.c					\
 	cocoa_menu_item.h				\
 	cocoa_menu_item.c				\
-	gtkosxapplication_quartz.c				\
+	gtkosxapplication_quartz.c			\
 	gtkosxapplication.c				\
-	gtkosxapplicationprivate.h				\
+	gtkosxapplicationprivate.h			\
+	gtkosx-image.c					\
+	gtkosx-image.h					\
 	gtk-mac-dock.c					\
 	gtk-mac-bundle.c				\
 	gtk-mac-menu.c					\

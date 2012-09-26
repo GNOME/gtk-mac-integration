@@ -37,6 +37,14 @@ fi
 
 GTK_DOC_CHECK([1.11], [--flavour no-tmpl])
 
+AC_ARG_ENABLE([menu-images],
+    [AS_HELP_STRING([--enable-menu-images],
+     [Include menu item icons in Mac menus @<:@default=no@:>@])],
+    [],
+    [enable_menu_images=no])
+AS_IF([test "x$enable_menu_images" != xno],
+      [AC_DEFINE([USE_MENU_IMAGES], 1, [Add images to menu items])])
+
 AC_ARG_WITH([gtk],
 	[AS_HELP_STRING([--with-gtk],
 		[select gtk+-3.0 or gtk+-2.0. @<:@default=check@:>@])],
