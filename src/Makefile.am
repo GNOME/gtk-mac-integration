@@ -35,7 +35,7 @@ libgtkmacintegration_la_SOURCES =			\
 libgtkmacintegration_la_CFLAGS = $(MAC_CFLAGS) -xobjective-c
 libgtkmacintegration_la_OBJCFLAGS = $(MAC_CFLAGS)
 libgtkmacintegration_la_LIBADD =  $(MAC_LIBS) -lobjc
-libgtkmacintegration_la_LDFLAGS = -framework Carbon -framework ApplicationServices
+libgtkmacintegration_la_LDFLAGS = -framework Carbon -framework ApplicationServices -version-info $(GTK_MAC_INTEGRATION_LT_VERSION)
 
 integration_includedir = $(includedir)/gtkmacintegration
 integration_include_HEADERS =				\
