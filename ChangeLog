@@ -1,1464 +1,489 @@
-2011-10-03  John Ralls <jralls@ceridwen.us>
+Changes from version gtk-mac-integration-1.0.1 to version gtk-mac-integration-2.0.0:
+John Ralls (22):
+      Change 'NSAlternate' to be used with GDK_MOD1_MASK, matching changes
+         in Gtk keyhandling.
+      initial conversion to gobject-introspectable structure
+      [Introspection] Remove bindings/python/gtk3_osxapplication, made
+         obsolete by gobject-introspection.
+      [Introspection] Change all instances of gtk_osxapplication to
+         gtkosx_application  in python bindings.
+      [Introspection] Rename gtk_osxapplication files in python bindings to
+         gtkosx_application, part 1
+      [Introspection] Rename gtk_osxapplication files in python bindings to
+         gtkosx_application, part 2
+      [Introspection] Test-integration with introspection.
+      [Introspection] Change gtk_osxapplication to gtkosx_application in
+         python bindings
+      [Python] Adjust acinclude and bindings/python/Makefile.am for
+         introspection changes.
+      [Introspection] Rename the bundle functions from quartz_application
+         to gtkosx_application so that introspection can find them.
+      Fix up some documentation warnings
+      [Introspection] Final changes to configure & python Makefile
+      [Introspection] Fix up the test-introspection example so that it
+         works.
+      g_threads_init is deprecated in glib-2.31
+      Ignore introspection with Gtk2
+      Change namespace on create_cgimage_from_pixbuf
+      Fix naming conflict with gtkquartz-menu
+      Remove gtkosx_application_cleanup
+      Adjustments and fixes to 4620977
+
+Julien Woillez (1):
+      Add support for icons in menus.
+
+Richard Procter (1):
+      Fix object release issues found with Clang static analysis
+
+Roy Liu (1):
+      Add the missing G_END_DECLS macro to gtkosxapplication.h
+
+Changes from version gtk-mac-integration-1.0.0 to version gtk-mac-integration-1.0.1:
+John Ralls (9):
+      Add to extra-dist the test data files accel_map and src/testui.xml
+      Strings: Fix error in install script.
+      Restore ige-mac-foo files
+      Rename ige-mac-foo files to gtk-mac-foo
+      Rename bindings/python/igemacintegration to
+         bindings/python/gtkmacintegration
+      Update internals of former ige-mac-foo files
+      strings: Fix the same error in the uninstall script.
+
+Changes from version ige-mac-integration-0.9.8 to version gtk-mac-integration-1.0.0:
+John Ralls (11):
+      Replace the single static emission_hook_id with stuffing the id for
+         each main menu as a qdata on the menu shell.
+      Remove the attempt to add the window title to the window menu.
+      Fix a dumb typo which prevented building with Gtk+2
+      Bug 56: Better French Translations, thanks to gegeweb
+      Add doap file for git.gnome.org
+      Rename the module from ige-mac-integration to gtk-mac-integration
+      Remove deprecations for Gtk-mac-integration release 1.0.0
+      More changes to reflect project name change
+      Make package work with "make dist"
+      Documentation updates for 1.0.0 Release
+
+Changes from version ige-mac-integration-0.9.7 to version ige-mac-integration-0.9.8:
+John Ralls (13):
+      Fix compile error with IGE_MAC_INTEGRATION defined.
+      Cleanup trailing whitespace.
+      Fix a warning about labels not being GObjects when there isn't a
+         label (when the menu item is a separator).
+      Bug #53: Force a double menubar switch to suppress a second system
+         menu icon (with no attached menu) from appearing in the menubar
+         when a new window is created after starting the main loop.
+      Force addition of the current window to the Window menu when a window
+         menu is passed in. This is mostly needed for for the first window;
+         the windows list gets created after the window, so it's not no the
+         list.
+      Test for adding a window after starting the main loop; a tailored
+         window menu is added to hold the command.
+      Add m4 to the ignore list.
+      Bug #52: Make Quartz accelerator handlers work in a gdk_threaded
+         application.
+      Move the "Bounce" binding from "o" to "u" so that it doesn't conflict
+         with File>Open.
+      Setup a new directory, bindings/python/gtk3_osxapplication for pygi
+         (replacing pygtk for gtk3), and for making it instead of
+         gtk_osxapplication if the gtk library is gtk3, Gtk-3.0.gir exists,
+         and pygobject-2.28 or better is present.
+      Add bindings which work with PyGI (replaced PyGtk).
+
+Changes from version ige-mac-integration-0.9.6 to version ige-mac-integration-0.9.7:
+John Ralls (7):
+      Cast to GNSMenuItem so that the setHidden method is found when
+         building for Tiger.
+         https://sourceforge.net/apps/trac/gtk-osx/ticket/41
+      Correct parameter number error in g_cclosure_marshal_BOOLEAN__STRING
+      Add test for openfile.
+      Revert e9a29d3d5ee06f88ce02b68a047e52b1e6f95f31. It turns out that
+         you _do_ need to call gtk_window_add_accel_group, even when using
+         GtkUIManager.
+      Fix key equivalents for Hide, Hide Others, and Minimize so that they
+         don't require <Shift>; not standard per the Apple HIG. Thanks to
+         Richard Proctor for pointing this out.
+      Clean up trailing whitespace in configure.ac
+
+Changes from version ige-mac-integration-0.9.5 to version ige-mac-integration-0.9.6:
+John Ralls (11):
+      Remove the semicolons from the macro definitions; they caused errors
+         when using the macros in the declaration section of a code block.
+      Add a "removeItem" call to GNSMenuItem (only needed because of the
+         inMenu and index member variables which exist when the target is
+         10.4)
+      Rework parent_set_emission_hook so that it returns immediately if
+         neither the old nor the new parent have registered cocoa menus. It
+         turns out that GtkComboBox uses a GtkMenu to keep its list, and
+         trying to sync that menu was a common (and expensive) occurence.
+      Restore cocoa_menu_item_connect to outside of not a separator; that
+         was the wrong solution. Instead, explicitly unhide the inserted
+         separated item in Cocoa.
+      Prevent reentry of signal emission in applicationShouldTermintate
+      Change keymask to reflect patch to gtk+ which maps NSCommandKeyMask
+         to GDK_META_MASK
+      test-integration: Enable BUILT_UI, fix a couple of compile errors for
+         that option, load an accelerator map file.
+      Add accel_map, used for test-integration.
+      Add protection against index being out of range when unhiding a menu
+         item.
+      Use gdkkeysyms-compat for versions of Gtk after 2.90.7
+
+Changes from version ige_mac_integration-0.9.4 to version ige-mac-integration-0.9.5:
+John Ralls (6):
+      Protect the creation of the static GtkOSXApplication pointer with a
+         GStaticMutex for thread safety.
+      Correct the modifier key mappings.
+      Move connect_menu_item call inside the "not a separator branch";
+         unattached separators (those inserted by
+         gtk_osxapplication_insert_app_menu_item in particular) were
+         disappearing because they couldn't successfully connect.
+      [#37] Deprecate gtk_osxapplication_add_app_menu_group() and
+         gtk_osxapplication_add_app_menu_item() in favor of the much
+         simpler gtk_osxapplication_insert_app_menu_item().
+      Update python gtk_osxapplication bindings to reflect API changes.
+
+Richard Procter (1):
+      Make bundle functions "free"
+
+Changes from version ige_mac_integration-0.9.3 to version ige_mac_integration-0.9.4:
+Hamish Mackenzie (1):
+      Menu_event_handler_func: return eventNotHandledErr instead of calling
+         the next event (which EventManager will do when it gets the
+         eventNotHandledErr -- and if the next event returns it, then
+         EventManager would call it again, uselessly)
+
+John Ralls (9):
+      Add clean and distclean targets in strings
+      Correct errors in Python detection script
+      Correct conceptual error in strings clean target: Delete the Makefile
+         for distclean, so that configure will create a new one. One can't
+         very well have a make target to make the makefile.
+      Enable building to gtk+-2.0 or gtk+-3.0
+      Replace deprecated function and macro calls to enable correct
+         operation in gtk+-3.0
+      No need to call gtk_window_add_accel_group with BUILT_UI;
+         GtkUIManager takes care of it for us.
+      Clean up the ifdefs, which had gotten borked for IGEMACINTEGRATION.
+      Corrected ifdef error which prevented test-integration from building
+         in GTKOSXAPPLICATION mode.
+
+Changes from version ige_mac_integration-0.9.2 to version ige_mac_integration-0.9.3:
+John Ralls (14):
+      Make bundle functions return duplicated gchar* instead of the const
+         gchar* pointing into the NSString object. This corrects some ugly
+         memory leaks.
+      Create an object autorelease pool. Corrects some memory issues if the
+         GtkOSXApplication object is created too early.
+      Wrap static strings for translation.
+      Test Response to WillTerminateNotification signal.
+      Add translations for menu labels
+      Use AC_CONFIG_FILES instead of the deprecated AC_OUTPUT().
+      Rename the english strings file to have the "en" suffix.
+      Install the strings files. They'll go to
+         $PREFIX/share/strings/foo.proj/GtkOSXApplication.strings (where
+         "foo" is the appropriate language code).
+      Move some code around to fix errors when BUILD_UI is undeffed.
+      Template accelerator map file for converting standard accelerators to
+         OSX-standard key equivalents.
+      Add pointer to the wiki page for more documentation.
+      Add standard key equivalents to selected menu items in Application
+         and Window menus.
+
+Changes from version ige_mac_integration-0.9.1 to version ige_mac_integration-0.9.2:
+John Ralls (12):
+      Add Paul Davis.
+      Restore the docs Makefiles to AC_OUTPUT, mysteriously deleted in a
+         merge.
+      Better memory management in the unlikely case that the various memory
+         items are changed.
+      Provide accessor for GtkMenuBar*
+      Change name of windowMenu to windowsMenu for consistency with
+         NSApplication function
+      Expose cocoa_menu_item_get as a public function.
+      Split setting up of the Help and Window menus as separate functions.
+      Additional required docs files... should have been added earlier.
+      Fix crash if help_menu or window_menu is no longer attached to the
+         menu bar.
+      Add "will terminate" signal to fully support applications that use
+         two-stage shutdown.
+      Make the creation of docs conditional on --enable-gtk-docs.
+
+Changes from version ige_mac_integration-0.9.0 to version ige_mac_integration-0.9.1:
+John Ralls (6):
+      Tiger compatibility fixes
+      Minor documentation errors
+      Change the return to shouldTerminate to NSTerminateCancel.
+      Add observation of NSApplicationWillTerminate and use that to clean
+         up.
+      Add the notification object to self->priv to ensure its orderly
+         destruction at shutdown.
+
+Changes from version ige_mac_integration-0.8.6 to version ige_mac_integration-0.9.0:
+John Ralls (144):
+      Fix ticket #13 (window focus). Thanks to Steffen Gutmann.
+      Add check for parent so menubars which aren't attached to windows
+         won't be connected to the window-switch callback. (Steffen
+         Gutmann)
+      h2defs.py moved from pygtk to pygobject
+      Add descriptive comments
+      Two windows for test-integration
+      Removed extraneous set_parent
+      Fixed the change icon path so that it's something that's guaranteed
+         to be available and so that it can be found (instead of being on
+         an absolute path from MacPorts).
+      Cocoa reimplimentation on ige-mac-menu from Paul Davis (Ardour).
+      Change license notice to allow distribution under later revisions of
+         LGPL.
+      Change further info URL from imendio to gtk-osx
+      Update copyright information
+      Rename and reorganize gtkapplication-quartz, rewrite GtkApplication
+         class as a GObject (from a Gtkmm C++) class.
+      Adjust Makefile.am to compile GtkApplication and related classes.
+      Upgrade to automake-1.10
+      Use GtkApplication menu functions instead of ige-mac-menu.
+      Split up overly-long gtkapplication_quartz.c into more manageable
+         (and object-specific) files.
+      Cleanup extra includes and put all exported functions together.
+      Invoke gtk_application_ready() before starting the event loop. This
+         tells NSApp that the menus are ready; leave it out and the menubar
+         isn't populated.
+      minor reformat for readability
+      Move, rather than skip, an existing NSMenuItem.
+      Use the saved app_menu instead of retrieving submenu 0.
+      Rename carbon_menu_item_add_submenu to cocoa_menu_item_add_submenu.
+         Oops!
+      Call [NSApplication sharedApplication] exactly once during
+         GtkApplication init, and use the global NSApp elsewhere.
+      Change GNSMenuItem to take a GClosure for its second argument instead
+         of a GtkMenuItem.
+      New ClosureData struct
+      New function cocoa_menu_item_add_action to take a closure and a
+         gpointer to other data so that an arbitrary two-parameter (one in
+         closure.data and one in the gpointer) function wrapped in a
+         closure can be used as a callback to the added CocoaMenuItem, for
+         use in menus that aren't changed with the window.
+      Change calls to [GNSMenuItem initWithTitle] to comply with new
+         signature.
+      Call g_cclosure_new_object_swap instead of g_cclosure_new
+      Change signature of gtk_application_add_app_menu_item to take a
+         label, closure, and data pointer instead of a menu_item.
+      Restore ige-mac-menu to the library for testing and
+         backwards-compatibility.
+      Create accelerators on the File menu to test accelerator function.
+      Renable testing two windows.
+      Add reminder for test coverage
+      Add explanitory comment about menu action callback
+      Set up defines for testing either no menu mangling, Carbon menu
+         mangling (IGEMACMENU) or Cocoa menu mangling (GTKAPPLICATION).
+      Allow cocoa_menu_get to be called (and to return NULL) if
+         cocoa_menu_connect hasn't yet been called.
+      Move the menubar from being owned by the GtkApplication (which limits
+         us to one menubar) to being owned by each window, since in Gtk
+         each window has its own menubar (or doesn't have one at all --
+         which might crash the application when the menuless window
+         receives focus.)
+      Restore the use of a menu item for gtk_application_add_app_menu_item,
+         because it turns out that while Carbon has only one App menu
+         shared among all menubars, Cocoa has one for every menubar.
+      Connect window_focus_cb to the signal.
+      Correct behavior of [GtkApplicationDelegate ApplicationShouldQuit],
+         signature and behavior of gtk_application_should_quit, and
+         comments about other AppDelegate functions.
+      Correct license from GPL to LGPL.
+      Move update_active, update_accel_closure, and _update_submenu from
+         carbon_menu_item_create to sync_menu_shell so that changes to
+         these things will be synchronized even if the menu itself isn't
+         changed.
+      Replace interface extension and direct call to [NSApp setAppleMenu:]
+         with indirect call
+      Comment out add_to_app_menu and add_to_window_menu
+      Fix forgotten parameter in g_print in gtk_application_should_load.
+      Modify add_to_menubar to take a position indicating where on the
+         menubar to add the new menu.
+      Modify create_app_menu to always insert the app menu at index 0.
+      Create a Window menu, always inserting it just to the left of the
+         Help menu if there is one, or on the end if there isn't.
+      Fix app_menu tracking
+      Fix Window menu to include the first-opened window.
+      Add signal handler to override gtk_widget_can_activate_accel for the
+         hidden menubar; makes menu accelerators work.
+      Add to the test program a GtkUIManager ui with actions instead of
+         menuitems doing the work.
+      Add some documentation and a guard to prevent calling
+         ige_mac_menu_sync() before ige_mac_menu_set_menubar();
+      Turn off debug messagesin cocoa_menu_item and gtkapplication_quartz
+      Suppress critical error message if cocoa_menu_get is called before
+         the quark is set.
+      Make the diagnostic signal handler messages DEBUG() macros.
+      UI file for test program GtkUIManager ui.
+      A little cleanup
+      Delete stray leftover from adding accelerators
+      Remove "in_event_menu_handler"     Don't know why this was here, it
+         isn't used.
+      Force passing of windowless (read Apple) accelerators to the main
+         menu bar.
+      Remove cocoa_menu_item_add_action; it isn't needed.
+      Clean out debugging message
+      Provide menu-item hiding for Tiger (not tested) and enable it for
+         Leopard and later (tested).
+      Use Tiger menu item hiding.
+      Prettier formatting.
+      Provide for disabling of Quartz menu accelerator (aka keyEquivalents)
+         for apps which need to do their own.
+      Change the menu_item_activate callback to toggle the sensitiviy of
+         Edit>Copy rather than turn it off once.
+      Fix up the tests of accelerators so that they respond correctly to
+         changes from e.g., gtkrc files.
+      Provide test of disabling quartz key equivalents.
+      Separate state syncronization into a separate function, rename
+         cocoa_menu_item_active to cocoa_menu_item_checked, and  provide
+         for setting checked menu items to "NSMixedState" when the
+         corresponding GtkCheckedMenuItem has its "inconsistent" property
+         set to true.
+      Provide for resyncing an already-set menubar.
+      Make the "action" instance variable private.
+      Fix errors in the Tiger menu-item-hiding code; now tested and working
+         properly.
+      Tidy up some word-wrapping
+      Clean up line endings
+      Add a Help item to the Help menu in BUILT_UI to force the Help menu
+         to be visible after the About menu item is moved.
+      Handle resync of an existing submenu
+      Add parameters with accessors for the 3 OSX special menus so that
+         their positions can be maintained.
+      Add a notUsed instance variable with manipulation so that
+         GNSMenuItems whose Gtk counterparts have been deleted
+         programmatically with signals disconnected can be identified and
+         removed.
+      Track osx-controlled special menus (Apple, Windows, and if needed,
+         Help) so that their positions can be adjusted after modifications
+         to the menubar.
+      Move menu_data_cb functions outside of the ifndef BUILT_UI block so
+         that they can be used with BUILT_UI
+      Add a button which adds/removes a new menu item to/from the menu bar
+         to test and demonstrate programmatic menu synchronization.
+         BUILT_UI only.
+      Change all instances of NSMenuItem in cocoa_menu_item.c to
+         GNSMenuItem to make sure that pointers don't get corrupted by
+         slicing.
+      Editorial cleanup and comments
+      Oops. Clean the submenu and return if there *isn't* a Gtk submenu,
+         not if there is!
+      Some safety improvements in cocoa_menu_item_add_submenu
+      Wrap ige_mac_menu_sync for python bindings
+      When syncronizing the main menu bar ensure that the Window menu gets
+         put back in the right place.
+      Provide for synchronizing deletion of menu items.
+      Provide a QUARTZ_HANDLERS macro to turn on allowing quartz to handle
+         keyboard accelerators.
+      Disconnect the old signal instead of ignoring the fact that the
+         coocoa_item has changed.
+      Don't do anything if the old item and new item match.
+      Comments for #endifs; it's getting pretty complicated!
+      Add dock menu support
+      Comments separating function prototypes by what they do.
+      Add comment indicating that ige-mac-image-utils does not need to be
+         rewritten to support 64-bit compilation.
+      Fix crasher from last change
+      Fix a typo, add some descriptive comments
+      Add a protective check against a null menu shell.
+      Repair a couple of minor typos in GtkApplicationDelegate.c
+      Finish dock functions in GtkApplication, and tests for same to
+         test-integration.c
+      Add bundle functions
+      GtkApplicationNotify emits signals instead of calling a hard-coded
+         function in GtkApplication.
+      Reconfigure GtkApplicationDelegate to use a signal for
+         applicationShouldTerminate.
+      Rename GtkApplication to GtkOSXApplication
+      Move the ige_mac_integration python bindings into their own directory
+         in preparation for creating gtkosxapplication bindings (also in
+         their own directory).
+      Fix m4 function IMENDIO_PYTHON_CHECK for codegen moving from pygtk to
+         pygobject.
+      Symbol changes to be compatible with pygobject-codegen
+      Modify makefiles and configure for moving the ige_mac_integration
+         wrapper to a subdirectory of bindings/python. Provide a makefile
+         for the gtkosxapplication binding.
+      Basic python wrapper for gtkosxapplication.
+      Rename bindings/python/gtkosxapplication to gtk_osxapplication to
+         work consistently with the wrapper module name.
+      Provide a signal for NSApplicationDelegate openFile:
+      Add compiled python and wrapper-intermediate files to ignore list.
+      Fix minor bug and remove testing comment.
+      Change comment type, because pygobject's h2defs pukes on C++-style.
+      Remove the menu item hide in gtk_osxapplication_add_app_menu_item.
+      Remove redundant hide command from cocoa_menu_item_sync_state.    
+         (cocoa_menu_item_update_state handles hidden and sensitive
+         properties)
+      Rename cocoa_menu_item_sync_state to cocoa_menu_item_sync
+      Give gtk_application_sync_menubar a GtkOSXApplication* argument so
+         that h2defs.py will recognize it as a member function.
+      Correct marshaller arguments in NSApplicationOpenFile signal
+         creation.
+      Complete python bindings for GtkOSXApplication
+      Minor typo in AC_OUTPUT
+      PyGObject-codegen needs to see "self" to recognize a class method
+      Conditionally compile Carbon-dependent functions in 32-bit only.
+      Disable compilation of igemacintegration python bindings when
+         compiling for 64-bit is enabled.
+      Make gtk_osxapplication_dock_menu() appear private to Gtk-Doc by
+         renaming it _gtk_osxapplication_dock_menu()
+      Enable running Gtk-Doc to build documentation; update minimum version
+         to 1.11, the one in the current stable moduleset.
+      First pass at documentation.
+      Move the signal creation from gtk_osxapplication_init to
+         gtk_osxapplication_class_init.
+      Add the docs Makefiles so that docs get built
+      Add gtk-doc.make to distribution
+      Gtk-docs Makefile tweaks to get it working.
+      Documentation fixups.
+      Fix some documentation typos.
+      Change return type of gtk_osxapplication_get_bundle_info to gchar*
+      Finish Documentation
+      Update README
+      New version 0.9.0
+      Fix URL in README
+
+Changes from version ige-mac-integration-0.8.5 to version ige_mac_integration-0.8.6:
+John Ralls (10):
+      Provide separate menubars for different windows.
+      Corrected return type (and value) of window_focus event handler,
+         added window_delete event handler.
+      Better logging of parent-set events, synch_menu_shell startup.
+      Rename carbon_menu_create_item to carbon_menu_item_create, more
+         consistent with other function names
+      Decrement CarbonMenuItem index when it's only 1 high (i.e., after a
+         menu item deletion) instead of deleting and recreating the
+         MenuItem.
+      Destroy the Carbon Menu/MenuItem when freeing the
+         CarbonMenu/CarbonMenuItem that points to it.
+      Revert "Corrected return type (and value) of window_focus event
+         handler, added window_delete event handler."
+      Corrected return type, value of window_focus.
+      Clear the menubar when a window is deleted. Still have to manually
+         refocus to another window in the app, but this is a gtk+-quartz
+         problem, not a menu problem.
+
+Changes from version ige-mac-integration-0.8.4 to version ige-mac-integration-0.8.5:
+John Ralls (13):
+      Reformatted for better readability.
+      Rearranged some if blocks to reduce excessive indenting.
+      Extract method to carbon_menu_create_item
+      Prettier control of Debug printing.
+      Error detection and reporting for carbon calls
+      Clean up compile errors
+      Better, more concise logging
+      create carbon_menu_item_get_checked from carbon_menu_item_get (which
+         is returned to it's former form)
+      Use carbon_menu_item_get_checked where needed
+      Avoid adding CarbonMenuItems after errors
+      Better logging
+      Just increment the carbon_item->index after an insert instead of
+         trying to delete the menu item and get everything relinked.
+
+Changes from version ige_mac_integration-0.8.0 to version ige-mac-integration-0.8.4:
+John Ralls (3):
+      Added -DMAC_INTEGRATION
+      Updated URL in README
 
-  * strings/Makefile.am: strings: Fix the same error in the uninstall script.
-
-  * bindings/python/gtkmacintegration/Makefile.am,
-  bindings/python/gtkmacintegration/__init__.py,
-  .../gtkmacintegration/gtkmacintegration-module.c,
-  .../gtkmacintegration/gtkmacintegration.override,
-  data/gtk-mac-integration.pc.in, src/gtk-mac-bundle.c, src/gtk-mac-bundle.h,
-  src/gtk-mac-dock.c, src/gtk-mac-dock.h, src/gtk-mac-image-utils.c,
-  src/gtk-mac-image-utils.h, src/gtk-mac-integration.h, src/gtk-mac-menu.c,
-  src/gtk-mac-menu.h, src/gtk-mac-private.h: Update internals of former
-  ige-mac-foo files
-
-  * bindings/python/gtkmacintegration/Makefile.am,
-  bindings/python/gtkmacintegration/__init__.py,
-  .../gtkmacintegration/gtkmacintegration-module.c,
-  .../gtkmacintegration/gtkmacintegration.override,
-  .../python/gtkmacintegration/test-integration.py,
-  bindings/python/igemacintegration/Makefile.am,
-  bindings/python/igemacintegration/__init__.py,
-  .../igemacintegration/gtkmacintegration-module.c,
-  .../igemacintegration/gtkmacintegration.override,
-  .../python/igemacintegration/test-integration.py: Rename
-  bindings/python/igemacintegration to bindings/python/gtkmacintegration
-
-  * .../igemacintegration/gtkmacintegration-module.c,
-  .../igemacintegration/gtkmacintegration.override,
-  .../igemacintegration/igemacintegration-module.c,
-  .../igemacintegration/igemacintegration.override,
-  data/gtk-mac-integration.pc.in, data/ige-mac-integration.pc.in,
-  docs/reference/gtk-mac-integration-docs.sgml,
-  docs/reference/ige-mac-integration-docs.sgml, src/gtk-mac-bundle.c,
-  src/gtk-mac-bundle.h, src/gtk-mac-dock.c, src/gtk-mac-dock.h,
-  src/gtk-mac-image-utils.c, src/gtk-mac-image-utils.h,
-  src/gtk-mac-integration.h, src/gtk-mac-menu.c, src/gtk-mac-menu.h,
-  src/gtk-mac-private.h, src/ige-mac-bundle.c, src/ige-mac-bundle.h,
-  src/ige-mac-dock.c, src/ige-mac-dock.h, src/ige-mac-image-utils.c,
-  src/ige-mac-image-utils.h, src/ige-mac-integration.h, src/ige-mac-menu.c,
-  src/ige-mac-menu.h, src/ige-mac-private.h: Rename ige-mac-foo files to
-  gtk-mac-foo
-
-  * strings/Makefile.am: Strings: Fix error in install script.
-
-2011-09-26  John Ralls <jralls@ceridwen.us>
-
-  * Makefile.am, src/Makefile.am: Add to extra-dist the test data files
-  accel_map and src/testui.xml
-
-2011-09-23  John Ralls <jralls@ceridwen.us>
-
-  * configure.ac: Bump version to 1.0.1
-
-  * ChangeLog, NEWS, README: Documentation updates for 1.0.0 Release
-
-2011-09-22  John Ralls <jralls@ceridwen.us>
-
-  * Makefile.am, acinclude.m4, strings/Makefile.am, strings/Makefile.in: Make
-  package work with "make dist"  This took a couple of changes:
-  strings/Makefile had to be redone to use automake instead of having a
-  hand-written Makefile.in Provision had to be made for building all three
-  python binding directories. For this to work, it's necessary to have both
-  gtk+-2 and gtk+-3 installed along with pygobject-2, pygobject-3 and pygtk
-  (and all the other pygtk dependencies), and to pass --enable-python=all to
-  configure.
-
-  * bindings/python/.gitignore, docs/reference/Makefile.am: More changes to
-  reflect project name change
-
-2011-09-20  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkosxapplication.h, src/gtkosxapplication_quartz.c: Remove
-  deprecations for Gtk-mac-integration release 1.0.0
-
-2011-09-17  John Ralls <jralls@ceridwen.us>
-
-  * README, autogen.sh, bindings/python/Makefile.am,
-  bindings/python/gtk3_osxapplication/Makefile.am,
-  bindings/python/gtk_osxapplication/Makefile.am,
-  bindings/python/igemacintegration/Makefile.am,
-  bindings/python/igemacintegration/__init__.py,
-  .../igemacintegration/igemacintegration-module.c,
-  .../igemacintegration/igemacintegration.override,
-  .../python/igemacintegration/test-integration.py, configure.ac,
-  data/Makefile.am, data/ige-mac-integration.pc.in, docs/reference/Makefile.am,
-  docs/reference/ige-mac-integration-docs.sgml, src/Makefile.am,
-  src/gtkosxapplication.c, src/gtkosxapplication.h,
-  src/gtkosxapplication_quartz.c, src/ige-mac-bundle.c, src/ige-mac-bundle.h,
-  src/ige-mac-dock.c, src/ige-mac-dock.h, src/ige-mac-image-utils.c,
-  src/ige-mac-image-utils.h, src/ige-mac-integration.h, src/ige-mac-menu.c,
-  src/ige-mac-menu.h, src/ige-mac-private.h, src/test-integration.c: Rename the
-  module from ige-mac-integration to gtk-mac-integration
-
-2011-09-15  John Ralls <jralls@ceridwen.us>
-
-  * gtk-mac-integration.doap: Add doap file for git.gnome.org
-
-2011-06-05  John Ralls <jralls@ceridwen.us>
-
-  * strings/GtkOSXApplication.strings.fr: Bug 56: Better French Translations,
-  thanks to gegeweb
-
-2011-06-01  John Ralls <jralls@ceridwen.us>
-
-  * acinclude.m4: Fix a dumb typo which prevented building with Gtk+2
-
-2011-05-26  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkosxapplication_quartz.c: Remove the attempt to add the window title
-  to the window menu.  First off, it's unnecessary: AppKit takes care of it.
-  Second, it doesn't work because there's no GDK window until the window is
-  realized, and most applications will call this during menu setup, before that
-  happens.
-
-  * src/gtkosxapplication_quartz.c: Replace the single static emission_hook_id
-  with stuffing the id for each main menu as a qdata on the menu shell.  This
-  caused crit errors because only the last hook id created could be removed;
-  when earlier-created windows were destroyed, parent_emission_hook_remove
-  would try to remove the already-removed hook, throwing a critical error.
-
-2011-05-20  John Ralls <jralls@ceridwen.us>
-
-  * ChangeLog: Update Changelog for 0.9.8 Release
-
-  * configure.ac: Bump version to 0.9.8
-
-  * bindings/python/gtk3_osxapplication/Makefile.am,
-  bindings/python/gtk3_osxapplication/__init__.py,
-  .../gtk_osxapplication-module.c, .../gtk_osxapplication.override,
-  .../python/gtk3_osxapplication/test-integration.py: Add bindings which work
-  with PyGI (replaced PyGtk).
-
-2011-05-17  John Ralls <jralls@ceridwen.us>
-
-  * acinclude.m4, bindings/python/Makefile.am, configure.ac: Setup a new
-  directory, bindings/python/gtk3_osxapplication for pygi (replacing pygtk for
-  gtk3), and for making it instead of gtk_osxapplication if the gtk library is
-  gtk3, Gtk-3.0.gir exists, and pygobject-2.28 or better is present.
-
-2011-04-26  John Ralls <jralls@ceridwen.us>
-
-  * src/test-integration.c: Move the "Bounce" binding from "o" to "u" so that
-  it doesn't conflict with File>Open.
-
-  * src/GNSMenuItem.c, src/gtkosxapplication_quartz.c, src/test-integration.c:
-  Bug #52: Make Quartz accelerator handlers work in a gdk_threaded application.
-
-  * .gitignore: Add m4 to the ignore list.
-
-  * src/test-integration.c, src/testui.xml: Test for adding a window after
-  starting the main loop; a tailored window menu is added to hold the command.
-
-  * src/gtkosxapplication_quartz.c: Force addition of the current window to the
-  Window menu when a window menu is passed in. This is mostly needed for for
-  the first window; the windows list gets created after the window, so it's not
-  no the list.
-
-  * src/gtkosxapplication_quartz.c: Bug #53: Force a double menubar switch to
-  suppress a second system menu icon (with no attached menu) from appearing in
-  the menubar when a new window is created after starting the main loop.
-
-2011-02-11  John Ralls <jralls@ceridwen.us>
-
-  * src/cocoa_menu_item.c: Fix a warning about labels not being GObjects when
-  there isn't a label (when the menu item is a separator).
-
-  * src/cocoa_menu.c, src/cocoa_menu.h, src/cocoa_menu_item.c,
-  src/cocoa_menu_item.h: Cleanup trailing whitespace.
-
-2011-02-10  John Ralls <jralls@ceridwen.us>
-
-  * src/test-integration.c: Fix compile error with IGE_MAC_INTEGRATION defined.
-
-2010-12-14  John Ralls <jralls@ceridwen.us>
-
-  * configure.ac: Bump version to 0.9.7
-
-  * configure.ac: Clean up trailing whitespace in configure.ac
-
-2010-11-28  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkosxapplication_quartz.c: Fix key equivalents for Hide, Hide Others,
-  and Minimize so that they don't require <Shift>; not standard per the Apple
-  HIG. Thanks to Richard Proctor for pointing this out.
-
-2010-10-05  John Ralls <jralls@ceridwen.us>
-
-  * src/test-integration.c: Revert e9a29d3d5ee06f88ce02b68a047e52b1e6f95f31. It
-  turns out that you _do_ need to call gtk_window_add_accel_group, even when
-  using GtkUIManager.
-
-2010-10-01  John Ralls <jralls@ceridwen.us>
-
-  * bundle/Info.plist, bundle/launcher.sh, bundle/test-integration.bundle,
-  src/test-integration.c: Add test for openfile.  Note that this makes a
-  bundle, and the get_bundle_id() test will fail because it doesn't want to
-  find a bundle id.
-
-  * src/gtkosxapplication_quartz.c: Correct parameter number error in
-  g_cclosure_marshal_BOOLEAN__STRING
-
-2010-09-13  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkosxapplication_quartz.c: Cast to GNSMenuItem so that the setHidden
-  method is found when building for Tiger.
-  https://sourceforge.net/apps/trac/gtk-osx/ticket/41
-
-2010-09-09  John Ralls <jralls@ceridwen.us>
-
-  * src/cocoa_menu_item.c, src/test-integration.c: Use gdkkeysyms-compat for
-  versions of Gtk after 2.90.7
-
-  * src/GNSMenuItem.c: Add protection against index being out of range when
-  unhiding a menu item.
-
-2010-09-07  John Ralls <jralls@ceridwen.us>
-
-  * configure.ac: Bump Version to 0.9.6
-
-  * accel_map: Add accel_map, used for test-integration.
-
-2010-09-06  John Ralls <jralls@ceridwen.us>
-
-  * src/test-integration.c: test-integration: Enable BUILT_UI, fix a couple of
-  compile errors for that option, load an accelerator map file.
-
-2010-08-30  John Ralls <jralls@ceridwen.us>
-
-  * src/cocoa_menu_item.c: Change keymask to reflect patch to gtk+ which maps
-  NSCommandKeyMask to GDK_META_MASK
-
-2010-08-29  John Ralls <jralls@ceridwen.us>
-
-  * src/GtkApplicationDelegate.c: Prevent reentry of signal emission in
-  applicationShouldTermintate  GObject signal emissions are not reentrant, so
-  if the program is in a handler and the program tries to emit another instance
-  of the signal, that emission returns with a null result. In our case, that
-  means that if one is handling a shouldTerminate and the user manages to issue
-  another one (perhaps with the dock menu, which isn't affected by modal
-  dialogs) the second shouldTerminate will receive an NSTerminateNow and the
-  app will quit, perhaps while trying to save its file. Not so good.  This
-  change prevents that by returning NSTerminateCancel if the app is waiting on
-  a handler.
-
-2010-08-27  John Ralls <jralls@ceridwen.us>
-
-  * src/cocoa_menu_item.c, src/gtkosxapplication_quartz.c: Restore
-  cocoa_menu_item_connect to outside of not a separator; that was the wrong
-  solution. Instead, explicitly unhide the inserted separated item in Cocoa.
-
-2010-08-22  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkosxapplication_quartz.c: Rework parent_set_emission_hook so that it
-  returns immediately if neither the old nor the new parent have registered
-  cocoa menus. It turns out that GtkComboBox uses a GtkMenu to keep its list,
-  and trying to sync that menu was a common (and expensive) occurence.  Further
-  reworked to just delete the menu item from the old NSMenu if there was one,
-  and to re-synch the new parent menu if it's has a registered cocoa menu. (If
-  it doesn't, then it hasn't been added yet and it will get synched when it
-  is.)
-
-  * src/GNSMenuItem.c, src/GNSMenuItem.h: Add a "removeItem" call to
-  GNSMenuItem (only needed because of the inMenu and index member variables
-  which exist when the target is 10.4)
-
-  * src/gtkosxapplication.h: Remove the semicolons from the macro definitions;
-  they caused errors when using the macros in the declaration section of a code
-  block.
-
-2010-08-15  John Ralls <jralls@ceridwen.us>
-
-  * configure.ac: Bump Version to 0.9.5
-
-  * .../gtk_osxapplication/gtk_osxapplication.override,
-  .../python/gtk_osxapplication/test-integration.py: Update python
-  gtk_osxapplication bindings to reflect API changes.
-
-2010-08-07  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkosxapplication.h, src/gtkosxapplication_quartz.c,
-  src/test-integration.c: [#37] Deprecate
-  gtk_osxapplication_add_app_menu_group() and
-  gtk_osxapplication_add_app_menu_item() in favor of the much simpler
-  gtk_osxapplication_insert_app_menu_item().  The new interface allows one to
-  insert a separator item simply by creating a GtkSeparatorMenuItem and passing
-  it. This enables a good deal more control than messing around with the
-  groups, particularly if you want to add items at different points in the app
-  setup process.
-
-  * src/cocoa_menu_item.c: Move connect_menu_item call inside the "not a
-  separator branch"; unattached separators (those inserted by
-  gtk_osxapplication_insert_app_menu_item in particular) were disappearing
-  because they couldn't successfully connect.
-
-2010-08-07  Richard Procter <richard.n.procter@gmail.com>
-
-  * src/gtkosxapplication.h, src/gtkosxapplication_quartz.c,
-  src/test-integration.c: Make bundle functions "free"  No need for them to be
-  member functions and save having to get an app pointer just for getting
-  bundle info.  Renamed to quartz_application_foo with a defined alias to avoid
-  suddenly breaking existing code, but the member function calls are deprecated
-  and will be removed at version 1.0
-
-2010-08-01  John Ralls <jralls@ceridwen.us>
-
-  * src/cocoa_menu_item.c, src/test-integration.c: Correct the modifier key
-  mappings.  Note that as of Gtk+-2.20, GDK_META_MASK is no longer mapped to
-  the Command Keys, so it can't be used anymore. The correct keyword for
-  Command in accelerator map files is now "Alt".
-
-  * src/gtkosxapplication_quartz.c: Protect the creation of the static
-  GtkOSXApplication pointer with a GStaticMutex for thread safety.  (The GOnce
-  version was misguided; GOnce is to protect thread creation objects, not
-  singletons.)
-
-2010-06-26  John Ralls <jralls@ceridwen.us>
-
-  * src/test-integration.c: Corrected ifdef error which prevented
-  test-integration from building in GTKOSXAPPLICATION mode.
-
-  * configure.ac: Bump version
-
-  * src/test-integration.c: Clean up the ifdefs, which had gotten borked for
-  IGEMACINTEGRATION.
-
-  * src/test-integration.c: No need to call gtk_window_add_accel_group with
-  BUILT_UI; GtkUIManager takes care of it for us.
-
-  * src/cocoa_menu_item.c, src/gtkosxapplication_quartz.c, src/ige-mac-menu.c,
-  src/test-integration.c: Replace deprecated function and macro calls to enable
-  correct operation in gtk+-3.0
-
-  * configure.ac, data/ige-mac-integration.pc.in: Enable building to gtk+-2.0
-  or gtk+-3.0  Selectable at build time if both are available, defaulting to
-  gtk+-3.0. If only one is available, it will abort if the wrong one is
-  selected, otherwise it will build whichever one is available. 
-  ige-mac-integration.pc will be set up accordingly. There is no provision for
-  having both installed.
-
-  * strings/Makefile.in: Correct conceptual error in strings clean target:
-  Delete the Makefile for distclean, so that configure will create a new one.
-  One can't very well have a make target to make the makefile.
-
-  * acinclude.m4: Correct errors in Python detection script
-
-2010-06-21  John Ralls <jralls@ceridwen.us>
-
-  * strings/Makefile.in: Add clean and distclean targets in strings
-
-2010-06-20  Hamish Mackenzie <hamish.k.mackenzie@googlemail.com>
-
-  * src/ige-mac-menu.c: Menu_event_handler_func: return eventNotHandledErr
-  instead of calling the next event (which EventManager will do when it gets
-  the eventNotHandledErr -- and if the next event returns it, then EventManager
-  would call it again, uselessly)
-
-2010-06-05  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkosxapplication_quartz.c: Add standard key equivalents to selected
-  menu items in Application and Window menus.
-
-  * configure.ac: Bump version 0.9.3
-
-  * README: Add pointer to the wiki page for more documentation.
-
-  * data/template_accel_map: Template accelerator map file for converting
-  standard accelerators to OSX-standard key equivalents.
-
-  * src/test-integration.c: Move some code around to fix errors when BUILD_UI
-  is undeffed.
-
-2010-06-04  John Ralls <jralls@ceridwen.us>
-
-  * Makefile.am, configure.ac, strings/Makefile.in: Install the strings files.
-  They'll go to $PREFIX/share/strings/foo.proj/GtkOSXApplication.strings (where
-  "foo" is the appropriate language code).
-
-  * strings/GtkOSXApplication.strings, strings/GtkOSXApplication.strings.en:
-  Rename the english strings file to have the "en" suffix.
-
-  * configure.ac: Use AC_CONFIG_FILES instead of the deprecated AC_OUTPUT().
-
-  * strings/GtkOSXApplication.strings, strings/GtkOSXApplication.strings.ca,
-  strings/GtkOSXApplication.strings.cs, strings/GtkOSXApplication.strings.da,
-  strings/GtkOSXApplication.strings.de, strings/GtkOSXApplication.strings.es,
-  strings/GtkOSXApplication.strings.eu, strings/GtkOSXApplication.strings.fa,
-  strings/GtkOSXApplication.strings.fi, strings/GtkOSXApplication.strings.fr,
-  strings/GtkOSXApplication.strings.he, strings/GtkOSXApplication.strings.hu,
-  strings/GtkOSXApplication.strings.it, strings/GtkOSXApplication.strings.ja,
-  strings/GtkOSXApplication.strings.ko, strings/GtkOSXApplication.strings.lt,
-  strings/GtkOSXApplication.strings.lv_LV,
-  strings/GtkOSXApplication.strings.nb, strings/GtkOSXApplication.strings.nl,
-  strings/GtkOSXApplication.strings.pl, strings/GtkOSXApplication.strings.pt,
-  strings/GtkOSXApplication.strings.ro, strings/GtkOSXApplication.strings.ru,
-  strings/GtkOSXApplication.strings.sk, strings/GtkOSXApplication.strings.sv,
-  strings/GtkOSXApplication.strings.tr, strings/GtkOSXApplication.strings.uk,
-  strings/GtkOSXApplication.strings.vi,
-  strings/GtkOSXApplication.strings.zh_CN,
-  strings/GtkOSXApplication.strings.zh_TW: Add translations for menu labels
-
-  * src/test-integration.c: Test Response to WillTerminateNotification signal.
-
-2010-05-22  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkosxapplication_quartz.c: Wrap static strings for translation.  We're
-  using the apple translation mecanism here because the strings are coded in
-  Cocoa.
-
-  * src/gtkosxapplication_quartz.c, src/gtkosxapplicationprivate.h: Create an
-  object autorelease pool. Corrects some memory issues if the GtkOSXApplication
-  object is created too early.
-
-  * src/GtkApplicationNotify.c, src/gtkosxapplication.h,
-  src/gtkosxapplication_quartz.c: Make bundle functions return duplicated
-  gchar* instead of the const gchar* pointing into the NSString object. This
-  corrects some ugly memory leaks.
-
-2010-05-20  John Ralls <jralls@ceridwen.us>
-
-  * configure.ac: Bump version
-
-  * configure.ac, docs/Makefile.am: Make the creation of docs conditional on
-  --enable-gtk-docs.
-
-  * src/GtkApplicationNotify.c, src/gtkosxapplication_quartz.c,
-  src/test-integration.c: Add "will terminate" signal to fully support
-  applications that use two-stage shutdown.
-
-  * src/GNSMenuBar.c: Fix crash if help_menu or window_menu is no longer
-  attached to the menu bar.
-
-  * docs/Makefile.am, docs/reference/ige-mac-integration-docs.sgml: Additional
-  required docs files... should have been added earlier.
-
-  * src/gtkosxapplication.h, src/gtkosxapplication_quartz.c,
-  src/test-integration.c: Split setting up of the Help and Window menus as
-  separate functions.  Adding them without asking was rude and added strings
-  exposed to the user. No provision had been made for translating those strings
-  -- and to do so would expose application ports to an unexpected requirement. 
-  Now, if the application has a Window or Help menu, the application can
-  designate it so that OSX will manage it correctly. If not, and if the
-  application doesn't need translations, the menus can be created -- but this
-  is intended mostly for testing rather than actual use.
-
-2010-05-18  John Ralls <jralls@ceridwen.us>
-
-  * src/cocoa_menu_item.c, src/cocoa_menu_item.h: Expose cocoa_menu_item_get as
-  a public function.  Needed for separating gtk_osx_application_set_window_menu
-  from gtk_osx_application_set_menu_bar
-
-  * src/GNSMenuBar.c, src/GNSMenuBar.h, src/cocoa_menu_item.c,
-  src/gtkosxapplication_quartz.c: Change name of windowMenu to windowsMenu for
-  consistency with NSApplication function
-
-  * src/GNSMenuBar.c, src/GNSMenuBar.h: Provide accessor for GtkMenuBar*
-
-  * src/GNSMenuBar.c: Better memory management in the unlikely case that the
-  various memory items are changed.
-
-  * configure.ac: Restore the docs Makefiles to AC_OUTPUT, mysteriously deleted
-  in a merge.
-
-2010-05-17  John Ralls <jralls@ceridwen.us>
-
-  * AUTHORS: Add Paul Davis.
-
-  * src/gtkosxapplication_quartz.c, src/gtkosxapplicationprivate.h: Add the
-  notification object to self->priv to ensure its orderly destruction at
-  shutdown.
-
-  * src/GtkApplicationNotify.c: Add observation of NSApplicationWillTerminate
-  and use that to clean up.
-
-  * src/GtkApplicationDelegate.c: Change the return to shouldTerminate to
-  NSTerminateCancel.  NSTerminateLater is for delaying termination, and
-  termination is allowed to proceed when the application calls
-  replyToShouldTerminate:. That doesn't make sense in a Gtk+ application, and
-  besides, it leaves the CFEventLoop in a state where it won't accept other
-  events.
-
-  * src/gtkosxapplication.c: Minor documentation errors
-
-  * src/GNSMenuItem.c, src/GNSMenuItem.h, src/gtkosxapplication_quartz.c: Tiger
-  compatibility fixes  The unhide mechanism was causing a crash due to
-  recursion, fixed by setting hidden to false first instead of last; NSInteger
-  was added in 10.5, but for now just calling it an int works fine.
-
-2010-05-16  John Ralls <jralls@ceridwen.us>
-
-  * README: Fix URL in README
-
-  * configure.ac: New version 0.9.0
-
-  * README: Update README
-
-  * docs/reference/Makefile.am, src/GNSMenuBar.h, src/GNSMenuItem.h,
-  src/cocoa_menu_item.c, src/gtkosxapplication.c, src/gtkosxapplication.h:
-  Finish Documentation
-
-  * src/gtkosxapplication.h, src/gtkosxapplication_quartz.c: Change return type
-  of gtk_osxapplication_get_bundle_info to gchar*  Returning an NSObject* was a
-  dumb idea, because it forces users to use ObjC to deal with it. There are
-  only two likely return values from an Info.plist key anyway, a string (which
-  this now accomodates) and a dictionary (which it doesn't, and which would be
-  difficult to because of the possibility that the dictionary contains more
-  dictionaries).
-
-2010-05-14  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkosxapplication_quartz.c: Fix some documentation typos.
-
-  * src/gtkosxapplication.h: Documentation fixups.  In particular, move the
-  signal comments to gtkosxapplication_quartz.c, where Gtk-doc seems to like
-  them better,
-
-  * docs/reference/Makefile.am: Gtk-docs Makefile tweaks to get it working.
-
-  * Makefile.am: Add gtk-doc.make to distribution
-
-  * configure.ac: Add the docs Makefiles so that docs get built
-
-  * src/gtkosxapplication_quartz.c: Move the signal creation from
-  gtk_osxapplication_init to gtk_osxapplication_class_init.  Not only does
-  Gtk-doc like this better, but it also makes more sense, because signals
-  should be created only once. The fact that GtkOSXApplication is a singleton
-  is the only thing that avoided trouble.
-
-  * docs/reference/Makefile.am, src/gtkosxapplication.c,
-  src/gtkosxapplication_quartz.c: First pass at documentation.
-
-  * Makefile.am, configure.ac: Enable running Gtk-Doc to build documentation;
-  update minimum version to 1.11, the one in the current stable moduleset.
-
-  * src/GtkApplicationDelegate.c, src/gtkosxapplication_quartz.c: Make
-  gtk_osxapplication_dock_menu() appear private to Gtk-Doc by renaming it
-  _gtk_osxapplication_dock_menu()
-
-2010-05-13  John Ralls <jralls@ceridwen.us>
-
-  * bindings/python/Makefile.am, configure.ac: Disable compilation of
-  igemacintegration python bindings when compiling for 64-bit is enabled.  Note
-  that this will either prevent build the python bindings or the build will
-  break when building universal.
-
-  * src/ige-mac-bundle.c, src/ige-mac-bundle.h, src/ige-mac-dock.c,
-  src/ige-mac-dock.h, src/ige-mac-menu.c, src/ige-mac-menu.h,
-  src/test-integration.c: Conditionally compile Carbon-dependent functions in
-  32-bit only.
-
-  * src/gtkosxapplication.h: PyGObject-codegen needs to see "self" to recognize
-  a class method
-
-  * configure.ac: Minor typo in AC_OUTPUT
-
-  * bindings/python/gtk_osxapplication/__init__.py,
-  .../gtk_osxapplication/gtk_osxapplication.override,
-  .../python/gtk_osxapplication/test-integration.py: Complete python bindings
-  for GtkOSXApplication
-
-  * src/gtkosxapplication_quartz.c: Correct marshaller arguments in
-  NSApplicationOpenFile signal creation.
-
-  * src/gtkosxapplication.h, src/gtkosxapplication_quartz.c: Give
-  gtk_application_sync_menubar a GtkOSXApplication* argument so that h2defs.py
-  will recognize it as a member function.
-
-  * src/cocoa_menu_item.c: Rename cocoa_menu_item_sync_state to
-  cocoa_menu_item_sync  To avoid confusion, because it calls several update
-  functions, including one called cocoa_menu_item_update_state.
-
-  * src/cocoa_menu_item.c: Remove redundant hide command from
-  cocoa_menu_item_sync_state. (cocoa_menu_item_update_state handles hidden and
-  sensitive properties)
-
-2010-05-11  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkosxapplication_quartz.c: Remove the menu item hide in
-  gtk_osxapplication_add_app_menu_item.  The menu item is removed from the
-  original quartz menu, and menus are not resynced the same way in Cocoa, so
-  it's unnecessary. Also, in PyGtk, it was hiding the menu item on the Apple
-  menu. (I guess the interesting question is why doesn't it hide it in C?)
-
-  * src/gtkosxapplication.h: Change comment type, because pygobject's h2defs
-  pukes on C++-style.
-
-  * .../python/gtk_osxapplication/gtk_osxapplication.c,
-  src/GtkApplicationDelegate.c: Fix minor bug and remove testing comment.
-
-2010-05-10  John Ralls <jralls@ceridwen.us>
-
-  * .gitignore: Add compiled python and wrapper-intermediate files to ignore
-  list.
-
-  * src/GtkApplicationDelegate.c, src/gtkosxapplication.h,
-  src/gtkosxapplication_quartz.c: Provide a signal for NSApplicationDelegate
-  openFile:  Replaces the GtkOSXApplication instance function should_open_file
-  which was a no-op anyway.
-
-  * bindings/python/Makefile.am,
-  bindings/python/gtk_osxapplication/Makefile.am,
-  .../gtk_osxapplication/gtk_osxapplication-module.c,
-  .../python/gtk_osxapplication/gtk_osxapplication.c,
-  .../gtk_osxapplication/gtk_osxapplication.override,
-  bindings/python/gtkosxapplication/Makefile.am,
-  .../gtkosxapplication/gtk_osxapplication-module.c,
-  .../python/gtkosxapplication/gtk_osxapplication.c,
-  .../gtkosxapplication/gtk_osxapplication.override: Rename
-  bindings/python/gtkosxapplication to gtk_osxapplication to work consistently
-  with the wrapper module name.
-
-2010-05-09  John Ralls <jralls@ceridwen.us>
-
-  * .../gtkosxapplication/gtk_osxapplication-module.c,
-  .../python/gtkosxapplication/gtk_osxapplication.c,
-  .../gtkosxapplication/gtk_osxapplication.override: Basic python wrapper for
-  gtkosxapplication.
-
-  * bindings/python/Makefile.am, bindings/python/gtkosxapplication/Makefile.am,
-  bindings/python/igemacintegration/Makefile.am,
-  .../igemacintegration/igemacintegration.override, configure.ac: Modify
-  makefiles and configure for moving the ige_mac_integration wrapper to a
-  subdirectory of bindings/python. Provide a makefile for the gtkosxapplication
-  binding.  Dunno what the relative path to the headers was about, but I fixed
-  it anyway.
-
-  * src/GtkApplicationDelegate.c, src/GtkApplicationNotify.c,
-  src/gtkosxapplication.c, src/gtkosxapplication.h,
-  src/gtkosxapplication_quartz.c, src/gtkosxapplicationprivate.h,
-  src/test-integration.c: Symbol changes to be compatible with
-  pygobject-codegen  Codegen wants to generate macros named GTK_OSX_APPLICATION
-  instead of GTK_OSXAPPLICATION, so this change mollifies it. It's also
-  persnickety about having a GType macro for the named enum
-  GtkOSXApplicationAttentionType because it's used as a parameter to a
-  function, so this change provides that as well.
-
-  * acinclude.m4: Fix m4 function IMENDIO_PYTHON_CHECK for codegen moving from
-  pygtk to pygobject.  This includes updating the minimum requiements for PyGtk
-  to 2.14 and introducing a requirement for PyGObject 2.16 or greater, as these
-  are the releases in which that change was made.  Note that this is being
-  tested against git masters, so it's possible (though unlikely) that there
-  will be changes required once it's checked against moduleset-stable.
-
-2010-05-08  John Ralls <jralls@ceridwen.us>
-
-  * bindings/python/Makefile.am, bindings/python/__init__.py,
-  bindings/python/igemacintegration-module.c,
-  bindings/python/igemacintegration.override,
-  bindings/python/igemacintegration/Makefile.am,
-  bindings/python/igemacintegration/__init__.py,
-  .../igemacintegration/igemacintegration-module.c,
-  .../igemacintegration/igemacintegration.override,
-  .../python/igemacintegration/test-integration.py,
-  bindings/python/test-integration.py: Move the ige_mac_integration python
-  bindings into their own directory in preparation for creating
-  gtkosxapplication bindings (also in their own directory).
-
-  * src/GNSMenuBar.c, src/GNSMenuBar.h, src/GtkApplicationDelegate.c,
-  src/GtkApplicationNotify.c, src/Makefile.am, src/gtkapplication.c,
-  src/gtkapplication.h, src/gtkapplication_quartz.c,
-  src/gtkapplicationprivate.h, src/gtkosxapplication.c,
-  src/gtkosxapplication.h, src/gtkosxapplication_quartz.c,
-  src/gtkosxapplicationprivate.h, src/test-integration.c: Rename GtkApplication
-  to GtkOSXApplication  There has been some discussion on gtk-dev about
-  creating one or more application classes, and GtkApplication is one of the
-  proposed names. Since very little of this class has anything to do with
-  anything other than Cocoa at this point, it seems prudent to change the name
-  and avoid a potential collision if a GtkApplication class ever becomes part
-  of Gtk.
-
-  * src/GtkApplicationDelegate.c, src/gtkapplication.c, src/gtkapplication.h,
-  src/gtkapplication_quartz.c, src/test-integration.c: Reconfigure
-  GtkApplicationDelegate to use a signal for applicationShouldTerminate.
-
-2010-05-07  John Ralls <jralls@ceridwen.us>
-
-  * src/GtkApplicationNotify.c, src/gtkapplication.c, src/gtkapplication.h,
-  src/gtkapplication_quartz.c, src/test-integration.c: GtkApplicationNotify
-  emits signals instead of calling a hard-coded function in GtkApplication. 
-  This is vastly more flexible, and helps eliminate the need to subclass
-  GtkApplication to get reasonable behavior.
-
-  * src/gtkapplication.h, src/gtkapplication_quartz.c, src/test-integration.c:
-  Add bundle functions
-
-2010-05-06  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkapplication.h, src/gtkapplication_quartz.c, src/test-integration.c:
-  Finish dock functions in GtkApplication, and tests for same to
-  test-integration.c  Things that work: Change Icon, Set Menu,
-  AttentionRequest. Change overlay is removed from 10.5 and later, and so not
-  implemented.  Dragging a file to the dock tile doesn't trigger ShouldOpen.
-
-  * src/GtkApplicationDelegate.c: Repair a couple of minor typos in
-  GtkApplicationDelegate.c
-
-  * src/ige-mac-menu.c: Add a protective check against a null menu shell.
-
-  * src/ige-mac-menu.c: Fix a typo, add some descriptive comments
-
-  * src/ige-mac-menu.c: Fix crasher from last change  The submenu in the
-  deleted fragment wasn't initialized, and so the test was bogus -- with
-  predictable results. If it was a submenu, carbon_menu_item_update_submenu had
-  already run sync_menu_shell anyway.
-
-2010-05-04  John Ralls <jralls@ceridwen.us>
-
-  * src/ige-mac-image-utils.c: Add comment indicating that ige-mac-image-utils
-  does not need to be rewritten to support 64-bit compilation.
-
-  * src/gtkapplication.h: Comments separating function prototypes by what they
-  do.
-
-  * src/GtkApplicationDelegate.c, src/gtkapplication.h,
-  src/gtkapplication_quartz.c, src/gtkapplicationprivate.h: Add dock menu
-  support
-
-  * src/test-integration.c: Comments for #endifs; it's getting pretty
-  complicated!
-
-2010-04-25  John Ralls <jralls@ceridwen.us>
-
-  * src/cocoa_menu_item.c: Don't do anything if the old item and new item
-  match.
-
-  * src/cocoa_menu_item.c: Disconnect the old signal instead of ignoring the
-  fact that the coocoa_item has changed.  It often happens in cases when adding
-  or removing menu items that a new cocoa_menu_item will be created and
-  attached. The original version of this would check to see if there was
-  already an item set on the GtkMenuItem and if there was, would leave the old
-  signal connected and pointing to the wrong NSMenuItem. This change
-  disconnects the old signals and connects new ones with the right data so that
-  the handler can invoke the right Cocoa object.
-
-  * src/test-integration.c: Provide a QUARTZ_HANDLERS macro to turn on allowing
-  quartz to handle keyboard accelerators.
-
-  * src/cocoa_menu_item.c: Provide for synchronizing deletion of menu items.
-
-  * src/GNSMenuBar.c, src/gtkapplication_quartz.c: When syncronizing the main
-  menu bar ensure that the Window menu gets put back in the right place.
-
-2010-04-24  John Ralls <jralls@ceridwen.us>
-
-  * bindings/python/__init__.py: Wrap ige_mac_menu_sync for python bindings
-
-2010-04-20  John Ralls <jralls@ceridwen.us>
-
-  * src/cocoa_menu_item.c: Some safety improvements in
-  cocoa_menu_item_add_submenu
-
-  * src/cocoa_menu_item.c: Oops. Clean the submenu and return if there *isn't*
-  a Gtk submenu, not if there is!
-
-  * src/gtkapplication_quartz.c, src/test-integration.c: Editorial cleanup and
-  comments
-
-  * src/cocoa_menu_item.c: Change all instances of NSMenuItem in
-  cocoa_menu_item.c to GNSMenuItem to make sure that pointers don't get
-  corrupted by slicing.
-
-  * src/addedui.xml, src/test-integration.c, src/testui.xml: Add a button which
-  adds/removes a new menu item to/from the menu bar to test and demonstrate
-  programmatic menu synchronization. BUILT_UI only.
-
-  * src/test-integration.c: Move menu_data_cb functions outside of the ifndef
-  BUILT_UI block so that they can be used with BUILT_UI
-
-  * src/gtkapplication_quartz.c: Track osx-controlled special menus (Apple,
-  Windows, and if needed, Help) so that their positions can be adjusted after
-  modifications to the menubar.
-
-  * src/GNSMenuItem.c, src/GNSMenuItem.h: Add a notUsed instance variable with
-  manipulation so that GNSMenuItems whose Gtk counterparts have been deleted
-  programmatically with signals disconnected can be identified and removed.
-
-  * src/GNSMenuBar.c, src/GNSMenuBar.h: Add parameters with accessors for the 3
-  OSX special menus so that their positions can be maintained.
-
-  * src/cocoa_menu_item.c: Handle resync of an existing submenu  As originally
-  written, the cocoa_menu_item_add_menu_item could handle only additions to the
-  menu. This modification allows one to resync an existing menu item with its
-  Gtk counterpart, including deletions and state changes which occur without
-  the signal being emitted (because it's happening under program control with
-  the signal disconnected). Not completely working yet.
-
-2010-04-17  John Ralls <jralls@ceridwen.us>
-
-  * src/test-integration.c, src/testui.xml: Add a Help item to the Help menu in
-  BUILT_UI to force the Help menu to be visible after the About menu item is
-  moved.
-
-  * src/test-integration.c: Clean up line endings
-
-  * src/cocoa_menu_item.c: Tidy up some word-wrapping
-
-  * src/GNSMenuItem.c: Fix errors in the Tiger menu-item-hiding code; now
-  tested and working properly.
-
-  * src/GNSMenuItem.h: Make the "action" instance variable private.
-
-  * src/GNSMenuBar.c, src/GNSMenuBar.h, src/gtkapplication.h,
-  src/gtkapplication_quartz.c: Provide for resyncing an already-set menubar. 
-  This is done at two levels: A function gtk_application_sync_menubar is
-  provided for client applications to call from C, but it just asks the
-  currently-active menubar to resync. That's implemented by a new function
-  GNSMenuBar -resync. For it to work, GNSMenubar needs to know what GtkMenuBar
-  it's associated with, so a new private instance variable and a new
-  initializer are provided as well. GNSMenuBar's instance variable
-  app_menu_groups is made private as well, just for cleanliness.
-
-  * src/cocoa_menu_item.c: Separate state syncronization into a separate
-  function, rename cocoa_menu_item_active to cocoa_menu_item_checked, and 
-  provide for setting checked menu items to "NSMixedState" when the
-  corresponding GtkCheckedMenuItem has its "inconsistent" property set to true.
-
-2010-04-16  John Ralls <jralls@ceridwen.us>
-
-  * src/test-integration.c: Provide test of disabling quartz key equivalents.
-
-  * src/test-integration.c: Fix up the tests of accelerators so that they
-  respond correctly to changes from e.g., gtkrc files.
-
-  * src/test-integration.c: Change the menu_item_activate callback to toggle
-  the sensitiviy of Edit>Copy rather than turn it off once.
-
-  * src/gtkapplication.c, src/gtkapplication.h, src/gtkapplication_quartz.c,
-  src/gtkapplicationprivate.h: Provide for disabling of Quartz menu accelerator
-  (aka keyEquivalents) for apps which need to do their own.  For example, if an
-  app has over-ridden the acccelerator closure for some reason, the quartz
-  handling will call the menu item rather than the accelerator's closure.
-
-  * src/cocoa_menu_item.c: Prettier formatting.
-
-  * src/cocoa_menu_item.c: Use Tiger menu item hiding.
-
-  * src/GNSMenuItem.c, src/GNSMenuItem.h: Provide menu-item hiding for Tiger
-  (not tested) and enable it for Leopard and later (tested).
-
-  * src/GNSMenuBar.c: Clean out debugging message
-
-2010-04-15  John Ralls <jralls@ceridwen.us>
-
-  * src/cocoa_menu_item.c, src/cocoa_menu_item.h: Remove
-  cocoa_menu_item_add_action; it isn't needed.
-
-  * src/gtkapplication_quartz.c: Force passing of windowless (read Apple)
-  accelerators to the main menu bar.
-
-  * src/gtkapplication.h, src/gtkapplication_quartz.c: Remove
-  "in_event_menu_handler" Don't know why this was here, it isn't used.
-
-  * src/test-integration.c: Delete stray leftover from adding accelerators
-
-2010-04-12  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkapplication_quartz.c: A little cleanup
-
-  * src/testui.xml: UI file for test program GtkUIManager ui.
-
-  * src/gtkapplication.c: Make the diagnostic signal handler messages DEBUG()
-  macros.
-
-  * src/cocoa_menu.c: Suppress critical error message if cocoa_menu_get is
-  called before the quark is set.
-
-  * src/cocoa_menu_item.c, src/gtkapplication_quartz.c: Turn off debug
-  messagesin cocoa_menu_item and gtkapplication_quartz
-
-  * src/ige-mac-menu.c: Add some documentation and a guard to prevent calling
-  ige_mac_menu_sync() before ige_mac_menu_set_menubar();
-
-  * src/test-integration.c: Add to the test program a GtkUIManager ui with
-  actions instead of menuitems doing the work.
-
-  * src/test-integration.c: Add signal handler to override
-  gtk_widget_can_activate_accel for the hidden menubar; makes menu accelerators
-  work.  Gtk by default disables accelerators on GtkMenuItems which aren't
-  visible -- but it provides a signal for overriding this. By providing a
-  signal handler to the menubar (which is what's hidden because we're
-  displaying our own), we enable the accelerators. This wasn't a problem in
-  ige-mac-menu, because it intercepts the NSEvents and dispatches them itself.
-
-2010-04-09  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkapplication_quartz.c: Fix Window menu to include the first-opened
-  window.
-
-2010-04-06  John Ralls <jralls@ceridwen.us>
-
-  * src/GNSMenuBar.c, src/GNSMenuBar.h, src/Makefile.am, src/gtkapplication.c,
-  src/gtkapplication.h, src/gtkapplication_quartz.c,
-  src/gtkapplicationprivate.h: Fix app_menu tracking  There wasn't a good way
-  that I could see to get the GtkMenuBar from
-  gtk_application_add_app_menu_item, so I derived a subclass of NSMenu,
-  GNSMenuBar, to hold the GList * for the menu groups. Everything else here
-  tracks that change.
-
-2010-04-04  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkapplication_quartz.c, src/gtkapplicationprivate.h: Create a Window
-  menu, always inserting it just to the left of the Help menu if there is one,
-  or on the end if there isn't.
-
-  * src/gtkapplication_quartz.c: Modify create_app_menu to always insert the
-  app menu at index 0.
-
-  * src/gtkapplication_quartz.c: Modify add_to_menubar to take a position
-  indicating where on the menubar to add the new menu.
-
-  * src/gtkapplication.c: Fix forgotten parameter in g_print in
-  gtk_application_should_load.
-
-  * src/gtkapplication_quartz.c: Comment out add_to_app_menu and
-  add_to_window_menu  They're not currently used and they were throwing
-  warnings.
-
-  * src/gtkapplication_quartz.c: Replace interface extension and direct call to
-  [NSApp setAppleMenu:] with indirect call  Gets rid of two warnings.
-
-  * src/ige-mac-menu.c: Move update_active, update_accel_closure, and
-  _update_submenu from carbon_menu_item_create to sync_menu_shell so that
-  changes to these things will be synchronized even if the menu itself isn't
-  changed.
-
-  * src/ige-mac-bundle.c, src/ige-mac-bundle.h, src/ige-mac-dock.c,
-  src/ige-mac-dock.h, src/ige-mac-image-utils.c, src/ige-mac-image-utils.h,
-  src/ige-mac-integration.h, src/ige-mac-menu.c, src/ige-mac-menu.h,
-  src/ige-mac-private.h: Correct license from GPL to LGPL.
-
-  * src/GtkApplicationDelegate.c, src/gtkapplication.c, src/gtkapplication.h:
-  Correct behavior of [GtkApplicationDelegate ApplicationShouldQuit], signature
-  and behavior of gtk_application_should_quit, and comments about other
-  AppDelegate functions.
-
-  * src/gtkapplication_quartz.c: Connect window_focus_cb to the signal.
-
-  * src/gtkapplication.h, src/gtkapplication_quartz.c: Restore the use of a
-  menu item for gtk_application_add_app_menu_item, because it turns out that
-  while Carbon has only one App menu shared among all menubars, Cocoa has one
-  for every menubar.
-
-  * src/gtkapplication_quartz.c, src/gtkapplicationprivate.h: Move the menubar
-  from being owned by the GtkApplication (which limits us to one menubar) to
-  being owned by each window, since in Gtk each window has its own menubar (or
-  doesn't have one at all -- which might crash the application when the
-  menuless window receives focus.)
-
-  * src/cocoa_menu.c: Allow cocoa_menu_get to be called (and to return NULL) if
-  cocoa_menu_connect hasn't yet been called.
-
-  * src/test-integration.c: Set up defines for testing either no menu mangling,
-  Carbon menu mangling (IGEMACMENU) or Cocoa menu mangling (GTKAPPLICATION).
-
-  * src/test-integration.c: Add explanitory comment about menu action callback
-
-  * src/test-integration.c: Add reminder for test coverage
-
-  * src/test-integration.c: Renable testing two windows.
-
-  * src/test-integration.c: Create accelerators on the File menu to test
-  accelerator function.
-
-  * src/Makefile.am: Restore ige-mac-menu to the library for testing and
-  backwards-compatibility.
-
-2010-04-02  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkapplication.h, src/gtkapplication_quartz.c: Change signature of
-  gtk_application_add_app_menu_item to take a label, closure, and data pointer
-  instead of a menu_item.  The App menu doesn't change with the rest of the
-  menubar when the window changes, and its items have to be independent of
-  windows and their menu items. This allows one to associate a callback
-  directly with the app menu item so that it can be invoked directly from the
-  app menu instead of being mediated by a GtkMenuItem.
-
-  * src/cocoa_menu_item.c: Call g_cclosure_new_object_swap instead of
-  g_cclosure_new  This way the closure is freed if menu_item is, and the
-  callback function is invoked with closure.data instead of the (empty)
-  passed-in pointer.
-
-  * src/cocoa_menu_item.c: Change calls to [GNSMenuItem initWithTitle] to
-  comply with new signature.
-
-  * src/cocoa_menu_item.c, src/cocoa_menu_item.h: New function
-  cocoa_menu_item_add_action to take a closure and a gpointer to other data so
-  that an arbitrary two-parameter (one in closure.data and one in the gpointer)
-  function wrapped in a closure can be used as a callback to the added
-  CocoaMenuItem, for use in menus that aren't changed with the window.
-
-  * src/GNSMenuItem.c, src/GNSMenuItem.h: New ClosureData struct 
-  g_cclosure_marshal_VOID__VOID passes two arguments to the closure function:
-  The closure.data (set when the closure is created, called the instance) and a
-  second passed in a GValue. (g_closure_invoke is just a conduit function for
-  the marshaller set on the closure).  Most of the GSignal functions get this
-  wrong, and copy closure.data into the GValue.  We set up a structure with the
-  closure and the pointer and use the pointer to create the GValue.
-
-2010-03-27  John Ralls <jralls@ceridwen.us>
-
-  * src/GNSMenuItem.c, src/GNSMenuItem.h, src/cocoa_menu_item.c: Change
-  GNSMenuItem to take a GClosure for its second argument instead of a
-  GtkMenuItem.  This allows us to substitute menu callbacks (by wrapping them
-  in closures) instead of having to intermediate through the menu item. We need
-  this ability in the short term to create window-independent menu items for
-  the app(le) menu and in the longer term for moving this functionality into
-  Gtk+.
-
-2010-03-25  John Ralls <jralls@ceridwen.us>
-
-  * src/GtkApplicationNotify.c, src/gtkapplication_quartz.c: Call
-  [NSApplication sharedApplication] exactly once during GtkApplication init,
-  and use the global NSApp elsewhere.
-
-  * src/cocoa_menu_item.c, src/cocoa_menu_item.h, src/gtkapplication_quartz.c:
-  Rename carbon_menu_item_add_submenu to cocoa_menu_item_add_submenu. Oops!
-
-  * src/gtkapplication_quartz.c: Use the saved app_menu instead of retrieving
-  submenu 0.
-
-  * src/cocoa_menu_item.c: Move, rather than skip, an existing NSMenuItem.
-
-  * src/cocoa_menu_item.c: minor reformat for readability
-
-  * src/test-integration.c: Invoke gtk_application_ready() before starting the
-  event loop. This tells NSApp that the menus are ready; leave it out and the
-  menubar isn't populated.
-
-  * src/gtkapplication_quartz.c: Cleanup extra includes and put all exported
-  functions together.
-
-  * src/Makefile.am, src/cocoa_menu.c, src/cocoa_menu.h, src/cocoa_menu_item.c,
-  src/cocoa_menu_item.h, src/getlabel.c, src/getlabel.h,
-  src/gtkapplication_quartz.c: Split up overly-long gtkapplication_quartz.c
-  into more manageable (and object-specific) files.
-
-2010-03-23  John Ralls <jralls@ceridwen.us>
-
-  * src/test-integration.c: Use GtkApplication menu functions instead of
-  ige-mac-menu.
-
-  * autogen.sh: Upgrade to automake-1.10
-
-  * configure.ac, src/Makefile.am: Adjust Makefile.am to compile GtkApplication
-  and related classes.
-
-  * src/GNSMenuItem.c, src/GNSMenuItem.h, src/GtkApplicationDelegate.c,
-  src/GtkApplicationDelegate.h, src/GtkApplicationNotify.c,
-  src/GtkApplicationNotify.h, src/gtkapplication.c, src/gtkapplication.h,
-  src/gtkapplication_quartz.c, src/gtkapplication_quartz.mm,
-  src/gtkapplicationprivate.h: Rename and reorganize gtkapplication-quartz,
-  rewrite GtkApplication class as a GObject (from a Gtkmm C++) class.
-
-2010-02-05  John Ralls <jralls@ceridwen.us>
-
-  * src/ige-mac-menu.c, src/ige-mac-menu.h, src/test-integration.c: Update
-  copyright information
-
-  * src/ige-mac-dock.h, src/ige-mac-integration.h, src/ige-mac-menu.c,
-  src/ige-mac-menu.h, src/ige-mac-private.h, src/test-integration.c: Change
-  further info URL from imendio to gtk-osx
-
-  * src/ige-mac-bundle.c, src/ige-mac-bundle.h, src/ige-mac-dock.c,
-  src/ige-mac-dock.h, src/ige-mac-image-utils.c, src/ige-mac-image-utils.h,
-  src/ige-mac-integration.h, src/ige-mac-menu.c, src/ige-mac-menu.h,
-  src/ige-mac-private.h, src/test-integration.c: Change license notice to allow
-  distribution under later revisions of LGPL.
-
-2010-01-22  John Ralls <jralls@ceridwen.us>
-
-  * src/gtkapplication.h, src/gtkapplication_quartz.mm: Cocoa reimplimentation
-  on ige-mac-menu from Paul Davis (Ardour).
-
-2009-11-08  John Ralls <jralls@ceridwen.us>
-
-  * configure.ac, src/test-integration.c: Fixed the change icon path so that
-  it's something that's guaranteed to be available and so that it can be found
-  (instead of being on an absolute path from MacPorts).
-
-  * src/test-integration.c: Removed extraneous set_parent
-
-  * src/test-integration.c: Two windows for test-integration
-
-2009-11-06  John Ralls <jralls@ceridwen.us>
-
-  * src/ige-mac-menu.c: Add descriptive comments
-
-2009-10-15  John Ralls <jralls@ceridwen.us>
-
-  * bindings/python/Makefile.am: h2defs.py moved from pygtk to pygobject
-
-2009-10-08  John Ralls <jralls@ceridwen.us>
-
-  * src/ige-mac-menu.c: Add check for parent so menubars which aren't attached
-  to windows won't be connected to the window-switch callback. (Steffen
-  Gutmann)
-
-2009-09-20  John Ralls <jralls@ceridwen.us>
-
-  * src/ige-mac-menu.c: Fix ticket #13 (window focus). Thanks to Steffen
-  Gutmann.
-
-2009-07-30  John Ralls <jralls@ceridwen.us>
-
-  * configure.ac: Bump version to 0.8.6
-
-  * src/ige-mac-menu.c: Clear the menubar when a window is deleted. Still have
-  to manually refocus to another window in the app, but this is a gtk+-quartz
-  problem, not a menu problem.
-
-  * src/ige-mac-menu.c: Corrected return type, value of window_focus.
-
-  * src/ige-mac-menu.c: Destroy the Carbon Menu/MenuItem when freeing the
-  CarbonMenu/CarbonMenuItem that points to it.
-
-  * src/ige-mac-menu.c: Decrement CarbonMenuItem index when it's only 1 high
-  (i.e., after a menu item deletion) instead of deleting and recreating the
-  MenuItem.
-
-2009-07-28  John Ralls <jralls@ceridwen.us>
-
-  * src/ige-mac-menu.c: Rename carbon_menu_create_item to
-  carbon_menu_item_create, more consistent with other function names
-
-  * src/ige-mac-menu.c: Better logging of parent-set events, synch_menu_shell
-  startup.
-
-  * src/ige-mac-menu.c: Corrected return type (and value) of window_focus event
-  handler, added window_delete event handler.
-
-  * src/ige-mac-menu.c: Provide separate menubars for different windows.
-
-2009-07-20  John Ralls <jralls@ceridwen.us>
-
-  * configure.ac: Bump version to 0.8.5
-
-  * src/ige-mac-menu.c: Just increment the carbon_item->index after an insert
-  instead of trying to delete the menu item and get everything relinked.
-
-  * src/ige-mac-menu.c: Better logging
-
-  * src/ige-mac-menu.c: Avoid adding CarbonMenuItems after errors
-
-  * src/ige-mac-menu.c: Use carbon_menu_item_get_checked where needed
-
-  * src/ige-mac-menu.c: create carbon_menu_item_get_checked from
-  carbon_menu_item_get (which is returned to it's former form)
-
-  * src/ige-mac-menu.c: Better, more concise logging
-
-  * src/ige-mac-menu.c: Clean up compile errors
-
-  * src/ige-mac-menu.c: Error detection and reporting for carbon calls
-
-2009-07-19  John Ralls <jralls@ceridwen.us>
-
-  * src/ige-mac-menu.c: Prettier control of Debug printing.
-
-  * src/ige-mac-menu.c: Extract method to carbon_menu_create_item
-
-  * src/ige-mac-menu.c: Rearranged some if blocks to reduce excessive
-  indenting.
-
-  * src/ige-mac-menu.c: Reformatted for better readability.
-
-2009-06-01  John Ralls <jralls@ceridwen.us>
-
-  * ChangeLog, README: Updated URL in README
-
-  * AUTHORS, ChangeLog, configure.ac: Bumped version to 0.8.4
-
-  * data/ige-mac-integration.pc.in: Added -DMAC_INTEGRATION
-
-2009-05-28  John Ralls <jralls@ceridwen.us>
-
-  * ChangeLog, src/ige-mac-menu.c, src/ige-mac-menu.h: Fixed hiding/unhiding
-  menus on the menubar and added a function to allow a client app to resync the
-  menus.
-
-2008-05-23  Richard Hult <richard@imendio.com>
-
-  * configure.ac: Bump version
-
-  * src/ige-mac-menu.c: Handle all key events by default
-
-  * src/ige-mac-dock.c: Make it possible to set NULL pixbuf as overlay to
-  restore
-
-2008-05-18  Richard Hult <richard@imendio.com>
-
-  * src/ige-mac-dock.c, src/ige-mac-dock.h, src/ige-mac-integration.h,
-  src/ige-mac-menu.h, src/ige-mac-private.h: Make headers more consistent
-
-  * bindings/python/igemacintegration.override: Fix python binding build
-
-2008-05-14  Michael Natterer <mitch@imendio.com>
-
-  * src/ige-mac-menu.c: Ignore separator menu items at the toplevel, they break
-  the menubar.
-
-2008-05-14  Richard Hult <richard@imendio.com>
-
-  * configure.ac: Bump version to 0.8.1
-
-  * src/ige-mac-menu.c, src/ige-mac-menu.h: Another attempt at solving how apps
-  hook up the key handler
-
-2008-05-13  Richard Hult <richard@imendio.com>
-
-  * configure.ac, src/ige-mac-dock.c, src/ige-mac-private.h: Add API to dock to
-  see if it handles the quit menu item, and bump version
-
-2008-05-08  Richard Hult <richard@imendio.com>
-
-  * configure.ac: Bump version to 0.8.
-
-  * configure.ac, src/Makefile.am, src/ige-mac-menu.c, src/ige-mac-menu.h:
-  Changes to get menu events handled more correctly  Move special casing of
-  events from gdk to here. This requires a very recent GTK+ from 2.13.
-
-2008-04-12  Richard Hult <richard@imendio.com>
-
-  * src/ige-mac-dock.c: Fix compile warning
-
-  * src/Makefile.am: Fix header filename
-
-  * configure.ac: Bump version to 0.7
-
-  * src/Makefile.am, src/ige-mac-integration.h, src/ige-mac-menu.c,
-  src/ige-mac-private.h: Add all-inclusive header file and private header file
-
-  * src/test-integration.c: Add test code for changing the menu
-
-  * src/ige-mac-dock.c: Remove some debug print outs
-
-2008-03-28  Richard Hult <richard@imendio.com>
-
-  * src/ige-mac-menu.c: Assign IDs to all menu items to make it possible to
-  flash them
-
-  * src/ige-mac-menu.c: Make it possible to hide toplevel menu items  Note that
-  it only works when hiding the menu item before setting up the mac menu for
-  now, not dynamically.
-
-2008-02-29  Michael Natterer <mitch@imendio.com>
-
-  * src/ige-mac-menu.c: - #include "config.h" - some cleanup. - fix c99-ism.
-
-2008-02-01  Richard Hult <richard@imendio.com>
-
-  * bindings/python/Makefile.am: Fix make distcheck
-
-  * src/ige-mac-bundle.c, src/ige-mac-bundle.h, src/ige-mac-dock.c,
-  src/ige-mac-dock.h: Small cleanup
-
-  * README: Add some information to the README
-
-  * configure.ac: Clean up configure script a bit
-
-  * ChangeLog: Add note that ChangeLog is not used currently
-
-2007-11-08  Richard Hult <richard@imendio.com>
-
-  * src/ige-mac-menu.c: Make it possible to reuse menus (e.g. switching between
-  two different menus)
-
-2007-11-04  Richard Hult <richard@imendio.com>
-
-  * src/ige-mac-menu.c: Setup the event handler when adding other items to the
-  app menu as well (not just quit)
-
-  * acinclude.m4: Make the python bindings optional
-
-2007-11-02  Sven Herzberg <herzi@wallace.local>
-
-  * src/ige-mac-menu.c: Make sure the quit menu item works without a
-  synchonized menu bar
-
-2007-10-12  Richard Hult <richard@imendio.com>
-
-  * bindings/python/igemacintegration.override: Fix the python binding really
-  this time  The problem turned out to be the pixbuf import, the right module
-  is gtk.gdk.Pixbuf.
-
-  * src/ige-mac-dock.c: Add comment about changing the name of the dock code
-
-  * bindings/python/igemacintegration-module.c,
-  bindings/python/igemacintegration.override: Fix the python binding
-
-  * src/ige-mac-bundle.c: Add a comment about parsing -psn
-
-  * src/ige-mac-dock.c: Start implementing the open-documents apple event
-
-  * bindings/python/Makefile.am, bindings/python/igemacintegration.override,
-  src/ige-mac-dock.c, src/ige-mac-dock.h: Fix build of the python bindings
-
-  * src/Makefile.am, src/test-integration.c: Hook up new files and add some
-  tests for them
-
-  * src/ige-mac-dock.c, src/ige-mac-dock.h: Add icon handling, and attention
-  request
-
-  * src/ige-mac-image-utils.c, src/ige-mac-image-utils.h: Add image utils, with
-  code to get a CGImage from a pixbuf
-
-  * src/ige-mac-bundle.c, src/ige-mac-bundle.h: Handle environment variables in
-  Info.plist and add skeleton for getting resource paths
-
-2007-10-09  Richard Hult <richard@imendio.com>
-
-  * src/ige-mac-bundle.c, src/ige-mac-bundle.h: Add id and path getters to the
-  bundle object
-
-  * COPYING: Don't keep a symlink in the repo
-
-  * bindings/python/Makefile.am, bindings/python/igemacintegration.override,
-  src/Makefile.am, src/ige-mac-bundle.c, src/ige-mac-bundle.h: Add beginning of
-  bundle code
-
-  * src/ige-mac-dock.c, src/ige-mac-dock.h: Fix comments in the headers
-
-2007-10-06  Richard Hult <richard@imendio.com>
-
-  * bindings/python/test-integration.py: Improve consistency in the python
-  example
-
-  * bindings/python/test-integration.py: Fix non-pythonism
-
-  * .gitignore, bindings/python/Makefile.am, bindings/python/__init__.py,
-  bindings/python/igemacintegration-module.c,
-  bindings/python/igemacintegration.override,
-  bindings/python/test-integration.py: Add higher-level abstraction for the
-  python bindings
-
-  * data/Makefile.am: Update makefile rule for the pc file after the rename
-
-  * src/ige-mac-dock.h: Change format to make pygtk find the objects
-
-  * src/ige-mac-dock.c, src/test-integration.c: Add a quit signal on the dock
-
-  * .gitignore, bindings/python/.gitignore, bindings/python/Makefile.am,
-  data/.gitignore, src/.gitignore, src/Makefile.am, src/test-integration.c,
-  src/test-menu.c: Add dock test
-
-  * autogen.sh, bindings/python/Makefile.am,
-  bindings/python/igemacintegration-module.c,
-  bindings/python/igemacintegration.override,
-  bindings/python/igemacmenu-module.c, bindings/python/igemacmenu.override,
-  configure.ac, data/ige-mac-integration.pc.in, data/ige-mac-menu.pc.in,
-  src/Makefile.am, src/ige-mac-dock.c, src/ige-mac-dock.h: Add dock integration
-  and change the name of the library to igemacintegration
-
-2007-10-05  Richard Hult <richard@imendio.com>
-
-  * src/ige-mac-menu.c: Update TODO list
-
-  * src/ige-mac-menu.c, src/ige-mac-menu.h: Add Imendio to copyrights
-
-2007-09-27  Richard Hult <richard@imendio.com>
-
-  * ige-mac-menu.c, ige-mac-menu.h: Specify the license as 2.1, not any version
-
-  * ige-mac-menu.c: Remove unused variable
-
-2007-09-27  Michael Natterer <mitch@imendio.com>
-
-  * ige-mac-menu.c: - fixed indices when deleting and inserting items, so we
-  can update the menus correctly, not only construct them in the right order. -
-  install an emission hook on the "parent-set" and update the menus accordingly
-  when it was a GtkMenuItem of the global menubar that was added or removed. -
-  added some conditional debugging output, i'm sure we will need it again ;-)
-
-2007-09-24  Michael Natterer <mitch@imendio.com>
-
-  * ige-mac-menu.c: - Allow to pass a NULL label return location to
-  get_menu_label_text() - Allow to pass a NULL label to
-  ige_mac_menu_add_app_menu_item() and get the label from the passed menu item.
-
-  * ige-mac-menu.c, ige-mac-menu.h, test-menu.c: - Replaced API to set about
-  and prefs menu items by generalized API at add groups to the application menu
-  and items to these groups. - Renamed functions to set the menu bar and the
-  quit menu item.
-
-2007-09-18  Richard Hult <richard@imendio.com>
-
-  * ige-mac-menu.c, ige-mac-menu.h, test-menu.c: Finish the namespace change
-
-  * Makefile: Add clean target
-
-  * Makefile, gtk-macmenu.c, gtk-macmenu.h, ige-mac-menu.c, ige-mac-menu.h,
-  test-menu.c: Start moving namespace to ige_mac_menu_
-
-2007-09-04  Richard Hult <richard@imendio.com>
-
-  * .gitignore: Ignore .DS_Store
-
-  * README: Add short README file
-
-  * ChangeLog, test-menu.c: Build fix
-
-2007-09-03  Michael Natterer <mitch@imendio.com>
-
-  * Makefile, gtk-macmenu.c, gtk-macmenu.h, sync-menu.c, sync-menu.h,
-  test-menu.c: Renamed files from sync-menu.* to gtk-macmenu.*
-
-2007-08-31  Michael Natterer <mitch@imendio.com>
-
-  * sync-menu.c, sync-menu.h: - rename sync_menu_takeover_menu() to
-  gtk_macmenu_set_menuber() - added functions to set "Quit", "About" and
-  "Preferences" menu items
-
-2007-08-30  Michael Natterer <mitch@rigel-2.local>
-
-  * sync-menu.c, sync-menu.h: - add copyright headers. - remove trailing
-  whitespace. - add include guards. - add G_BEGIN/END_DECLS.
-
-2007-08-30  Richard Hult <richard@imendio.com>
-
-  * sync-menu.c: Fix a build warning.
-
-2007-08-29  Michael Natterer <mitch@rigel-2.local>
-
-  * sync-menu.c: - remove #ifdefed NSMenu code - skip the "Empty" menu item
-  created by GtkUIManager for toplevel menubars - minor formatting cleanup
-
-2007-06-21  Richard Hult <richard@imendio.com>
-
-  * sync-menu.c: Fix crash in accel_changed when the menu is disposed
-
-2007-06-21  Michael Natterer <mitch@rigel-2.local>
-
-  * sync-menu.c: Really listen to accelerator changes by connecting to
-  "accel-changed" of the accel label's closure's accel group and update the
-  menu item's command key in the callback.
-
-2007-06-19  Michael Natterer <mitch@rigel-2.local>
-
-  * sync-menu.c: Replace accel_key_to_command_key() with code that properly
-  translates the accelerator's keyval into a hardware keycode.
-
-2007-06-18  Michael Natterer <mitch@rigel-2.local>
-
-  * sync-menu.c: Remove g_ascii_upupper() because we do gdk_keyval_to_upper()
-
-  * sync-menu.c: convert keyvals to UPPER for the menu shurtcuts and fix
-  carbon_menu_item_connect() signature
-
-2007-06-18  Richard Hult <richard@imendio.com>
-
-  * sync-menu.c: Turn function keys into the right carbon glyphs
-
-2007-06-17  Richard Hult <richard@imendio.com>
-
-  * sync-menu.c, sync-menu.h, test-menu.c: Update from Mitch
-
-2007-06-08  Mikael Hallendal <micke@imendio.com>
-
-  * sync-menu.c, test-menu.c: Added support for listening to visible and
-  sensitive changes.
-
-2007-05-29  Richard Hult <richard@imendio.com>
-
-  * .gitignore, sync-menu.c, sync-menu.h, test-menu.c: Add simple test app
-
-  * Makefile: Initial setup
