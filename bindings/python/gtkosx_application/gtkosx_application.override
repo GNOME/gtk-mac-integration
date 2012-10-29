@@ -25,7 +25,7 @@ _wrap_gtkosx_application_add_app_menu_group (PyGObject *self)
     GtkOSXApplicationMenuGroup *group;
     PyObject *ret;
 
-    group = gtkosx_application_add_app_menu_group (GTKOSX__APPLICATION(self->obj));
+    group = gtkosx_application_add_app_menu_group (GTKOSX_APPLICATION(self->obj));
 
     ret = PyCObject_FromVoidPtr ((void *) group, NULL);
 
@@ -52,7 +52,7 @@ _wrap_gtkosx_application_add_app_menu_item (PyGObject *self, PyObject *args, PyO
     group = PyCObject_AsVoidPtr (pygroup);
     item = GTK_MENU_ITEM (pygobject_get (pyitem));
     g_return_val_if_fail(group != NULL, Py_None);
-    gtkosx_application_add_app_menu_item (GTKOSX__APPLICATION(self->obj), group, item);
+    gtkosx_application_add_app_menu_item (GTKOSX_APPLICATION(self->obj), group, item);
     return Py_None;
 }
 %%
@@ -72,7 +72,7 @@ _wrap_gtkosx_application_insert_app_menu_item (PyGObject *self, PyObject *args, 
 
     Py_INCREF (Py_None);
     item = GTK_WIDGET (pygobject_get (pyitem));
-    gtkosx_application_insert_app_menu_item (GTKOSX__APPLICATION(self->obj), item, index);
+    gtkosx_application_insert_app_menu_item (GTKOSX_APPLICATION(self->obj), item, index);
     return Py_None;
 }
 %%
