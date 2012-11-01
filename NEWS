@@ -1,3 +1,22 @@
+Changes from version gtk-mac-integration-2.0.0 to version
+	gtk-mac-integration-2.0.1:
+* This is a minor bug-fix release.
+
+gtk-mac-integration-2.0.0:
+
+*  Now fully compatible with gobject-introspection and useable with Gtk3 gi
+   bindings.
+      Note: Gtk_OSXApplication is now GtkOsx_Application to avoid namespace
+       collision with Gtk. This requires minor changes to application code.
+      Note: Bundle functions (quartz_application_foo) have been renamed to
+       gtkosx_application_foo so that they are introspected.
+      Note: Introspection of Gtk2 doesn't work, so it's ignored in
+       GtkOsxApplication. Gtk2 python applications should continue to use pyGtk.
+*  Change 'NSAlternate' to be used with GDK_MOD1_MASK, matching changes
+         in Gtk keyhandling.
+*  Add support for icons in menus.
+*  Fix object release issues found with Clang static analysis
+
 gtk-mac-integration-1.0.1:
 
 * Add two files to extra_dist: Both are necessary for testing, but not

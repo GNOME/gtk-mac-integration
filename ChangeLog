@@ -1,4 +1,10 @@
-Changes from version gtk-mac-integration-1.0.1 to version gtk-mac-integration-2.0.0:
+Changes from version gtk-mac-integration-2.0.0 to version
+	gtk-mac-integration-2.0.1:
+John Ralls (1):
+	Fix some compilation errors when building pyGtk bindings.
+
+Changes from version gtk-mac-integration-1.0.1 to version
+	gtk-mac-integration-2.0.0:
 John Ralls (22):
       Change 'NSAlternate' to be used with GDK_MOD1_MASK, matching changes
          in Gtk keyhandling.
