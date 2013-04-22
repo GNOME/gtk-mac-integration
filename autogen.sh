@@ -77,7 +77,7 @@ if grep "^AM_[A-Z0-9_]\{1,\}_GETTEXT" "$CONFIGURE" >/dev/null; then
       GETTEXTIZE="gettextize"
       GETTEXTIZE_URL="ftp://alpha.gnu.org/gnu/gettext-0.10.35.tar.gz"
     fi
-                                                                                                          
+
     $GETTEXTIZE --version < /dev/null > /dev/null 2>&1
     if test $? -ne 0; then
       echo
@@ -120,7 +120,7 @@ fi
 rm -rf autom4te.cache
 
 echo "Running $ACLOCAL $ACLOCAL_FLAGS..."
-$ACLOCAL $ACLOCAL_FLAGS || exit $?
+$ACLOCAL -I m4 $ACLOCAL_FLAGS || exit $?
 
 if grep "^AC_PROG_INTLTOOL" $CONFIGURE >/dev/null ||
     grep "^IT_PROG_INTLTOOL" $CONFIGURE >/dev/null; then

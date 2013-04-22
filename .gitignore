@@ -25,4 +25,7 @@ compile
 *.defs
 gtk-doc.make
 py-compile
-m4/
+m4/*
+!m4/introspection.m4
+data/gtk-mac-integration.pc
+
