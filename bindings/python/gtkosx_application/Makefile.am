@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/src $(PYTHON_INCLUDES)
+AM_CPPFLAGS = -I$(top_srcdir)/src $(PYTHON_INCLUDES)
 
 gtkosx_applicationdir = $(libdir)/python$(PYTHON_VERSION)/site-packages/gtkosx_application
 

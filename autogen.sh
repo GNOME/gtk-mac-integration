@@ -134,7 +134,7 @@ if grep "^GTK_DOC_CHECK" $CONFIGURE > /dev/null; then
     $GTKDOCIZE
 fi
 
-if grep "^AM_CONFIG_HEADER" $CONFIGURE >/dev/null; then
+if grep "^AC_CONFIG_HEADERS" $CONFIGURE >/dev/null; then
     echo "Running $AUTOHEADER..."
     $AUTOHEADER || exit $?
 fi
