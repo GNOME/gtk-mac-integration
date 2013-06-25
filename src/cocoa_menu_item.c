@@ -76,6 +76,7 @@ static void
 cocoa_menu_item_free (gpointer *ptr)
 {
   _GNSMenuItem* item = (_GNSMenuItem*) ptr;
+  [[item menu] removeItem: item];
   [item release];
 }
 
@@ -513,36 +514,43 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
 
   cocoa_item = cocoa_menu_item_get (menu_item);
 
-  if (cocoa_item) {
-    DEBUG ("\tItem exists\n");
-    [cocoa_item retain];
-    [[cocoa_item menu] removeItem: cocoa_item];
-  }
+  if (cocoa_item)
+    {
+      DEBUG ("\tItem exists\n");
+      [cocoa_item retain];
+      [[cocoa_item menu] removeItem: cocoa_item];
+      [cocoa_item release];
+    }
 
-  if (GTK_IS_SEPARATOR_MENU_ITEM (GTK_MENU_ITEM (menu_item))) {
-    cocoa_item = (_GNSMenuItem*)[_GNSMenuItem separatorItem];
-    DEBUG ("\ta separator\n");
-  } else {
-    const gchar* text = get_menu_label_text (menu_item, &label);
-    NSString *title = [NSString stringWithUTF8String:(text ? text : @"")];
+  if (GTK_IS_SEPARATOR_MENU_ITEM (GTK_MENU_ITEM (menu_item)))
+    {
+      cocoa_item = (_GNSMenuItem*)[_GNSMenuItem separatorItem];
+      DEBUG ("\ta separator\n");
+    }
+  else
+    {
+      const gchar* text = get_menu_label_text (menu_item, &label);
+      NSString *title = [NSString stringWithUTF8String:(text ? text : @"")];
 
-    GClosure *menu_action =
-      g_cclosure_new_object_swap(G_CALLBACK(gtk_menu_item_activate),
-				 G_OBJECT(menu_item));
-    g_closure_set_marshal(menu_action, g_cclosure_marshal_VOID__VOID);
+      GClosure *menu_action =
+	g_cclosure_new_object_swap(G_CALLBACK(gtk_menu_item_activate),
+				   G_OBJECT(menu_item));
+      g_closure_set_marshal(menu_action, g_cclosure_marshal_VOID__VOID);
 
-    cocoa_item = [[_GNSMenuItem alloc]
-                   initWithTitle: title
-                   aGClosure:menu_action andPointer:NULL];
-    
-    DEBUG ("\tan item\n");
-  }
+      cocoa_item = [[_GNSMenuItem alloc]
+		    initWithTitle: title
+		    aGClosure:menu_action andPointer:NULL];
+
+      DEBUG ("\tan item\n");
+    }
   cocoa_menu_item_connect (menu_item, (_GNSMenuItem*) cocoa_item, label);
+
 #ifdef USE_MENU_IMAGES
   if (GTK_IS_IMAGE_MENU_ITEM (menu_item))
     cocoa_menu_item_add_item_image(cocoa_item, menu_item);
 #endif
-  [ cocoa_item setEnabled:YES];
+
+  [cocoa_item setEnabled:YES];
 
   /* connect GtkMenuItem and _GNSMenuItem so that we can notice changes
    * to accel/label/submenu etc. */
