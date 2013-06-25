@@ -66,9 +66,9 @@
 /* GTKMACINTEGRATION uses Carbon, which isn't available for 64-bit builds. */
 #ifdef __x86_64__
 #undef GTKMACINTEGRATION
-#ifndef GTKOSXAPPLICATION
+# ifndef GTKOSXAPPLICATION
 #define GTKOSXAPPLICATION
-#endif
+# endif
 #endif //__x86_64__
 
 #include <gtk/gtk.h>
@@ -243,7 +243,7 @@ static GtkRadioActionEntry view_actions[] =
     {"VerticalAction", NULL, "_Vertical", NULL, NULL, 0},
 };
 #else //not BUILT_UI
-#if !defined QUARTZ_HANDLERS && defined GTKOSXAPPLICATION
+# if !defined QUARTZ_HANDLERS && defined GTKOSXAPPLICATION
 
 /* This is needed as a callback to enable accelerators when not using
  * the Quartz event handling path and using GtkMenuItems instead of
@@ -254,7 +254,7 @@ can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data)
 {
   return gtk_widget_is_sensitive(widget);
 }
-#endif //!QUARTZ_HANDLERS
+# endif //!QUARTZ_HANDLERS
 
 static GtkWidget *
 test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
@@ -415,7 +415,22 @@ change_icon_cb (GtkWidget  *button,
 
   changed = !changed;
 }
-#endif
+#else //Neither GTKMACINTEGRATION nor GTKOSXAPPLICATION
+static gboolean
+attention_cb(gpointer req)
+{
+}
+static void
+bounce_cb (GtkWidget  *button,
+           gpointer app)
+{
+}
+static void
+change_icon_cb (GtkWidget  *button,
+                gpointer app)
+{
+}
+#endif //GTKMACINTEGRATION
 
 static void
 change_menu_cb (GtkWidget  *button,
@@ -495,7 +510,7 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
     gtk_ui_manager_remove_ui(mgr, mergeid);
     mergeid = 0;
   }
-#else
+#else //Not BUILT_UI
   g_print("View Menu Toggle Button doesn't actually do anything in the hand-built menu build\n");
 #endif //BUILT_UI
 }
@@ -546,7 +561,7 @@ static GtkWidget *
 create_window(const gchar *title)
 {
   gpointer	dock = NULL;
-#endif
+#endif //not GTKMACINTEGRATION
   GtkWidget	  *window;
   GtkWidget       *vbox;
   GtkWidget       *menubar;
@@ -574,15 +589,20 @@ create_window(const gchar *title)
       gtk_window_set_title (GTK_WINDOW (window), title);
   gtk_window_set_default_size (GTK_WINDOW (window), 400, 300);
   items->window = GTK_WINDOW (window);
+#if GTK_CHECK_VERSION(3, 0, 0)
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+#else
   vbox = gtk_vbox_new (FALSE, 0);
+#endif
   gtk_container_add (GTK_CONTAINER (window), vbox);
 #ifdef BUILT_UI
   mergeid = gtk_ui_manager_add_ui_from_file(mgr, "src/testui.xml", &err);
   if (err) {
     g_print("Error retrieving file: %d %s\n", mergeid, err->message);
+    exit (1);
   }
   gtk_action_group_add_actions(actions, test_actions,
-			       sizeof(test_actions)/sizeof(GtkActionEntry),
+			       G_N_ELEMENTS (test_actions),
 			       (gpointer)window);
   gtk_ui_manager_insert_action_group(mgr, actions, 0);
   menubar = gtk_ui_manager_get_widget(mgr, "/menubar");
@@ -608,7 +628,11 @@ create_window(const gchar *title)
                       gtk_label_new ("Some window content here"),
                       FALSE, FALSE, 12);
 
+#if GTK_CHECK_VERSION(3, 0, 0)
+  bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
+#else
   bbox = gtk_hbutton_box_new ();
+#endif //not Gtk3
   gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_CENTER);
   gtk_box_set_spacing (GTK_BOX (bbox), 12);
 
@@ -649,13 +673,13 @@ create_window(const gchar *title)
   gtk_widget_show_all (window);
 #if defined GTK_MAC_MENU || defined GTKOSXAPPLICATION
   gtk_widget_hide (menubar);
-#ifdef GTKOSXAPPLICATION
+# ifdef GTKOSXAPPLICATION
 /* Not really necessary unless quartz accelerator handling is turned off. */
-#if !defined QUARTZ_HANDLERS && !defined BUILT_UI
+#  if !defined QUARTZ_HANDLERS && !defined BUILT_UI
   g_signal_connect(menubar, "can-activate-accel",
 		   G_CALLBACK(can_activate_cb), NULL);
-#endif // !defined QUARTZ_HANDLERS && !defined BUILT_UI
-#endif  //GTKOSXAPPLICATION
+#  endif // !defined QUARTZ_HANDLERS && !defined BUILT_UI
+# endif  //GTKOSXAPPLICATION
 #endif //defined GTK_MAC_MENU || defined GTKOSXAPPLICATION
 #ifdef GTKMACINTEGRATION
   gtk_mac_menu_set_menu_bar (GTK_MENU_SHELL (menubar));
@@ -708,9 +732,11 @@ main (int argc, char **argv)
   GtkosxApplication *theApp;
 #endif //GTKOSXAPPLICATION
 #ifndef HAVE_GLIB_2_31
-    g_thread_init(NULL);
+  g_thread_init(NULL);
 #endif
-    gdk_threads_init();
+#if ! GTK_CHECK_VERSION(3, 0, 0)
+  gdk_threads_init();
+#endif //not Gtk3
   gtk_init (&argc, &argv);
 #ifdef GTKMACINTEGRATION
   dock = gtk_mac_dock_get_default ();
@@ -725,13 +751,13 @@ main (int argc, char **argv)
                     "quit-activate",
                     G_CALLBACK (gtk_main_quit),
                     window1);
-#endif //GTKMACINTEGRATION
-#ifdef GTKOSXAPPLICATION
+#elif defined(GTKOSXAPPLICATION)
+
   theApp  = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
   window1 = create_window("Test Integration Window 1");
-#ifndef BUILT_UI
+# ifndef BUILT_UI
   window2 = create_window("Test Integration Window 2");
-#endif
+# endif
   {
     gboolean falseval = FALSE;
     gboolean trueval = TRUE;
@@ -746,9 +772,9 @@ main (int argc, char **argv)
     g_signal_connect(theApp, "NSApplicationOpenFile",
 		     G_CALLBACK(app_open_file_cb), NULL);
   }
-#ifndef QUARTZ_HANDLERS
+# ifndef QUARTZ_HANDLERS
   gtkosx_application_set_use_quartz_accelerators(theApp, FALSE);
-#endif //QUARTZ_HANDLERS
+# endif //QUARTZ_HANDLERS
   gtkosx_application_ready(theApp);
   {
     const gchar *id = gtkosx_application_get_bundle_id();
@@ -756,6 +782,9 @@ main (int argc, char **argv)
       g_print ("TestIntegration Error! Bundle Has ID %s\n", id);
     }
   }
+#else //i.e., no integration
+  window1 = create_window("Test Integration Window 1");
+  window2 = create_window("Test Integration Window 2");
 #endif //GTKOSXAPPLICATION
   gtk_accel_map_load("accel_map");
   gtk_main ();
