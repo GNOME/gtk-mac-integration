@@ -43,7 +43,8 @@
 #include "gtk-mac-image-utils.h"
 #include "gtk-mac-private.h"
 
-enum {
+enum
+{
   CLICKED,
   QUIT_ACTIVATE,
   OPEN_DOCUMENTS,
@@ -54,23 +55,24 @@ static guint signals[LAST_SIGNAL] = { 0 };
 
 typedef struct GtkMacDockPriv GtkMacDockPriv;
 
-struct GtkMacDockPriv {
+struct GtkMacDockPriv
+{
   glong id;
 };
 
 static void  mac_dock_finalize                  (GObject          *object);
 static OSErr mac_dock_handle_quit               (const AppleEvent *inAppleEvent,
-                                                 AppleEvent       *outAppleEvent,
-                                                 long              inHandlerRefcon);
+    AppleEvent       *outAppleEvent,
+    long              inHandlerRefcon);
 static OSErr mac_dock_handle_open_documents     (const AppleEvent *inAppleEvent,
-                                                 AppleEvent       *outAppleEvent,
-                                                 long              inHandlerRefcon);
+    AppleEvent       *outAppleEvent,
+    long              inHandlerRefcon);
 static OSErr mac_dock_handle_open_application   (const AppleEvent *inAppleEvent,
-                                                 AppleEvent       *outAppleEvent,
-                                                 long              inHandlerRefcon);
+    AppleEvent       *outAppleEvent,
+    long              inHandlerRefcon);
 static OSErr mac_dock_handle_reopen_application (const AppleEvent *inAppleEvent,
-                                                 AppleEvent       *outAppleEvent,
-                                                 long              inHandlerRefcon);
+    AppleEvent       *outAppleEvent,
+    long              inHandlerRefcon);
 
 G_DEFINE_TYPE (GtkMacDock, gtk_mac_dock, G_TYPE_OBJECT)
 
@@ -125,10 +127,10 @@ gtk_mac_dock_class_init (GtkMacDockClass *class)
 #if 0
   EventTypeSpec kFakeEventList[] = { { INT_MAX, INT_MAX } };
   EventRef event;
-  
+
   ReceiveNextEvent (GetEventTypeCount (kFakeEventList),
                     kFakeEventList,
-                    kEventDurationNoWait, false, 
+                    kEventDurationNoWait, false,
                     &event);
 #endif
 }
@@ -143,13 +145,13 @@ gtk_mac_dock_init (GtkMacDock *dock)
 
   handlers = g_list_prepend (handlers, dock);
 
-  AEInstallEventHandler (kCoreEventClass, kAEQuitApplication, 
+  AEInstallEventHandler (kCoreEventClass, kAEQuitApplication,
                          mac_dock_handle_quit,
                          priv->id, true);
   AEInstallEventHandler (kCoreEventClass, kAEOpenApplication,
                          mac_dock_handle_open_application,
                          priv->id, true);
-  AEInstallEventHandler (kCoreEventClass, kAEReopenApplication, 
+  AEInstallEventHandler (kCoreEventClass, kAEReopenApplication,
                          mac_dock_handle_reopen_application,
                          priv->id, true);
   AEInstallEventHandler (kCoreEventClass, kAEOpenDocuments,
@@ -215,14 +217,14 @@ mac_dock_get_from_id (gulong id)
         break;
 
       dock = NULL;
-  }
+    }
 
   return dock;
 }
 
 static OSErr
-mac_dock_handle_quit (const AppleEvent *inAppleEvent, 
-                      AppleEvent       *outAppleEvent, 
+mac_dock_handle_quit (const AppleEvent *inAppleEvent,
+                      AppleEvent       *outAppleEvent,
                       long              inHandlerRefcon)
 {
   GtkMacDock *dock;
@@ -246,8 +248,8 @@ mac_dock_handle_open_application (const AppleEvent *inAppleEvent,
 }
 
 static OSErr
-mac_dock_handle_reopen_application (const AppleEvent *inAppleEvent, 
-                                    AppleEvent       *outAppleEvent, 
+mac_dock_handle_reopen_application (const AppleEvent *inAppleEvent,
+                                    AppleEvent       *outAppleEvent,
                                     long              inHandlerRefcon)
 {
   GtkMacDock *dock;
@@ -256,7 +258,7 @@ mac_dock_handle_reopen_application (const AppleEvent *inAppleEvent,
 
   if (dock)
     g_signal_emit (dock, signals[CLICKED], 0);
-  
+
   return noErr;
 }
 
@@ -288,7 +290,7 @@ mac_dock_handle_open_documents (const AppleEvent *inAppleEvent,
         {
           FSRef ref;
 
-          status = AEGetNthPtr (&documents, i + 1, typeFSRef, 
+          status = AEGetNthPtr (&documents, i + 1, typeFSRef,
                                 0, 0, &ref, sizeof (ref),
                                 0);
           if (status != noErr)
@@ -302,8 +304,8 @@ mac_dock_handle_open_documents (const AppleEvent *inAppleEvent,
           /*g_print ("  %s\n", path);*/
         }
     }
-        
-    return status;
+
+  return status;
 }
 
 void
@@ -397,7 +399,8 @@ gtk_mac_dock_set_overlay_from_resource (GtkMacDock   *dock,
     }
 }
 
-struct _GtkMacAttentionRequest {
+struct _GtkMacAttentionRequest
+{
   NMRec    nm_request;
   guint    timeout_id;
   gboolean is_cancelled;
@@ -428,7 +431,7 @@ gtk_mac_dock_attention_request (GtkMacDock          *dock,
 
   request->nm_request.nmMark = 1;
   request->nm_request.qType = nmType;
-  
+
   if (NMInstall (&request->nm_request) != noErr)
     {
       g_free (request);
@@ -437,9 +440,9 @@ gtk_mac_dock_attention_request (GtkMacDock          *dock,
 
   if (type == GTK_MAC_ATTENTION_INFO)
     request->timeout_id = gdk_threads_add_timeout (
-            1000,
-            (GSourceFunc) mac_dock_attention_cb,
-            request);
+                            1000,
+                            (GSourceFunc) mac_dock_attention_cb,
+                            request);
 
   return request;
 }

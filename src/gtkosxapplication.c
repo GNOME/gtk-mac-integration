@@ -40,9 +40,9 @@
  *
  * Using GtkosxApplication is pretty simple.
  * First, create an instance at startup:
- * 
+ *
  * |[GtkosxApplication *theApp = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);]|
- * 
+ *
  * Do this early in your program, shortly after you run
  * |[gtk_init()]|. Don't forget to guard it, and all other calls into
  * the library, with |[#ifdef MAC_INTEGRATION]|. You don't want your
@@ -110,7 +110,7 @@
  *   return gtk_widget_is_sensitive(widget);
  * }
  * ...
- *   g_signal_connect(menubar, "can-activate-accel", 
+ *   g_signal_connect(menubar, "can-activate-accel",
  *                    G_CALLBACK(can_activate_cb), NULL);
  * </programlisting>
  * </example>
@@ -161,8 +161,8 @@
  * and change the menu (perhaps because of a context change within a
  * window, as with changing pages in a GtkNotebook) you need to call
  * |[gtkosx_application_sync_menubar(theApp)]|
- * 
- * 
+ *
+ *
  * * The dock is that bar of icons that normally lives at the bottom of
  * the display on a Mac (though it can be moved to one of the other
  * sides; this author likes his on the left, which is where it was
@@ -178,8 +178,8 @@
  * task so that the user will know that it's finished if she's
  * switched to another application while she waits for yours.
  * They're all pretty simple, so you can just read the details below.
- * 
- * 
+ *
+ *
  * * The last feature to which GtkosxApplication provides an interface
  * is the bundle. Normally in OSX, graphical applications are packaged
  * along with their non-standard dependencies and their resources
@@ -217,7 +217,7 @@
  * return the value associated with an arbitrary key from Info.plist
  * as long as that value is a string. If it isn't, then the function
  * returns a null string ("").
- * 
+ *
  * Finally, notice the signals. These are emitted in response to the
  * indicated OSX notifications. Except for
  * #GtkosxApplication::NSApplicationBlockTermination, most programs
@@ -242,34 +242,34 @@ gtkosx_application_get (void)
 }
 
 
-/** 
+/**
  * gtkosx_application_use_quartz_accelerators:
  * @self: The GtkosxApplication pointer.
  *
- * Are we using Quartz or Gtk+ accelerator handling? 
+ * Are we using Quartz or Gtk+ accelerator handling?
  *
  * Returns: a gboolean
  */
 gboolean
-gtkosx_application_use_quartz_accelerators(GtkosxApplication *self)
+gtkosx_application_use_quartz_accelerators (GtkosxApplication *self)
 {
-    return self->priv->use_quartz_accelerators;
+  return self->priv->use_quartz_accelerators;
 }
 
-/** 
+/**
  * gtkosx_application_set_use_quartz_accelerators:
  * @self: The GtkosxApplication pointer.
- * @use_quartz_accelerators: Gboolean 
+ * @use_quartz_accelerators: Gboolean
  *
  * Set quartz accelerator handling; TRUE (default) uses quartz; FALSE
  * uses Gtk+. Quartz accelerator handling is required for normal OSX
  * accelerators (e.g., command-q to quit) to work.
  */
 void
-gtkosx_application_set_use_quartz_accelerators(GtkosxApplication *self,
-					    gboolean use_quartz_accelerators)
+gtkosx_application_set_use_quartz_accelerators (GtkosxApplication *self,
+    gboolean use_quartz_accelerators)
 {
-    self->priv->use_quartz_accelerators = use_quartz_accelerators;
+  self->priv->use_quartz_accelerators = use_quartz_accelerators;
 }
 
 /*
@@ -279,7 +279,7 @@ gtkosx_application_set_use_quartz_accelerators(GtkosxApplication *self,
  * requests. Exists soley to satisfy the PyGObject codegen system.
  */
 GType
-gtkosx_type_application_attention_type_get_type(void)
+gtkosx_type_application_attention_type_get_type (void)
 {
   //Bogus GType, but there's no good reason to register this; it's only an enum
   return GTKOSX_TYPE_APPLICATION;

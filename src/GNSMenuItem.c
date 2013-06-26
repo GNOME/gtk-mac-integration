@@ -1,5 +1,5 @@
 /* --- objc-mode --- */
-/* GTK+ Integration with platform-specific application-wide features 
+/* GTK+ Integration with platform-specific application-wide features
  * such as the OS X menubar and application delegate concepts.
  *
  * Copyright (C) 2009 Paul Davis
@@ -28,46 +28,49 @@ idle_call_activate (ClosureData *action)
 {
 //    g_value_init(&args, GTK_TYPE_MENU_ITEM);
   GValue arg = {0};
-  g_value_init(&arg, G_TYPE_POINTER);
-  g_value_set_pointer(&arg, action->data);
-  g_closure_invoke(action->closure, NULL, 1, &arg, 0);
+  g_value_init (&arg, G_TYPE_POINTER);
+  g_value_set_pointer (&arg, action->data);
+  g_closure_invoke (action->closure, NULL, 1, &arg, 0);
 //  gtk_menu_item_activate ((GtkMenuItem*) data);
   return FALSE;
 }
 
 @implementation _GNSMenuItem
 
-- (id) initWithTitle:(NSString*) title aGClosure:(GClosure*) closure andPointer:(gpointer) ptr
+-(id) initWithTitle: (NSString*) title
+           aGClosure: (GClosure*) closure
+	   andPointer: (gpointer) ptr
 {
 
   /* All menu items have the action "activate", which will be handled by this child class
    */
-  self = [ super initWithTitle:title action:@selector(activate:) keyEquivalent:@"" ];
+  self = [ super initWithTitle: title action: @selector (activate: ) keyEquivalent: @"" ];
 
-  if (self) {
-    /* make this handle its own action */
-    [ self setTarget:self ];
-    g_closure_ref(closure);
-    g_closure_sink(closure);
-    action.closure = closure;
-    action.data = ptr;
-    accel_closure = NULL;
-    notUsed = NO;
-  }
+  if (self)
+    {
+      /* make this handle its own action */
+      [ self setTarget: self ];
+      g_closure_ref (closure);
+      g_closure_sink (closure);
+      action.closure = closure;
+      action.data = ptr;
+      accel_closure = NULL;
+      notUsed = NO;
+    }
   return self;
 }
 
-- (void) activate:(id) sender
+-(void) activate: (id) sender
 {
-/* Add an idle in a thread-safe way and wake up the main loop with
-   a bogus event: */
+  /* Add an idle in a thread-safe way and wake up the main loop with
+     a bogus event: */
   GdkEvent *wake_up = gdk_event_new (GDK_NOTHING);
   gdk_threads_add_idle ((GSourceFunc)idle_call_activate, &action);
   gdk_event_put (wake_up);
   gdk_event_free (wake_up);
 }
 
-- (BOOL) isHidden
+-(BOOL) isHidden
 {
 #if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4
   return [super isHidden];
@@ -75,56 +78,59 @@ idle_call_activate (ClosureData *action)
   return hidden;
 #endif
 }
-  
-- (void) setHidden: (BOOL) shouldHide
+
+-(void) setHidden: (BOOL)shouldHide
 {
 #if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4
   [super setHidden: shouldHide];
 #else
   [self retain];
-  if (!hidden && shouldHide) {
-    inMenu = [self menu];
-    index = [inMenu indexOfItem: self];
-    [inMenu removeItem: self];
-    hidden = YES;
-  }
-  else if (hidden && !shouldHide) {
+  if (!hidden && shouldHide)
+    {
+      inMenu = [self menu];
+      index = [inMenu indexOfItem: self];
+      [inMenu removeItem: self];
+      hidden = YES;
+    }
+  else if (hidden && !shouldHide)
+    {
       int maxIndex = [inMenu numberOfItems];
-    hidden = NO;
-    if (index < 0) index = 0;
-    if (index > maxIndex) index = maxIndex;
-    [inMenu insertItem: self atIndex: index];
-    [(_GNSMenuBar*)[NSApp mainMenu] resync];
-  }
+      hidden = NO;
+      if (index < 0) index = 0;
+      if (index > maxIndex) index = maxIndex;
+      [inMenu insertItem: self atIndex: index];
+      [(_GNSMenuBar*)[NSApp mainMenu] resync];
+    }
   [self release];
 #endif
 }
 
-- (void) mark
+-(void) mark
 {
   notUsed = YES;
 }
 
-- (void) unmark
+-(void) unmark
 {
   notUsed = NO;
 }
 
-- (BOOL) isMarked
+-(BOOL) isMarked
 {
   return notUsed;
 }
 
-- (void) removeFromMenu: (NSMenu*) old_menu {
+-(void) removeFromMenu: (NSMenu*)old_menu
+{
 #if !(MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4)
-    if (old_menu != inMenu && old_menu != [self menu])
-      return;
-    [[self menu] removeItem: self];
-    inMenu = nil;
-    index = -1;
+  if (old_menu != inMenu && old_menu != [self menu])
+    return;
+  [[self menu] removeItem: self];
+  inMenu = nil;
+  index = -1;
 #else
-    if (old_menu == [self menu])
-      [[self menu] removeItem: self];
+  if (old_menu == [self menu])
+    [[self menu] removeItem: self];
 #endif
 }
 

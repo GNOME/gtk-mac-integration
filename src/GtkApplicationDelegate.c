@@ -1,4 +1,4 @@
-/* GTK+ Integration with platform-specific application-wide features 
+/* GTK+ Integration with platform-specific application-wide features
  * such as the OS X menubar and application delegate concepts.
  *
  * Copyright (C) 2009 Paul Davis
@@ -25,34 +25,35 @@
 #include "gtkosxapplication.h"
 
 @implementation GtkApplicationDelegate
--(BOOL) application:(NSApplication*) theApplication openFile:(NSString*) file
+-(BOOL) application: (NSApplication*)theApplication openFile: (NSString*) file
 {
   const gchar *utf8_path =  [file UTF8String];
-  GtkosxApplication *app = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
-  guint sig = g_signal_lookup("NSApplicationOpenFile", 
-			      GTKOSX_TYPE_APPLICATION);
+  GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
+  guint sig = g_signal_lookup ("NSApplicationOpenFile",
+  GTKOSX_TYPE_APPLICATION);
   gboolean result = FALSE;
   if (sig)
-      g_signal_emit(app, sig, 0, utf8_path, &result);
-  g_object_unref(app);
+    g_signal_emit (app, sig, 0, utf8_path, &result);
+  g_object_unref (app);
   return result;
 }
 
 
-- (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *)sender
+-(NSApplicationTerminateReply) applicationShouldTerminate: (NSApplication *)sender
 {
-  GtkosxApplication *app = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
-  guint sig = g_signal_lookup("NSApplicationBlockTermination", 
-			      GTKOSX_TYPE_APPLICATION);
+  GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
+  guint sig = g_signal_lookup ("NSApplicationBlockTermination",
+  GTKOSX_TYPE_APPLICATION);
   gboolean result = FALSE;
   static gboolean inHandler = FALSE;
   if (inHandler) return NSTerminateCancel;
-  if (sig) {
+  if (sig)
+    {
       inHandler = TRUE;
-      g_signal_emit(app, sig, 0, &result);
-  }
+      g_signal_emit (app, sig, 0, &result);
+    }
 
-  g_object_unref(app);
+  g_object_unref (app);
   inHandler = FALSE;
   if (!result)
     return NSTerminateNow;
@@ -60,12 +61,12 @@
     return NSTerminateCancel;
 }
 
-extern NSMenu* _gtkosx_application_dock_menu(GtkosxApplication* app);
+extern NSMenu* _gtkosx_application_dock_menu (GtkosxApplication* app);
 
--(NSMenu *)applicationDockMenu: (NSApplication*) sender
+-(NSMenu *) applicationDockMenu: (NSApplication*)sender
 {
-    GtkosxApplication *app = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
-    return _gtkosx_application_dock_menu(app);
+  GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
+  return _gtkosx_application_dock_menu (app);
 }
 
 @end

@@ -45,8 +45,8 @@ gtkosx_create_cgimage_from_pixbuf (GdkPixbuf *pixbuf)
 
   colorspace = CGColorSpaceCreateDeviceRGB ();
   data_provider = CGDataProviderCreateWithData (NULL, data,
-                                                pixbuf_height * rowstride,
-                                                NULL);
+                  pixbuf_height * rowstride,
+                  NULL);
 
   image = CGImageCreate (pixbuf_width, pixbuf_height, 8,
                          has_alpha ? 32 : 24, rowstride,

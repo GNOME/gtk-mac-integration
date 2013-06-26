@@ -30,8 +30,9 @@
 
 typedef struct GtkMacBundlePriv GtkMacBundlePriv;
 
-struct GtkMacBundlePriv {
-  CFBundleRef  cf_bundle; 
+struct GtkMacBundlePriv
+{
+  CFBundleRef  cf_bundle;
   gchar       *path;
   gchar       *id;
   gchar       *datadir;
@@ -43,8 +44,8 @@ struct GtkMacBundlePriv {
 static void   mac_bundle_finalize              (GObject      *object);
 static gchar *cf_string_to_utf8                (CFStringRef   str);
 static void   mac_bundle_set_environment_value (GtkMacBundle *bundle,
-                                                const gchar  *key,
-                                                const gchar  *value);
+    const gchar  *key,
+    const gchar  *value);
 
 static GtkMacBundle *global_bundle;
 
@@ -126,7 +127,7 @@ gtk_mac_bundle_init (GtkMacBundle *bundle)
 
           g_free (keys);
           g_free (values);
-        }      
+        }
     }
 }
 
@@ -168,8 +169,8 @@ cf_string_to_utf8 (CFStringRef str)
   CFIndex  len;
   gchar   *ret;
 
-  len = CFStringGetMaximumSizeForEncoding (CFStringGetLength (str), 
-                                           kCFStringEncodingUTF8) + 1;
+  len = CFStringGetMaximumSizeForEncoding (CFStringGetLength (str),
+        kCFStringEncodingUTF8) + 1;
 
   ret = g_malloc (len);
   ret[len] = '\0';
@@ -183,7 +184,7 @@ cf_string_to_utf8 (CFStringRef str)
 
 static void
 mac_bundle_set_environment_value (GtkMacBundle *bundle,
-                                  const gchar  *key, 
+                                  const gchar  *key,
                                   const gchar  *value)
 {
   GtkMacBundlePriv *priv = GET_PRIV (bundle);
@@ -332,8 +333,8 @@ gtk_mac_bundle_setup_environment (GtkMacBundle *bundle)
   // could add FONTCONFIG_FILE
 
   /*export LANG="\`grep \"\\\`defaults read .GlobalPreferences AppleCollationOrder \
- 2>&1\\\`_\" /usr/share/locale/locale.alias | tail -n1 | sed 's/\./ /' | \
- awk '{print \$2}'\`.UTF-8"*/
+  2>&1\\\`_\" /usr/share/locale/locale.alias | tail -n1 | sed 's/\./ /' | \
+  awk '{print \$2}'\`.UTF-8"*/
 
   g_free (share);
   g_free (lib);
@@ -367,8 +368,8 @@ gtk_mac_bundle_get_resource_path (GtkMacBundle *bundle,
   // FIXME: Look at using CFURLGetFileSystemRepresentation (urlcf_, true, (UInt8*)outPathName, 256)
 
   // FIXME: crate real cfstring here...
-  cf_url = CFBundleCopyResourceURL (priv->cf_bundle, 
-                                    CFSTR("name"), CFSTR("type"), CFSTR("subdir"));
+  cf_url = CFBundleCopyResourceURL (priv->cf_bundle,
+                                    CFSTR ("name"), CFSTR ("type"), CFSTR ("subdir"));
   cf_string = CFURLCopyFileSystemPath (cf_url, kCFURLPOSIXPathStyle);
   path = cf_string_to_utf8 (cf_string);
   CFRelease (cf_string);

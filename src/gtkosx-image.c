@@ -1,4 +1,4 @@
-/* GTK+ application-level integration for the Mac OS X/Cocoa 
+/* GTK+ application-level integration for the Mac OS X/Cocoa
  *
  * Copyright (C) 2007 Pioneer Research Center USA, Inc.
  * Copyright (C) 2007 Imendio AB
@@ -41,21 +41,21 @@
  * Returns: An autoreleased NSImage
  */
 NSImage*
-nsimage_from_resource(const gchar *name, const gchar* type, const gchar* subdir)
+nsimage_from_resource (const gchar *name, const gchar* type, const gchar* subdir)
 {
   NSString *ns_name, *ns_type, *ns_subdir, *path;
-  NSImage *image = NULL; 
-  g_return_val_if_fail(name != NULL, NULL);
-  g_return_val_if_fail(type != NULL, NULL);
-  g_return_val_if_fail(subdir != NULL, NULL);
+  NSImage *image = NULL;
+  g_return_val_if_fail (name != NULL, NULL);
+  g_return_val_if_fail (type != NULL, NULL);
+  g_return_val_if_fail (subdir != NULL, NULL);
 
   ns_name = [NSString stringWithUTF8String: name];
   ns_type = [NSString stringWithUTF8String: type];
   ns_subdir = [NSString stringWithUTF8String: subdir];
   path = [[NSApp mainBundle] pathForResource: ns_name
-		     ofType: ns_type inDirectory: ns_subdir];
-  if (path) 
-  image = [[[NSImage alloc] initWithContentsOfFile: path] autorelease];
+	  ofType: ns_type inDirectory: ns_subdir];
+  if (path)
+    image = [[[NSImage alloc] initWithContentsOfFile: path] autorelease];
 
   return image;
 }
@@ -70,27 +70,27 @@ nsimage_from_resource(const gchar *name, const gchar* type, const gchar* subdir)
  * Returns: An auto-released NSImage*
  */
 NSImage*
-nsimage_from_pixbuf(GdkPixbuf *pixbuf)
+nsimage_from_pixbuf (GdkPixbuf *pixbuf)
 {
   CGImageRef image = NULL;
-  NSRect imageRect = NSMakeRect(0.0, 0.0, 0.0, 0.0);
+  NSRect imageRect = NSMakeRect (0.0, 0.0, 0.0, 0.0);
   CGContextRef imageContext = nil;
   NSImage* newImage = nil;
 
   g_return_val_if_fail (pixbuf !=  NULL, NULL);
   image = gtkosx_create_cgimage_from_pixbuf (pixbuf);
   // Get the image dimensions.
-  imageRect.size.height = CGImageGetHeight(image);
-  imageRect.size.width = CGImageGetWidth(image);
+  imageRect.size.height = CGImageGetHeight (image);
+  imageRect.size.width = CGImageGetWidth (image);
 
   // Create a new image to receive the Quartz image data.
-  newImage = [[[NSImage alloc] initWithSize:imageRect.size] autorelease];
+  newImage = [[[NSImage alloc] initWithSize: imageRect.size] autorelease];
   [newImage lockFocus];
 
   // Get the Quartz context and draw.
   imageContext = (CGContextRef)[[NSGraphicsContext currentContext]
-				graphicsPort];
-  CGContextDrawImage(imageContext, *(CGRect*)&imageRect, image);
+                                graphicsPort];
+  CGContextDrawImage (imageContext, * (CGRect*)&imageRect, image);
   [newImage unlockFocus];
   CGImageRelease (image);
   return newImage;

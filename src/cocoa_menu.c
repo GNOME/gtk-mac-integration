@@ -43,7 +43,7 @@ cocoa_menu_free (gpointer *ptr)
 
 void
 cocoa_menu_connect (GtkWidget *menu,
-		    NSMenu*    cocoa_menu)
+                    NSMenu*    cocoa_menu)
 {
   [cocoa_menu retain];
 
@@ -51,6 +51,6 @@ cocoa_menu_connect (GtkWidget *menu,
     cocoa_menu_quark = g_quark_from_static_string ("NSMenu");
 
   g_object_set_qdata_full (G_OBJECT (menu), cocoa_menu_quark,
-			   cocoa_menu,
-			   (GDestroyNotify) cocoa_menu_free);
+                           cocoa_menu,
+                           (GDestroyNotify) cocoa_menu_free);
 }

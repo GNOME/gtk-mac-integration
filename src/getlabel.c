@@ -1,4 +1,4 @@
-/* GTK+ Integration with platform-specific application-wide features 
+/* GTK+ Integration with platform-specific application-wide features
  * such as the OS X menubar and application delegate concepts.
  *
  * Copyright (C) 2009 Paul Davis
@@ -38,11 +38,11 @@ find_menu_label (GtkWidget *widget)
       children = gtk_container_get_children (GTK_CONTAINER (widget));
 
       for (l = children; l; l = l->next)
-	{
-	  label = find_menu_label ((GtkWidget*) l->data);
-	  if (label)
-	    break;
-	}
+        {
+          label = find_menu_label ((GtkWidget*) l->data);
+          if (label)
+            break;
+        }
 
       g_list_free (children);
     }
@@ -52,7 +52,7 @@ find_menu_label (GtkWidget *widget)
 
 const gchar *
 get_menu_label_text (GtkWidget  *menu_item,
-		     GtkWidget **label)
+                     GtkWidget **label)
 {
   GtkWidget *my_label;
 
