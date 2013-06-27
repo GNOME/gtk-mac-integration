@@ -237,7 +237,7 @@ cocoa_menu_item_update_accelerator (_GNSMenuItem *cocoa_item,
 
           if (keyval_is_keypad (actual_key))
             {
-	      actual_key = keyval_keypad_nonkeypad_equivalent (actual_key)
+		 actual_key = keyval_keypad_nonkeypad_equivalent (actual_key);
               if (actual_key == GDK_VoidSymbol)
                 {
                   /* GDK_KP_Separator */
@@ -550,7 +550,7 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
   else
     {
       const gchar* text = get_menu_label_text (menu_item, &label);
-      NSString *title = [NSString stringWithUTF8String: (text ? text : @"")];
+      NSString *title = [NSString stringWithUTF8String: (text ? text : "")];
 
       GClosure *menu_action =
         g_cclosure_new_object_swap (G_CALLBACK (gtk_menu_item_activate),

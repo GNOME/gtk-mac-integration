@@ -40,4 +40,4 @@ void cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
 				  gboolean      debug);
 
 
-#endif __COCOA_MENU_ITEM_H__
+#endif /* __COCOA_MENU_ITEM_H__ */
