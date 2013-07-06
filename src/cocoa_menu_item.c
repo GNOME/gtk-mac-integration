@@ -342,10 +342,10 @@ cocoa_menu_item_update_accel_closure (_GNSMenuItem *cocoa_item,
   if (cocoa_item->accel_closure)
     {
       group = gtk_accel_group_from_accel_closure (cocoa_item->accel_closure);
-
-      g_signal_handlers_disconnect_by_func (group,
-                                            (void*) cocoa_menu_item_accel_changed,
-                                            widget);
+      if (group)
+	g_signal_handlers_disconnect_by_func (group,
+					      (void*) cocoa_menu_item_accel_changed,
+					      widget);
 
       g_closure_unref (cocoa_item->accel_closure);
       cocoa_item->accel_closure = NULL;
@@ -361,10 +361,10 @@ cocoa_menu_item_update_accel_closure (_GNSMenuItem *cocoa_item,
       g_closure_ref (cocoa_item->accel_closure);
 
       group = gtk_accel_group_from_accel_closure (cocoa_item->accel_closure);
-
-      g_signal_connect_object (group, "accel-changed",
-                               G_CALLBACK (cocoa_menu_item_accel_changed),
-                               widget, (GConnectFlags) 0);
+      if (group)
+	g_signal_connect_object (group, "accel-changed",
+				 G_CALLBACK (cocoa_menu_item_accel_changed),
+				 widget, (GConnectFlags) 0);
     }
 
   cocoa_menu_item_update_accelerator (cocoa_item, widget);
@@ -517,6 +517,7 @@ cocoa_menu_item_add_item_image (_GNSMenuItem* cocoa_item, GtkWidget* menu_item)
     [cocoa_item setImage: image];
 }
 #endif
+
 /*
  * Public Functions
  */
@@ -653,6 +654,7 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
         continue;
       /*OK, this must be a new one. Add it. */
       cocoa_menu_item_add_item (cocoa_menu, menu_item, index++);
+
     }
   /* Iterate over the cocoa menu again removing anything that's still marked */
   for (index = 0; index < [cocoa_menu numberOfItems]; index++)
