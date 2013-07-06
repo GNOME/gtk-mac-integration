@@ -459,15 +459,6 @@ change_icon_cb (GtkWidget  *button,
 {
 }
 #endif //GTKMACINTEGRATION
-static void
-window_change_title_cb (GtkWidget *button, gpointer user_data)
-{
-  GtkWidget *window = gtk_widget_get_toplevel (button);
-  gchar *old_title = gtk_window_get_title (GTK_WINDOW (window));
-  gchar *new_title = g_strdup_printf ("New %s", old_title);
-  gtk_window_set_title (GTK_WINDOW (window), new_title);
-  g_free (new_title);
-}
 
 static void
 change_menu_cb (GtkWidget  *button,
@@ -715,13 +706,6 @@ create_window (const gchar *title)
                       button,
                       FALSE, FALSE, 0);
 
-  button = gtk_button_new_with_label ("Change Title");
-  g_signal_connect (button, "clicked", G_CALLBACK (window_change_title_cb),
-		    NULL);
-  gtk_box_pack_start (GTK_BOX (bbox),
-                      button,
-                      FALSE, FALSE, 0);
-
   gtk_widget_show_all (window);
 #if defined GTK_MAC_MENU || defined GTKOSXAPPLICATION
   gtk_widget_hide (menubar);
@@ -767,8 +751,6 @@ create_window (const gchar *title)
     menu_items_quark = g_quark_from_static_string ("MenuItem");
   g_object_set_qdata_full (G_OBJECT (window), menu_items_quark,
                            items, (GDestroyNotify)menu_items_destroy);
-  //  gtk_widget_set_sensitive(items->preferences_item, FALSE);
-  g_object_set (items->preferences_item, "visible", FALSE, NULL);
   return window;
 }
 
@@ -830,7 +812,6 @@ main (int argc, char **argv)
   gtkosx_application_set_use_quartz_accelerators (theApp, FALSE);
 # endif //QUARTZ_HANDLERS
   gtkosx_application_ready (theApp);
-
   {
     const gchar *id = gtkosx_application_get_bundle_id ();
     if (id != NULL)
