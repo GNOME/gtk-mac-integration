@@ -37,6 +37,7 @@ struct _GtkosxApplicationPrivate
   NSMenu *dock_menu;
   GtkApplicationNotificationObject *notify;
   GtkApplicationDelegate *delegate;
+  gboolean app_menu_set;
 };
 
 #endif

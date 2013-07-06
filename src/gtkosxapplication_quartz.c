@@ -217,8 +217,11 @@ create_apple_menu (GtkosxApplication *self)
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
-
-  [NSApp performSelector: @selector (setAppleMenu: ) withObject: app_menu];
+  if (!self->priv->app_menu_set)
+    {
+      [NSApp performSelector: @selector (setAppleMenu: ) withObject: app_menu];
+      self->priv->app_menu_set = TRUE;
+    }
   return add_to_menubar (self, app_menu, 0);
 }
 
@@ -483,6 +486,7 @@ gtkosx_application_init (GtkosxApplication *self)
   self->priv->notify = [[GtkApplicationNotificationObject alloc] init];
   [NSApp setDelegate: [GtkApplicationDelegate new]];
   self->priv->delegate = [NSApp delegate];
+  self->priv->app_menu_set = FALSE;
 }
 
 static void
@@ -613,6 +617,11 @@ gtkosx_application_class_init (GtkosxApplicationClass *klass)
 void
 gtkosx_application_ready (GtkosxApplication *self)
 {
+  if (!self->priv->app_menu_set)
+    {
+      create_apple_menu (self);
+      self->priv->app_menu_set = TRUE;
+    }
   [NSApp finishLaunching];
 }
 
