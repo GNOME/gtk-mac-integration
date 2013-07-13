@@ -459,6 +459,17 @@ change_icon_cb (GtkWidget  *button,
 {
 }
 #endif //GTKMACINTEGRATION
+static void
+toggle_prefs_cb (GtkWidget *button,
+		 gpointer user_data)
+{
+  GtkWidget *window = gtk_widget_get_toplevel (button);
+  MenuItems *items = g_object_get_qdata (G_OBJECT (window), menu_items_quark);
+  gboolean state = gtk_widget_get_sensitive (GTK_WIDGET (items->preferences_item));
+  g_print ("Setting Preferences Item sensitive to %s\n",
+	   state ? "False" : "True");
+  gtk_widget_set_sensitive (GTK_WIDGET (items->preferences_item), !state);
+}
 
 static void
 change_menu_cb (GtkWidget  *button,
@@ -705,6 +716,13 @@ create_window (const gchar *title)
   gtk_box_pack_start (GTK_BOX (bbox),
                       button,
                       FALSE, FALSE, 0);
+
+  button = gtk_toggle_button_new_with_label ("Sensitive_Prefs");
+  g_signal_connect (button, "toggled", G_CALLBACK (toggle_prefs_cb), NULL);
+  gtk_box_pack_start (GTK_BOX (bbox),
+                      button,
+                      FALSE, FALSE, 0);
+
 
   gtk_widget_show_all (window);
 #if defined GTK_MAC_MENU || defined GTKOSXAPPLICATION

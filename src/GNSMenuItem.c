@@ -105,6 +105,19 @@ idle_call_activate (ClosureData *action)
 #endif
 }
 
+-(BOOL) isEnabled
+{
+  return [self action] != nil;
+}
+
+-(void) setEnabled: (BOOL)shouldEnable
+{
+  if (shouldEnable)
+    [self setAction: @selector (activate:)];
+  else
+    [self setAction: nil];
+}
+
 -(void) mark
 {
   notUsed = YES;

@@ -87,6 +87,8 @@ typedef struct {
 
 - (BOOL) isHidden;
 - (void) setHidden: (BOOL) shouldHide;
+- (BOOL) isEnabled;
+- (void) setEnabled: (BOOL) shouldEnable;
 - (void) mark;
 - (void) unmark;
 - (BOOL) isMarked;

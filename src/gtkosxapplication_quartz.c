@@ -736,10 +736,9 @@ gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
     GtkWidget* item,
     gint index)
 {
+  gtk_widget_set_visible (item, TRUE);
   cocoa_menu_item_add_item ([[[NSApp mainMenu] itemAtIndex: 0] submenu],
                             item, index);
-  [(_GNSMenuItem*)[[[[NSApp mainMenu] itemAtIndex: 0] submenu]
-		   itemAtIndex: index] setHidden: NO];
 }
 
 /**
