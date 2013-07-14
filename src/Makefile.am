@@ -13,6 +13,8 @@ libgtkmacintegration_la_SOURCES =			\
 	GNSMenuBar.c					\
 	GNSMenuItem.h					\
 	GNSMenuItem.c					\
+	GNSMenuDelegate.h				\
+	GNSMenuDelegate.c				\
 	getlabel.h					\
 	getlabel.c					\
 	cocoa_menu.h					\

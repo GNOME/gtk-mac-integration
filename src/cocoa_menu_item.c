@@ -34,6 +34,7 @@
 #include "getlabel.h"
 #include "gtkosx-image.h"
 #import "GNSMenuBar.h"
+#import "GNSMenuDelegate.h"
 
 //#define DEBUG(format, ...) g_printerr ("%s: " format, G_STRFUNC, ## __VA_ARGS__)
 #define DEBUG(format, ...)
@@ -154,7 +155,11 @@ cocoa_menu_item_update_submenu (_GNSMenuItem *cocoa_item,
   if (cocoa_submenu != nil)
     if ([cocoa_item submenu] != cocoa_submenu)
       //covers no submenu or wrong submenu on cocoa_item)
-      [cocoa_item setSubmenu: cocoa_submenu];
+      {
+	[[[cocoa_item submenu] delegate] release];
+	[[cocoa_item submenu] release];
+	[cocoa_item setSubmenu: cocoa_submenu];
+      }
     else ;
   //Nothing required -- the submenus are already set up correctly
   else if ([cocoa_item hasSubmenu])
@@ -166,12 +171,13 @@ cocoa_menu_item_update_submenu (_GNSMenuItem *cocoa_item,
     {
       const gchar *text = get_menu_label_text (widget, &label);
       NSString *title = [NSString stringWithUTF8String: text ? text : ""];
+      _GNSMenuDelegate *delegate = [[_GNSMenuDelegate alloc] init];
 
       cocoa_submenu = [[[NSMenu alloc] initWithTitle: title] autorelease];
 
+      [cocoa_submenu setDelegate: delegate];
       [cocoa_submenu setAutoenablesItems: NO];
       cocoa_menu_connect (submenu, cocoa_submenu);
-
       /* connect the new nsmenu to the passed-in item (which lives in
          the parent nsmenu)
          (Note: this will release any pre-existing version of this submenu)
@@ -560,7 +566,7 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
 
       cocoa_item = [[_GNSMenuItem alloc]
 		    initWithTitle: title
-		    aGClosure: menu_action andPointer: NULL];
+		    aGClosure: menu_action andPointer: menu_item];
 
       DEBUG ("\tan item\n");
     }

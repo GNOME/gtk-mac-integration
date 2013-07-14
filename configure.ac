@@ -38,7 +38,7 @@ AM_PROG_CC_C_O
 
 AM_PATH_GLIB_2_0([2.14.0])
 AC_MSG_CHECKING([for GLib >= 2.31.0])
-if $PKG_CONFIG 'glib-2.0 >= 2.31.0'
+if $PKG_CONFIG 'glib-2.0 >= 2.32.0'
 then
     AC_MSG_RESULT(yes)
     AC_DEFINE(HAVE_GLIB_2_31,1,[System has GLib 2.31.0 or newer])

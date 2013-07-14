@@ -51,6 +51,7 @@ typedef struct {
   ClosureData action;
   // The hidden parameter was introduced in 10.5; for earlier OSX
   // versions we need to emulate it.
+  GWeakRef menuItem;
   BOOL notUsed;
 #if !(MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4)
   BOOL hidden;
@@ -93,6 +94,7 @@ typedef struct {
 - (void) unmark;
 - (BOOL) isMarked;
 - (void) removeFromMenu: (NSMenu*) old_menu;
+- (void) willHighlight;
 
 @end
 

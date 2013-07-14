@@ -39,7 +39,7 @@ idle_call_activate (ClosureData *action)
 
 -(id) initWithTitle: (NSString*) title
            aGClosure: (GClosure*) closure
-	   andPointer: (gpointer) ptr
+	   andPointer: (gpointer) gtkmenuitem
 {
 
   /* All menu items have the action "activate", which will be handled by this child class
@@ -53,9 +53,10 @@ idle_call_activate (ClosureData *action)
       g_closure_ref (closure);
       g_closure_sink (closure);
       action.closure = closure;
-      action.data = ptr;
+      action.data = NULL;
       accel_closure = NULL;
       notUsed = NO;
+      g_weak_ref_set (&menuItem, GTK_MENU_ITEM (gtkmenuitem));
     }
   return self;
 }
@@ -147,4 +148,16 @@ idle_call_activate (ClosureData *action)
 #endif
 }
 
+-(void) willHighlight
+{
+  NSMenu *theMenu = [self menu];
+  guint index = [theMenu indexOfItem: self];
+  GtkMenuItem *item = g_weak_ref_get (&menuItem);
+  if (item != NULL)
+    {
+      GtkMenu *menu = GTK_MENU (gtk_widget_get_parent (GTK_WIDGET (item)));
+      gtk_menu_set_active (menu, index);
+      g_object_unref (item);
+    }
+}
 @end
