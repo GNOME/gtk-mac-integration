@@ -63,14 +63,6 @@
 #define BUILT_UI
 //#define QUARTZ_HANDLERS
 
-/* GTKMACINTEGRATION uses Carbon, which isn't available for 64-bit builds. */
-#ifdef __x86_64__
-#undef GTKMACINTEGRATION
-# ifndef GTKOSXAPPLICATION
-#define GTKOSXAPPLICATION
-# endif
-#endif //__x86_64__
-
 #include <gtk/gtk.h>
 #include <stdio.h>
 #if GTK_CHECK_VERSION(2,90,7)
