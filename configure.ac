@@ -81,6 +81,12 @@ AC_SUBST(GTK_VERSION)
 AC_MSG_RESULT("$GTK_VERSION")
 AM_CONDITIONAL([INTROSPECTION], [test x$GTK_MAJOR = "xgtk+-3.0"])
 
+AS_IF([test "$GTK_MAJOR" = gtk+-3.0],
+	 [PKG_CHECK_EXISTS([gtk+-3.0 >= 3.3.0],
+	 AC_DEFINE([HAVE_GTK_34], 1, [Gtk version 3.3 or higher]))
+	 PKG_CHECK_EXISTS([gtk+-3.0 >= 3.9.0],
+	 AC_DEFINE([HAVE_GTK_310], 1, [Gtk version 3.9 or higher]))],)
+
 GTK_PYTHON_CHECK
 
 GOBJECT_INTROSPECTION_CHECK([0.10.1])

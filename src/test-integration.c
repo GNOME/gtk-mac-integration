@@ -61,6 +61,9 @@
 #define GTKOSXAPPLICATION
 /* These others are optional */
 #define BUILT_UI
+#ifndef HAVE_GTK_310
+//#define BUILT_UI //The built UI uses deprecated functions
+#endif
 //#define QUARTZ_HANDLERS
 
 /* GTKMACINTEGRATION uses Carbon, which isn't available for 64-bit builds. */
@@ -295,7 +298,11 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   gtk_menu_set_accel_group (GTK_MENU (menu), accel);
   gtk_menu_set_accel_path (GTK_MENU (menu), "<test-integration>/File");
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
+#ifndef HAVE_GTK_310
   item = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, NULL);
+#else
+  item = gtk_menu_item_new_with_label ("Open");
+#endif
   items->open_item = item;
   /* We're being fancy with our connection here so that we don't have to
    * have a separate callback function for each menu item, since each
@@ -308,7 +315,11 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
                          menu_cbdata_new ("open", items->window),
                          (GClosureNotify) menu_cbdata_delete, 0);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+#ifndef HAVE_GTK_310
   items->quit_item = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
+#else
+  items->quit_item = gtk_menu_item_new_with_label ("Quit");
+#endif
   g_signal_connect (items->quit_item, "activate", G_CALLBACK (gtk_main_quit), NULL);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), items->quit_item);
 //Set accelerators

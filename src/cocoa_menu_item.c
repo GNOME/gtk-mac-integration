@@ -651,10 +651,11 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
         /* Don't want separators on the menubar */
         continue;
 
+#ifndef HAVE_GTK_34
       if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
         /*Don't want tearoff items at all */
         continue;
-
+#endif
       if (g_object_get_data (G_OBJECT (menu_item), "gtk-empty-menu-item"))
         /* Nor blank items. */
         continue;
