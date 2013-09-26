@@ -60,7 +60,6 @@
 //#define GTKMACINTEGRATION
 #define GTKOSXAPPLICATION
 /* These others are optional */
-#define BUILT_UI
 #ifndef HAVE_GTK_310
 //#define BUILT_UI //The built UI uses deprecated functions
 #endif
@@ -332,6 +331,10 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   gtk_menu_shell_append (GTK_MENU_SHELL (menubar), item);
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
+
+  item = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+
   item = gtk_menu_item_new_with_label ("Copy");
   items->copy_item = item;
   g_signal_connect_data (item, "activate", G_CALLBACK (menu_item_activate_cb),
@@ -339,10 +342,16 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
                          (GClosureNotify) menu_cbdata_delete, 0);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
+  item = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+
   item = gtk_menu_item_new_with_label ("Paste");
   g_signal_connect_data (item, "activate", G_CALLBACK (menu_item_activate_cb),
                          menu_cbdata_new ( "paste", items->window),
                          (GClosureNotify) menu_cbdata_delete, 0);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+
+  item = gtk_separator_menu_item_new ();
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
   items->preferences_item = gtk_menu_item_new_with_label ("Preferences");

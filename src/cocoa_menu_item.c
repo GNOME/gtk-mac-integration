@@ -543,10 +543,22 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
 
   if (cocoa_item)
     {
+      NSMenu *cocoa_menu = [cocoa_item menu];
+      NSInteger index = [cocoa_menu indexOfItem: cocoa_item];
       DEBUG ("\tItem exists\n");
       [cocoa_item retain];
-      [[cocoa_item menu] removeItem: cocoa_item];
+      [cocoa_menu removeItem: cocoa_item];
       [cocoa_item release];
+      /* Clean up adjacent separators: */
+      if ([cocoa_menu numberOfItems] > 0)
+	{
+	  if (([cocoa_menu numberOfItems] == index ||
+	       [[cocoa_menu itemAtIndex: index] isSeparatorItem]) &&
+	      [[cocoa_menu itemAtIndex: index - 1] isSeparatorItem])
+	    [cocoa_menu removeItemAtIndex: index - 1];
+	  if (index == 0 && [[cocoa_menu itemAtIndex: index] isSeparatorItem])
+	    [cocoa_menu removeItemAtIndex: index];
+	}
     }
 
   if (GTK_IS_SEPARATOR_MENU_ITEM (GTK_MENU_ITEM (menu_item)))
@@ -599,6 +611,8 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
   GList         *children;
   GList         *l;
   guint index = 0, count, loc;
+  GtkWidget *last_item = NULL;
+  NSMenuItem *last_cocoa_item = nil;
 
   count = [cocoa_menu numberOfItems];
   /* First go through the cocoa menu and mark all of the items unused. */
@@ -651,6 +665,13 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
         /* Don't want separators on the menubar */
         continue;
 
+      if (GTK_IS_SEPARATOR_MENU_ITEM (menu_item) &&
+	  (last_item == NULL || GTK_IS_SEPARATOR_MENU_ITEM (last_item)))
+	/* Don't put a separator at the top, nor make separators with
+	 * nothing between them.
+	 */
+	continue;
+
 #ifndef HAVE_GTK_34
       if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
         /*Don't want tearoff items at all */
@@ -661,15 +682,24 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
         continue;
       /*OK, this must be a new one. Add it. */
       cocoa_menu_item_add_item (cocoa_menu, menu_item, index++);
-
+      last_item = menu_item;
     }
-  /* Iterate over the cocoa menu again removing anything that's still marked */
+  /* Iterate over the cocoa menu again removing anything that's still
+     marked, checking again for adjacent separators. */
   for (index = 0; index < [cocoa_menu numberOfItems]; index++)
     {
       _GNSMenuItem *item = (_GNSMenuItem*)[cocoa_menu itemAtIndex: index];
+      if ([item isSeparatorItem] &&
+	  (last_cocoa_item == nil || [last_cocoa_item isSeparatorItem]))
+	  [cocoa_menu removeItem: item];
       if (([item respondsToSelector: @selector (isMarked)]) && [item isMarked])
 	[cocoa_menu removeItem: item];
+      else if (![item isHidden])
+	last_cocoa_item = item;
     }
+  /* Finally make sure that the last item isn't a separator. */
+  if ([last_cocoa_item isSeparatorItem])
+    [cocoa_menu removeItem: last_cocoa_item];
 
   g_list_free (children);
 }
