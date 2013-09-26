@@ -186,6 +186,7 @@ create_apple_menu (GtkosxApplication *self)
 						@"GtkOSXApplication",
 						@"Services Menu title");
   NSMenu *menuServices = [[[NSMenu alloc] initWithTitle: title] autorelease];
+  NSString *appname = [[[NSRunningApplication currentApplication] localizedName] capitalizedString];
   [NSApp setServicesMenu: menuServices];
 
   [app_menu addItem: [NSMenuItem separatorItem]];
@@ -195,7 +196,7 @@ create_apple_menu (GtkosxApplication *self)
   [app_menu addItem: menuitem];
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable (@"Hide",  @"GtkosxApplication", @"Hide menu item title")
+  menuitem = [[NSMenuItem alloc] initWithTitle: [[NSLocalizedStringFromTable (@"Hide",  @"GtkosxApplication", @"Hide menu item title") autorelease] stringByAppendingFormat: @" %@", appname]
 	      action: @selector (hide: ) keyEquivalent: @"h"];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
@@ -212,7 +213,7 @@ create_apple_menu (GtkosxApplication *self)
   [app_menu addItem: menuitem];
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable (@"Quit",  @"GtkosxApplication", @"Quit menu item title")
+  menuitem = [[NSMenuItem alloc] initWithTitle: [[NSLocalizedStringFromTable (@"Quit",  @"GtkosxApplication", @"Quit menu item title") autorelease] stringByAppendingFormat: @" %@", appname]
 	      action: @selector (terminate: ) keyEquivalent: @"q"];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
@@ -726,6 +727,11 @@ gtkosx_application_sync_menubar (GtkosxApplication *self)
  * menu item, removing it from its original menu in the Gtk
  * application.
  *
+ * Any items inserted at index zero will have the app name appended;
+ * this is intended for the "About" menu item, so that it says "About
+ * Foo" like most Mac programs, without having to worry too much about
+ * how "About" is spelled/translated.
+ *
  * To group your menu items, insert GtkSeparatorMenuItem*s where you want them.
  *
  * Don't use it for Quit! A Quit menu item is created automatically
@@ -733,10 +739,19 @@ gtkosx_application_sync_menubar (GtkosxApplication *self)
  */
 void
 gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
-    GtkWidget* item,
-    gint index)
+                                         GtkWidget* item,
+                                         gint index)
 {
   gtk_widget_set_visible (item, TRUE);
+  /*Sleazy hack to avoid dealing with translating "About": If it's the
+    zero'th item, it's the About item. */
+  if (index == 0)
+    {
+      gchar *label = gtk_menu_item_get_label (GTK_MENU_ITEM (item));
+      gchar *appname = [[[[NSRunningApplication currentApplication] localizedName] capitalizedString] UTF8String];
+      gtk_menu_item_set_label (GTK_MENU_ITEM (item), g_strdup_printf ("%s %s", label, appname));
+    }
+
   cocoa_menu_item_add_item ([[[NSApp mainMenu] itemAtIndex: 0] submenu],
                             item, index);
 }
