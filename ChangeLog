@@ -1,3 +1,22 @@
+Changes from version gtk-mac-integration-2.0.1 to version
+	gtk-mac-integration-2.0.2
+John Ralls (18):
+      Ensure HAVE_INTROSPECTION is defined
+      Bug 699987 - gtk-mac-integration build failure: can't find automake
+      Bug 698334 - Mac top-of-screen menu not working properly
+      Enable running test-integration without integration
+      Clean up a couple of leaks
+      Reformat to Gnome coding standard
+      Fix some Clang-5 errors
+      Suppress NULL object warning in cocoa_menu_item_update_accel_closure
+      Bug 703781 - app menu item disappears when made insensitive
+      Bug 703675 - GtkRecentChooserMenu: GtkRecentChooser doesn't work
+      Avoid deprecated functions from Gtk-3.4 and Gtk3.10
+      Prevent "doesn't implement NSApplicationDelegate" error
+      Bug 707803 - Suppress adjacent separators
+      Bug 707882 - App menu shows "About", "Hide", "Quit",
+      Fix missing localization of "Help" in the main menu bar.
+
 Changes from version gtk-mac-integration-2.0.0 to version
 	gtk-mac-integration-2.0.1:
 John Ralls (1):

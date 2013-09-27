@@ -1,3 +1,11 @@
+Changes from version gtk-mac-integration-2.0.1 to version
+	gtk-mac-integration-2.0.2:
+* Ready for Mavericks and Xcode 5.0
+* Make the App(le) Menu more Mac-like, with the App-name appended to
+  Hide, Quit, and any items added to the zeroth entry (normally About).
+* Suppress leading, trailing, and consecutive separators in menus
+* Other bug-fixes. See ChangeLog.
+
 Changes from version gtk-mac-integration-2.0.0 to version
 	gtk-mac-integration-2.0.1:
 * This is a minor bug-fix release.

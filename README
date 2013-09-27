@@ -3,7 +3,8 @@ app bundles.
 
 This library provides two implementations: An older Carbon
 implementation (gtk-mac-integration) and a new implementation in Cocoa
-(GtkOSXApplication). PyGtk bindings are provided for both.
+(GtkOSXApplication). PyGtk bindings are provided for both, and
+GtkosxApplication is gobject-introspectable.
 
 GtkOSXApplication compiles and works with x86_64, a major failing of
 the Carbon implementation, as well as resolving some other glaring
@@ -12,6 +13,10 @@ and is likely to remove it from a future version of the operating
 system, Gtk-mac-integration is also deprecated. New ports of Gtk+
 applications should use GtkOSXApplication and maintainers of older
 ports are strongly encouraged to convert as soon as practical.
+
+NB: Applications already using Gtk+-3.4 and GLib 2.36 and later should
+use the GApplication/GtkApplication and GMenuModel/GMenu APIs which
+make this library unnecessary.
 
 For a rather complex example on how to use the various flavors, see
 src/test-integration.c. Basic examples of using the Python bindings
