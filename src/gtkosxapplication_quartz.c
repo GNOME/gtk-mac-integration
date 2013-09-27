@@ -821,7 +821,7 @@ gtkosx_application_set_help_menu (GtkosxApplication *self,
     }
   else
     {
-      _GNSMenuItem *menuitem = [[[_GNSMenuItem alloc] initWithTitle: @"Help"
+      _GNSMenuItem *menuitem = [[[_GNSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable(@"Help", @"GtkosxApplication", @"Help menu item title")
 				 action: NULL keyEquivalent: @""] autorelease];
       [cocoa_menubar setHelpMenu: menuitem];
       [cocoa_menubar addItem: [cocoa_menubar helpMenu]];
