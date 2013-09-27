@@ -47,8 +47,8 @@ AC_DEFUN([GTK_PYTHON_CHECK],
 
   AC_ARG_ENABLE([python],
     AS_HELP_STRING([--enable-python=@<:@no/yes/all/auto@:>@],
-                   [build Python bindings [[default=auto]]]),,
-    [enable_python=auto])
+                   [build Python bindings [[default=all]]]),,
+    [enable_python=all])
 
   have_python=no
 

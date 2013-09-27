@@ -10,7 +10,7 @@ headers = $(top_srcdir)/src/gtkosxapplication.h
 gtkosx_application.defs: $(headers)
 	$(PYTHON) $(datadir)/pygobject/2.0/codegen/h2def.py $(headers) > $@
 
-gtkosx_application.c: gtkosx_application.defs gtkosx_application.override
+gtkosx_application.c: gtkosx_application.defs
 
 _gtkosx_application_la_CFLAGS =				\
 	$(MAC_CFLAGS)					\
@@ -28,7 +28,7 @@ _gtkosx_application_la_SOURCES =				\
 	($(PYGOBJECT_CODEGEN)				\
 	    --register $(PYGTK_DEFSDIR)/gdk-types.defs	\
 	    --register $(PYGTK_DEFSDIR)/gtk-types.defs	\
-	    --override $*.override			\
+	    --override $(srcdir)/$*.override			\
 	    --prefix $* $<) > gen-$*.c			\
 	&& cp gen-$*.c $*.c				\
 	&& rm -f gen-$*.c
@@ -38,5 +38,4 @@ CLEANFILES =						\
 	gtkosx_application.c
 
 EXTRA_DIST =						\
-	gtkosx_application.defs				\
 	gtkosx_application.override
