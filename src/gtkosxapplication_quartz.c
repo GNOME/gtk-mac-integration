@@ -186,7 +186,9 @@ create_apple_menu (GtkosxApplication *self)
 						@"GtkOSXApplication",
 						@"Services Menu title");
   NSMenu *menuServices = [[[NSMenu alloc] initWithTitle: title] autorelease];
-  NSString *appname = [[[NSRunningApplication currentApplication] localizedName] capitalizedString];
+  NSString *appname = [[[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"] capitalizedString];
+  if (appname == nil)
+    appname = [[[NSProcessInfo processInfo] processName] capitalizedString];
   [NSApp setServicesMenu: menuServices];
 
   [app_menu addItem: [NSMenuItem separatorItem]];
@@ -748,7 +750,11 @@ gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
   if (index == 0)
     {
       gchar *label = gtk_menu_item_get_label (GTK_MENU_ITEM (item));
-      gchar *appname = [[[[NSRunningApplication currentApplication] localizedName] capitalizedString] UTF8String];
+      gchar *appname;
+      NSString *nsappname = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
+      if (nsappname == nil)
+	nsappname = [[NSProcessInfo processInfo] processName];
+      appname = [[nsappname capitalizedString] UTF8String];
       gtk_menu_item_set_label (GTK_MENU_ITEM (item), g_strdup_printf ("%s %s", label, appname));
     }
 
