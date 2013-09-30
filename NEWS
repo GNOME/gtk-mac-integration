@@ -1,3 +1,7 @@
+Changes from version gtk-mac-integration-2.0.2 to version
+	gtk-mac-integration-2.0.3:
+* A bugfix to allow compilation on Tiger and Leopard systems
+
 Changes from version gtk-mac-integration-2.0.1 to version
 	gtk-mac-integration-2.0.2:
 * Ready for Mavericks and Xcode 5.0

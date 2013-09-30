@@ -8,9 +8,9 @@
   <bookinfo>
     <title>Gtk-OSX Integration Reference Manual</title>
     <releaseinfo>
-      for ige-mac-integration 0.9
+      For <em>gtk-mac-integration 2.0.3</em><br/>
       The latest version of this documentation can be found on-line at
-      <ulink role="online-location" url="http://gtk-osx.sourceforge.net/ige-mac-integration/index.html">http://gtk-osx.sourceforge.net/ige-mac-integration/</ulink>.
+      <ulink role="online-location" url="http://gtk-osx.sourceforge.net/gtk-mac-integration/index.html">http://gtk-osx.sourceforge.net/gtk-mac-integration/</ulink>.
     </releaseinfo>
   </bookinfo>
 
