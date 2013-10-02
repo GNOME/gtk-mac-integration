@@ -1,3 +1,7 @@
+Changes from version gtk-mac-integration-2.0.3 to version
+	gtk-mac-integration-2.0.4:
+* A double-release bug fix. Crasher! Don't use 2.0.3!
+
 Changes from version gtk-mac-integration-2.0.2 to version
 	gtk-mac-integration-2.0.3:
 * A bugfix to allow compilation on Tiger and Leopard systems
