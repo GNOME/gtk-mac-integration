@@ -445,7 +445,6 @@ cocoa_menu_item_connect (GtkWidget*   menu_item,
           old_item))
         g_print ("Failed to disconnect old notify signal for %s\\n",
                  gtk_widget_get_name (menu_item));
-      [old_item release];
     }
   g_signal_connect (menu_item, "notify",
                     G_CALLBACK (cocoa_menu_item_notify),
@@ -645,6 +644,7 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
           [cocoa_item unmark];
           cocoa_menu_item_sync (menu_item);
           ++index;
+	  last_item = menu_item;
           continue;
         }
       if (cocoa_item && (loc = [cocoa_menu indexOfItem: cocoa_item]) > -1)
@@ -658,6 +658,7 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
             [cocoa_item unmark];
           [cocoa_item release];
           cocoa_menu_item_sync (menu_item);
+	  last_item = menu_item;
           continue;
         }
       if (GTK_IS_SEPARATOR_MENU_ITEM (menu_item) &&
