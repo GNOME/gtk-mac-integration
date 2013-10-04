@@ -159,6 +159,24 @@ add_to_menubar (GtkosxApplication *self, NSMenu *menu, int pos)
     [menubar insertItem: dummyItem atIndex: pos];
   return dummyItem;
 }
+static NSString*
+get_application_name (void)
+{
+  NSString *appname = nil;
+  NSBundle *bundle = [NSBundle mainBundle];
+  NSString *path = nil;
+  if ([bundle bundleIdentifier])
+    {
+      NSString *bundlep = [bundle bundlePath];
+      appname =  [[NSFileManager defaultManager] displayNameAtPath: bundlep];
+    }
+  else
+    {
+      NSString *exepath = [bundle executablePath];
+      appname =  [[NSFileManager defaultManager] displayNameAtPath: exepath];
+    }
+  return appname;
+}
 
 /*
  * create_apple_menu:
@@ -186,9 +204,12 @@ create_apple_menu (GtkosxApplication *self)
 						@"GtkOSXApplication",
 						@"Services Menu title");
   NSMenu *menuServices = [[[NSMenu alloc] initWithTitle: title] autorelease];
-  NSString *appname = [[[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"] capitalizedString];
+  NSString *appname = get_application_name ();
+  /*
+  NSString *appname = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
   if (appname == nil)
     appname = [[[NSProcessInfo processInfo] processName] capitalizedString];
+  */
   [NSApp setServicesMenu: menuServices];
 
   [app_menu addItem: [NSMenuItem separatorItem]];
@@ -749,12 +770,11 @@ gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
     zero'th item, it's the About item. */
   if (index == 0)
     {
-      gchar *label = gtk_menu_item_get_label (GTK_MENU_ITEM (item));
+      GtkWidget *widgetLabel = NULL;
+      gchar *label = get_menu_label_text (item, &widgetLabel);
       gchar *appname;
-      NSString *nsappname = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
-      if (nsappname == nil)
-	nsappname = [[NSProcessInfo processInfo] processName];
-      appname = [[nsappname capitalizedString] UTF8String];
+      NSString *nsappname = get_application_name ();
+      appname = [nsappname UTF8String];
       gtk_menu_item_set_label (GTK_MENU_ITEM (item), g_strdup_printf ("%s %s", label, appname));
     }
 

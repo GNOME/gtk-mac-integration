@@ -367,7 +367,11 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 
+#ifndef HAVE_GTK_310
+  items->about_item = gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, NULL);
+#else
   items->about_item = gtk_menu_item_new_with_label ("About");
+#endif
   g_signal_connect_data (items->about_item, "activate",
                          G_CALLBACK (menu_item_activate_cb),
                          menu_cbdata_new ("about", items->window),
