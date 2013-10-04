@@ -38,6 +38,11 @@
 #include "getlabel.h"
 #include "gtkosx-image.h"
 
+#ifdef G_LOG_DOMAIN
+#undef G_LOG_DOMAIN
+#endif
+#define G_LOG_DOMAIN "gtkosxapplication"
+
 /* This is a private function in libgdk; we need to have is so that we
    can force new windows onto the Window menu */
 extern NSWindow* gdk_quartz_window_get_nswindow (GdkWindow*);
@@ -159,16 +164,27 @@ add_to_menubar (GtkosxApplication *self, NSMenu *menu, int pos)
     [menubar insertItem: dummyItem atIndex: pos];
   return dummyItem;
 }
+
 static NSString*
 get_application_name (void)
 {
   NSString *appname = nil;
   NSBundle *bundle = [NSBundle mainBundle];
-  NSString *path = nil;
   if ([bundle bundleIdentifier])
     {
-      NSString *bundlep = [bundle bundlePath];
-      appname =  [[NSFileManager defaultManager] displayNameAtPath: bundlep];
+
+      appname = [[bundle infoDictionary]
+		 objectForKey: (NSString*)kCFBundleNameKey];
+      if (appname == nil)
+	appname = [[bundle infoDictionary]
+		   objectForKey: @"CFBundleExecutable"];
+      if (appname == nil)
+	{
+	  NSString *bundlep = [bundle bundlePath];
+	  appname =  [[NSFileManager defaultManager]
+		      displayNameAtPath: bundlep];
+	  g_info ("[get_application_name]: no bundle name key in Info.plist\n");
+	}
     }
   else
     {
@@ -191,6 +207,16 @@ get_application_name (void)
  * translations other than the ones provided. The resource file will
  * be GtkosxApplication.strings, and must be installed in lang.proj in
  * the application bundle's Resources directory.
+ *
+ * Several menu items have the application name appended, in accord
+ * with Apple's practice. When the app is bundled, it will look for
+ * the Info.plist keys CFBundleName and CFBundleExecutable. If neither
+ * exists (unlikely, since the app won't launch if CFBundleExecutable
+ * isn't set), it will fall back to the name of the bundle, including
+ * the ".app" extension if the user has checked "display all
+ * extensions" in Finder>Preferences>Advanced. When not bundled, the
+ * application name will be the executable name. This will generally
+ * match what LaunchServices names the app menu.
  *
  * Returns: A pointer to the menu item.
  */
