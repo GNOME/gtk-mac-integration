@@ -809,7 +809,7 @@ main (int argc, char **argv)
 #ifdef GTKOSXAPPLICATION
   GtkosxApplication *theApp;
 #endif //GTKOSXAPPLICATION
-#ifndef HAVE_GLIB_2_31
+#ifndef HAVE_GLIB_2_32
   g_thread_init (NULL);
 #endif
 #if ! GTK_CHECK_VERSION(3, 0, 0)

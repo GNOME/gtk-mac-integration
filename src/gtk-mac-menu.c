@@ -974,8 +974,10 @@ sync_menu_shell (GtkMenuShell *menu_shell, MenuRef carbon_menu,
       MenuAttributes attrs;
       const gchar *label = get_menu_label_text (menu_item, NULL);
 
+#ifndef HAVE_GTK_310
       if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
         continue;
+#endif
       if (toplevel && (g_object_get_data (G_OBJECT (menu_item),
                                           "gtk-empty-menu-item")
                        || GTK_IS_SEPARATOR_MENU_ITEM (menu_item)))
@@ -1367,4 +1369,4 @@ gtk_mac_menu_sync (GtkMenuShell *menu_shell)
                    carbon_menu->toplevel, DEBUG_SYNC);
 }
 
-#endif __x86_64__
+#endif /* __x86_64__ */

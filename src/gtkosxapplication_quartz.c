@@ -31,6 +31,7 @@
 #import "GNSMenuBar.h"
 #import "GNSMenuItem.h"
 
+#include <config.h>
 #include "gtkosxapplication.h"
 #include "gtkosxapplicationprivate.h"
 #include "cocoa_menu_item.h"
@@ -183,7 +184,7 @@ get_application_name (void)
 	  NSString *bundlep = [bundle bundlePath];
 	  appname =  [[NSFileManager defaultManager]
 		      displayNameAtPath: bundlep];
-	  g_info ("[get_application_name]: no bundle name key in Info.plist\n");
+	  g_message ("[get_application_name]: no bundle name key in Info.plist\n");
 	}
     }
   else
@@ -337,16 +338,26 @@ gtkosx_application_constructor (GType gtype,
                                 GObjectConstructParam *properties)
 {
   static GObject *self = NULL;
+#ifdef HAVE_GLIB_2_32
+  static GMutex mutex;
+  g_mutex_init (&mutex);
+  g_mutex_lock (&mutex);
+#else
   static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
   g_static_mutex_lock (&mutex);
+#endif
   if (self == NULL)
     {
       self = G_OBJECT_CLASS (gtkosx_application_parent_class)->constructor (gtype, n_properties, properties);
       g_object_add_weak_pointer (self, (gpointer) &self);
 
     }
+#ifdef HAVE_GLIB_2_32
+  g_mutex_unlock (&mutex);
+  g_mutex_clear (&mutex);
+#else
   g_static_mutex_unlock (&mutex);
-
+#endif
   return g_object_ref (self);
 
 }
@@ -481,19 +492,28 @@ global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
   GtkosxApplication* app = user_data;
 
   /* Handle menu events with no window, since they won't go through
-   * the regular event processing. We have to release the gdk mutex so
-   * that we can recquire it when we invoke the gtk handler. Note well
-   * that handlers need to wrap any calls into gtk in
-   * gdk_threads_enter() and gdk_threads_leave() in a multi-threaded
-   * environment!
+   * the regular event processing. When using Gtk before 3.6, we have
+   * to release the gdk mutex so that we can recquire it when we
+   * invoke the gtk handler. Note well that handlers need to wrap any
+   * calls into gtk in gdk_threads_enter() and gdk_threads_leave() in
+   * a multi-threaded environment!
+   *
+   * With Gtk 3.6 and later, all Gtk calls must be made from the main
+   * thread, so be sure that handlers aren't invoked on a worker
+   * thread; use an idle or timer event to start the handler if
+   * necessary.
    */
   if ([nsevent type] == NSKeyDown &&
       gtkosx_application_use_quartz_accelerators (app) )
     {
       gboolean result;
+#ifndef HAVE_GTK_36
       gdk_threads_leave ();
       result = [[NSApp mainMenu] performKeyEquivalent: nsevent];
       gdk_threads_enter ();
+#else
+      result = [[NSApp mainMenu] performKeyEquivalent: nsevent];
+#endif
       if (result) return GDK_FILTER_TRANSLATE;
     }
   return GDK_FILTER_CONTINUE;
@@ -792,10 +812,9 @@ gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
   if (index == 0)
     {
       GtkWidget *widgetLabel = NULL;
-      gchar *label = get_menu_label_text (item, &widgetLabel);
-      gchar *appname;
+      const gchar *label = get_menu_label_text (item, &widgetLabel);
       NSString *nsappname = get_application_name ();
-      appname = [nsappname UTF8String];
+      const gchar *appname = [nsappname UTF8String];
       gtk_menu_item_set_label (GTK_MENU_ITEM (item), g_strdup_printf ("%s %s", label, appname));
     }
 

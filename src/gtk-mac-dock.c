@@ -296,7 +296,7 @@ mac_dock_handle_open_documents (const AppleEvent *inAppleEvent,
           if (status != noErr)
             continue;
 
-          FSRefMakePath (&ref, (char *) path, MAXPATHLEN);
+          FSRefMakePath (&ref, (unsigned char *) path, MAXPATHLEN);
 
           /* FIXME: Add to a list, then emit the open-documents
            * signal.
