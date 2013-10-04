@@ -205,11 +205,6 @@ create_apple_menu (GtkosxApplication *self)
 						@"Services Menu title");
   NSMenu *menuServices = [[[NSMenu alloc] initWithTitle: title] autorelease];
   NSString *appname = get_application_name ();
-  /*
-  NSString *appname = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
-  if (appname == nil)
-    appname = [[[NSProcessInfo processInfo] processName] capitalizedString];
-  */
   [NSApp setServicesMenu: menuServices];
 
   [app_menu addItem: [NSMenuItem separatorItem]];
