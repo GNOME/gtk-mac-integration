@@ -1,3 +1,28 @@
+Changes from version gtk-mac-integration-2.0.4 to version
+	gtk-mac-integration-2.0.5
+John Ralls (8):
+      Bug 709427 - gtk-mac-integration: app menu issues in 2.0.4
+      Remove commented-out code from previous change
+      Refine the app-menu application name
+      Clean up some deprecations and warnings
+      A cleaner way to fix up those deprecations.
+      Fix double-free crash if last menu item is a separator.
+      Get Enable/Disable working again
+      Enable BUILT_UI in test-integration while suppressing gtk deprecated
+	warnings
+
+Changes from version gtk-mac-integration-2.0.3 to version
+	gtk-mac-integration-2.0.4
+
+John Ralls (2):
+      Fix a refcounting bug & menu index bug
+
+Changes from version gtk-mac-integration-2.0.2 to version
+	gtk-mac-integration-2.0.3
+John Ralls (3):
+      Replace 10.6-only NSRunningApplication with NSBundle
+      Fix minimum version to one that exists in 10.5
+
 Changes from version gtk-mac-integration-2.0.1 to version
 	gtk-mac-integration-2.0.2
 John Ralls (18):

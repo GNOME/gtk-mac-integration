@@ -8,7 +8,7 @@
   <bookinfo>
     <title>Gtk-OSX Integration Reference Manual</title>
     <releaseinfo>
-      For <em>gtk-mac-integration 2.0.4</em><br/>
+      For <b>gtk-mac-integration 2.0.5</b><br/>
       The latest version of this documentation can be found on-line at
       <ulink role="online-location" url="http://gtk-osx.sourceforge.net/gtk-mac-integration/index.html">http://gtk-osx.sourceforge.net/gtk-mac-integration/</ulink>.
     </releaseinfo>
