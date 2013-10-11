@@ -38,17 +38,6 @@ AM_PROG_CC_C_O
 
 AM_PATH_GLIB_2_0([2.14.0])
 AC_MSG_CHECKING([GLib Version])
-if $PKG_CONFIG 'glib-2.0 >= 2.38.0'
-then
-    AC_MSG_RESULT(>=2.38)
-    AC_DEFINE(HAVE_GLIB_2_38,1,[System has GLib 2.38.0 or newer])
-    AC_DEFINE(HAVE_GLIB_2_32,1,[System has GLib 2.32.0 or newer])
-
-elif $PKG_CONFIG 'glib-2.0 >= 2.32.0'
-then
-    AC_MSG_RESULT(>=2.32, < 2.38)
-    AC_DEFINE(HAVE_GLIB_2_32,1,[System has GLib 2.32.0 or newer])
-fi
 
 GTK_DOC_CHECK([1.11], [--flavour no-tmpl])
 
@@ -86,14 +75,6 @@ AC_SUBST(GTK_MAJOR)
 AC_SUBST(GTK_VERSION)
 AC_MSG_RESULT("$GTK_VERSION")
 AM_CONDITIONAL([INTROSPECTION], [test x$GTK_MAJOR = "xgtk+-3.0"])
-
-AS_IF([test "$GTK_MAJOR" = gtk+-3.0],
-	 [PKG_CHECK_EXISTS([gtk+-3.0 >= 3.3.0],
-	 [AC_DEFINE([HAVE_GTK_34], 1, [Gtk version 3.3 or higher])
-	 PKG_CHECK_EXISTS([gtk+-3.0 >= 3.5.0],
-	 [AC_DEFINE([HAVE_GTK_36], 1, [Gtk version 3.3 or higher])
-	 PKG_CHECK_EXISTS([gtk+-3.0 >= 3.9.0],
-	 AC_DEFINE([HAVE_GTK_310], 1, [Gtk version 3.9 or higher]))],)],)])
 
 GTK_PYTHON_CHECK
 

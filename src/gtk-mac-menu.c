@@ -974,7 +974,7 @@ sync_menu_shell (GtkMenuShell *menu_shell, MenuRef carbon_menu,
       MenuAttributes attrs;
       const gchar *label = get_menu_label_text (menu_item, NULL);
 
-#ifndef HAVE_GTK_310
+#if ! GTK_CHECK_VERSION (3, 10, 0)
       if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
         continue;
 #endif

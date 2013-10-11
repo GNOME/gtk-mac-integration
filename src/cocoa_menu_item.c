@@ -673,7 +673,7 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
 	 */
 	continue;
 
-#ifndef HAVE_GTK_34
+#if ! GTK_CHECK_VERSION (3, 4, 0)
       if (GTK_IS_TEAROFF_MENU_ITEM (menu_item))
         /*Don't want tearoff items at all */
         continue;

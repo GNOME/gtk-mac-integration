@@ -338,7 +338,7 @@ gtkosx_application_constructor (GType gtype,
                                 GObjectConstructParam *properties)
 {
   static GObject *self = NULL;
-#ifdef HAVE_GLIB_2_32
+#if GLIB_CHECK_VERSION (2,32,0)
   static GMutex mutex;
   g_mutex_init (&mutex);
   g_mutex_lock (&mutex);
@@ -352,7 +352,7 @@ gtkosx_application_constructor (GType gtype,
       g_object_add_weak_pointer (self, (gpointer) &self);
 
     }
-#ifdef HAVE_GLIB_2_32
+#if GLIB_CHECK_VERSION (2,32,0)
   g_mutex_unlock (&mutex);
   g_mutex_clear (&mutex);
 #else
@@ -507,12 +507,12 @@ global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
       gtkosx_application_use_quartz_accelerators (app) )
     {
       gboolean result;
-#ifndef HAVE_GTK_36
+#if GTK_CHECK_VERSION (3, 6, 0)
+      result = [[NSApp mainMenu] performKeyEquivalent: nsevent];
+#else
       gdk_threads_leave ();
       result = [[NSApp mainMenu] performKeyEquivalent: nsevent];
       gdk_threads_enter ();
-#else
-      result = [[NSApp mainMenu] performKeyEquivalent: nsevent];
 #endif
       if (result) return GDK_FILTER_TRANSLATE;
     }

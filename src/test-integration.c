@@ -56,11 +56,14 @@
  * - GtkRadioMenuItems (special case of GtkCheckMenuItems)
  */
 
+#include <gtk/gtk.h>
+#include <stdio.h>
+
 /* Uncomment ONE of these to test menu-mangling: */
 //#define GTKMACINTEGRATION
 #define GTKOSXAPPLICATION
 /* These others are optional */
-#ifndef HAVE_GTK_310
+#if ! GTK_CHECK_VERSION (3, 10, 0)
 //#define BUILT_UI //The built UI uses deprecated functions
 #endif
 //#define QUARTZ_HANDLERS
@@ -73,9 +76,7 @@
 # endif
 #endif //__x86_64__
 
-#include <gtk/gtk.h>
-#include <stdio.h>
-#if GTK_CHECK_VERSION(2,90,7)
+#if GTK_CHECK_VERSION (2, 90, 7)
 #include <gdk/gdkkeysyms-compat.h>
 #else
 #include <gdk/gdkkeysyms.h>
@@ -297,10 +298,10 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   gtk_menu_set_accel_group (GTK_MENU (menu), accel);
   gtk_menu_set_accel_path (GTK_MENU (menu), "<test-integration>/File");
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-#ifndef HAVE_GTK_310
-  item = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, NULL);
-#else
+#if GTK_CHECK_VERSION (3, 10, 0)
   item = gtk_menu_item_new_with_label ("Open");
+#else
+  item = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, NULL);
 #endif
   items->open_item = item;
   /* We're being fancy with our connection here so that we don't have to
@@ -314,10 +315,10 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
                          menu_cbdata_new ("open", items->window),
                          (GClosureNotify) menu_cbdata_delete, 0);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-#ifndef HAVE_GTK_310
-  items->quit_item = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
-#else
+#if GTK_CHECK_VERSION (3, 10, 0)
   items->quit_item = gtk_menu_item_new_with_label ("Quit");
+#else
+  items->quit_item = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
 #endif
   g_signal_connect (items->quit_item, "activate", G_CALLBACK (gtk_main_quit), NULL);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), items->quit_item);
@@ -367,10 +368,11 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 
-#ifndef HAVE_GTK_310
-  items->about_item = gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, NULL);
-#else
+#if GTK_CHECK_VERSION (3, 10, 0)
   items->about_item = gtk_menu_item_new_with_label ("About");
+#else
+  items->about_item = gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT,
+							  NULL);
 #endif
   g_signal_connect_data (items->about_item, "activate",
                          G_CALLBACK (menu_item_activate_cb),
@@ -809,10 +811,10 @@ main (int argc, char **argv)
 #ifdef GTKOSXAPPLICATION
   GtkosxApplication *theApp;
 #endif //GTKOSXAPPLICATION
-#ifndef HAVE_GLIB_2_32
+#if ! GLIB_CHECK_VERSION (2, 34, 0)
   g_thread_init (NULL);
 #endif
-#if ! GTK_CHECK_VERSION(3, 0, 0)
+#if ! GTK_CHECK_VERSION (3, 0, 0)
   gdk_threads_init ();
 #endif //not Gtk3
   gtk_init (&argc, &argv);
