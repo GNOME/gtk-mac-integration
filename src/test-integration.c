@@ -62,10 +62,10 @@
 /* Uncomment ONE of these to test menu-mangling: */
 //#define GTKMACINTEGRATION
 #define GTKOSXAPPLICATION
+
 /* These others are optional */
-#if ! GTK_CHECK_VERSION (3, 10, 0)
-//#define BUILT_UI //The built UI uses deprecated functions
-#endif
+#define GTK_DISABLE_DEPRECATION_WARNINGS 1
+#define BUILT_UI //The built UI uses deprecated functions
 //#define QUARTZ_HANDLERS
 
 /* GTKMACINTEGRATION uses Carbon, which isn't available for 64-bit builds. */

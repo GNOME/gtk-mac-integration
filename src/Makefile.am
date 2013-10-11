@@ -56,6 +56,9 @@ test_integration_LDADD =  $(MAC_LIBS) libgtkmacintegration.la
 EXTRA_DIST = testui.xml
 
 if INTROSPECTION
+
+test_integration_CFLAGS += -DGDK_VERSION_MIN_REQUIRED=GDK_VERSION_3_2
+
 if HAVE_INTROSPECTION
 GtkosxApplication-1.0.gir: $(INTROSPECTION_SCANNER) libgtkmacintegration.la
 GtkosxApplication_1_0_gir_SCANNERFLAGS = \
