@@ -692,14 +692,17 @@ cocoa_menu_item_add_submenu (GtkMenuShell *menu_shell,
       _GNSMenuItem *item = (_GNSMenuItem*)[cocoa_menu itemAtIndex: index];
       if ([item isSeparatorItem] &&
 	  (last_cocoa_item == nil || [last_cocoa_item isSeparatorItem]))
+	{
 	  [cocoa_menu removeItem: item];
+	  continue;
+	}
       if (([item respondsToSelector: @selector (isMarked)]) && [item isMarked])
 	[cocoa_menu removeItem: item];
       else if (![item isHidden])
 	last_cocoa_item = item;
     }
   /* Finally make sure that the last item isn't a separator. */
-  if ([last_cocoa_item isSeparatorItem])
+  if (last_cocoa_item != nil && [last_cocoa_item isSeparatorItem])
     [cocoa_menu removeItem: last_cocoa_item];
 
   g_list_free (children);
