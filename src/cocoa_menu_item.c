@@ -176,7 +176,6 @@ cocoa_menu_item_update_submenu (_GNSMenuItem *cocoa_item,
       cocoa_submenu = [[[NSMenu alloc] initWithTitle: title] autorelease];
 
       [cocoa_submenu setDelegate: delegate];
-      [cocoa_submenu setAutoenablesItems: NO];
       cocoa_menu_connect (submenu, cocoa_submenu);
       /* connect the new nsmenu to the passed-in item (which lives in
          the parent nsmenu)
