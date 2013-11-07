@@ -19,7 +19,7 @@ _gtkosx_application_la_LDFLAGS = -module -avoid-version -export-symbols-regex in
 _gtkosx_application_la_LIBADD =				\
 	$(MAC_LIBS)					\
 	$(PYGTK_LIBS)					\
-	$(top_builddir)/src/libgtkmacintegration.la
+	$(top_builddir)/src/libgtkmacintegration-@GTK_MAC_INTEGRATION_LIB_SUFFIX@.la
 _gtkosx_application_la_SOURCES =				\
 	gtkosx_application.c				\
 	gtkosx_application-module.c

@@ -76,6 +76,17 @@ AC_SUBST(GTK_VERSION)
 AC_MSG_RESULT("$GTK_VERSION")
 AM_CONDITIONAL([INTROSPECTION], [test x$GTK_MAJOR = "xgtk+-3.0"])
 
+
+AC_MSG_RESULT("$GTK_MAJOR")
+
+if [test "x$GTK_MAJOR" = xgtk+-3.0]; then
+  GTK_MAC_INTEGRATION_LIB_SUFFIX=gtk3
+else
+  GTK_MAC_INTEGRATION_LIB_SUFFIX=gtk2
+fi
+
+AC_SUBST(GTK_MAC_INTEGRATION_LIB_SUFFIX)
+
 GTK_PYTHON_CHECK
 
 GOBJECT_INTROSPECTION_CHECK([0.10.1])
@@ -94,11 +105,16 @@ AC_CONFIG_FILES(
 	bindings/python/gtkmacintegration/Makefile
 	bindings/python/gtkosx_application/Makefile
         data/Makefile
-        data/gtk-mac-integration.pc
 	docs/Makefile
 	docs/reference/Makefile
 	strings/Makefile
 )
+
+if [test "x$GTK_MAJOR" = xgtk+-3.0]; then
+  AC_CONFIG_FILES(data/gtk-mac-integration-gtk3.pc:data/gtk-mac-integration.pc.in)
+else
+  AC_CONFIG_FILES(data/gtk-mac-integration-gtk2.pc:data/gtk-mac-integration.pc.in)
+fi
 
 AC_OUTPUT
 

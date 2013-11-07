@@ -7,5 +7,5 @@ Name: gtk-mac-integration
 Description: Mac menu bar and dock integration for GTK+
 Requires: @GTK_MAJOR@
 Version: @VERSION@
-Libs: -L${libdir} -lgtkmacintegration
-Cflags: -I${includedir}/gtkmacintegration -DMAC_INTEGRATION
+Libs: -L${libdir} -lgtkmacintegration-@GTK_MAC_INTEGRATION_LIB_SUFFIX@
+Cflags: -I${includedir}/gtkmacintegration-@GTK_MAC_INTEGRATION_LIB_SUFFIX@ -DMAC_INTEGRATION

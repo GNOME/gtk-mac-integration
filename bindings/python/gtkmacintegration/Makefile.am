@@ -22,7 +22,7 @@ _gtkmacintegration_la_LDFLAGS = -module -avoid-version -export-symbols-regex ini
 _gtkmacintegration_la_LIBADD =				\
 	$(MAC_LIBS)					\
 	$(PYGTK_LIBS)					\
-	$(top_builddir)/src/libgtkmacintegration.la
+	$(top_builddir)/src/libgtkmacintegration-@GTK_MAC_INTEGRATION_LIB_SUFFIX@.la
 _gtkmacintegration_la_SOURCES =				\
 	gtkmacintegration.c				\
 	gtkmacintegration-module.c
