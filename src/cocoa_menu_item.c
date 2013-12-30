@@ -550,12 +550,16 @@ cocoa_menu_item_add_item (NSMenu* cocoa_menu, GtkWidget* menu_item, int index)
       /* Clean up adjacent separators: */
       if ([cocoa_menu numberOfItems] > 0)
 	{
-	  if (([cocoa_menu numberOfItems] == index ||
-	       [[cocoa_menu itemAtIndex: index] isSeparatorItem]) &&
-	      [[cocoa_menu itemAtIndex: index - 1] isSeparatorItem])
+	  if (index == 0)
+	    {
+	      if ([[cocoa_menu itemAtIndex: index] isSeparatorItem])
+		[cocoa_menu removeItemAtIndex: index];
+	    }
+	  else if (([cocoa_menu numberOfItems] == index ||
+		    [[cocoa_menu itemAtIndex: index] isSeparatorItem]) &&
+		   [[cocoa_menu itemAtIndex: index - 1] isSeparatorItem])
 	    [cocoa_menu removeItemAtIndex: index - 1];
-	  if (index == 0 && [[cocoa_menu itemAtIndex: index] isSeparatorItem])
-	    [cocoa_menu removeItemAtIndex: index];
+
 	}
     }
 
