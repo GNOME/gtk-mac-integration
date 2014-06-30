@@ -8,6 +8,7 @@ libtool
 ltmain.sh
 missing
 stamp-h1
+ar-lib
 *~
 Makefile.in
 Makefile
@@ -27,5 +28,7 @@ gtk-doc.make
 py-compile
 m4/*
 !m4/introspection.m4
-data/gtk-mac-integration.pc
-
+data/gtk-mac-integration*.pc
+*.gir
+*.typelib
+src/test-integration-gtk*
