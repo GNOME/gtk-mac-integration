@@ -241,8 +241,11 @@ create_apple_menu (GtkosxApplication *self)
   [app_menu addItem: menuitem];
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle: [[NSLocalizedStringFromTable (@"Hide",  @"GtkosxApplication", @"Hide menu item title") autorelease] stringByAppendingFormat: @" %@", appname]
-	      action: @selector (hide: ) keyEquivalent: @"h"];
+  menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithFormat: NSLocalizedStringFromTable (@"Hide %@", @"GtkosxApplication", @"Hide menu item title"), appname]
+	      action: @selector (hide:) keyEquivalent: @"h"];
+/*
+ * Accounts for the added application name to the Hide menu item in a way that word order can be defined.
+ */
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
@@ -258,8 +261,11 @@ create_apple_menu (GtkosxApplication *self)
   [app_menu addItem: menuitem];
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle: [[NSLocalizedStringFromTable (@"Quit",  @"GtkosxApplication", @"Quit menu item title") autorelease] stringByAppendingFormat: @" %@", appname]
-	      action: @selector (terminate: ) keyEquivalent: @"q"];
+  menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithFormat: NSLocalizedStringFromTable (@"Quit %@", @"GtkosxApplication", @"Quit menu item title"), appname]
+	      action: @selector (terminate:) keyEquivalent: @"q"];
+/*
+* Accounts for the added application name to the Quit menu item in a way that word order can be defined.
+*/
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
