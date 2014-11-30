@@ -228,7 +228,7 @@ create_apple_menu (GtkosxApplication *self)
   // Create the application (Apple) menu.
   NSMenu *app_menu = [[[NSMenu alloc] initWithTitle: @"Apple Menu"] autorelease];
   NSString *title = NSLocalizedStringFromTable (@"Services",
-						@"GtkOSXApplication",
+						@"GtkosxApplication",
 						@"Services Menu title");
   NSMenu *menuServices = [[[NSMenu alloc] initWithTitle: title] autorelease];
   NSString *appname = get_application_name ();
@@ -293,7 +293,7 @@ static _GNSMenuItem *
 create_window_menu (GtkosxApplication *self)
 {
   NSString *title = NSLocalizedStringFromTable (@"Window",
-                    @"GtkOSXApplication",
+                    @"GtkosxApplication",
                     @"Window Menu title");
   NSMenu *window_menu = [[[NSMenu alloc] initWithTitle: title] autorelease];
   GtkMenuBar *menubar = [(_GNSMenuBar*)[NSApp mainMenu] menuBar];
