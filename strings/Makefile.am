@@ -5,36 +5,36 @@
 # Copyright 2010 John Ralls
 
 
-dist_string_DATA =  GtkOSXApplication.strings.ca    \
-		GtkOSXApplication.strings.cs    \
-		GtkOSXApplication.strings.da    \
-		GtkOSXApplication.strings.de    \
-		GtkOSXApplication.strings.en    \
-		GtkOSXApplication.strings.es    \
-		GtkOSXApplication.strings.eu    \
-		GtkOSXApplication.strings.fa    \
-		GtkOSXApplication.strings.fi    \
-		GtkOSXApplication.strings.fr    \
-		GtkOSXApplication.strings.he    \
-		GtkOSXApplication.strings.hu    \
-		GtkOSXApplication.strings.it    \
-		GtkOSXApplication.strings.ja    \
-		GtkOSXApplication.strings.ko    \
-		GtkOSXApplication.strings.lt    \
-		GtkOSXApplication.strings.lv_LV \
-		GtkOSXApplication.strings.nb    \
-		GtkOSXApplication.strings.nl    \
-		GtkOSXApplication.strings.pl    \
-		GtkOSXApplication.strings.pt    \
-		GtkOSXApplication.strings.ro    \
-		GtkOSXApplication.strings.ru    \
-		GtkOSXApplication.strings.sk    \
-		GtkOSXApplication.strings.sv    \
-		GtkOSXApplication.strings.tr    \
-		GtkOSXApplication.strings.uk    \
-		GtkOSXApplication.strings.vi    \
-		GtkOSXApplication.strings.zh_CN \
-		GtkOSXApplication.strings.zh_TW
+dist_string_DATA =  GtkosxApplication.strings.ca    \
+		GtkosxApplication.strings.cs    \
+		GtkosxApplication.strings.da    \
+		GtkosxApplication.strings.de    \
+		GtkosxApplication.strings.en    \
+		GtkosxApplication.strings.es    \
+		GtkosxApplication.strings.eu    \
+		GtkosxApplication.strings.fa    \
+		GtkosxApplication.strings.fi    \
+		GtkosxApplication.strings.fr    \
+		GtkosxApplication.strings.he    \
+		GtkosxApplication.strings.hu    \
+		GtkosxApplication.strings.it    \
+		GtkosxApplication.strings.ja    \
+		GtkosxApplication.strings.ko    \
+		GtkosxApplication.strings.lt    \
+		GtkosxApplication.strings.lv_LV \
+		GtkosxApplication.strings.nb    \
+		GtkosxApplication.strings.nl    \
+		GtkosxApplication.strings.pl    \
+		GtkosxApplication.strings.pt    \
+		GtkosxApplication.strings.ro    \
+		GtkosxApplication.strings.ru    \
+		GtkosxApplication.strings.sk    \
+		GtkosxApplication.strings.sv    \
+		GtkosxApplication.strings.tr    \
+		GtkosxApplication.strings.uk    \
+		GtkosxApplication.strings.vi    \
+		GtkosxApplication.strings.zh_CN \
+		GtkosxApplication.strings.zh_TW
 
 
 stringdir = ${datadir}/strings
