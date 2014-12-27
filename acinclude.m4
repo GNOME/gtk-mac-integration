@@ -118,7 +118,7 @@ dnl Check that pygobject and gtk-3.0.gir are present
 
   if test "x$have_python" = "xno"; then
     enable_python=no
-  elif test "x$have_python" = "xyes" -a "x$enable_python" = "xauto"; then
+  elif test "x$have_python" = "xyes" -a "x$enable_python" != "xno"; then
     enable_python=yes
   fi
 
