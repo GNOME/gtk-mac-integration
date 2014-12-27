@@ -8,17 +8,15 @@
   <bookinfo>
     <title>Gtk-OSX Integration Reference Manual</title>
     <releaseinfo>
-      For <b>gtk-mac-integration 2.0.5</b><br/>
+      For <b>gtk-mac-integration 2.0.6</b><br/>
       The latest version of this documentation can be found on-line at
-      <ulink role="online-location" url="http://gtk-osx.sourceforge.net/gtk-mac-integration/index.html">http://gtk-osx.sourceforge.net/gtk-mac-integration/</ulink>.
+      <ulink role="online-location" url="http://gtk-osx.sourceforge.net/gtk-mac-integration/index.htmL">http://gtk-osx.sourceforge.net/gtk-mac-integration/</ulink>.
     </releaseinfo>
   </bookinfo>
 
   <chapter>
     <title>GtkOSXApplication Reference</title>
         <xi:include href="xml/gtkosxapplication.xml"/>
-    <xi:include href="xml/GNSMenuItem.xml"/>
-
   </chapter>
   <chapter id="object-tree">
     <title>Object Hierarchy</title>
