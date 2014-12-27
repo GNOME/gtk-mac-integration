@@ -1,3 +1,13 @@
+Changes from version gtk-mac-integration-2.0.5 to version
+	gtk-mac-integration-2.0.6
+John Ralls
+	Add a suffix to distinguish Gtk2 and Gtk3 libraries -- Daniel Sabo
+	Prevent accessing menu itemAtIndex:-1, which crashed.
+	Fix error in GTK_PYTHON_CHECK which prevented building python bindings.
+
+Kevin Bernhagen and Josh Pettus:
+	Bug 740510: Update localization strings to match GtkosxApplication name.
+
 Changes from version gtk-mac-integration-2.0.4 to version
 	gtk-mac-integration-2.0.5
 John Ralls (8):

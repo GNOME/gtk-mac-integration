@@ -1,14 +1,22 @@
+Changes from version gtk-mac-integration-2.0.5 to version
+	gtk-mac-integration-2.0.6
+* Add a suffix to distinguish Gtk2 and Gtk3 libraries -- Daniel Sabo
+* Prevent accessing menu itemAtIndex:-1, which crashed.
+* Bug 740510: Update localization strings to match GtkosxApplication name.
+    -- Kevin Bernhagen and Josh Pettus
+* Fix error in GTK_PYTHON_CHECK which prevented building python bindings.
+
 Changes from version gtk-mac-integration-2.0.4 to version
 	gtk-mac-integration-2.0.5
-      Bug 709427 - gtk-mac-integration: app menu issues in 2.0.4
-      Remove commented-out code from previous change
-      Refine the app-menu application name
-      Clean up some deprecations and warnings
-      A cleaner way to fix up those deprecations.
-      Fix double-free crash if last menu item is a separator.
-      Get Enable/Disable working again
-      Enable BUILT_UI in test-integration while suppressing gtk deprecated
-	warnings
+* Bug 709427 - gtk-mac-integration: app menu issues in 2.0.4
+* Remove commented-out code from previous change
+* Refine the app-menu application name
+* Clean up some deprecations and warnings
+* A cleaner way to fix up those deprecations.
+* Fix double-free crash if last menu item is a separator.
+* Get Enable/Disable working again
+* Enable BUILT_UI in test-integration while suppressing gtk deprecated
+  warnings
 
 Changes from version gtk-mac-integration-2.0.3 to version
 	gtk-mac-integration-2.0.4:
