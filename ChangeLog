@@ -1,3 +1,9 @@
+Changes from version gtk-mac-integration-2.0.6 to version
+	gtk-mac-integration-2.0.7
+John Ralls
+	Bug 739492 - Default key binding for hiding window on OS X does
+	not work.
+
 Changes from version gtk-mac-integration-2.0.5 to version
 	gtk-mac-integration-2.0.6
 John Ralls
