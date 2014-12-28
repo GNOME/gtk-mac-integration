@@ -22,6 +22,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface GtkApplicationDelegate : NSObject {}
+@interface GtkApplicationDelegate : NSObject <NSApplicationDelegate> {}
 @end
 
