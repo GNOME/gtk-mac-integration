@@ -39,6 +39,12 @@
 #include "getlabel.h"
 #include "gtkosx-image.h"
 
+#if GTK_CHECK_VERSION (2, 90, 7)
+#include <gdk/gdkkeysyms-compat.h>
+#else
+#include <gdk/gdkkeysyms.h>
+#endif
+
 #ifdef G_LOG_DOMAIN
 #undef G_LOG_DOMAIN
 #endif
@@ -195,6 +201,18 @@ get_application_name (void)
   return appname;
 }
 
+static void
+_nsapp_hide (id sender)
+{
+  [NSApp hide:sender];
+}
+
+static void
+_nsapp_hide_others (id sender)
+{
+  [NSApp hideOtherApplications:sender];
+}
+
 /*
  * create_apple_menu:
  * @self: The GtkosxApplication object.
@@ -222,7 +240,7 @@ get_application_name (void)
  * Returns: A pointer to the menu item.
  */
 static _GNSMenuItem*
-create_apple_menu (GtkosxApplication *self)
+create_apple_menu (GtkosxApplication *self, GtkWidget *toplevel)
 {
   NSMenuItem *menuitem;
   // Create the application (Apple) menu.
@@ -232,6 +250,10 @@ create_apple_menu (GtkosxApplication *self)
 						@"Services Menu title");
   NSMenu *menuServices = [[[NSMenu alloc] initWithTitle: title] autorelease];
   NSString *appname = get_application_name ();
+  GClosure *hide_closure, *hide_others_closure;
+  GtkAccelGroup *accel_group = gtk_accel_group_new ();
+  gtk_window_add_accel_group (GTK_WINDOW (toplevel), accel_group);
+
   [NSApp setServicesMenu: menuServices];
 
   [app_menu addItem: [NSMenuItem separatorItem]];
@@ -243,8 +265,13 @@ create_apple_menu (GtkosxApplication *self)
   [app_menu addItem: [NSMenuItem separatorItem]];
   menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithFormat: NSLocalizedStringFromTable (@"Hide %@", @"GtkosxApplication", @"Hide menu item title"), appname]
 	      action: @selector (hide:) keyEquivalent: @"h"];
+  hide_closure = g_cclosure_new (G_CALLBACK (_nsapp_hide),
+				 (void*)menuitem, NULL);
+  gtk_accel_group_connect (accel_group, GDK_h, GDK_META_MASK,
+			   GTK_ACCEL_MASK, hide_closure);
 /*
- * Accounts for the added application name to the Hide menu item in a way that word order can be defined.
+ * Accounts for the added application name to the Hide menu item in a
+ * way that word order can be defined.
  */
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
@@ -257,15 +284,22 @@ create_apple_menu (GtkosxApplication *self)
   [menuitem release];
   menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable ( @"Show All", @"GtkosxApplication",  @"Show All menu item title")
 	      action: @selector (unhideAllApplications: ) keyEquivalent: @""];
+  hide_others_closure = g_cclosure_new (G_CALLBACK (_nsapp_hide_others),
+					(void*)menuitem, NULL);
+  gtk_accel_group_connect (accel_group, GDK_h, GDK_META_MASK | GDK_MOD1_MASK,
+			   GTK_ACCEL_MASK, hide_others_closure);
+
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
+
   menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithFormat: NSLocalizedStringFromTable (@"Quit %@", @"GtkosxApplication", @"Quit menu item title"), appname]
 	      action: @selector (terminate:) keyEquivalent: @"q"];
 /*
-* Accounts for the added application name to the Quit menu item in a way that word order can be defined.
-*/
+ * Accounts for the added application name to the Quit menu item in a
+ * way that word order can be defined.
+ */
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
@@ -741,7 +775,7 @@ gtkosx_application_set_menu_bar (GtkosxApplication *self, GtkMenuShell *menu_she
   if (cocoa_menubar != [NSApp mainMenu])
     [NSApp setMainMenu: cocoa_menubar];
 
-  [cocoa_menubar setAppMenu: create_apple_menu (self)];
+  [cocoa_menubar setAppMenu: create_apple_menu (self, parent)];
 
   emission_hook_id =
     g_signal_add_emission_hook (g_signal_lookup ("parent-set",
