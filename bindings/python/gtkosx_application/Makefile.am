@@ -8,7 +8,7 @@ gtkosx_application_LTLIBRARIES = _gtkosx_application.la
 headers = $(top_srcdir)/src/gtkosxapplication.h
 
 gtkosx_application.defs: $(headers)
-	$(PYTHON) $(datadir)/pygobject/2.0/codegen/h2def.py $(headers) > $@
+	$(PYTHON) $(PYGOBJECT_DATADIR)/pygobject/2.0/codegen/h2def.py $(headers) > $@
 
 gtkosx_application.c: gtkosx_application.defs
 

@@ -84,6 +84,11 @@ AC_DEFUN([GTK_PYTHON_CHECK],
     	PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
     	AC_SUBST(PYGTK_DEFSDIR)
     	AC_MSG_RESULT($PYGTK_DEFSDIR)
+
+    	AC_MSG_CHECKING([PyGObject DataDir])
+    	PYGOBJECT_DATADIR=`$PKG_CONFIG --variable=datadir pygobject-2.0`
+    	AC_SUBST(PYGOBJECT_DATADIR)
+    	AC_MSG_RESULT($PYGOBJECT_DATADIR)
      ],
      [ test x$GTK_MAJOR = "xgtk+-3.0" -o x$enable_python = "xall"],
 dnl Check that pygobject and gtk-3.0.gir are present
