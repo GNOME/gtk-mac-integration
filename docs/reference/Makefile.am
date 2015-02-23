@@ -1,8 +1,3 @@
-## Process this file with automake to produce Makefile.in
-
-# We require automake 1.6 at least.
-AUTOMAKE_OPTIONS = 1.6
-
 # This is a blank Makefile.am for using gtk-doc.
 # Copy this to your project's API docs directory and modify the variables to
 # suit your project. See the GTK+ Makefiles in gtk+/docs/reference for examples
@@ -12,16 +7,15 @@ AUTOMAKE_OPTIONS = 1.6
 DOC_MODULE=gtk-mac-integration
 
 # Uncomment for versioned docs and specify the version of the module, e.g. '2'.
-DOC_MODULE_VERSION=0.9
+#DOC_MODULE_VERSION=2
 
+# The top-level XML file (SGML in the past). You can change this if you want to.
+DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.xml
 
-# The top-level SGML file. You can change this if you want to.
-DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
-
-# The directory containing the source code. Relative to $(srcdir).
-# gtk-doc will search all .c & .h files beneath here for inline comments
-# documenting the functions and macros.
-# e.g. DOC_SOURCE_DIR=../../../gtk
+# Directories containing the source code.
+# gtk-doc will search all .c and .h files beneath these paths
+# for inline comments documenting functions and macros.
+# e.g. DOC_SOURCE_DIR=$(top_srcdir)/gtk $(top_srcdir)/gdk
 DOC_SOURCE_DIR=$(top_srcdir)/src
 
 # Extra options to pass to gtkdoc-scangobj. Not normally needed.
@@ -29,11 +23,11 @@ SCANGOBJ_OPTIONS=
 
 # Extra options to supply to gtkdoc-scan.
 # e.g. SCAN_OPTIONS=--deprecated-guards="GTK_DISABLE_DEPRECATED"
-SCAN_OPTIONS=--rebuild-types --rebuild-sections
+SCAN_OPTIONS=
 
 # Extra options to supply to gtkdoc-mkdb.
-# e.g. MKDB_OPTIONS=--sgml-mode --output-format=xml
-MKDB_OPTIONS=--sgml-mode --output-format=xml
+# e.g. MKDB_OPTIONS=--xml-mode --output-format=xml
+MKDB_OPTIONS=--xml-mode --output-format=xml
 
 # Extra options to supply to gtkdoc-mktmpl
 # e.g. MKTMPL_OPTIONS=--only-section-tmpl
@@ -52,8 +46,12 @@ FIXXREF_OPTIONS=--extra-dir=html
 HFILE_GLOB=$(top_srcdir)/src/*.h
 CFILE_GLOB=$(top_srcdir)/src/*.c
 
-# Header files to ignore when scanning.
-# e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h
+# Extra header to include when scanning, which are not under DOC_SOURCE_DIR
+# e.g. EXTRA_HFILES=$(top_srcdir}/contrib/extra.h
+EXTRA_HFILES=
+
+# Header files or dirs to ignore when scanning. Use base file/dir names
+# e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h private_code
 IGNORE_HFILES=				\
 	gtk-mac-integration.h		\
 	gtk-mac-bundle.h		\
@@ -79,7 +77,6 @@ HTML_IMAGES=
 content_files=
 
 # SGML files where gtk-doc abbrevations (#GtkWidget) are expanded
-# These files must be listed here *and* in content_files
 # e.g. expand_content_files=running.sgml
 expand_content_files=
 
@@ -88,21 +85,20 @@ expand_content_files=
 # signals and properties.
 # e.g. GTKDOC_CFLAGS=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
-GTKDOC_CFLAGS = $(GLIB_CFLAGS)
-GTKDOC_LIBS = $(top_builddir)/src/libgtkmacintegration-@GTK_MAC_INTEGRATION_LIB_SUFFIX@.la -lgobject-2.0
+GTKDOC_CFLAGS=$(GLIB_CFLAGS)
+GTKDOC_LIBS=$(top_builddir)/src/libgtkmacintegration-@GTK_MAC_INTEGRATION_LIB_SUFFIX@.la -lgobject-2.0
 DYLD_LOAD_PATH=$(top_builddir)/src/.libs
+
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 include $(top_srcdir)/gtk-doc.make
 
-# Other files to distribute
-# e.g. EXTRA_DIST += version.xml.in
-EXTRA_DIST +=
+# Comment this out if you want 'make check' to test you doc status
+# and run some sanity checks
+if ENABLE_GTK_DOC
+TESTS_ENVIRONMENT = \
+  DOC_MODULE=$(DOC_MODULE) DOC_MAIN_SGML_FILE=$(DOC_MAIN_SGML_FILE) \
+  SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir)
+TESTS = $(GTKDOC_CHECK)
+endif
 
-# Files not to distribute
-# for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
-# for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
-#DISTCLEANFILES +=
-
-# Comment this out if you want your docs-status tested during 'make check'
-#TESTS = $(GTKDOC_CHECK)
-
+-include $(top_srcdir)/git.mk
