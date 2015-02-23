@@ -166,6 +166,11 @@
  * gtkosx_application_sync_menubar(theApp)
  * ]|
  *
+ * N.B.: One GtkMenu function, gtk_menu_reorder_child(), changes the
+ * menu appearance without emitting a signal, so if you use that
+ * function in your code you'll need to call
+ * gtkosx_application_sync_menubar() afterwards.
+ *
  * ## Dock Support
  * The dock is that bar of icons that normally lives at the bottom of
  * the display on a Mac (though it can be moved to one of the other
