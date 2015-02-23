@@ -21,7 +21,12 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#include <AvailabilityMacros.h>
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1060
 @interface GtkApplicationDelegate : NSObject <NSApplicationDelegate> {}
+#else
+@interface GtkApplicationDelegate : NSObject {}
+#endif
 @end
 
