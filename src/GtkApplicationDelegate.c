@@ -24,16 +24,36 @@
 #include <gtk/gtk.h>
 #include "gtkosxapplication.h"
 
+static gchar *utf8_path = NULL;
+
 @implementation GtkApplicationDelegate
+
+-(void) applicationDidFinishLaunching: (NSNotification*)aNotification
+{
+  if (utf8_path != NULL)
+    {
+      GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
+      guint sig = g_signal_lookup ("NSApplicationOpenFile",
+				   GTKOSX_TYPE_APPLICATION);
+      gboolean result = FALSE;
+      if (sig)
+	g_signal_emit (app, sig, 0, utf8_path, &result);
+      g_object_unref (app);
+    }
+}
+
 -(BOOL) application: (NSApplication*)theApplication openFile: (NSString*) file
 {
-  const gchar *utf8_path =  [file UTF8String];
+  utf8_path =  [file UTF8String];
   GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
   guint sig = g_signal_lookup ("NSApplicationOpenFile",
-  GTKOSX_TYPE_APPLICATION);
+			       GTKOSX_TYPE_APPLICATION);
   gboolean result = FALSE;
   if (sig)
-    g_signal_emit (app, sig, 0, utf8_path, &result);
+    {
+      g_signal_emit (app, sig, 0, utf8_path, &result);
+      utf8_path = NULL;
+    }
   g_object_unref (app);
   return result;
 }
@@ -56,7 +76,10 @@
   g_object_unref (app);
   inHandler = FALSE;
   if (!result)
-    return NSTerminateNow;
+    {
+      g_object_unref (app);
+      return NSTerminateNow;
+    }
   else
     return NSTerminateCancel;
 }
