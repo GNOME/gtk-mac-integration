@@ -13,12 +13,11 @@ GTK_MAC_INTEGRATION_LT_VERSION=2:7:0
 AC_SUBST(GTK_MAC_INTEGRATION_LT_VERSION)
 AC_CONFIG_SRCDIR(src/gtk-mac-menu.c)
 AC_CONFIG_MACRO_DIR(m4)
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([1.11 dist-bzip2 subdir-objects no-define foreign])
 
 AC_CONFIG_HEADERS(config.h)
 
 AM_DISABLE_STATIC
-AM_PROG_LIBTOOL
 AC_MSG_CHECKING([Bitness])
 AC_PREPROC_IFELSE(
     [AC_LANG_PROGRAM([[]],[[#ifndef __x86_64__
@@ -35,6 +34,8 @@ AC_PROG_CC
 AC_HEADER_STDC
 AC_PROG_OBJC
 AM_PROG_CC_C_O
+AM_PROG_AR
+AM_PROG_LIBTOOL
 
 AM_PATH_GLIB_2_0([2.14.0])
 AC_MSG_CHECKING([GLib Version])
@@ -49,46 +50,31 @@ AC_ARG_ENABLE([menu-images],
 AS_IF([test "x$enable_menu_images" != xno],
       [AC_DEFINE([USE_MENU_IMAGES], 1, [Add images to menu items])])
 
-AC_ARG_WITH([gtk],
-	[AS_HELP_STRING([--with-gtk],
-		[select gtk+-3.0 or gtk+-2.0. @<:@default=check@:>@])],
-	[],
-	[with_gtk=check])
-dnl gtk_major=
 
-AS_ECHO(["Specified Gtk Version $with_gtk"])
+AC_ARG_WITH([gtk2], [AS_HELP_STRING([--with-gtk2]), [build against gtk2])] ,[with_gtk2=$withval],
+	[with_gtk2=yes])
+AC_ARG_WITH([gtk3], [AS_HELP_STRING([--with-gtk3], [build against gtk3])] ,[with_gtk3=$withval],
+    [with_gtk3=yes])
 
-AS_IF([test "x$with_gtk" = xgtk+-3.0],
-         [PKG_CHECK_MODULES(MAC, [gtk+-3.0 >= 2.90], GTK_MAJOR="gtk+-3.0",
-           AC_MSG_ERROR([GTK+-3.0 specified but not found]))],
-      [test "x$with_gtk" = xgtk+-2.0],
-         [PKG_CHECK_MODULES(MAC, [gtk+-2.0 >= 2.10], GTK_MAJOR="gtk+-2.0",
-           AC_MSG_ERROR([GTK+-2.0 specified but not found]))],
-      [PKG_CHECK_MODULES(MAC, [gtk+-3.0 >= 3.2],GTK_MAJOR="gtk+-3.0",
-         PKG_CHECK_MODULES(MAC, [gtk+-2.0 >= 2.10], GTK_MAJOR="gtk+-2.0",
-	    AC_MSG_ERROR([GTK+-2.0 Wersion 2.10 or higher or GTK+-3.0 Version 3.2.0 or higher is required to build gtk-mac-integration])))])
-
-AC_MSG_CHECKING([GTK+ Version])
-
-GTK_VERSION=`$PKG_CONFIG --modversion ${GTK_MAJOR}`
-AC_SUBST(GTK_MAJOR)
-AC_SUBST(GTK_VERSION)
-AC_MSG_RESULT("$GTK_VERSION")
-AM_CONDITIONAL([INTROSPECTION], [test x$GTK_MAJOR = "xgtk+-3.0"])
-
-
-AC_MSG_RESULT("$GTK_MAJOR")
-
-if [test "x$GTK_MAJOR" = xgtk+-3.0]; then
-  GTK_MAC_INTEGRATION_LIB_SUFFIX=gtk3
-else
-  GTK_MAC_INTEGRATION_LIB_SUFFIX=gtk2
+if test "x$with_gtk3" = "xyes" ; then
+    PKG_CHECK_MODULES([GTK3], [gtk+-3.0], [],
+       with_gtk3=no
+       AC_MSG_WARN([GTK+-3.0 not found])
+    ])
 fi
 
-AC_SUBST(GTK_MAC_INTEGRATION_LIB_SUFFIX)
+if test "x$with_gtk2" = "xyes" ; then
+    PKG_CHECK_MODULES([GTK2], [gtk+-2.0], [],
+       with_gtk2=no
+       AC_MSG_WARN([GTK+-2.0 not found])
+    ])
+fi
+
+AM_CONDITIONAL([INTROSPECTION], [test x$with_gtk3 = xyes])
+AM_CONDITIONAL([WITH_GTK2], [test x$with_gtk2 = xyes])
+AM_CONDITIONAL([WITH_GTK3], [test x$with_gtk3 = xyes])
 
 GTK_PYTHON_CHECK
-
 GOBJECT_INTROSPECTION_CHECK([0.10.1])
 
 # This will cause the automake generated makefiles to pass the correct
@@ -108,17 +94,16 @@ AC_CONFIG_FILES(
 	docs/Makefile
 	docs/reference/Makefile
 	strings/Makefile
+    data/gtk-mac-integration-gtk2.pc
+    data/gtk-mac-integration-gtk3.pc
 )
-
-if [test "x$GTK_MAJOR" = xgtk+-3.0]; then
-  AC_CONFIG_FILES(data/gtk-mac-integration-gtk3.pc:data/gtk-mac-integration.pc.in)
-else
-  AC_CONFIG_FILES(data/gtk-mac-integration-gtk2.pc:data/gtk-mac-integration.pc.in)
-fi
 
 AC_OUTPUT
 
 echo
 echo "Prefix         : $prefix"
+echo "GTK+2 bindings : $with_gtk2"
+echo "GTK+3 bindings : $with_gtk3"
 echo "Python bindings: $enable_python"
+echo "Introspection  : $enable_introspection"
 echo

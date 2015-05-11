@@ -1,4 +1,12 @@
-EXTRA_DIST = gtk-mac-integration.pc.in
+EXTRA_DIST = gtk-mac-integration-gtk3.pc.in gtk-mac-integration-gtk2.pc.in
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = gtk-mac-integration-$(GTK_MAC_INTEGRATION_LIB_SUFFIX).pc
+pkgconfig_DATA =
+
+if WITH_GTK3
+pkgconfig_DATA += gtk-mac-integration-gtk3.pc
+endif
+
+if WITH_GTK2
+pkgconfig_DATA += gtk-mac-integration-gtk2.pc
+endif
