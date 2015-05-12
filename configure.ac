@@ -51,7 +51,7 @@ AS_IF([test "x$enable_menu_images" != xno],
       [AC_DEFINE([USE_MENU_IMAGES], 1, [Add images to menu items])])
 
 
-AC_ARG_WITH([gtk2], [AS_HELP_STRING([--with-gtk2]), [build against gtk2])] ,[with_gtk2=$withval],
+AC_ARG_WITH([gtk2], [AS_HELP_STRING([--with-gtk2], [build against gtk2])] ,[with_gtk2=$withval],
 	[with_gtk2=yes])
 AC_ARG_WITH([gtk3], [AS_HELP_STRING([--with-gtk3], [build against gtk3])] ,[with_gtk3=$withval],
     [with_gtk3=yes])
@@ -60,14 +60,18 @@ if test "x$with_gtk3" = "xyes" ; then
     PKG_CHECK_MODULES([GTK3], [gtk+-3.0], [],
        with_gtk3=no
        AC_MSG_WARN([GTK+-3.0 not found])
-    ])
+    )
 fi
 
 if test "x$with_gtk2" = "xyes" ; then
     PKG_CHECK_MODULES([GTK2], [gtk+-2.0], [],
        with_gtk2=no
        AC_MSG_WARN([GTK+-2.0 not found])
-    ])
+    )
+fi
+
+if test "x$with_gtk2" = "xno" && test "x$with_gtk3" = "xno" ; then
+	AC_MSG_ERROR([Neither GTK+-2.0 nor GTK+-3.0 was found])
 fi
 
 AM_CONDITIONAL([INTROSPECTION], [test x$with_gtk3 = xyes])
