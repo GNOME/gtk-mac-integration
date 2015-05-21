@@ -34,6 +34,20 @@ http://live.gnome.org/GTK%2B/OSX/Integration.
 
 For more information about the Gtk-OSX project, please visit our
 webpage at http://gtk-osx.sourceforge.net/
+Gtk-mac-integration may be built for either Gtk+-2, Gtk+-3, or since
+version 2.0.7 both. Because it's not possible to link both
+libgtk-quartz-2.0.dylib and libgtk-3.dylib, from version 2.0.7 on it
+builds libgtkmacintegration-gtk2.dylib and/or
+libgtkmacintegration-gtk3.dylib and provides separate pkgconfig files,
+gtk-mac-integration-gtk2.pc and gtk-mac-integration-gtk3.pc, for the
+respective gtk library versions. Since version 2.0.8 it also provides
+gtk-mac-integration.pc which is a copy of gtk-mac-integration-gtk2.pc
+*unless only libgtk-mac-integration-gtk3 is built*. This is to avoid
+breakage of applications last updated before version
+2.0.7. Application maintainers are urged not to depend on this as it
+may not work in all environments and to update their applications to
+use the appropriate version-specific pc file.
+
 
 MAINTAINER NOTE:
 
