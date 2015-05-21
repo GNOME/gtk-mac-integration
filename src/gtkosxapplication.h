@@ -38,6 +38,12 @@ G_BEGIN_DECLS
 typedef struct _GtkosxApplication GtkosxApplication;
 typedef struct _GtkosxApplicationPrivate GtkosxApplicationPrivate;
 typedef struct _GtkosxApplicationClass GtkosxApplicationClass;
+/** GtkosxApplicationMenuGroup:
+ * @items: List of menu items in the group.
+ *
+ * A menu group is used to collect menu items between separators in
+ * the Application menu.
+ */
 typedef struct _GtkosxApplicationMenuGroup GtkosxApplicationMenuGroup;
 
 struct _GtkosxApplication
@@ -84,7 +90,11 @@ void gtkosx_application_set_help_menu (GtkosxApplication *self,
 				       GtkMenuItem *menu_item);
 
 /*Dock Functions*/
-
+/**
+ * GtkosxApplicationAttentionType
+ * @CRITICAL_REQUEST: Bounce the icon until the app is activated.
+ * @INFO_REQUEST: Bounce the icon for one second.
+ */
 typedef enum {
   CRITICAL_REQUEST = 0,
   INFO_REQUEST = 10
