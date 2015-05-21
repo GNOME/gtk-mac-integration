@@ -1,4 +1,4 @@
-if GTK_VERSION_2
+if WITH_GTK2
   GTK_COCOA_DIR = gtkosx_application
 if !SIXTY_FOUR_BIT
   GTK_CARBON_DIR = gtkmacintegration

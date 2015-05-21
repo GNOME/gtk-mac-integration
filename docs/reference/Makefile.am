@@ -85,8 +85,13 @@ expand_content_files=
 # signals and properties.
 # e.g. GTKDOC_CFLAGS=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
-GTKDOC_CFLAGS=$(GLIB_CFLAGS)
-GTKDOC_LIBS=$(top_builddir)/src/libgtkmacintegration-@GTK_MAC_INTEGRATION_LIB_SUFFIX@.la -lgobject-2.0
+GTKDOC_CFLAGS = $(GLIB_CFLAGS)
+GTKDOC_LIBS = -lgobject-2.0
+if WITH_GTK2
+GTKDOC_LIBS += $(top_builddir)/src/libgtkmacintegration-gtk2.la
+else
+GTKDOC_LIBS += $(top_builddir)/src/libgtkmacintegration-gtk3.la
+endif
 DYLD_LOAD_PATH=$(top_builddir)/src/.libs
 
 # This includes the standard gtk-doc make rules, copied by gtkdocize.

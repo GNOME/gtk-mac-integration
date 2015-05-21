@@ -61,7 +61,7 @@ AC_DEFUN([GTK_PYTHON_CHECK],
     AC_MSG_CHECKING([Python Headers])
     AM_CHECK_PYTHON_HEADERS(,[AC_MSG_RESULT([Python headers not found])])
     AC_MSG_NOTICE([Switch on Gtk+ Version])
-    AS_IF([ test x$GTK_MAJOR = "xgtk+-2.0" -o x$enable_python = "xall"], [
+    AS_IF([ test x$with_gtk2 = "xyes" -o x$enable_python = "xall"], [
     dnl Check for PyGTK
         AC_MSG_CHECKING([PyGObject 2.16 or newer])
         PKG_CHECK_MODULES(PYGOBJECT, pygobject-2.0 >= 2.16.0,,have_pygobject=no)
@@ -90,7 +90,7 @@ AC_DEFUN([GTK_PYTHON_CHECK],
     	AC_SUBST(PYGOBJECT_DATADIR)
     	AC_MSG_RESULT($PYGOBJECT_DATADIR)
      ],
-     [ test x$GTK_MAJOR = "xgtk+-3.0" -o x$enable_python = "xall"],
+     [ test x$with_gtk3 = "xyes" -o x$enable_python = "xall"],
 dnl Check that pygobject and gtk-3.0.gir are present
      [ PKG_CHECK_MODULES(PYGOBJECT_2, pygobject-2.0 >= 2.28.0,[
 	AC_MSG_CHECKING([PyGObject-Codegen-2.0])
@@ -130,6 +130,6 @@ dnl Check that pygobject and gtk-3.0.gir are present
   AC_MSG_RESULT($enable_python)
 
   AM_CONDITIONAL([ENABLE_PYTHON], [test x$enable_python = xyes])
-  AM_CONDITIONAL([GTK_VERSION_2], [test "x$GTK_MAJOR" = "xgtk+-2.0" -o x$enable_python = "xall"])
+  AM_CONDITIONAL([GTK_VERSION_2], [test "x$with_gtk2" = "xyes" -o x$enable_python = "xall"])
 ])
 dnl -----------------------------------------------------------
