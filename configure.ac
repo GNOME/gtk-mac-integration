@@ -39,6 +39,7 @@ AM_PROG_LIBTOOL
 
 AM_PATH_GLIB_2_0([2.14.0])
 AC_MSG_CHECKING([GLib Version])
+PKG_INSTALLDIR()
 
 GTK_DOC_CHECK([1.11], [--flavour no-tmpl])
 
