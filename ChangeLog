@@ -1,3 +1,21 @@
+Changes from version gtk-mac-integration-2.0.7 to version
+	gtk-mac-integration-2.0.8
+Brett Machiels
+	Use pkgconfig for PyGObject2 datadir
+	Provide for overriding libtoolize
+John Ralls
+	Provide gtk-mac-integration.pc to avoid breaking applications that
+	haven't updated to specify gtk2 or gtk3.
+	Allow GtkApplicationDelegate's application:openFile: handler to
+	work at startup.
+	Bug 744597 - Document that gtk_menu_reorder_child() doesn't update
+	the Menubar menu.
+Ting Ping, Tom Schoonjans, and John Ralls
+	Permit building both gtk2 and gtk3 integration libraries at once.
+Ting Ping
+	Use gnome-autogen.sh
+	Update configure.ac for automake 1.11
+
 Changes from version gtk-mac-integration-2.0.6 to version
 	gtk-mac-integration-2.0.7
 John Ralls

@@ -1,3 +1,28 @@
+Changes from version gtk-mac-integration-2.0.7 to version
+	gtk-mac-integration-2.0.8
+
+* Provide a default gtk-mac-integration.pc, a copy of
+      gtk-mac-integration-gtk2.pc unless gtk-mac-integration-gtk3.pc is the
+      only version built. Applications are advised not to use it; it's only to
+      avoid gratuitous breakage in single-gtk environments.
+* Get GtkApplicationDelegate's application:openFile: handler to work at startup.
+      It fires off the signal before the main loop has started, so stash the
+      URI in a static for applicationDidFinishLaunching to fire the signal.
+* Bug 744597 - Document that gtk_menu_reorder_child() doesn't update the menu.
+* Update documents for current version of Gtk-Docs.
+* Fix compile error on Leopard & Tiger.
+* Minor build system improvements
+* Make it possible to override libtoolize
+* Get PyGObject-2.0's datadir from pkg-config
+* Update .gitignore
+* Fix autotools warnings and modernize some
+* Use seperate configure flags for gtk2 and gtk3
+      Changes --with-gtk=gtk2 (which was broken) to --with-gtk2 and --with-gtk3
+      This allows you to build against both at the same time.
+      None of the pkgconfig files should have been changed but there is only
+      a single includedir now since they are the same.
+* Use gnome-autogen.sh
+
 Changes from version gtk-mac-integration-2.0.6 to version
 	gtk-mac-integration-2.0.7
 * Bug 739492 - Default key binding for hiding window on OS X does not work.
