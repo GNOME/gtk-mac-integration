@@ -86,7 +86,11 @@ GOBJECT_INTROSPECTION_CHECK([0.10.1])
 # flags to aclocal.
 ACLOCAL_AMFLAGS="\${ACLOCAL_FLAGS}"
 AC_SUBST(ACLOCAL_AMFLAGS)
-AC_DEFINE_UNQUOTED([PREFIX],["$prefix"], [Installation prefix (for making filenames)])
+if test "x$prefix" = xNONE; then
+  AC_DEFINE_UNQUOTED([PREFIX],["$ac_default_prefix"], [Installation prefix (for making filenames)])
+else
+  AC_DEFINE_UNQUOTED([PREFIX],["$prefix"], [Installation prefix (for making filenames)])
+fi
 
 AC_CONFIG_FILES(
 	Makefile
