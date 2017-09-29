@@ -1,0 +1,1395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>GtkosxApplication</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="gtk-mac-integration Reference Manual">
+<link rel="up" href="ch01.html" title="GtkosxApplication Reference">
+<link rel="prev" href="gtk-mac-integration-gtkosx-image.html" title="gtkosx-image">
+<link rel="next" href="object-tree.html" title="Object Hierarchy">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#GtkosxApplication.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#GtkosxApplication.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_signals">  <span class="dim">|</span> 
+                  <a href="#GtkosxApplication.signals" class="shortcut">Signals</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="gtk-mac-integration-gtkosx-image.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="object-tree.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry" lang="en">
+<a name="GtkosxApplication"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="GtkosxApplication.top_of_page"></a>GtkosxApplication</span></h2>
+<p>GtkosxApplication — Base class for OS X integration</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1" lang="en">
+<a name="GtkosxApplication.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a href="GtkosxApplication.html" title="GtkosxApplication"><span class="returnvalue">GtkosxApplication</span></a> *
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-get" title="gtkosx_application_get ()">gtkosx_application_get</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-ready" title="gtkosx_application_ready ()">gtkosx_application_ready</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-set-use-quartz-accelerators" title="gtkosx_application_set_use_quartz_accelerators ()">gtkosx_application_set_use_quartz_accelerators</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">gboolean</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-use-quartz-accelerators" title="gtkosx_application_use_quartz_accelerators ()">gtkosx_application_use_quartz_accelerators</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-set-menu-bar" title="gtkosx_application_set_menu_bar ()">gtkosx_application_set_menu_bar</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-sync-menubar" title="gtkosx_application_sync_menubar ()">gtkosx_application_sync_menubar</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-insert-app-menu-item" title="gtkosx_application_insert_app_menu_item ()">gtkosx_application_insert_app_menu_item</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-set-window-menu" title="gtkosx_application_set_window_menu ()">gtkosx_application_set_window_menu</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-set-help-menu" title="gtkosx_application_set_help_menu ()">gtkosx_application_set_help_menu</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-set-dock-menu" title="gtkosx_application_set_dock_menu ()">gtkosx_application_set_dock_menu</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-set-dock-icon-pixbuf" title="gtkosx_application_set_dock_icon_pixbuf ()">gtkosx_application_set_dock_icon_pixbuf</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-set-dock-icon-resource" title="gtkosx_application_set_dock_icon_resource ()">gtkosx_application_set_dock_icon_resource</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">gint</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-attention-request" title="gtkosx_application_attention_request ()">gtkosx_application_attention_request</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-cancel-attention-request" title="gtkosx_application_cancel_attention_request ()">gtkosx_application_cancel_attention_request</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">gchar</span> *
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-get-bundle-path" title="gtkosx_application_get_bundle_path ()">gtkosx_application_get_bundle_path</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">gchar</span> *
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-get-resource-path" title="gtkosx_application_get_resource_path ()">gtkosx_application_get_resource_path</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">gchar</span> *
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-get-executable-path" title="gtkosx_application_get_executable_path ()">gtkosx_application_get_executable_path</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">gchar</span> *
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-get-bundle-id" title="gtkosx_application_get_bundle_id ()">gtkosx_application_get_bundle_id</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">gchar</span> *
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-get-bundle-info" title="gtkosx_application_get_bundle_info ()">gtkosx_application_get_bundle_info</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1" lang="en">
+<a name="GtkosxApplication.signals"></a><h2>Signals</h2>
+<div class="informaltable"><table border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="signal_type"><span class="returnvalue">gboolean</span></td>
+<td class="signal_name"><a href="GtkosxApplication.html#GtkosxApplication-NSApplicationBlockTermination" title="The “NSApplicationBlockTermination” signal">NSApplicationBlockTermination</a></td>
+<td class="signal_flags">Action</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a href="GtkosxApplication.html#GtkosxApplication-NSApplicationDidBecomeActive" title="The “NSApplicationDidBecomeActive” signal">NSApplicationDidBecomeActive</a></td>
+<td class="signal_flags">Action</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">gboolean</span></td>
+<td class="signal_name"><a href="GtkosxApplication.html#GtkosxApplication-NSApplicationOpenFile" title="The “NSApplicationOpenFile” signal">NSApplicationOpenFile</a></td>
+<td class="signal_flags">Action</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a href="GtkosxApplication.html#GtkosxApplication-NSApplicationWillResignActive" title="The “NSApplicationWillResignActive” signal">NSApplicationWillResignActive</a></td>
+<td class="signal_flags">Action</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a href="GtkosxApplication.html#GtkosxApplication-NSApplicationWillTerminate" title="The “NSApplicationWillTerminate” signal">NSApplicationWillTerminate</a></td>
+<td class="signal_flags">Action</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1" lang="en">
+<a name="GtkosxApplication.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a href="GtkosxApplication.html#GtkosxApplicationMenuGroup" title="struct GtkosxApplicationMenuGroup">GtkosxApplicationMenuGroup</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a href="GtkosxApplication.html#GtkosxApplicationAttentionType" title="enum GtkosxApplicationAttentionType">GtkosxApplicationAttentionType</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a href="GtkosxApplication.html#GTKOSX-TYPE-APPLICATION-ATTENTION-TYPE:CAPS" title="GTKOSX_TYPE_APPLICATION_ATTENTION_TYPE">GTKOSX_TYPE_APPLICATION_ATTENTION_TYPE</a></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1" lang="en">
+<a name="GtkosxApplication.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    GObject
+    <span class="lineart">╰──</span> GtkosxApplication
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="GtkosxApplication.includes"></a><h2>Includes</h2>
+<pre class="synopsis">#include &lt;gtkosxapplication.h&gt;
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="GtkosxApplication.description"></a><h2>Description</h2>
+<p>Exposes to the Gtk+ program important functions of
+OS X's NSApplication class for use by Gtk+ applications running with
+the quartz Gdk backend and provides addtional functions for
+integrating a Gtk+ program into the OS X user environment.</p>
+<p>Using GtkosxApplication is pretty simple.
+First, create an instance at startup:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkosxApplication *theApp = g_object_new(GTKOSX_TYPE_APPLICATION, <span class="number">NULL</span>);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p>Do this early in your program, shortly after you run</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">gtk_init()</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>
+Don't forget to guard it, and all other calls into the library, with</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="preproc">#ifdef MAC_INTEGRATION</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p>You don't want your Linux users' builds failing because of this.
+The application object is a singleton, so you can call g_object_new
+as often as you like. You'll always get the same pointer
+back. There's no need to pass it around as an argument. Do note
+that all of the GtkosxApplication functions take theApp as an
+argument, even if they don't use it. This seems silly in C, and
+perhaps it is, but it's needed to make the Python binding logic
+recognize that they're class methods.</p>
+<p>Just having the application object created will get you some
+benefits, like having the Quit menu item in the dock menu work. But
+you'll obviously want more. So the next place to visit is your main
+window code. If you have a simple application, you might be
+constructing the menu by hand, but you're more likely to be using
+GtkBuilder. In either case, you need to get a pointer to the
+menubar. If you're building by hand, you've already got it lying
+around because you needed it to add the menus to. With GtkBuilder,
+you need to ask the GtkUIManager for a pointer. Once everything is
+more-or-less set up on the Gtk+ side, you need only hide the menu
+and call <code class="function">gtkosx_application_set_main_menu()</code>. Here's an example with
+GtkBuilder:</p>
+<div class="refsect3" lang="en">
+<a name="idp140591857430072"></a><h4>Setting the MenuBar</h4>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkUIManager *mgr = gtk_ui_manager_new();
+GtkosxApplication *theApp = g_object_new(GTKOSX_TYPE_APPLICATION, <span class="number">NULL</span>);
+...
+mergeid = gtk_ui_manager_add_ui_from_file(mgr, <span class="number">&quot;src/testui.xml&quot;</span>, &amp;err);
+...
+menubar = gtk_ui_manager_get_widget(mgr, <span class="number">&quot;/menubar&quot;</span>);
+gtk_widget_hide (menubar);
+gtkosx_application_set_menu_bar(theApp, GTK_MENU_SHELL(menubar));</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p>There are a couple of wrinkles, though, if you use
+accelerators. First off, there are two event paths for
+accelerators: Quartz, where the keystroke is processed by OS X and
+the menu item action event is placed on the event queue by OS X, or
+Gtk, where the accelerator key event is passed through to Gtk to
+recognize. This is controlled by
+<a href="GtkosxApplication.html#gtkosx-application-set-use-quartz-accelerators" title="gtkosx_application_set_use_quartz_accelerators ()"><code class="function">gtkosx_application_set_use_quartz_accelerators()</code></a> (you can test the
+value with <a href="GtkosxApplication.html#gtkosx-application-use-quartz-accelerators" title="gtkosx_application_use_quartz_accelerators ()"><code class="function">gtkosx_application_use_quartz_accelerators()</code></a>), and the
+default is to use Quartz handling. This has two advantages:</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>It works without any extra steps</p></li>
+<li><p>It changes stock accelerators (like Ctrl-O for open file) to
+the stock OS X keyEquivalent (Cmd-O in that case).</p></li>
+</ul></div>
+<p>If you need to use Gtk+ keyboard accelerator handling *and*
+you're using GtkMenuItems instead of GtkActions, you'll need to
+connect a special handler as shown in the following example:</p>
+</div>
+<div class="refsect3" lang="en">
+<a name="idp140591858163976"></a><h4>Enabling Accelerators on Hidden Menus</h4>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="type">static</span> gboolean
+can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data)
+{
+  <span class="keyword">return</span> gtk_widget_is_sensitive(widget);
+}
+...
+  g_signal_connect(menubar, <span class="number">&quot;can-activate-accel&quot;</span>,
+                   G_CALLBACK(can_activate_cb), <span class="number">NULL</span>);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p>The next task to make your application appear more normal for Mac
+users is to move some menu items from their normal Gtk locations to
+the so-called "App" menu. That's the menu all the way at the left
+of the menubar that has the currently-running application's
+name. There are 3 menu items that normally go there:</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>Help|About</p></li>
+<li><p>Edit|Preferences</p></li>
+<li><p>File|Quit</p></li>
+</ul></div>
+<p>File|Quit is a special case, because OS X handles it itself and
+automatically includes it, so the only thing you need do is hide it
+on the File menu so that it doesn't show up twice:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">gtk_widget_hide(GTK_WIDGET(file_quit_menu_item));</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>
+The other two must be moved in code, and there are two functions
+for doing that. The first one creates "goups", which is just an
+easy way to manage separators, and the second adds the actual menu
+items to the groups. Here's an example:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre></td>
+        <td class="listing_code"><pre class="programlisting">GtkosxApplicationMenuGroup *group;
+GtkMenuItem *about_item, *preferences_item;
+about_item = gtk_ui_manager_get_widget(mgr, <span class="number">&quot;/menubar/Help/About&quot;</span>);
+preferences_item = gtk_ui_manager_get_widget(mgr, <span class="number">&quot;/menubar/Edit/Preferences&quot;</span>);
+
+group = gtkosx_application_add_app_menu_group (theApp);
+gtkosx_application_add_app_menu_item  (theApp, group,
+                                       GTK_MENU_ITEM (about_item));
+
+group = gtkosx_application_add_app_menu_group (theApp);
+gtkosx_application_add_app_menu_item  (theApp, group,
+                                       GTK_MENU_ITEM (preferences_item));</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>
+Once we have everything set up for as many windows as we're going
+to open before we call <code class="function">gtk_main_loop()</code>, we need to tell OS X that
+we're ready:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">gtkosx_application_ready(theApp);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p>If you add other windows later, you must do everything above for
+each one's menubar. Most of the time the internal notifictations
+will ensure that the GtkosxApplication is able to keep everything
+in sync. However, if you at any time disconnect or block signals
+and change the menu (perhaps because of a context change within a
+window, as with changing pages in a GtkNotebook) you need to call</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">gtkosx_application_sync_menubar(theApp)</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p>N.B.: One GtkMenu function, <code class="function">gtk_menu_reorder_child()</code>, changes the
+menu appearance without emitting a signal, so if you use that
+function in your code you'll need to call
+<a href="GtkosxApplication.html#gtkosx-application-sync-menubar" title="gtkosx_application_sync_menubar ()"><code class="function">gtkosx_application_sync_menubar()</code></a> afterwards.</p>
+</div>
+<div class="refsect3" lang="en">
+<a name="idp140591859873240"></a><h4>Dock Support</h4>
+<p>The dock is that bar of icons that normally lives at the bottom of
+the display on a Mac (though it can be moved to one of the other
+sides; this author likes his on the left, which is where it was
+originally on a NeXT). Each running application has a "dock tile",
+an icon on the dock. Users can, if they like, add application (or
+document) icons to the dock, and those can be used to launch the
+application. Apple allows limited customization of the dock tile,
+and GtkosxApplication has an interface for adding to the dock's
+menu and for changing the icon that is displayed for the the
+application. GtkosxApplication also provides an interface to
+AttentionRequest, which bounces the dock tile if the application
+doesn't have focus. You might want to do that at the end of a long
+task so that the user will know that it's finished if she's
+switched to another application while she waits for yours.
+They're all pretty simple, so you can just read the details below.</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>gtkosx_application_set_doc_menu()</p></li>
+<li><p>gtkosx_application_set_doc_icon_pixbuf()</p></li>
+<li><p>gtkosx_application_set_dock_icon_resource()</p></li>
+<li><p>gtkosx_application_attention_request()</p></li>
+<li><p>gtkosx_application_cancel_attention_request()</p></li>
+</ul></div>
+</div>
+<div class="refsect3" lang="en">
+<a name="idp140591859878312"></a><h4>Bundle Support</h4>
+<p>The last feature to which GtkosxApplication provides an interface
+is the bundle. Normally in OS X, graphical applications are packaged
+along with their non-standard dependencies and their resources
+(graphical elements, translations, and such) in special directory
+structures called "bundles". To easily package your Gtk+
+application, have a look at gtk-mac-bundler, also available from
+the Gtk-OSX project.</p>
+<p>OS X provides a variety of functions pertaining to bundles, most of
+which are not likely to interest someone porting a Gtk+
+application. GtkosxApplication has wrapped a few that might be:</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>gtkosx_application_get_bundle_path()</p></li>
+<li><p>gtkosx_application_get_resource_path()</p></li>
+<li><p>gtkosx_application_get_executable_path()</p></li>
+<li><p>gtkosx_application_get_bundle_id()</p></li>
+<li><p>gtkosx_application_get_bundle_info()</p></li>
+</ul></div>
+<p>The first three just get a UTF8-encoded path. An interesting note
+is that they'll return the path to the executable or the folder
+it's in regardless of whether it's actually in a bundle. To find
+out if one is actually dealing with a bundle,
+<a href="GtkosxApplication.html#gtkosx-application-get-bundle-id" title="gtkosx_application_get_bundle_id ()"><code class="function">gtkosx_application_get_bundle_id()</code></a> will return "" if it can't find
+the key <code class="literal">CFBundleIdentifier</code> from the bundle's Info.plist -- which it
+won't if the application isn't in a bundle or wasn't launched by
+opening the bundle. (In other words, even if you have your
+application installed in Foo.app, if you launch it from the command
+line as</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">$ Foo.app/Contents/MacOS/Foo</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>
+the Info.plist won't have been opened and
+<a href="GtkosxApplication.html#gtkosx-application-get-bundle-id" title="gtkosx_application_get_bundle_id ()"><code class="function">gtkosx_application_get_bundle_id()</code></a> will return "". Of course, it
+will also return "" if you didn't set <code class="literal">CFBundleIdentifier</code> in the
+Info.plist, so make sure that you do!</p>
+<p>The last function, <a href="GtkosxApplication.html#gtkosx-application-get-bundle-info" title="gtkosx_application_get_bundle_info ()"><code class="function">gtkosx_application_get_bundle_info()</code></a>, will
+return the value associated with an arbitrary key from Info.plist
+as long as that value is a string. If it isn't, then the function
+returns a null string ("").</p>
+</div>
+<div class="refsect3" lang="en">
+<a name="idp140591859889720"></a><h4>Notifications</h4>
+<p>Finally, notice the signals. These are emitted in response to the
+indicated OS X notifications. Except for
+<a href="GtkosxApplication.html#GtkosxApplication-NSApplicationBlockTermination" title="The “NSApplicationBlockTermination” signal"><span class="type">“NSApplicationBlockTermination”</span></a>, most programs
+won't need to do anything with
+them. <a href="GtkosxApplication.html#GtkosxApplication-NSApplicationBlockTermination" title="The “NSApplicationBlockTermination” signal"><span class="type">“NSApplicationBlockTermination”</span></a> is telling
+you that OS X is planning to shut down your program. If you have any
+cleanup to do (like saving open files), or if you want to ask the
+user if it's OK, you should connect to the signal and do your
+cleanup. Your handler can return <code class="literal">TRUE</code> to prevent the application
+from quitting.</p>
+</div>
+</div>
+<div class="refsect1" lang="en">
+<a name="GtkosxApplication.functions_details"></a><h2>Functions</h2>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-get"></a><h3>gtkosx_application_get ()</h3>
+<pre class="programlisting"><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="returnvalue">GtkosxApplication</span></a> *
+gtkosx_application_get (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-get.returns"></a><h4>Returns</h4>
+<p> (transfer none) the singleton application object.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-ready"></a><h3>gtkosx_application_ready ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_ready (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>);</pre>
+<p>Inform Cocoa that application initialization is complete.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-ready.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The GtkosxApplication object</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-set-use-quartz-accelerators"></a><h3>gtkosx_application_set_use_quartz_accelerators ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_set_use_quartz_accelerators
+                               (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
+                                <em class="parameter"><code><span class="type">gboolean</span> use_quartz_accelerators</code></em>);</pre>
+<p>Set quartz accelerator handling; TRUE (default) uses quartz; FALSE
+uses Gtk+. Quartz accelerator handling is required for normal OS X
+accelerators (e.g., command-q to quit) to work.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-set-use-quartz-accelerators.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The GtkosxApplication pointer.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>use_quartz_accelerators</p></td>
+<td class="parameter_description"><p>Gboolean</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-use-quartz-accelerators"></a><h3>gtkosx_application_use_quartz_accelerators ()</h3>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
+gtkosx_application_use_quartz_accelerators
+                               (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>);</pre>
+<p>Are we using Quartz or Gtk+ accelerator handling?</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-use-quartz-accelerators.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The GtkosxApplication pointer.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-use-quartz-accelerators.returns"></a><h4>Returns</h4>
+<p> a gboolean</p>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-set-menu-bar"></a><h3>gtkosx_application_set_menu_bar ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_set_menu_bar (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
+                                 <em class="parameter"><code><span class="type">GtkMenuShell</span> *menu_shell</code></em>);</pre>
+<p>Set a window's menubar as the application menu bar. Call this once
+for each window as you create them. It works best if the menubar is
+reasonably fully populated before you call it. Once set, it will
+stay syncronized through signals as long as you don't disconnect or
+block them.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-set-menu-bar.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The GtkosxApplication object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>menu_shell</p></td>
+<td class="parameter_description"><p>The GtkMenuBar that you want to set.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-sync-menubar"></a><h3>gtkosx_application_sync_menubar ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_sync_menubar (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>);</pre>
+<p>Syncronize the active window's GtkMenuBar with the OSX menu
+bar. You should only need this if you have programmatically changed
+the menus with signals blocked or disconnected.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-sync-menubar.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The GtkosxApplication object</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-insert-app-menu-item"></a><h3>gtkosx_application_insert_app_menu_item ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_insert_app_menu_item
+                               (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
+                                <em class="parameter"><code><span class="type">GtkWidget</span> *menu_item</code></em>,
+                                <em class="parameter"><code><span class="type">gint</span> index</code></em>);</pre>
+<p>Certain menu items (About, Check for updates, and Preferences in
+particular) are normally found in the so-called Application menu
+(the first one on the menubar, named after the application) in OSX
+applications. This function will create a menu entry for such a
+menu item, removing it from its original menu in the Gtk
+application.</p>
+<p>Any items inserted at index zero will have the app name appended;
+this is intended for the "About" menu item, so that it says "About
+Foo" like most Mac programs, without having to worry too much about
+how "About" is spelled/translated.</p>
+<p>To group your menu items, insert GtkSeparatorMenuItem*s where you want them.</p>
+<p>Don't use it for Quit! A Quit menu item is created automatically
+along with the Application menu. Just hide your Gtk Quit menu item.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-insert-app-menu-item.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The GtkosxApplication object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>menu_item</p></td>
+<td class="parameter_description"><p>The GtkMenuItem to add to the group.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>index</p></td>
+<td class="parameter_description"><p>The place in the app menu that you want the item
+inserted. The first item is 0.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-set-window-menu"></a><h3>gtkosx_application_set_window_menu ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_set_window_menu (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
+                                    <em class="parameter"><code><span class="type">GtkMenuItem</span> *menu_item</code></em>);</pre>
+<p>Sets a designated menu item already on the menu bar as the Window
+menu. This is the menu which contains a list of open windows for
+the application; by default it also provides menu items to minimize
+and zoom the current window and to bring all windows to the
+front. Call this after <code class="function">gtk_osx_application_set_menu_bar()</code>. It
+operates on the currently active menubar. If <em class="parameter"><code>nenu_item</code></em>
+ is NULL, it
+will create a new menu for you, which will not be gettext translatable.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-set-window-menu.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The application object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>menu_item</p></td>
+<td class="parameter_description"><p>The menu item which will be set as the Window menu</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-set-help-menu"></a><h3>gtkosx_application_set_help_menu ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_set_help_menu (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
+                                  <em class="parameter"><code><span class="type">GtkMenuItem</span> *menu_item</code></em>);</pre>
+<p>Sets a designated menu item already on the menu bar as the Help
+menu. Call this after <code class="function">gtk_osx_application_set_menu_bar()</code>, but
+before <code class="function">gtk_osx_application_window_menu()</code>, especially if you're
+letting GtkosxApplication create a Window menu for you (it helps
+position the Window menu correctly). It operates on the currently
+active menubar. If <em class="parameter"><code>nenu_item</code></em>
+ is <code class="literal">NULL</code>, it will create a new menu
+for you, which will not be gettext translatable.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-set-help-menu.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The application object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>menu_item</p></td>
+<td class="parameter_description"><p>The menu item which will be set as the Window menu</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-set-dock-menu"></a><h3>gtkosx_application_set_dock_menu ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_set_dock_menu (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
+                                  <em class="parameter"><code><span class="type">GtkMenuShell</span> *menu_shell</code></em>);</pre>
+<p>Set a GtkMenu as the dock menu.</p>
+<p>This menu does not have a "sync" function, so changes made while
+signals are disconnected will not update the menu which appears in
+the dock, and may produce strange results or crashes if a
+GtkMenuItem or GtkAction associated with a dock menu item is
+deallocated.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-set-dock-menu.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The GtkosxApplication object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>menu_shell</p></td>
+<td class="parameter_description"><p>A GtkMenu (cast it with <code class="function">GTK_MENU_SHELL()</code> when you
+pass it in</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-set-dock-icon-pixbuf"></a><h3>gtkosx_application_set_dock_icon_pixbuf ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_set_dock_icon_pixbuf
+                               (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
+                                <em class="parameter"><code><span class="type">GdkPixbuf</span> *pixbuf</code></em>);</pre>
+<p>Set the dock icon from a GdkPixbuf</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-set-dock-icon-pixbuf.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The GtkosxApplication</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>pixbuf</p></td>
+<td class="parameter_description"><p>The pixbuf. Pass NULL to reset the icon to its default.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-set-dock-icon-resource"></a><h3>gtkosx_application_set_dock_icon_resource ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_set_dock_icon_resource
+                               (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
+                                <em class="parameter"><code>const <span class="type">gchar</span> *name</code></em>,
+                                <em class="parameter"><code>const <span class="type">gchar</span> *type</code></em>,
+                                <em class="parameter"><code>const <span class="type">gchar</span> *subdir</code></em>);</pre>
+<p>Set the dock icon from an image file in the bundle/</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-set-dock-icon-resource.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The GtkosxApplication</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>name</p></td>
+<td class="parameter_description"><p>The ame of the image file</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>type</p></td>
+<td class="parameter_description"><p>The extension (e.g., jpg) of the filename</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>subdir</p></td>
+<td class="parameter_description"><p>The subdirectory of $Bundle/Contents/Resources in which to
+look for the file.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-attention-request"></a><h3>gtkosx_application_attention_request ()</h3>
+<pre class="programlisting"><span class="returnvalue">gint</span>
+gtkosx_application_attention_request (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
+                                      <em class="parameter"><code><a href="GtkosxApplication.html#GtkosxApplicationAttentionType" title="enum GtkosxApplicationAttentionType"><span class="type">GtkosxApplicationAttentionType</span></a> type</code></em>);</pre>
+<p>Create an attention request.  If type is CRITICAL_REQUEST, the
+dock icon will bounce until cancelled the application receives
+focus; otherwise it will bounce for 1 second -- but the attention
+request will remain asserted until cancelled or the application
+receives focus. This function has no effect if the application has focus.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-attention-request.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The GtkosxApplication pointer</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>type</p></td>
+<td class="parameter_description"><p>CRITICAL_REQUEST or INFO_REQUEST</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-attention-request.returns"></a><h4>Returns</h4>
+<p> A the attention request ID. Pass this id to
+gtkosx_application_cancel_attention_request.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-cancel-attention-request"></a><h3>gtkosx_application_cancel_attention_request ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_cancel_attention_request
+                               (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
+                                <em class="parameter"><code><span class="type">gint</span> id</code></em>);</pre>
+<p>Cancel an attention request created with
+gtkosx_application_attention_request.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-cancel-attention-request.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The application</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>id</p></td>
+<td class="parameter_description"><p>The integer attention request id returned from
+gtkosx_application_attention_request.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-get-bundle-path"></a><h3>gtkosx_application_get_bundle_path ()</h3>
+<pre class="programlisting"><span class="returnvalue">gchar</span> *
+gtkosx_application_get_bundle_path (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Return the root path of the bundle or the directory containing the
+ executable if it isn't actually a bundle.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-get-bundle-path.returns"></a><h4>Returns</h4>
+<p> path The bundle's absolute path or <code class="literal">NULL</code> on error. <code class="function">g_free()</code> it when done.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-get-resource-path"></a><h3>gtkosx_application_get_resource_path ()</h3>
+<pre class="programlisting"><span class="returnvalue">gchar</span> *
+gtkosx_application_get_resource_path (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Return the Resource path for the bundle or the directory containing the
+ executable if it isn't actually a bundle. Use <a href="GtkosxApplication.html#gtkosx-application-get-bundle-id" title="gtkosx_application_get_bundle_id ()"><code class="function">gtkosx_application_get_bundle_id()</code></a> to check (it will return <code class="literal">NULL</code> if it's not a bundle).</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-get-resource-path.returns"></a><h4>Returns</h4>
+<p> path The absolute resource path. or <code class="literal">NULL</code> on error. <code class="function">g_free()</code> it when done.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-get-executable-path"></a><h3>gtkosx_application_get_executable_path ()</h3>
+<pre class="programlisting"><span class="returnvalue">gchar</span> *
+gtkosx_application_get_executable_path
+                               (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Return the executable path, including file name</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-get-executable-path.returns"></a><h4>Returns</h4>
+<p> The path to the primary executable, or <code class="literal">NULL</code> if it can't find one. <code class="function">g_free()</code> it when done</p>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-get-bundle-id"></a><h3>gtkosx_application_get_bundle_id ()</h3>
+<pre class="programlisting"><span class="returnvalue">gchar</span> *
+gtkosx_application_get_bundle_id (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Return the value of the CFBundleIdentifier key from the bundle's Info.plist</p>
+<p>This will return NULL if it's not really a bundle, there's no
+Info.plist, or if Info.plist doesn't have a CFBundleIdentifier key
+(So if you need to detect being in a bundle, make sure that your
+bundle has that key!)</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-get-bundle-id.returns"></a><h4>Returns</h4>
+<p> The string value of CFBundleIdentifier, or <code class="literal">NULL</code> if there is none. <code class="function">g_free()</code> it when done.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="gtkosx-application-get-bundle-info"></a><h3>gtkosx_application_get_bundle_info ()</h3>
+<pre class="programlisting"><span class="returnvalue">gchar</span> *
+gtkosx_application_get_bundle_info (<em class="parameter"><code>const <span class="type">gchar</span> *key</code></em>);</pre>
+<p>Queries the bundle's Info.plist with key. If the returned object is
+a string, returns that; otherwise returns <code class="literal">NULL</code>.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-get-bundle-info.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>key</p></td>
+<td class="parameter_description"><p>The key, as a normal UTF8 string.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-get-bundle-info.returns"></a><h4>Returns</h4>
+<p> A UTF8-encoded string. <code class="function">g_free()</code> it when done.</p>
+</div>
+</div>
+</div>
+<div class="refsect1" lang="en">
+<a name="GtkosxApplication.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2" lang="en">
+<a name="GtkosxApplicationMenuGroup"></a><h3>struct GtkosxApplicationMenuGroup</h3>
+<pre class="programlisting">struct GtkosxApplicationMenuGroup {
+  GList *items;
+};
+</pre>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkosxApplicationAttentionType"></a><h3>enum GtkosxApplicationAttentionType</h3>
+<div class="refsect3" lang="en">
+<a name="GtkosxApplicationAttentionType.members"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="CRITICAL-REQUEST:CAPS"></a>CRITICAL_REQUEST</p></td>
+<td class="enum_member_description">
+<p>Bounce the icon until the app is activated.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="INFO-REQUEST:CAPS"></a>INFO_REQUEST</p></td>
+<td class="enum_member_description">
+<p>Bounce the icon for one second.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GTKOSX-TYPE-APPLICATION-ATTENTION-TYPE:CAPS"></a><h3>GTKOSX_TYPE_APPLICATION_ATTENTION_TYPE</h3>
+<pre class="programlisting">#define GTKOSX_TYPE_APPLICATION_ATTENTION_TYPE (gtkosx_type_application_attention_type_get_type())
+</pre>
+</div>
+</div>
+<div class="refsect1" lang="en">
+<a name="GtkosxApplication.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2" lang="en">
+<a name="GtkosxApplication-NSApplicationBlockTermination"></a><h3>The <code class="literal">“NSApplicationBlockTermination”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
+user_function (<a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *app,
+               <span class="type">gpointer</span>           user_data)</pre>
+<p>Emitted by the Application Delegate when the application reeeives
+an NSApplicationShouldTerminate notification. Perform any cleanup
+you need to do (e.g., saving files) before exiting. Returning FALSE
+will allow further handlers to run and if none return TRUE, the
+application to shut down. Returning TRUE will veto shutdown and
+stop emission, so later handlers will not run.</p>
+<div class="refsect3" lang="en">
+<a name="GtkosxApplication-NSApplicationBlockTermination.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>app</p></td>
+<td class="parameter_description"><p>The application object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>Data appended at connection</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3" lang="en">
+<a name="GtkosxApplication-NSApplicationBlockTermination.returns"></a><h4>Returns</h4>
+<p> Boolean indicating that further emission and application
+termination should be blocked.</p>
+</div>
+<p>Flags: Action</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkosxApplication-NSApplicationDidBecomeActive"></a><h3>The <code class="literal">“NSApplicationDidBecomeActive”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *app,
+               <span class="type">gpointer</span>           user_data)</pre>
+<p>Emitted by the Application Delegate when the application receives
+an NSApplicationDidBecomeActive notification. Connect a handler if
+there is anything you need to do when the application is activated.</p>
+<div class="refsect3" lang="en">
+<a name="GtkosxApplication-NSApplicationDidBecomeActive.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>app</p></td>
+<td class="parameter_description"><p>The application object
+<span class="type">user_data</span>: Data appended at connection</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: Action</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkosxApplication-NSApplicationOpenFile"></a><h3>The <code class="literal">“NSApplicationOpenFile”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
+user_function (<a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *app,
+               <span class="type">gchar</span>             *path,
+               <span class="type">gpointer</span>           user_data)</pre>
+<p>Emitted when a OpenFile, OpenFiles, or OpenEmptyFile event is
+received from the operating system. This signal does not implement
+drops, but it does implement "open with" events from Finder. An
+OpenEmptyFile is received at launch in Python applications.</p>
+<div class="refsect3" lang="en">
+<a name="GtkosxApplication-NSApplicationOpenFile.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>app</p></td>
+<td class="parameter_description"><p>The application object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>path</p></td>
+<td class="parameter_description"><p>A UTF8-encoded file path to open.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>Data attached at connection</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3" lang="en">
+<a name="GtkosxApplication-NSApplicationOpenFile.returns"></a><h4>Returns</h4>
+<p> Boolean indicating success at opening the file.</p>
+</div>
+<p>Flags: Action</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkosxApplication-NSApplicationWillResignActive"></a><h3>The <code class="literal">“NSApplicationWillResignActive”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *app,
+               <span class="type">gpointer</span>           user_data)</pre>
+<p>This signal is emitted by the Application Delegate when the
+application receives an NSApplicationWillResignActive
+notification. Connect a handler to it if there's anything your
+application needs to do to prepare for inactivity.</p>
+<div class="refsect3" lang="en">
+<a name="GtkosxApplication-NSApplicationWillResignActive.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>app</p></td>
+<td class="parameter_description"><p>The application object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>Data appended at connection</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: Action</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="GtkosxApplication-NSApplicationWillTerminate"></a><h3>The <code class="literal">“NSApplicationWillTerminate”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *app,
+               <span class="type">gpointer</span>           user_data)</pre>
+<p>Emitted by the Application Delegate when the application reeeives
+an NSApplicationSWillTerminate notification. Connect your final
+shutdown routine (the one that calls <code class="function">gtk_main_quit()</code> here.</p>
+<div class="refsect3" lang="en">
+<a name="GtkosxApplication-NSApplicationWillTerminate.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>app</p></td>
+<td class="parameter_description"><p>The application object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>Data appended at connection</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: Action</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.25</div>
+</body>
+</html>
