@@ -38,6 +38,7 @@
 #include "cocoa_menu.h"
 #include "getlabel.h"
 #include "gtkosx-image.h"
+#include "gettext.h"
 
 #if GTK_CHECK_VERSION (2, 90, 7)
 #include <gdk/gdkkeysyms-compat.h>
@@ -49,6 +50,7 @@
 #undef G_LOG_DOMAIN
 #endif
 #define G_LOG_DOMAIN "gtkosxapplication"
+#define _(s) dgettext (PACKAGE_NAME, s)
 
 /* This is a private function in libgdk; we need to have is so that we
    can force new windows onto the Window menu */
@@ -245,9 +247,8 @@ create_apple_menu (GtkosxApplication *self, GtkWidget *toplevel)
   NSMenuItem *menuitem;
   // Create the application (Apple) menu.
   NSMenu *app_menu = [[[NSMenu alloc] initWithTitle: @"Apple Menu"] autorelease];
-  NSString *title = NSLocalizedStringFromTable (@"Services",
-						@"GtkosxApplication",
-						@"Services Menu title");
+  /* Translators: This is the Services menu item for the "Apple" menu. */
+  NSString *title = [NSString stringWithUTF8String: _("Services")];
   NSMenu *menuServices = [[[NSMenu alloc] initWithTitle: title] autorelease];
   NSString *appname = get_application_name ();
   GClosure *hide_closure, *hide_others_closure;
@@ -257,13 +258,16 @@ create_apple_menu (GtkosxApplication *self, GtkWidget *toplevel)
   [NSApp setServicesMenu: menuServices];
 
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle:  NSLocalizedStringFromTable (@"Services",  @"GtkosxApplication", @"Services Menu Item title")
+  menuitem = [[NSMenuItem alloc] initWithTitle: title
 	      action: nil keyEquivalent: @""];
   [menuitem setSubmenu: menuServices];
   [app_menu addItem: menuitem];
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
-  menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithFormat: NSLocalizedStringFromTable (@"Hide %@", @"GtkosxApplication", @"Hide menu item title"), appname]
+  /* Translators: This is the "Hide" menu item of the "Apple"
+     menu. The parameter is the application name.
+   */
+  menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithFormat: [NSString stringWithUTF8String: _("Hide %s")], appname]
 	      action: @selector (hide:) keyEquivalent: @"h"];
   hide_closure = g_cclosure_new (G_CALLBACK (_nsapp_hide),
 				 (void*)menuitem, NULL);
@@ -276,13 +280,15 @@ create_apple_menu (GtkosxApplication *self, GtkWidget *toplevel)
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
-  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable (@"Hide Others",  @"GtkosxApplication", @"Hide Others menu item title")
+  /* Translators: This is the "Hide Others" menu item for the "Apple" menu. */
+  menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithUTF8String: _("Hide Others")]
 	      action: @selector (hideOtherApplications: ) keyEquivalent: @"h"];
   [menuitem setKeyEquivalentModifierMask: NSCommandKeyMask | NSAlternateKeyMask];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
-  menuitem = [[NSMenuItem alloc] initWithTitle: NSLocalizedStringFromTable ( @"Show All", @"GtkosxApplication",  @"Show All menu item title")
+  /* Translators: This is the Show All menu item in the "Apple" menu. */
+  menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithUTF8String: _("Show All")]
 	      action: @selector (unhideAllApplications: ) keyEquivalent: @""];
   hide_others_closure = g_cclosure_new (G_CALLBACK (_nsapp_hide_others),
 					(void*)menuitem, NULL);
@@ -294,7 +300,10 @@ create_apple_menu (GtkosxApplication *self, GtkWidget *toplevel)
   [menuitem release];
   [app_menu addItem: [NSMenuItem separatorItem]];
 
-  menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithFormat: NSLocalizedStringFromTable (@"Quit %@", @"GtkosxApplication", @"Quit menu item title"), appname]
+  /* Translators: This is the Quit menu item for the "Apple" menu. The
+     parameter is the application name.
+   */
+  menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithFormat: [NSString stringWithUTF8String: _("Quit %s")], appname]
 	      action: @selector (terminate:) keyEquivalent: @"q"];
 /*
  * Accounts for the added application name to the Quit menu item in a
@@ -326,9 +335,8 @@ create_apple_menu (GtkosxApplication *self, GtkWidget *toplevel)
 static _GNSMenuItem *
 create_window_menu (GtkosxApplication *self)
 {
-  NSString *title = NSLocalizedStringFromTable (@"Window",
-                    @"GtkosxApplication",
-                    @"Window Menu title");
+  /* Translators: This is the title of the Window menu in the menubar. */
+  NSString *title = [NSString stringWithUTF8String: _("Window")];
   NSMenu *window_menu = [[[NSMenu alloc] initWithTitle: title] autorelease];
   GtkMenuBar *menubar = [(_GNSMenuBar*)[NSApp mainMenu] menuBar];
   GtkWidget *parent = NULL;
@@ -343,11 +351,12 @@ create_window_menu (GtkosxApplication *self)
     win = gtk_widget_get_window (parent);
   if (win && GDK_IS_WINDOW (win))
     nswin = gdk_quartz_window_get_nswindow (win);
-
-  [window_menu addItemWithTitle: NSLocalizedStringFromTable (@"Minimize", @"GtkosxApplication", @"Windows|Minimize menu item")
+  /* Translators: This is the Minimize menuitem for the Window menu. */
+  [window_menu addItemWithTitle: [NSString stringWithUTF8String: _("Minimize")]
    action: @selector (performMiniaturize: ) keyEquivalent: @"m"];
   [window_menu addItem: [NSMenuItem separatorItem]];
-  [window_menu addItemWithTitle: NSLocalizedStringFromTable (@"Bring All to Front", @"GtkosxApplication", @"Windows|Bring All To Front menu item title")
+  /* Translators: This is a menu item in the Window menu. */
+  [window_menu addItemWithTitle: [NSString stringWithUTF8String: _("Bring All to Front")]
    action: @selector (arrangeInFront: ) keyEquivalent: @""];
 
   [NSApp setWindowsMenu: window_menu];
@@ -364,11 +373,6 @@ create_window_menu (GtkosxApplication *self)
  * @properties: an array of construction properties
  *
  * Overrides the GObject (superclass) constructor to enforce a singleton
- * Note that the static strings are internationalized the Apple way,
- * so you'll need to use the Apple localization tools if you need to
- * translations other than the ones provided. The resource file will
- * be GtkosxApplication.strings, and must be installed in lang.proj in
- * the application bundle's Resources directory.
  *
  * Returns: A pointer to the new object.
  */
@@ -588,6 +592,7 @@ gtkosx_application_init (GtkosxApplication *self)
   self->priv->notify = [[GtkApplicationNotificationObject alloc] init];
   [NSApp setDelegate: [GtkApplicationDelegate new]];
   self->priv->delegate = [NSApp delegate];
+  bindtextdomain (PACKAGE_NAME, LOCALEDIR);
 }
 
 static void
@@ -847,16 +852,8 @@ gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
                                          gint index)
 {
   gtk_widget_set_visible (item, TRUE);
-  /*Sleazy hack to avoid dealing with translating "About": If it's the
-    zero'th item, it's the About item. */
   if (index == 0)
-    {
-      GtkWidget *widgetLabel = NULL;
-      const gchar *label = get_menu_label_text (item, &widgetLabel);
-      NSString *nsappname = get_application_name ();
-      const gchar *appname = [nsappname UTF8String];
-      gtk_menu_item_set_label (GTK_MENU_ITEM (item), g_strdup_printf ("%s %s", label, appname));
-    }
+    return;
 
   cocoa_menu_item_add_item ([[[NSApp mainMenu] itemAtIndex: 0] submenu],
                             item, index);

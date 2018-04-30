@@ -1,4 +1,4 @@
-SUBDIRS = src data bindings docs strings
+SUBDIRS = src data bindings docs po
 
 EXTRA_DIST = gtk-doc.make accel_map autogen.sh
 

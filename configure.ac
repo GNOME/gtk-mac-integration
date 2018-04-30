@@ -36,6 +36,7 @@ AC_PROG_OBJC
 AM_PROG_CC_C_O
 AM_PROG_AR
 AM_PROG_LIBTOOL
+AM_GNU_GETTEXT([external])
 
 AM_PATH_GLIB_2_0([2.14.0])
 AC_MSG_CHECKING([GLib Version])
@@ -93,16 +94,16 @@ else
 fi
 
 AC_CONFIG_FILES(
-	Makefile
-	src/Makefile
-        bindings/Makefile
-        bindings/python/Makefile
-	bindings/python/gtkmacintegration/Makefile
-	bindings/python/gtkosx_application/Makefile
-        data/Makefile
-	docs/Makefile
-	docs/reference/Makefile
-	strings/Makefile
+    po/Makefile.in
+    Makefile
+    src/Makefile
+    bindings/Makefile
+    bindings/python/Makefile
+    bindings/python/gtkmacintegration/Makefile
+    bindings/python/gtkosx_application/Makefile
+    data/Makefile
+    docs/Makefile
+    docs/reference/Makefile
     data/gtk-mac-integration-gtk2.pc
     data/gtk-mac-integration-gtk3.pc
 )

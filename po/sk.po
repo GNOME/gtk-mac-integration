@@ -1,0 +1,65 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR John Ralls <jralls@ceridwen.us>
+# This file is distributed under the same license as the gtk-mac-integration package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gtk-mac-integration 2.0.8\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gtk-"
+"mac-integration\n"
+"POT-Creation-Date: 2018-04-30 12:09-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Translators: This is the Services menu item for the "Apple" menu.
+#: src/gtkosxapplication_quartz.c:251
+msgid "Services"
+msgstr "Služby"
+
+#. Translators: This is the "Hide" menu item of the "Apple"
+#. menu. The parameter is the application name.
+#.
+#: src/gtkosxapplication_quartz.c:270
+#, c-format
+msgid "Hide %s"
+msgstr "Skryť %s"
+
+#. Translators: This is the "Hide Others" menu item for the "Apple" menu.
+#: src/gtkosxapplication_quartz.c:284
+msgid "Hide Others"
+msgstr "Skryť Ostatné"
+
+#. Translators: This is the Show All menu item in the "Apple" menu.
+#: src/gtkosxapplication_quartz.c:291
+msgid "Show All"
+msgstr "Zobraziť Všetko"
+
+#. Translators: This is the Quit menu item for the "Apple" menu. The
+#. parameter is the application name.
+#.
+#: src/gtkosxapplication_quartz.c:306
+#, c-format
+msgid "Quit %s"
+msgstr "Ukončiť %s"
+
+#. Translators: This is the title of the Window menu in the menubar.
+#: src/gtkosxapplication_quartz.c:339
+msgid "Window"
+msgstr "Okno"
+
+#. Translators: This is the Minimize menuitem for the Window menu.
+#: src/gtkosxapplication_quartz.c:355
+msgid "Minimize"
+msgstr "Minimalizovať"
+
+#. Translators: This is a menu item in the Window menu.
+#: src/gtkosxapplication_quartz.c:359
+msgid "Bring All to Front"
+msgstr "Prineste Všetko do Popredia"
