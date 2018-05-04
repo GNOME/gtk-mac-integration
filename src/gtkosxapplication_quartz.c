@@ -250,7 +250,7 @@ create_apple_menu (GtkosxApplication *self, GtkWidget *toplevel)
   /* Translators: This is the Services menu item for the "Apple" menu. */
   NSString *title = [NSString stringWithUTF8String: _("Services")];
   NSMenu *menuServices = [[[NSMenu alloc] initWithTitle: title] autorelease];
-  NSString *appname = get_application_name ();
+  const char *appname = [get_application_name () UTF8String];
   GClosure *hide_closure, *hide_others_closure;
   GtkAccelGroup *accel_group = gtk_accel_group_new ();
   gtk_window_add_accel_group (GTK_WINDOW (toplevel), accel_group);
