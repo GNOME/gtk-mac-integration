@@ -58,6 +58,7 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include <libintl.h>
 
 /* Uncomment ONE of these to test menu-mangling: */
 //#define GTKMACINTEGRATION
@@ -818,6 +819,9 @@ main (int argc, char **argv)
 #ifdef GTKOSXAPPLICATION
   GtkosxApplication *theApp;
 #endif //GTKOSXAPPLICATION
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE_NAME, LOCALEDIR);
+  textdomain (PACKAGE_NAME);
 #if ! GLIB_CHECK_VERSION (2, 34, 0)
   g_thread_init (NULL);
 #endif
