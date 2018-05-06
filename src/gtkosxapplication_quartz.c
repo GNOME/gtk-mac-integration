@@ -852,6 +852,7 @@ gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
                                          gint index)
 {
   gtk_widget_set_visible (item, TRUE);
+  /* For backwards compatibility, the 0 index item is forced to be About. */
   if (index == 0)
     {
       const gchar * app_name = [get_application_name () UTF8String];
@@ -860,6 +861,30 @@ gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
   cocoa_menu_item_add_item ([[[NSApp mainMenu] itemAtIndex: 0] submenu],
                             item, index);
 }
+
+/**
+ * gtkosx_application_set_about_item
+ * @self: The application object
+ * @item: The about menu item
+ *
+ * Sets the designated menu item as the "About <appname>", the first
+ * one on the App Menu. We take a GtkMenuItem* because it's less work
+ * for app developers than unwrapping a GtkAction for us to wrap in an
+ * NSAction.
+ */
+
+void
+gtkosx_application_set_about_item (GtkosxApplication* self,
+                                        GtkWidget* item)
+{
+  const static int about_index = 0;
+  const gchar * app_name = [get_application_name () UTF8String];
+  /* Translators: This is the "About foo" menu item at the top of the App menu. */
+  gtk_menu_item_set_label (GTK_MENU_ITEM (item), g_strdup_printf (_("About %s"), app_name));
+  cocoa_menu_item_add_item ([[[NSApp mainMenu] itemAtIndex: 0] submenu],
+                            item, about_index);
+}
+
 
 /**
  * gtkosx_application_set_window_menu:

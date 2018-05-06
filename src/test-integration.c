@@ -784,8 +784,7 @@ create_window (const gchar *title)
 #ifdef GTKOSXAPPLICATION
   GtkWidget *sep;
   gtkosx_application_set_menu_bar (theApp, GTK_MENU_SHELL (menubar));
-  gtkosx_application_insert_app_menu_item  (theApp, items->about_item,
-      0);
+  gtkosx_application_set_about_item  (theApp, items->about_item);
   sep = gtk_separator_menu_item_new ();
   g_object_ref (sep);
   gtkosx_application_insert_app_menu_item  (theApp, sep, 1);

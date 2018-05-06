@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gtk-mac-integration 2.0.8\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gtk-"
 "mac-integration\n"
-"POT-Creation-Date: 2018-05-06 10:05-0400\n"
+"POT-Creation-Date: 2018-05-06 15:16-0400\n"
 "PO-Revision-Date: 2018-05-03\n"
 "Last-Translator: Google Translate\n"
 "Language-Team: ca\n"
@@ -63,7 +63,8 @@ msgstr "Minimitzar"
 msgid "Bring All to Front"
 msgstr "Portar tot al capdavant"
 
-#: src/gtkosxapplication_quartz.c:860 src/gtkosxapplication_quartz.c:884
+#. Translators: This is the "About foo" menu item at the top of the App menu.
+#: src/gtkosxapplication_quartz.c:859 src/gtkosxapplication_quartz.c:883
 #, c-format
 msgid "About %s"
 msgstr "Sobre %s"

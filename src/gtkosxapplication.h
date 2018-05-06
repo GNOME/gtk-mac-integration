@@ -84,6 +84,8 @@ void gtkosx_application_sync_menubar (GtkosxApplication *self);
 void gtkosx_application_insert_app_menu_item (GtkosxApplication *self,
 					      GtkWidget *menu_item,
 					      gint index);
+void gtkosx_application_set_about_item (GtkosxApplication* self,
+                                        GtkWidget* item);
 void gtkosx_application_set_window_menu (GtkosxApplication *self,
 					 GtkMenuItem *menu_item);
 void gtkosx_application_set_help_menu (GtkosxApplication *self,
