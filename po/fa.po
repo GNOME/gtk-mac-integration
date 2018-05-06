@@ -62,3 +62,8 @@ msgstr "به حداقل رساندن"
 #: src/gtkosxapplication_quartz.c:359
 msgid "Bring All to Front"
 msgstr "بیاورید همه به جبهه"
+
+#: src/gtkosxapplication_quartz.c:860 src/gtkosxapplication_quartz.c:884
+#, c-format
+msgid "About %s"
+msgstr "%s درباره"

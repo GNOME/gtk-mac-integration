@@ -28,7 +28,7 @@ msgstr "서비스"
 #: src/gtkosxapplication_quartz.c:270
 #, c-format
 msgid "Hide %s"
-msgstr "숨기기 %s"
+msgstr "%s 숨기기"
 
 #. Translators: This is the "Hide Others" menu item for the "Apple" menu.
 #: src/gtkosxapplication_quartz.c:284
@@ -46,7 +46,7 @@ msgstr "모두보기"
 #: src/gtkosxapplication_quartz.c:306
 #, c-format
 msgid "Quit %s"
-msgstr "종료 %s"
+msgstr "%s 종료"
 
 #. Translators: This is the title of the Window menu in the menubar.
 #: src/gtkosxapplication_quartz.c:339
@@ -62,3 +62,8 @@ msgstr "최소화"
 #: src/gtkosxapplication_quartz.c:359
 msgid "Bring All to Front"
 msgstr "모두 앞으로 가져오기"
+
+#: src/gtkosxapplication_quartz.c:860 src/gtkosxapplication_quartz.c:884
+#, fuzzy, c-format
+msgid "About %s"
+msgstr "%s 정보"

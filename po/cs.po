@@ -62,3 +62,8 @@ msgstr "Minimalizovat"
 #: src/gtkosxapplication_quartz.c:359
 msgid "Bring All to Front"
 msgstr "Přenést vše do popředí"
+
+#: src/gtkosxapplication_quartz.c:860 src/gtkosxapplication_quartz.c:884
+#, c-format
+msgid "About %s"
+msgstr "O %sovi"

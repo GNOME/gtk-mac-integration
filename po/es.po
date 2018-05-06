@@ -62,3 +62,8 @@ msgstr "Minimizar"
 #: src/gtkosxapplication_quartz.c:359
 msgid "Bring All to Front"
 msgstr "Traer todo al frente"
+
+#: src/gtkosxapplication_quartz.c:860 src/gtkosxapplication_quartz.c:884
+#, c-format
+msgid "About %s"
+msgstr "Sobre %s"

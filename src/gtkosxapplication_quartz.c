@@ -853,8 +853,10 @@ gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
 {
   gtk_widget_set_visible (item, TRUE);
   if (index == 0)
-    return;
-
+    {
+      const gchar * app_name = [get_application_name () UTF8String];
+      gtk_menu_item_set_label (GTK_MENU_ITEM (item), g_strdup_printf (_("About %s"), app_name));
+    }
   cocoa_menu_item_add_item ([[[NSApp mainMenu] itemAtIndex: 0] submenu],
                             item, index);
 }

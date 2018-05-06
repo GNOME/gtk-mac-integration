@@ -28,7 +28,7 @@ msgstr "Hizmetler"
 #: src/gtkosxapplication_quartz.c:270
 #, c-format
 msgid "Hide %s"
-msgstr "Gizlemek %s"
+msgstr "%s'ı gizle"
 
 #. Translators: This is the "Hide Others" menu item for the "Apple" menu.
 #: src/gtkosxapplication_quartz.c:284
@@ -46,7 +46,7 @@ msgstr "Tüm"
 #: src/gtkosxapplication_quartz.c:306
 #, c-format
 msgid "Quit %s"
-msgstr "Çık %s"
+msgstr "%s'ı bırak"
 
 #. Translators: This is the title of the Window menu in the menubar.
 #: src/gtkosxapplication_quartz.c:339
@@ -62,3 +62,8 @@ msgstr "Azaltmak"
 #: src/gtkosxapplication_quartz.c:359
 msgid "Bring All to Front"
 msgstr "Tüm Öne Getir"
+
+#: src/gtkosxapplication_quartz.c:860 src/gtkosxapplication_quartz.c:884
+#, c-format
+msgid "About %s"
+msgstr "%s hakkında"

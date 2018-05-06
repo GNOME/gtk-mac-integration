@@ -62,3 +62,8 @@ msgstr "最小化"
 #: src/gtkosxapplication_quartz.c:359
 msgid "Bring All to Front"
 msgstr "把所有要接待"
+
+#: src/gtkosxapplication_quartz.c:860 src/gtkosxapplication_quartz.c:884
+#, c-format
+msgid "About %s"
+msgstr "關於%s"

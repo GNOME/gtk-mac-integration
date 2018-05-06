@@ -62,3 +62,8 @@ msgstr "Minimera"
 #: src/gtkosxapplication_quartz.c:359
 msgid "Bring All to Front"
 msgstr "Ta med alla längst fram"
+
+#: src/gtkosxapplication_quartz.c:860 src/gtkosxapplication_quartz.c:884
+#, c-format
+msgid "About %s"
+msgstr "OM %s"
