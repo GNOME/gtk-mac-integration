@@ -38,7 +38,8 @@ G_BEGIN_DECLS
 typedef struct _GtkosxApplication GtkosxApplication;
 typedef struct _GtkosxApplicationPrivate GtkosxApplicationPrivate;
 typedef struct _GtkosxApplicationClass GtkosxApplicationClass;
-/** GtkosxApplicationMenuGroup:
+/**
+ * GtkosxApplicationMenuGroup:
  * @items: List of menu items in the group.
  *
  * A menu group is used to collect menu items between separators in

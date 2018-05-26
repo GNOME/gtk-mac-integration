@@ -421,6 +421,11 @@ mac_dock_attention_cb (GtkMacAttentionRequest *request)
 /* FIXME: Add listener for "application activated" and cancel any
  * requests.
  */
+/**
+ * gtk_mac_doc_attention_request:
+ * @dock: The dock object
+ * @type: The attention type flag
+ */
 GtkMacAttentionRequest *
 gtk_mac_dock_attention_request (GtkMacDock          *dock,
                                 GtkMacAttentionType  type)
@@ -447,6 +452,11 @@ gtk_mac_dock_attention_request (GtkMacDock          *dock,
   return request;
 }
 
+/**
+ * gtk_mac_dock_attention_cancel:
+ * @dock: The dock object
+ * @request: The request id we want to cancel.
+ */
 void
 gtk_mac_dock_attention_cancel (GtkMacDock             *dock,
                                GtkMacAttentionRequest *request)
