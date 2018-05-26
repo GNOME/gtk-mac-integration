@@ -24,6 +24,7 @@ compile
 *.pyc
 *.so
 *.defs
+*.gmo
 gtk-doc.make
 py-compile
 m4/*
