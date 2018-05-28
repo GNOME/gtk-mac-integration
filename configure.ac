@@ -1,6 +1,6 @@
 AC_PREREQ(2.52)
 
-AC_INIT(gtk-mac-integration, 2.1.1)
+AC_INIT(gtk-mac-integration, 2.1.2)
 # Before making a release, the LT_VERSION string should be modified.
 # The string is of the form C:R:A.
 # - If interfaces have been changed or added, but binary compatibility has
@@ -9,7 +9,7 @@ AC_INIT(gtk-mac-integration, 2.1.1)
 #   change to C+1:0:0
 # - If the interface is the same as the previous version, change to C:R+1:A
 
-GTK_MAC_INTEGRATION_LT_VERSION=3:0:1
+GTK_MAC_INTEGRATION_LT_VERSION=3:1:1
 AC_SUBST(GTK_MAC_INTEGRATION_LT_VERSION)
 AC_CONFIG_SRCDIR(src/gtk-mac-menu.c)
 AC_CONFIG_MACRO_DIR(m4)
