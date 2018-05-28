@@ -52,7 +52,7 @@ nsimage_from_resource (const gchar *name, const gchar* type, const gchar* subdir
   ns_name = [NSString stringWithUTF8String: name];
   ns_type = [NSString stringWithUTF8String: type];
   ns_subdir = [NSString stringWithUTF8String: subdir];
-  path = [[NSApp mainBundle] pathForResource: ns_name
+  path = [[NSBundle mainBundle] pathForResource: ns_name
 	  ofType: ns_type inDirectory: ns_subdir];
   if (path)
     image = [[[NSImage alloc] initWithContentsOfFile: path] autorelease];

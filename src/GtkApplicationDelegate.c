@@ -37,14 +37,18 @@ static gchar *utf8_path = NULL;
 				   GTKOSX_TYPE_APPLICATION);
       gboolean result = FALSE;
       if (sig)
-	g_signal_emit (app, sig, 0, utf8_path, &result);
+        {
+          g_signal_emit (app, sig, 0, utf8_path, &result);
+          g_free(utf8_path);
+          utf8_path = NULL;
+        }
       g_object_unref (app);
     }
 }
 
 -(BOOL) application: (NSApplication*)theApplication openFile: (NSString*) file
 {
-  utf8_path =  [file UTF8String];
+  utf8_path =  g_strdup([file UTF8String]);
   GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
   guint sig = g_signal_lookup ("NSApplicationOpenFile",
 			       GTKOSX_TYPE_APPLICATION);
@@ -52,6 +56,7 @@ static gchar *utf8_path = NULL;
   if (sig)
     {
       g_signal_emit (app, sig, 0, utf8_path, &result);
+      g_free(utf8_path);
       utf8_path = NULL;
     }
   g_object_unref (app);
@@ -78,6 +83,7 @@ static gchar *utf8_path = NULL;
   if (!result)
     {
       g_object_unref (app);
+      g_free (utf8_path);
       return NSTerminateNow;
     }
   else

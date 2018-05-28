@@ -51,7 +51,7 @@ gtkosx_create_cgimage_from_pixbuf (GdkPixbuf *pixbuf)
   image = CGImageCreate (pixbuf_width, pixbuf_height, 8,
                          has_alpha ? 32 : 24, rowstride,
                          colorspace,
-                         has_alpha ? kCGImageAlphaLast : 0,
+                         has_alpha ? kCGBitmapAlphaInfoMask: 0,
                          data_provider, NULL, FALSE,
                          kCGRenderingIntentDefault);
 

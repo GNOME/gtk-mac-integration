@@ -59,6 +59,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <libintl.h>
+#include <stdlib.h>
 
 /* Uncomment ONE of these to test menu-mangling: */
 //#define GTKMACINTEGRATION
@@ -618,12 +619,12 @@ static gboolean
 app_open_file_cb (GtkosxApplication *app, gchar *path, gpointer user_data)
 {
   GtkWindow *parent = GTK_WINDOW(user_data);
-  GtkDialog *dialog = gtk_message_dialog_new (parent,
+  GtkWidget *dialog = gtk_message_dialog_new (parent,
 					      GTK_DIALOG_DESTROY_WITH_PARENT,
 					      GTK_MESSAGE_INFO,
 					      GTK_BUTTONS_CLOSE,
 					      "File open event for %s", path);
-  gtk_dialog_run (dialog);
+  gtk_dialog_run (GTK_DIALOG(dialog));
   gtk_widget_destroy (dialog);
   return FALSE;
 }
@@ -860,7 +861,7 @@ main (int argc, char **argv)
     g_signal_connect (theApp, "NSApplicationWillTerminate",
                       G_CALLBACK (app_will_quit_cb), NULL);
     g_signal_connect (theApp, "NSApplicationOpenFile",
-                      G_CALLBACK (app_open_file_cb), (gconstpointer)window1);
+                      G_CALLBACK (app_open_file_cb), (gpointer)window1);
   }
 # ifndef QUARTZ_HANDLERS
   gtkosx_application_set_use_quartz_accelerators (theApp, FALSE);
