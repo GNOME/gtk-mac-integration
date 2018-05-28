@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gtk-mac-integration 2.0.8\n"
+"Project-Id-Version: gtk-mac-integration 2.1.1\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gtk-"
 "mac-integration\n"
 "POT-Creation-Date: 2018-05-06 15:16-0400\n"

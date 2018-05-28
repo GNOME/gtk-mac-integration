@@ -1,5 +1,5 @@
 Changes from version gtk-mac-integration-2.0.8 to version
-        gtk-mac-integration-2.1.0
+        gtk-mac-integration-2.1.1
 
 * Add bit-compiled translation files to gitignore.
 * Add function gtkosx_application_set_about_item. Prefer this to setting
@@ -11,6 +11,8 @@ Changes from version gtk-mac-integration-2.0.8 to version
        https://jralls.github.io/gtk-mac-integration.
 * Change Spanish translation of 'Quit'.
 * Set PREFIX to default_prefix if --prefix isn't set.
+* Correct Latvian translation code and file name.
+* Polish translation by a human translator!
 
 Changes from version gtk-mac-integration-2.0.7 to version
 	gtk-mac-integration-2.0.8
