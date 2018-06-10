@@ -30,6 +30,7 @@ gtkosx_create_cgimage_from_pixbuf (GdkPixbuf *pixbuf)
 {
   CGColorSpaceRef   colorspace;
   CGDataProviderRef data_provider;
+  GCBitmapInfo      bmi;
   CGImageRef        image;
   void             *data;
   gint              rowstride;
@@ -47,11 +48,13 @@ gtkosx_create_cgimage_from_pixbuf (GdkPixbuf *pixbuf)
   data_provider = CGDataProviderCreateWithData (NULL, data,
                   pixbuf_height * rowstride,
                   NULL);
+  bmi = kCGBitmapByteOrderDefault |
+    (CGBitmapInfo)(has_alpha ? kCGImageAlphaLast : kCGImageAlphaNone);
 
   image = CGImageCreate (pixbuf_width, pixbuf_height, 8,
                          has_alpha ? 32 : 24, rowstride,
                          colorspace,
-                         has_alpha ? kCGBitmapAlphaInfoMask: 0,
+                         bmi,
                          data_provider, NULL, FALSE,
                          kCGRenderingIntentDefault);
 
