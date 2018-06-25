@@ -30,7 +30,7 @@ gtkosx_create_cgimage_from_pixbuf (GdkPixbuf *pixbuf)
 {
   CGColorSpaceRef   colorspace;
   CGDataProviderRef data_provider;
-  GCBitmapInfo      bmi;
+  CGBitmapInfo      bmi;
   CGImageRef        image;
   void             *data;
   gint              rowstride;
