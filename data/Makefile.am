@@ -16,3 +16,5 @@ endif
 
 gtk-mac-integration.pc: ${default_pc_file}
 	cp ${default_pc_file} $@
+
+DISTCLEANFILES=gtk-mac-integration.pc
