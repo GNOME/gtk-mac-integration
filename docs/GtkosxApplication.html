@@ -334,7 +334,7 @@ more-or-less set up on the Gtk+ side, you need only hide the menu
 and call <code class="function">gtkosx_application_set_main_menu()</code>. Here's an example with
 GtkBuilder:</p>
 <div class="refsect3" lang="en">
-<a name="idp140591857430072"></a><h4>Setting the MenuBar</h4>
+<a name="idp140700768824168"></a><h4>Setting the MenuBar</h4>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -380,7 +380,7 @@ you're using GtkMenuItems instead of GtkActions, you'll need to
 connect a special handler as shown in the following example:</p>
 </div>
 <div class="refsect3" lang="en">
-<a name="idp140591858163976"></a><h4>Enabling Accelerators on Hidden Menus</h4>
+<a name="idp140700768831272"></a><h4>Enabling Accelerators on Hidden Menus</h4>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -503,13 +503,13 @@ window, as with changing pages in a GtkNotebook) you need to call</p>
 </div>
 
 <p></p>
-<p>N.B.: One GtkMenu function, <code class="function">gtk_menu_reorder_child()</code>, changes the
+<p>N.B.: One GtkMenu function, <a href="../gtk3/GtkMenu.html#gtk-menu-reorder-child"><code class="function">gtk_menu_reorder_child()</code></a>, changes the
 menu appearance without emitting a signal, so if you use that
 function in your code you'll need to call
 <a href="GtkosxApplication.html#gtkosx-application-sync-menubar" title="gtkosx_application_sync_menubar ()"><code class="function">gtkosx_application_sync_menubar()</code></a> afterwards.</p>
 </div>
 <div class="refsect3" lang="en">
-<a name="idp140591859873240"></a><h4>Dock Support</h4>
+<a name="idp140700768805336"></a><h4>Dock Support</h4>
 <p>The dock is that bar of icons that normally lives at the bottom of
 the display on a Mac (though it can be moved to one of the other
 sides; this author likes his on the left, which is where it was
@@ -534,7 +534,7 @@ They're all pretty simple, so you can just read the details below.</p>
 </ul></div>
 </div>
 <div class="refsect3" lang="en">
-<a name="idp140591859878312"></a><h4>Bundle Support</h4>
+<a name="idp140700768810408"></a><h4>Bundle Support</h4>
 <p>The last feature to which GtkosxApplication provides an interface
 is the bundle. Normally in OS X, graphical applications are packaged
 along with their non-standard dependencies and their resources
@@ -584,7 +584,7 @@ as long as that value is a string. If it isn't, then the function
 returns a null string ("").</p>
 </div>
 <div class="refsect3" lang="en">
-<a name="idp140591859889720"></a><h4>Notifications</h4>
+<a name="idp140700768741880"></a><h4>Notifications</h4>
 <p>Finally, notice the signals. These are emitted in response to the
 indicated OS X notifications. Except for
 <a href="GtkosxApplication.html#GtkosxApplication-NSApplicationBlockTermination" title="The “NSApplicationBlockTermination” signal"><span class="type">“NSApplicationBlockTermination”</span></a>, most programs
@@ -695,7 +695,7 @@ gtkosx_application_use_quartz_accelerators
 <a name="gtkosx-application-set-menu-bar"></a><h3>gtkosx_application_set_menu_bar ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_set_menu_bar (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                 <em class="parameter"><code><span class="type">GtkMenuShell</span> *menu_shell</code></em>);</pre>
+                                 <em class="parameter"><code><a href="../gtk3/GtkMenuShell.html#GtkMenuShell-struct"><span class="type">GtkMenuShell</span></a> *menu_shell</code></em>);</pre>
 <p>Set a window's menubar as the application menu bar. Call this once
 for each window as you create them. It works best if the menubar is
 reasonably fully populated before you call it. Once set, it will
@@ -754,7 +754,7 @@ the menus with signals blocked or disconnected.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_insert_app_menu_item
                                (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                <em class="parameter"><code><span class="type">GtkWidget</span> *menu_item</code></em>,
+                                <em class="parameter"><code><a href="../gtk3/GtkWidget.html#GtkWidget-struct"><span class="type">GtkWidget</span></a> *menu_item</code></em>,
                                 <em class="parameter"><code><span class="type">gint</span> index</code></em>);</pre>
 <p>Certain menu items (About, Check for updates, and Preferences in
 particular) are normally found in the so-called Application menu
@@ -803,7 +803,7 @@ inserted. The first item is 0.</p></td>
 <a name="gtkosx-application-set-window-menu"></a><h3>gtkosx_application_set_window_menu ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_set_window_menu (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                    <em class="parameter"><code><span class="type">GtkMenuItem</span> *menu_item</code></em>);</pre>
+                                    <em class="parameter"><code><a href="../gtk3/GtkMenuItem.html#GtkMenuItem-struct"><span class="type">GtkMenuItem</span></a> *menu_item</code></em>);</pre>
 <p>Sets a designated menu item already on the menu bar as the Window
 menu. This is the menu which contains a list of open windows for
 the application; by default it also provides menu items to minimize
@@ -840,7 +840,7 @@ will create a new menu for you, which will not be gettext translatable.</p>
 <a name="gtkosx-application-set-help-menu"></a><h3>gtkosx_application_set_help_menu ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_set_help_menu (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                  <em class="parameter"><code><span class="type">GtkMenuItem</span> *menu_item</code></em>);</pre>
+                                  <em class="parameter"><code><a href="../gtk3/GtkMenuItem.html#GtkMenuItem-struct"><span class="type">GtkMenuItem</span></a> *menu_item</code></em>);</pre>
 <p>Sets a designated menu item already on the menu bar as the Help
 menu. Call this after <code class="function">gtk_osx_application_set_menu_bar()</code>, but
 before <code class="function">gtk_osx_application_window_menu()</code>, especially if you're
@@ -877,7 +877,7 @@ for you, which will not be gettext translatable.</p>
 <a name="gtkosx-application-set-dock-menu"></a><h3>gtkosx_application_set_dock_menu ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_set_dock_menu (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                  <em class="parameter"><code><span class="type">GtkMenuShell</span> *menu_shell</code></em>);</pre>
+                                  <em class="parameter"><code><a href="../gtk3/GtkMenuShell.html#GtkMenuShell-struct"><span class="type">GtkMenuShell</span></a> *menu_shell</code></em>);</pre>
 <p>Set a GtkMenu as the dock menu.</p>
 <p>This menu does not have a "sync" function, so changes made while
 signals are disconnected will not update the menu which appears in
@@ -914,7 +914,7 @@ pass it in</p></td>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_set_dock_icon_pixbuf
                                (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                <em class="parameter"><code><span class="type">GdkPixbuf</span> *pixbuf</code></em>);</pre>
+                                <em class="parameter"><code><a href="../gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf-struct"><span class="type">GdkPixbuf</span></a> *pixbuf</code></em>);</pre>
 <p>Set the dock icon from a GdkPixbuf</p>
 <div class="refsect3" lang="en">
 <a name="gtkosx-application-set-dock-icon-pixbuf.parameters"></a><h4>Parameters</h4>
@@ -1142,6 +1142,23 @@ a string, returns that; otherwise returns <code class="literal">NULL</code>.</p>
   GList *items;
 };
 </pre>
+<p>A menu group is used to collect menu items between separators in
+the Application menu.</p>
+<div class="refsect3" lang="en">
+<a name="GtkosxApplicationMenuGroup.members"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td class="struct_member_name"><p><span class="type">GList</span> *<em class="structfield"><code><a name="GtkosxApplicationMenuGroup.items"></a>items</code></em>;</p></td>
+<td class="struct_member_description"><p>List of menu items in the group.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2" lang="en">
@@ -1357,7 +1374,7 @@ user_function (<a href="GtkosxApplication.html" title="GtkosxApplication"><span 
                <span class="type">gpointer</span>           user_data)</pre>
 <p>Emitted by the Application Delegate when the application reeeives
 an NSApplicationSWillTerminate notification. Connect your final
-shutdown routine (the one that calls <code class="function">gtk_main_quit()</code> here.</p>
+shutdown routine (the one that calls <a href="../gtk3/gtk3-General.html#gtk-main-quit"><code class="function">gtk_main_quit()</code></a> here.</p>
 <div class="refsect3" lang="en">
 <a name="GtkosxApplication-NSApplicationWillTerminate.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">

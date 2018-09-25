@@ -1,5 +1,40 @@
-Changes from version gtk-mac-integration-2.0.7 to version
-	gtk-mac-integration-2.0.8
+Changes in 2.1.3:
+Mitsutoshi Aoe
+	Fix invalid image alphaInfo error.
+Mario Blättermann
+	Update German translation.
+Piotr Drąg
+        Update MSGID_BUGS_ADDRESS
+Rafael Fontenelle
+	Add Brazilian Portuguese translation.
+Daniel Hodan
+	Fix typo in CGBitmapInfo.
+Ignacio Casal Quinteiro
+        Use glib instead of the custom gettext code.
+Kukuh Syafaat
+        Add Indonesian translation
+
+Changes in 2.1.2:
+John Ralls
+        Add gettext.h to the dist.
+        Fix some compile warnings.
+
+Changes in 2.1.1:
+Piotr Drąg
+        Move Latvian translation to the correct language code.
+        Provide human translation for Polish.
+John Ralls
+        Set PREFIX to default_prefix if no option --prefix is passed to
+          configure.
+        Commit documentation so that it appears at
+          https://jralls.github.io/gtk-mac-integration.
+        Remove obsolete dependency on gnome-common.
+        Convert translation handling to gettext.
+        Add function gtkosx_application_set_about_item. Prefer this to
+          setting the 0th item with
+          gtkosx_application_insert_app_menu_item.
+
+Changes in 2.0.8:
 Brett Machiels
 	Use pkgconfig for PyGObject2 datadir
 	Provide for overriding libtoolize
@@ -16,14 +51,12 @@ Ting Ping
 	Use gnome-autogen.sh
 	Update configure.ac for automake 1.11
 
-Changes from version gtk-mac-integration-2.0.6 to version
-	gtk-mac-integration-2.0.7
+Changes in 2.0.7:
 John Ralls
 	Bug 739492 - Default key binding for hiding window on OS X does
 	not work.
 
-Changes from version gtk-mac-integration-2.0.5 to version
-	gtk-mac-integration-2.0.6
+Changes in 2.0.6:
 John Ralls
 	Add a suffix to distinguish Gtk2 and Gtk3 libraries -- Daniel Sabo
 	Prevent accessing menu itemAtIndex:-1, which crashed.
@@ -32,8 +65,7 @@ John Ralls
 Kevin Bernhagen and Josh Pettus:
 	Bug 740510: Update localization strings to match GtkosxApplication name.
 
-Changes from version gtk-mac-integration-2.0.4 to version
-	gtk-mac-integration-2.0.5
+Changes in 2.0.5:
 John Ralls (8):
       Bug 709427 - gtk-mac-integration: app menu issues in 2.0.4
       Remove commented-out code from previous change
@@ -45,20 +77,17 @@ John Ralls (8):
       Enable BUILT_UI in test-integration while suppressing gtk deprecated
 	warnings
 
-Changes from version gtk-mac-integration-2.0.3 to version
-	gtk-mac-integration-2.0.4
+Changes in 2.0.4:
 
 John Ralls (2):
       Fix a refcounting bug & menu index bug
 
-Changes from version gtk-mac-integration-2.0.2 to version
-	gtk-mac-integration-2.0.3
+Changes in 2.0.3:
 John Ralls (3):
       Replace 10.6-only NSRunningApplication with NSBundle
       Fix minimum version to one that exists in 10.5
 
-Changes from version gtk-mac-integration-2.0.1 to version
-	gtk-mac-integration-2.0.2
+Changes in 2.0.2:
 John Ralls (18):
       Ensure HAVE_INTROSPECTION is defined
       Bug 699987 - gtk-mac-integration build failure: can't find automake
@@ -76,13 +105,11 @@ John Ralls (18):
       Bug 707882 - App menu shows "About", "Hide", "Quit",
       Fix missing localization of "Help" in the main menu bar.
 
-Changes from version gtk-mac-integration-2.0.0 to version
-	gtk-mac-integration-2.0.1:
+Changes in 2.0.1:
 John Ralls (1):
 	Fix some compilation errors when building pyGtk bindings.
 
-Changes from version gtk-mac-integration-1.0.1 to version
-	gtk-mac-integration-2.0.0:
+Changes in 2.0.0:
 John Ralls (22):
       Change 'NSAlternate' to be used with GDK_MOD1_MASK, matching changes
          in Gtk keyhandling.
@@ -122,7 +149,7 @@ Richard Procter (1):
 Roy Liu (1):
       Add the missing G_END_DECLS macro to gtkosxapplication.h
 
-Changes from version gtk-mac-integration-1.0.0 to version gtk-mac-integration-1.0.1:
+Changes in 1.0.1:
 John Ralls (9):
       Add to extra-dist the test data files accel_map and src/testui.xml
       Strings: Fix error in install script.
@@ -133,7 +160,7 @@ John Ralls (9):
       Update internals of former ige-mac-foo files
       strings: Fix the same error in the uninstall script.
 
-Changes from version ige-mac-integration-0.9.8 to version gtk-mac-integration-1.0.0:
+Changes in 1.0.0:
 John Ralls (11):
       Replace the single static emission_hook_id with stuffing the id for
          each main menu as a qdata on the menu shell.
@@ -147,7 +174,7 @@ John Ralls (11):
       Make package work with "make dist"
       Documentation updates for 1.0.0 Release
 
-Changes from version ige-mac-integration-0.9.7 to version ige-mac-integration-0.9.8:
+Changes in 0.9.8:
 John Ralls (13):
       Fix compile error with IGE_MAC_INTEGRATION defined.
       Cleanup trailing whitespace.
@@ -173,7 +200,7 @@ John Ralls (13):
          and pygobject-2.28 or better is present.
       Add bindings which work with PyGI (replaced PyGtk).
 
-Changes from version ige-mac-integration-0.9.6 to version ige-mac-integration-0.9.7:
+Changes in 0.9.7:
 John Ralls (7):
       Cast to GNSMenuItem so that the setHidden method is found when
          building for Tiger.
@@ -188,7 +215,7 @@ John Ralls (7):
          Richard Proctor for pointing this out.
       Clean up trailing whitespace in configure.ac
 
-Changes from version ige-mac-integration-0.9.5 to version ige-mac-integration-0.9.6:
+Changes in 0.9.6:
 John Ralls (11):
       Remove the semicolons from the macro definitions; they caused errors
          when using the macros in the declaration section of a code block.
@@ -212,7 +239,7 @@ John Ralls (11):
          item.
       Use gdkkeysyms-compat for versions of Gtk after 2.90.7
 
-Changes from version ige_mac_integration-0.9.4 to version ige-mac-integration-0.9.5:
+Changes in 0.9.5
 John Ralls (6):
       Protect the creation of the static GtkOSXApplication pointer with a
          GStaticMutex for thread safety.
@@ -229,7 +256,7 @@ John Ralls (6):
 Richard Procter (1):
       Make bundle functions "free"
 
-Changes from version ige_mac_integration-0.9.3 to version ige_mac_integration-0.9.4:
+Changes in 0.9.4:
 Hamish Mackenzie (1):
       Menu_event_handler_func: return eventNotHandledErr instead of calling
          the next event (which EventManager will do when it gets the
@@ -251,7 +278,7 @@ John Ralls (9):
       Corrected ifdef error which prevented test-integration from building
          in GTKOSXAPPLICATION mode.
 
-Changes from version ige_mac_integration-0.9.2 to version ige_mac_integration-0.9.3:
+Changes in 0.9.3:
 John Ralls (14):
       Make bundle functions return duplicated gchar* instead of the const
          gchar* pointing into the NSString object. This corrects some ugly
@@ -273,7 +300,7 @@ John Ralls (14):
       Add standard key equivalents to selected menu items in Application
          and Window menus.
 
-Changes from version ige_mac_integration-0.9.1 to version ige_mac_integration-0.9.2:
+Changes in 0.9.2:
 John Ralls (12):
       Add Paul Davis.
       Restore the docs Makefiles to AC_OUTPUT, mysteriously deleted in a
@@ -292,7 +319,7 @@ John Ralls (12):
          two-stage shutdown.
       Make the creation of docs conditional on --enable-gtk-docs.
 
-Changes from version ige_mac_integration-0.9.0 to version ige_mac_integration-0.9.1:
+Changes in 0.9.1:
 John Ralls (6):
       Tiger compatibility fixes
       Minor documentation errors
@@ -302,7 +329,7 @@ John Ralls (6):
       Add the notification object to self->priv to ensure its orderly
          destruction at shutdown.
 
-Changes from version ige_mac_integration-0.8.6 to version ige_mac_integration-0.9.0:
+Changes in 0.9.0:
 John Ralls (144):
       Fix ticket #13 (window focus). Thanks to Steffen Gutmann.
       Add check for parent so menubars which aren't attached to windows
@@ -529,7 +556,7 @@ John Ralls (144):
       New version 0.9.0
       Fix URL in README
 
-Changes from version ige-mac-integration-0.8.5 to version ige_mac_integration-0.8.6:
+Changes in 0.8.6:
 John Ralls (10):
       Provide separate menubars for different windows.
       Corrected return type (and value) of window_focus event handler,
@@ -549,7 +576,7 @@ John Ralls (10):
          refocus to another window in the app, but this is a gtk+-quartz
          problem, not a menu problem.
 
-Changes from version ige-mac-integration-0.8.4 to version ige-mac-integration-0.8.5:
+Changes in 0.8.5:
 John Ralls (13):
       Reformatted for better readability.
       Rearranged some if blocks to reduce excessive indenting.
@@ -566,7 +593,7 @@ John Ralls (13):
       Just increment the carbon_item->index after an insert instead of
          trying to delete the menu item and get everything relinked.
 
-Changes from version ige_mac_integration-0.8.0 to version ige-mac-integration-0.8.4:
+Changes in 0.8.4:
 John Ralls (3):
       Added -DMAC_INTEGRATION
       Updated URL in README
