@@ -38,7 +38,8 @@
 #include "cocoa_menu.h"
 #include "getlabel.h"
 #include "gtkosx-image.h"
-#include "gettext.h"
+
+#include <glib/gi18n-lib.h>
 
 #if GTK_CHECK_VERSION (2, 90, 7)
 #include <gdk/gdkkeysyms-compat.h>
@@ -50,7 +51,6 @@
 #undef G_LOG_DOMAIN
 #endif
 #define G_LOG_DOMAIN "gtkosxapplication"
-#define _(s) dgettext (PACKAGE_NAME, s)
 
 /* This is a private function in libgdk; we need to have is so that we
    can force new windows onto the Window menu */

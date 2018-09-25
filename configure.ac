@@ -36,8 +36,15 @@ AC_PROG_OBJC
 AM_PROG_CC_C_O
 AM_PROG_AR
 AM_PROG_LIBTOOL
+
+dnl ================================================================
+dnl Gettext stuff.
+dnl ================================================================
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.19.8])
+
+AC_SUBST([GETTEXT_PACKAGE], [gtk-mac-integration])
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], "$GETTEXT_PACKAGE", [Define to the gettext package name.])
 
 AM_PATH_GLIB_2_0([2.14.0])
 AC_MSG_CHECKING([GLib Version])

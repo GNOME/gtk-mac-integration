@@ -23,7 +23,6 @@ HEADER = \
 	cocoa_menu.h              \
 	cocoa_menu_item.h         \
 	getlabel.h                \
-        gettext.h                 \
 	GNSMenuBar.h              \
 	GNSMenuDelegate.h         \
 	GNSMenuItem.h             \
