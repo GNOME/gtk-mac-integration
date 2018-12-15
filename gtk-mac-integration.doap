@@ -28,8 +28,8 @@
 
   <repository>
     <GitRepository>
-        <browse rdf:resource="http://git.gnome.org/browse/gtk-mac-integration/"/>
-      <location rdf:resource="git://git.gnome.org/gtk-mac-integration"/>
+        <browse rdf:resource="https://gitlab.gnome.org/GNOME/gtk-mac-integration"/>
+      <location rdf:resource="https://gitlab.gnome.org/GNOME/gtk-mac-integration.git"/>
     </GitRepository>
   </repository>
 
