@@ -1,26 +1,26 @@
 # Gtk-mac-integration Library.
 # Copyright (C) YEAR John Ralls <jralls@ceridwen.us>
 # This file is distributed under the same license as the gtk-mac-integration package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# scootergrisen, 2019.
 msgid ""
 msgstr ""
-"Project-Id-Version: gtk-mac-integration 2.1.1\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gtk-mac-integration/"
-"issues\n"
-"POT-Creation-Date: 2018-09-25 11:20-0700\n"
-"PO-Revision-Date: 2018-05-03\n"
-"Last-Translator: Google Translate\n"
-"Language-Team: da\n"
+"Project-Id-Version: gtk-mac-integration master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gtk-mac-"
+"integration/issues\n"
+"POT-Creation-Date: 2018-09-25 21:25+0000\n"
+"PO-Revision-Date: 2019-02-15 04:48+0200\n"
+"Last-Translator: scootergrisen\n"
+"Language-Team: Danish\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Translators: This is the Services menu item for the "Apple" menu.
 #: src/gtkosxapplication_quartz.c:251
 msgid "Services"
-msgstr "Services"
+msgstr "Tjenester"
 
 #. Translators: This is the "Hide" menu item of the "Apple"
 #. menu. The parameter is the application name.
@@ -33,7 +33,7 @@ msgstr "Skjul %s"
 #. Translators: This is the "Hide Others" menu item for the "Apple" menu.
 #: src/gtkosxapplication_quartz.c:284
 msgid "Hide Others"
-msgstr "Skjul Andre"
+msgstr "Skjul andre"
 
 #. Translators: This is the Show All menu item in the "Apple" menu.
 #: src/gtkosxapplication_quartz.c:291
@@ -61,7 +61,7 @@ msgstr "Minimer"
 #. Translators: This is a menu item in the Window menu.
 #: src/gtkosxapplication_quartz.c:359
 msgid "Bring All to Front"
-msgstr "Bring alle for at Front"
+msgstr "Anbring alle forrest"
 
 #. Translators: This is the "About foo" menu item at the top of the App menu.
 #: src/gtkosxapplication_quartz.c:859 src/gtkosxapplication_quartz.c:883
