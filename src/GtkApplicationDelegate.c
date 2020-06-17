@@ -22,30 +22,84 @@
 
 #import "GtkApplicationDelegate.h"
 #include <gtk/gtk.h>
+#include <gmodule.h>
 #include "gtkosxapplication.h"
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 10130
+static GSList *utf8_paths = NULL;
+#else
 static gchar *utf8_path = NULL;
-
+#endif
 @implementation GtkApplicationDelegate
 
 -(void) applicationDidFinishLaunching: (NSNotification*)aNotification
 {
-  if (utf8_path != NULL)
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 10130
+    if (utf8_paths != NULL)
     {
-      GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
       guint sig = g_signal_lookup ("NSApplicationOpenFile",
-				   GTKOSX_TYPE_APPLICATION);
-      gboolean result = FALSE;
+                                           GTKOSX_TYPE_APPLICATION);
       if (sig)
+      {
+        GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
+        gboolean result = TRUE;
+        g_signal_emit (app, sig, 0, utf8_paths, &result);
+        if (result == TRUE)
         {
-          g_signal_emit (app, sig, 0, utf8_path, &result);
-          g_free(utf8_path);
-          utf8_path = NULL;
+          [app replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
         }
-      g_object_unref (app);
+        else
+        {
+          [app replyToOpenOrPrint:NSApplicationDelegateReplyFailure];
+        }
+        g_slist_free_full(utf8_paths, g_free);
+        utf8_paths = NULL;
+        g_object_unref (app);
+      }
     }
+#else
+    if (utf8_path != NULL)
+    {
+      guint sig = g_signal_lookup ("NSApplicationOpenFile",
+                          GTKOSX_TYPE_APPLICATION);
+      if (sig)
+      {
+        gboolean result = FALSE;
+        GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
+        g_signal_emit (app, sig, 0, utf8_path, &result);
+        g_free(utf8_path);
+        utf8_path = NULL;
+        g_object_unref (app);
+      }
+    }
+#endif
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 10130
+-(void) application: (NSApplication*)theApplication openURLs: (NSArray<NSURL *> *) urls
+{
+  guint sig = g_signal_lookup ("NSApplicationOpenFile",
+			                   GTKOSX_TYPE_APPLICATION);
+  if (sig)
+  {
+    GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
+      for (NSURL* url in urls)
+      {
+        gboolean result = TRUE;
+        utf8_paths = g_slist_append(utf8_paths, g_strdup([[url absoluteString] UTF8String]));
+        g_signal_emit (app, sig, 0, [[url absoluteString] UTF8String], &result);
+        if (result == FALSE)
+        {
+          [theApplication replyToOpenOrPrint:NSApplicationDelegateReplyFailure];
+        }
+      }
+    [theApplication replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
+    g_slist_free_full(utf8_paths, g_free);
+    utf8_paths = NULL;
+    g_object_unref (app);
+  }
+}
+#else
 -(BOOL) application: (NSApplication*)theApplication openFile: (NSString*) file
 {
   utf8_path =  g_strdup([file UTF8String]);
@@ -62,7 +116,7 @@ static gchar *utf8_path = NULL;
   g_object_unref (app);
   return result;
 }
-
+#endif
 
 -(NSApplicationTerminateReply) applicationShouldTerminate: (NSApplication *)sender
 {
@@ -83,7 +137,11 @@ static gchar *utf8_path = NULL;
   if (!result)
     {
       g_object_unref (app);
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 10130
+      g_slist_free_full(utf8_paths, g_free);
+#else
       g_free (utf8_path);
+#endif
       return NSTerminateNow;
     }
   else
