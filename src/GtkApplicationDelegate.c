@@ -38,7 +38,7 @@ static gchar *utf8_path = NULL;
     if (utf8_paths != NULL)
     {
       guint sig = g_signal_lookup ("NSApplicationOpenFile",
-                                           GTKOSX_TYPE_APPLICATION);
+                                   GTKOSX_TYPE_APPLICATION);
       if (sig)
       {
         GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
@@ -61,7 +61,7 @@ static gchar *utf8_path = NULL;
     if (utf8_path != NULL)
     {
       guint sig = g_signal_lookup ("NSApplicationOpenFile",
-                          GTKOSX_TYPE_APPLICATION);
+                                   GTKOSX_TYPE_APPLICATION);
       if (sig)
       {
         gboolean result = FALSE;
@@ -79,7 +79,7 @@ static gchar *utf8_path = NULL;
 -(void) application: (NSApplication*)theApplication openURLs: (NSArray<NSURL *> *) urls
 {
   guint sig = g_signal_lookup ("NSApplicationOpenFile",
-			                   GTKOSX_TYPE_APPLICATION);
+                               GTKOSX_TYPE_APPLICATION);
   if (sig)
   {
     GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
@@ -105,7 +105,7 @@ static gchar *utf8_path = NULL;
   utf8_path =  g_strdup([file UTF8String]);
   GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
   guint sig = g_signal_lookup ("NSApplicationOpenFile",
-			       GTKOSX_TYPE_APPLICATION);
+                               GTKOSX_TYPE_APPLICATION);
   gboolean result = FALSE;
   if (sig)
     {
