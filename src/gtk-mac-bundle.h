@@ -21,7 +21,7 @@
 #ifndef __GTK_MAC_BUNDLE_H__
 #define __GTK_MAC_BUNDLE_H__
 
-#ifndef __x86_64__
+#ifndef __LP64__
 #include <glib-object.h>
 
 G_BEGIN_DECLS
@@ -60,5 +60,5 @@ gchar *       gtk_mac_bundle_get_resource_path (GtkMacBundle *bundle,
 
 G_END_DECLS
 
-#endif /* __x86_64__*/
+#endif /* __LP64__*/
 #endif /* __GTK_MAC_BUNDLE_H__ */

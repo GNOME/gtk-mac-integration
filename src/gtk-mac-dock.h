@@ -23,7 +23,7 @@
 
 #ifndef __GTK_MAC_DOCK_H__
 #define __GTK_MAC_DOCK_H__
-#ifndef __x86_64__
+#ifndef __LP64__
 
 #include <gtk/gtk.h>
 #include <gtk-mac-bundle.h>
@@ -84,5 +84,5 @@ GType                   gtk_mac_attention_type_get_type        (void);
 
 G_END_DECLS
 
-#endif /* __x86_64__ */
+#endif /* __LP64__ */
 #endif /* __GTK_MAC_DOCK_H__ */
