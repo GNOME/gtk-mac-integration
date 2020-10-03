@@ -1,21 +1,22 @@
 # Gtk-mac-integration Library.
 # Copyright (C) YEAR John Ralls <jralls@ceridwen.us>
 # This file is distributed under the same license as the gtk-mac-integration package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Emin Tufan Çetin <etcetin@gmail.com>, 2020.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gtk-mac-integration 2.1.1\n"
+"Project-Id-Version: gtk-mac-integration master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gtk-mac-integration/"
 "issues\n"
-"POT-Creation-Date: 2018-09-25 11:20-0700\n"
-"PO-Revision-Date: 2018-05-03\n"
-"Last-Translator: Google Translate\n"
-"Language-Team: tr\n"
+"POT-Creation-Date: 2020-06-17 18:30+0000\n"
+"PO-Revision-Date: 2020-10-03 14:05+0000\n"
+"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. Translators: This is the Services menu item for the "Apple" menu.
 #: src/gtkosxapplication_quartz.c:251
@@ -28,17 +29,17 @@ msgstr "Hizmetler"
 #: src/gtkosxapplication_quartz.c:270
 #, c-format
 msgid "Hide %s"
-msgstr "%s'ı gizle"
+msgstr "%s’ı Gizle"
 
 #. Translators: This is the "Hide Others" menu item for the "Apple" menu.
 #: src/gtkosxapplication_quartz.c:284
 msgid "Hide Others"
-msgstr "Diğerlerini sakla"
+msgstr "Diğerlerini Gizle"
 
 #. Translators: This is the Show All menu item in the "Apple" menu.
 #: src/gtkosxapplication_quartz.c:291
 msgid "Show All"
-msgstr "Tüm"
+msgstr "Tümünü Göster"
 
 #. Translators: This is the Quit menu item for the "Apple" menu. The
 #. parameter is the application name.
@@ -46,7 +47,7 @@ msgstr "Tüm"
 #: src/gtkosxapplication_quartz.c:306
 #, c-format
 msgid "Quit %s"
-msgstr "%s'ı bırak"
+msgstr "%s’ten Çık"
 
 #. Translators: This is the title of the Window menu in the menubar.
 #: src/gtkosxapplication_quartz.c:339
@@ -56,15 +57,15 @@ msgstr "Pencere"
 #. Translators: This is the Minimize menuitem for the Window menu.
 #: src/gtkosxapplication_quartz.c:355
 msgid "Minimize"
-msgstr "Azaltmak"
+msgstr "Küçült"
 
 #. Translators: This is a menu item in the Window menu.
 #: src/gtkosxapplication_quartz.c:359
 msgid "Bring All to Front"
-msgstr "Tüm Öne Getir"
+msgstr "Tümünü Öne Getir"
 
 #. Translators: This is the "About foo" menu item at the top of the App menu.
 #: src/gtkosxapplication_quartz.c:859 src/gtkosxapplication_quartz.c:883
 #, c-format
 msgid "About %s"
-msgstr "%s hakkında"
+msgstr "%s Hakkında"
