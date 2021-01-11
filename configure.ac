@@ -11,24 +11,13 @@ AC_INIT(gtk-mac-integration, 2.1.3)
 
 GTK_MAC_INTEGRATION_LT_VERSION=3:2:1
 AC_SUBST(GTK_MAC_INTEGRATION_LT_VERSION)
-AC_CONFIG_SRCDIR(src/gtk-mac-menu.c)
+AC_CONFIG_SRCDIR(src/gtkosxapplication.c)
 AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE([1.11 dist-bzip2 subdir-objects no-define foreign])
 
 AC_CONFIG_HEADERS(config.h)
 
 AM_DISABLE_STATIC
-AC_MSG_CHECKING([Bitness])
-AC_PREPROC_IFELSE(
-    [AC_LANG_PROGRAM([[]],[[#ifndef __x86_64__
-#error
-#endif
-	]])],
-    [AC_MSG_RESULT([64-BIT])
-     sixty_four_bit=yes],
-    [AC_MSG_RESULT([32-Bit])
-     sixty_four_bit=no])
-AM_CONDITIONAL([SIXTY_FOUR_BIT], [test x$sixty_four_bit = xyes])
 AC_ISC_POSIX
 AC_PROG_CC
 AC_HEADER_STDC
@@ -107,7 +96,6 @@ AC_CONFIG_FILES(
     src/Makefile
     bindings/Makefile
     bindings/python/Makefile
-    bindings/python/gtkmacintegration/Makefile
     bindings/python/gtkosx_application/Makefile
     data/Makefile
     docs/Makefile

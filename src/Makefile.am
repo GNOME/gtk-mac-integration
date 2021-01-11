@@ -14,9 +14,6 @@ SOURCES = \
 	gtkosxapplication_quartz.c		\
 	gtkosxapplication.c				\
 	gtkosx-image.c					\
-	gtk-mac-dock.c					\
-	gtk-mac-bundle.c				\
-	gtk-mac-menu.c					\
 	gtk-mac-image-utils.c
 
 HEADER = \
@@ -26,11 +23,7 @@ HEADER = \
 	GNSMenuBar.h              \
 	GNSMenuDelegate.h         \
 	GNSMenuItem.h             \
-	gtk-mac-bundle.h          \
-	gtk-mac-dock.h            \
 	gtk-mac-image-utils.h     \
-	gtk-mac-integration.h     \
-	gtk-mac-menu.h            \
 	gtk-mac-private.h         \
 	GtkApplicationDelegate.h  \
 	GtkApplicationNotify.h    \
@@ -57,13 +50,7 @@ libgtkmacintegration_gtk2_la_LDFLAGS = -framework Carbon -framework ApplicationS
 endif
 
 integration_includedir = $(includedir)/gtkmacintegration
-integration_include_HEADERS =				\
-	gtk-mac-integration.h				\
-	gtkosxapplication.h				\
-	gtk-mac-menu.h					\
-	gtk-mac-dock.h					\
-	gtk-mac-bundle.h
-
+integration_include_HEADERS = gtkosxapplication.h
 noinst_PROGRAMS =
 test_integration_gtk3_CFLAGS =
 if WITH_GTK3

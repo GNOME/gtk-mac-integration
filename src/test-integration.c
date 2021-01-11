@@ -13,7 +13,7 @@
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -61,22 +61,12 @@
 #include <libintl.h>
 #include <stdlib.h>
 
-/* Uncomment ONE of these to test menu-mangling: */
-//#define GTKMACINTEGRATION
-#define GTKOSXAPPLICATION
 
 /* These others are optional */
 #define GTK_DISABLE_DEPRECATION_WARNINGS 1
 #define BUILT_UI //The built UI uses deprecated functions
 //#define QUARTZ_HANDLERS
 
-/* GTKMACINTEGRATION uses Carbon, which isn't available for 64-bit builds. */
-#ifdef __x86_64__
-#undef GTKMACINTEGRATION
-# ifndef GTKOSXAPPLICATION
-#define GTKOSXAPPLICATION
-# endif
-#endif //__x86_64__
 
 #if GTK_CHECK_VERSION (2, 90, 7)
 #include <gdk/gdkkeysyms-compat.h>
@@ -84,14 +74,7 @@
 #include <gdk/gdkkeysyms.h>
 #endif
 
-#ifdef GTKMACINTEGRATION
-#include "gtk-mac-menu.h"
-#include "gtk-mac-dock.h"
-#include "gtk-mac-bundle.h"
-#endif
-#ifdef GTKOSXAPPLICATION
 #include "gtkosxapplication.h"
-#endif
 #include <config.h>
 
 typedef struct
@@ -374,7 +357,7 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
   items->about_item = gtk_menu_item_new_with_label ("About");
 #else
   items->about_item = gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT,
-							  NULL);
+                                                          NULL);
 #endif
   g_signal_connect_data (items->about_item, "activate",
                          G_CALLBACK (menu_item_activate_cb),
@@ -386,45 +369,6 @@ test_setup_menu (MenuItems *items, GtkAccelGroup *accel)
 }
 #endif //not BUILT_UI
 
-#ifdef GTKMACINTEGRATION
-static void
-dock_clicked_cb (GtkMacDock *dock,
-                 GtkWindow  *window)
-{
-  g_print ("Dock clicked\n");
-  gtk_window_deiconify (window);
-}
-
-static void
-bounce_cb (GtkWidget  *button,
-           GtkMacDock *dock)
-{
-  gtk_mac_dock_attention_request (dock, GTK_MAC_ATTENTION_INFO);
-}
-
-static void
-change_icon_cb (GtkWidget  *button,
-                GtkMacDock *dock)
-{
-  static gboolean   changed;
-  static GdkPixbuf *pixbuf;
-
-  if (!pixbuf)
-    {
-      char filename[PATH_MAX];
-      snprintf (filename, sizeof (filename), "%s/%s", PREFIX,
-                "share/gtk-2.0/demo/gnome-foot.png");
-      pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
-    }
-
-  if (changed)
-    gtk_mac_dock_set_icon_from_pixbuf (dock, NULL);
-  else
-    gtk_mac_dock_set_icon_from_pixbuf (dock, pixbuf);
-
-  changed = !changed;
-}
-#elif defined GTKOSXAPPLICATION
 typedef struct
 {
   GtkosxApplication *app;
@@ -471,31 +415,16 @@ change_icon_cb (GtkWidget  *button,
 
   changed = !changed;
 }
-#else //Neither GTKMACINTEGRATION nor GTKOSXAPPLICATION
-static gboolean
-attention_cb (gpointer req)
-{
-}
-static void
-bounce_cb (GtkWidget  *button,
-           gpointer app)
-{
-}
-static void
-change_icon_cb (GtkWidget  *button,
-                gpointer app)
-{
-}
-#endif //GTKMACINTEGRATION
+
 static void
 toggle_prefs_cb (GtkWidget *button,
-		 gpointer user_data)
+                 gpointer user_data)
 {
   GtkWidget *window = gtk_widget_get_toplevel (button);
   MenuItems *items = g_object_get_qdata (G_OBJECT (window), menu_items_quark);
   gboolean state = gtk_widget_get_sensitive (GTK_WIDGET (items->preferences_item));
   g_print ("Setting Preferences Item sensitive to %s\n",
-	   state ? "False" : "True");
+           state ? "False" : "True");
   gtk_widget_set_sensitive (GTK_WIDGET (items->preferences_item), !state);
 }
 
@@ -589,7 +518,6 @@ view_menu_cb (GtkWidget *button, gpointer user_data)
 #endif //BUILT_UI
 }
 
-#ifdef GTKOSXAPPLICATION
 static void
 app_active_cb (GtkosxApplication* app, gboolean* data)
 {
@@ -620,35 +548,25 @@ app_open_file_cb (GtkosxApplication *app, gchar *path, gpointer user_data)
 {
   GtkWindow *parent = GTK_WINDOW(user_data);
   GtkWidget *dialog = gtk_message_dialog_new (parent,
-					      GTK_DIALOG_DESTROY_WITH_PARENT,
-					      GTK_MESSAGE_INFO,
-					      GTK_BUTTONS_CLOSE,
-					      "File open event for %s", path);
+                                              GTK_DIALOG_DESTROY_WITH_PARENT,
+                                              GTK_MESSAGE_INFO,
+                                              GTK_BUTTONS_CLOSE,
+                                              "File open event for %s", path);
   gtk_dialog_run (GTK_DIALOG(dialog));
   gtk_widget_destroy (dialog);
   return FALSE;
 }
 
-#endif //GTKOSXAPPLICATION
-#ifdef GTKMACINTEGRATION
-
-gboolean _gtk_mac_menu_is_quit_menu_item_handled (void);
-
-static GtkWidget *
-create_window (GtkMacDock *dock, const gchar *title)
-{
-#else
-static GtkWidget *
+static GtkWidget*
 create_window (const gchar *title)
 {
-  gpointer	dock = NULL;
-#endif //not GTKMACINTEGRATION
-  GtkWidget	  *window;
+  gpointer        dock = NULL;
+  GtkWidget       *window;
   GtkWidget       *vbox;
   GtkWidget       *menubar;
   GtkWidget       *bbox;
   GtkWidget       *button;
-  GtkWidget	  *textentry;
+  GtkWidget       *textentry;
   MenuItems       *items = menu_items_new ();
 #ifdef BUILT_UI
   GtkUIManager *mgr = gtk_ui_manager_new ();
@@ -659,12 +577,7 @@ create_window (const gchar *title)
 #else //not BUILT_UI
   GtkAccelGroup *accel_group = gtk_accel_group_new ();
 #endif //not BUILT_UI
-#ifdef GTKMACINTEGRATION
-  GtkMacMenuGroup *group;
-#endif //GTKMACINTEGRATION
-#ifdef GTKOSXAPPLICATION
   GtkosxApplication *theApp = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
-#endif //GTKOSXAPPLICATION
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   if (title)
     gtk_window_set_title (GTK_WINDOW (window), title);
@@ -770,19 +683,6 @@ create_window (const gchar *title)
 #  endif // !defined QUARTZ_HANDLERS && !defined BUILT_UI
 # endif  //GTKOSXAPPLICATION
 #endif //defined GTK_MAC_MENU || defined GTKOSXAPPLICATION
-#ifdef GTKMACINTEGRATION
-  gtk_mac_menu_set_menu_bar (GTK_MENU_SHELL (menubar));
-  gtk_mac_menu_set_quit_menu_item (GTK_MENU_ITEM (items->quit_item));
-  group = gtk_mac_menu_add_app_menu_group ();
-  gtk_mac_menu_add_app_menu_item  (group,
-                                   GTK_MENU_ITEM (items->about_item),
-                                   "About");
-  group = gtk_mac_menu_add_app_menu_group ();
-  gtk_mac_menu_add_app_menu_item  (group,
-                                   GTK_MENU_ITEM (items->preferences_item),
-                                   "Preferences");
-#endif //GTKMACINTEGRATION
-#ifdef GTKOSXAPPLICATION
   GtkWidget *sep;
   gtkosx_application_set_menu_bar (theApp, GTK_MENU_SHELL (menubar));
   gtkosx_application_set_about_item  (theApp, items->about_item);
@@ -798,7 +698,6 @@ create_window (const gchar *title)
 
   gtkosx_application_set_help_menu (theApp, GTK_MENU_ITEM (items->help_menu));
   gtkosx_application_set_window_menu (theApp, GTK_MENU_ITEM (items->window_menu));
-#endif //GTKOSXAPPLICATION
   if (!menu_items_quark)
     menu_items_quark = g_quark_from_static_string ("MenuItem");
   g_object_set_qdata_full (G_OBJECT (window), menu_items_quark,
@@ -813,12 +712,7 @@ main (int argc, char **argv)
 #ifndef BUILT_UI
   GtkWidget *window2;
 #endif
-#ifdef GTKMACINTEGRATION
-  GtkMacDock      *dock;
-#endif //GTKMACINTEGRATION
-#ifdef GTKOSXAPPLICATION
   GtkosxApplication *theApp;
-#endif //GTKOSXAPPLICATION
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE_NAME, LOCALEDIR);
   textdomain (PACKAGE_NAME);
@@ -829,20 +723,6 @@ main (int argc, char **argv)
   gdk_threads_init ();
 #endif //not Gtk3
   gtk_init (&argc, &argv);
-#ifdef GTKMACINTEGRATION
-  dock = gtk_mac_dock_get_default ();
-  window1 = create_window (dock, "Test Integration Window 1");
-  dock = gtk_mac_dock_new ();
-  g_signal_connect (dock,
-                    "clicked",
-                    G_CALLBACK (dock_clicked_cb),
-                    window1);
-  g_signal_connect (dock,
-
-                    "quit-activate",
-                    G_CALLBACK (gtk_main_quit),
-                    window1);
-#elif defined(GTKOSXAPPLICATION)
 
   theApp  = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
   window1 = create_window ("Test Integration Window 1");
@@ -874,14 +754,8 @@ main (int argc, char **argv)
         g_print ("TestIntegration Error! Bundle Has ID %s\n", id);
       }
   }
-#else //i.e., no integration
-  window1 = create_window ("Test Integration Window 1");
-  window2 = create_window ("Test Integration Window 2");
-#endif //GTKOSXAPPLICATION
   gtk_accel_map_load ("accel_map");
   gtk_main ();
-#ifdef GTKOSXAPPLICATION
   g_object_unref (theApp);
-#endif //GTKOSXAPPLICATION
   return 0;
 }

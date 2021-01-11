@@ -53,10 +53,6 @@ EXTRA_HFILES=
 # Header files or dirs to ignore when scanning. Use base file/dir names
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h private_code
 IGNORE_HFILES=				\
-	gtk-mac-integration.h		\
-	gtk-mac-bundle.h		\
-	gtk-mac-dock.h			\
-	gtk-mac-menu.h			\
 	gtk-mac-image-utils.h 		\
 	gtk-mac-private.h		\
 	getlabel.h			\
