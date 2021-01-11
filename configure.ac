@@ -30,7 +30,7 @@ dnl ================================================================
 dnl Gettext stuff.
 dnl ================================================================
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.20.2])
+AM_GNU_GETTEXT_REQUIRE_VERSION([0.20.2])
 
 AC_SUBST([GETTEXT_PACKAGE], [gtk-mac-integration])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], "$GETTEXT_PACKAGE", [Define to the gettext package name.])
