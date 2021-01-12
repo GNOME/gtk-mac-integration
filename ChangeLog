@@ -1,3 +1,37 @@
+Changes in 3.0.0:
+Emin Tufan Çetin
+        Update Turkish translation
+Efstathios Iosifidis
+        Add Greek translation
+Milo Ivir
+        Update Croatian translation
+Andre Klapper
+        Replace git.gnome.org by Gitlab URL in <GitRepository> in DOAP file
+        Replace Bugzilla by Gitlab URL in DOAP file
+Марко Костић
+        Add Serbian translation
+Ask Hjorth Larsen
+        Updated Danish translation
+John Ralls
+        Update library version in consideration of API changes. (HEAD -> master)
+        Msgmerge updated potfile.
+        Clean up documentation so that gtk-docs check passes.
+        Remove PyGtk support.
+        Use AM_GNU_GETTEXT_REQUIRE_VERSION instead of AM_GNU_GETTEXT_VERSION
+        Remove the Carbon-based gtk-mac-menu/gtk-mac-dock/gtk-mac-bundle.
+        Update AM_GNU_GETTEXT_VERSION to match gtk-osx installed gettext.
+        Use __LP64__ instead of __x86_64__ to detect 64-bit builds.
+DaeHyun Sung
+        Update Korean translation
+Fabio Tomat
+        Add Friulian translation
+Matej Urbančič
+        Add Slovenian translation (gnome/master)
+Goran Vidović
+        Add Croatian translation
+Balázs Úr
+        Update Hungarian translation
+
 Changes in 2.1.3:
 Mitsutoshi Aoe
 	Fix invalid image alphaInfo error.

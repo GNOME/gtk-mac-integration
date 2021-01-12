@@ -1,3 +1,13 @@
+Changes from version gtk-mac-integration-2.1.3 to version
+        gtk-mac-integration-3.0.0
+* Removed the obsolete Carbon-based gtk-mac-bundle, gtk-mac-dock, and
+        gtk-mac-menu.
+* Removed the obsolete PyGtk bindings.
+* Added translations for Croatian, Friulian, Greek, and Slovenian
+* Updated Danish, Hungarian, Korean, and Turkish Translations
+* Replaced git repository and bug URLs to reflect Gnome project's move to
+        gitlab.gnome.org
+
 Changes from version gtk-mac-integration-2.1.2 to version
         gtk-mac-integration-2.1.3
 * Use glib instead of the custom gettext code (HEAD, origin/master, orig* Add Indonesian translation

@@ -1,36 +1,21 @@
-Gtk-mac-integration Version 2.1.3
-Provides integration for Gtk+ applications into the Mac desktop, with support for the Mac menubar, the Dock, and for finding resources in bundles.
+Gtk-mac-integration Version 3.0.0
 
-This library provides two implementations: An older Carbon
-implementation (gtk-mac-integration) and a new implementation in Cocoa
-(GtkosxApplication). PyGtk bindings are provided for both, and
-GtkosxApplication is gobject-introspectable.
+Provides integration for Gtk+ applications into the Mac desktop, with
+support for the Mac menubar, the Dock, and for finding resources in
+bundles. GtkosxApplication is gobject-introspectable.
 
-GtkosxApplication compiles and works with x86_64, a major failing of
-the Carbon implementation, as well as resolving some other glaring
-bugs. Since Apple has deperecated Carbon in OSX 10.6 (Snow Leopard)
-and is likely to remove it from a future version of the operating
-system removed parts of it from 10.9, Gtk-mac-integration is also
-deprecated. New ports of Gtk+ applications should use
-GtkosxApplication and maintainers of older ports are strongly
-encouraged to convert as soon as practical.
+GtkosxApplication compiles and works with i386, x86_64 and arm64.  New
+Gtk3 applications should prefer the GApplication/GtkApplication and
+GMenuModel/GMenu APIs which make this library unnecessary.
 
-NB: Applications already using Gtk+-3.4 and GLib 2.36 and later should
-use the GApplication/GtkApplication and GMenuModel/GMenu APIs which
-make this library unnecessary.
-
-For a rather complex example on how to use the various flavors, see
-src/test-integration.c. Basic examples of using the Python bindings
-will be found in their respective directories under bindings/python.
+Example and test code may be found in src/test-integration.c; Being
+GUI code this library is somewhat resistant to useful automated
+testing. Very rudimentary example usage in Python using
+gobject-introspection is in src/test-introspection.py.
 
 GtkosxApplication is well documented using Gtk-Doc. To build the
 documentation, pass --enable-gtk-doc to configure. A current copy may
-be found online at
-http://gtk-osx.sourceforge.net/gtk-mac-integration/index.html.
-
-Some documentation for gtk-mac-integration along with more about
-GtkosxApplication may be found at
-https://wiki.gnome.org/Projects/GTK%2B/OSX/
+be found online at https://jralls.github.io/gtk-mac-integration with additoinal information at https://wiki.gnome.org/Projects/GTK%2B/OSX/.
 
 Gtk-mac-integration may be built for either Gtk+-2, Gtk+-3, or since
 version 2.0.7 both. Because it's not possible to link both
@@ -45,20 +30,3 @@ breakage of applications last updated before version
 2.0.7. Application maintainers are urged not to depend on this as it
 may not work in all environments and to update their applications to
 use the appropriate version-specific pc file.
-
-
-MAINTAINER NOTE:
-
-Tarballs for distribution may be made with `make dist`, but in order
-to include all three versions of python bindings this requires special
-preparation:
-
-* Build both Gtk2 and Gtk3
-
-* Build PyGObject2 and PyGObject3. PyGObject2 must be built with
-  --disable-introspection in order for it to be installed in parallel
-  with PyGObject3.
-
-* Build PyGtk.
-
-* Configure gtk-mac-integration with --enable-python=all.
