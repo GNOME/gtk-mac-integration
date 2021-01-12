@@ -66,23 +66,28 @@ test_integration_gtk2_CFLAGS = $(GTK2_CFLAGS)
 test_integration_gtk2_LDADD =  $(GTK2_LIBS) libgtkmacintegration-gtk2.la
 endif
 
-EXTRA_DIST = testui.xml $(HEADER)
-
-if INTROSPECTION
-
-test_integration_gtk3_CFLAGS += -DGDK_VERSION_MIN_REQUIRED=GDK_VERSION_3_2
+EXTRA_DIST =  test-introspection.py testui.xml $(HEADER)
 
 if HAVE_INTROSPECTION
-GtkosxApplication-1.0.gir: $(INTROSPECTION_SCANNER) libgtkmacintegration-gtk3.la
+if WITH_GTK3
+test_integration_gtk3_CFLAGS += -DGDK_VERSION_MIN_REQUIRED=GDK_VERSION_3_2
+
+introspection_LIBS =
+gir_INCLUDES = Atk-1.0 GLib-2.0
+introspection_LIBS += libgtkmacintegration-gtk3.la
+gir_INCLUDES += Gtk-3.0
+
+GtkosxApplication-1.0.gir: $(INTROSPECTION_SCANNER) ${introspection_LIBS}
+
 GtkosxApplication_1_0_gir_SCANNERFLAGS = \
 	--identifier-prefix=Gtkosx \
 	--warn-all
 
-GtkosxApplication_1_0_gir_INCLUDES = Atk-1.0 GLib-2.0 Gtk-3.0
+GtkosxApplication_1_0_gir_INCLUDES = ${gir_INCLUDES}
 
 GtkosxApplication_1_0_gir_CFLAGS = \
 		$(AM_CPPFLAGS)
-GtkosxApplication_1_0_gir_LIBS = libgtkmacintegration-gtk3.la
+GtkosxApplication_1_0_gir_LIBS = ${introspection_LIBS}
 GtkosxApplication_1_0_gir_FILES = \
 	gtkosxapplication.h \
 	gtkosxapplication.c

@@ -288,16 +288,3 @@ gtkosx_application_set_use_quartz_accelerators (GtkosxApplication *self,
 {
   self->priv->use_quartz_accelerators = use_quartz_accelerators;
 }
-
-/*
- * gtk_type_osxapplication_attention_type_get_type:
- *
- * A public enum used to set the parameter for attention
- * requests. Exists soley to satisfy the PyGObject codegen system.
- */
-GType
-gtkosx_type_application_attention_type_get_type (void)
-{
-  //Bogus GType, but there's no good reason to register this; it's only an enum
-  return GTKOSX_TYPE_APPLICATION;
-}

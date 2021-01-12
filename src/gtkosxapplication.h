@@ -103,10 +103,6 @@ typedef enum {
   INFO_REQUEST = 10
 } GtkosxApplicationAttentionType;
 
-/*To satisfy h2defs.py */
-#define GTKOSX_TYPE_APPLICATION_ATTENTION_TYPE	(gtkosx_type_application_attention_type_get_type())
-GType gtkosx_type_application_attention_type_get_type(void);
-
 void gtkosx_application_set_dock_menu(GtkosxApplication *self, 
 				   GtkMenuShell *menu_shell);
 void gtkosx_application_set_dock_icon_pixbuf(GtkosxApplication *self,

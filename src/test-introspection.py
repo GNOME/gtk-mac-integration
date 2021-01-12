@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
+from gi import require_version
+require_version('Gtk', '2.0')
 from gi.repository import Gtk
 from gi.repository import GObject
+require_version('GtkosxApplication', '1.0')
 from gi.repository import GtkosxApplication
 
 class MainWindow(Gtk.Window):
@@ -67,13 +70,13 @@ class MainWindow(Gtk.Window):
         macapp.insert_app_menu_item(item, 3)
 
 #    def dock_clicked_cb(self, dock):
-#        print "Dock clicked"
+#        print("Dock clicked")
 
     def activate_cb(self, widget):
         try:
-            print widget.get_child().get_text()
+            print(widget.get_child().get_text())
         except:
-            print widget
+            print(widget)
             
 if __name__ == '__main__':
     macapp = GtkosxApplication.Application()
@@ -81,6 +84,6 @@ if __name__ == '__main__':
     window.connect("destroy", Gtk.main_quit)
     macapp.ready()
 #Just to illustrate using the qtkosx_application_get... functions
-    print macapp.get_resource_path()
+    print(macapp.get_resource_path())
     Gtk.main()
 

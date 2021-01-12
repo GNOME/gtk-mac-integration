@@ -73,11 +73,9 @@ if test "x$with_gtk2" = "xno" && test "x$with_gtk3" = "xno" ; then
 	AC_MSG_ERROR([Neither GTK+-2.0 nor GTK+-3.0 was found])
 fi
 
-AM_CONDITIONAL([INTROSPECTION], [test x$with_gtk3 = xyes])
 AM_CONDITIONAL([WITH_GTK2], [test x$with_gtk2 = xyes])
 AM_CONDITIONAL([WITH_GTK3], [test x$with_gtk3 = xyes])
 
-GTK_PYTHON_CHECK
 GOBJECT_INTROSPECTION_CHECK([0.10.1])
 
 # This will cause the automake generated makefiles to pass the correct
@@ -94,9 +92,6 @@ AC_CONFIG_FILES(
     po/Makefile.in
     Makefile
     src/Makefile
-    bindings/Makefile
-    bindings/python/Makefile
-    bindings/python/gtkosx_application/Makefile
     data/Makefile
     docs/Makefile
     docs/reference/Makefile
@@ -110,6 +105,5 @@ echo
 echo "Prefix         : $prefix"
 echo "GTK+2 bindings : $with_gtk2"
 echo "GTK+3 bindings : $with_gtk3"
-echo "Python bindings: $enable_python"
 echo "Introspection  : $enable_introspection"
 echo
