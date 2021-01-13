@@ -10,6 +10,7 @@ gtkosx_application_use_quartz_accelerators
 gtkosx_application_set_menu_bar
 gtkosx_application_sync_menubar
 gtkosx_application_insert_app_menu_item
+gtkosx_application_set_about_item
 gtkosx_application_set_window_menu
 gtkosx_application_set_help_menu
 gtkosx_application_set_dock_menu
@@ -41,18 +42,3 @@ nsimage_from_resource
 nsimage_from_pixbuf
 </SECTION>
 
-<SECTION>
-<FILE>GNSMenuBar</FILE>
-initWithTitle
-initWithGtkMenuBar
-addGroup
-app_menu_groups
-resync
-dealloc
-</SECTION>
-
-<SECTION>
-<FILE>GNSMenuItem</FILE>
-initWithTitle
-activate
-</SECTION>

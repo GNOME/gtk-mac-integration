@@ -863,11 +863,11 @@ gtkosx_application_insert_app_menu_item (GtkosxApplication* self,
 }
 
 /**
- * gtkosx_application_set_about_item
+ * gtkosx_application_set_about_item:
  * @self: The application object
  * @item: The about menu item
  *
- * Sets the designated menu item as the "About <appname>", the first
+ * Sets the designated menu item as the "About &lt;appname&gt;", the first
  * one on the App Menu. We take a GtkMenuItem* because it's less work
  * for app developers than unwrapping a GtkAction for us to wrap in an
  * NSAction.

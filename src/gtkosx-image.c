@@ -30,6 +30,15 @@
 #include "gtk-mac-image-utils.h"
 
 /**
+ * SECTION:gtkosx-image
+ * @short_description: Convert image resourcess to NSImage
+ *
+ * Quartz requires icon resources for the dock or menu items to be
+ * NSImages while Gnome uses either GdkPixbuf or image files such as
+ * jpeg or png. The functions in this section convert those resources
+ * into NSImage.
+ */
+/**
  * nsimage_from_resource:
  * @name: The filename
  * @type: The extension (e.g., jpg) of the filename
@@ -60,7 +69,7 @@ nsimage_from_resource (const gchar *name, const gchar* type, const gchar* subdir
   return image;
 }
 
-/*
+/**
  * nsimage_from_pixbuf:
  * @pixbuf: The GdkPixbuf* to convert
  *

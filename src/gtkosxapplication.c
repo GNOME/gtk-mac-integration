@@ -250,7 +250,10 @@
 /**
  * gtkosx_application_get:
  *
- * Returns: (transfer none) the singleton application object.
+ * Get the singleton NSApplication object.
+ *
+ * Returns: (transfer none): the singleton application object.
+ *
  */
 GtkosxApplication *
 gtkosx_application_get (void)

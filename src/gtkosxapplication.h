@@ -94,9 +94,11 @@ void gtkosx_application_set_help_menu (GtkosxApplication *self,
 
 /*Dock Functions*/
 /**
- * GtkosxApplicationAttentionType
+ * GtkosxApplicationAttentionType:
  * @CRITICAL_REQUEST: Bounce the icon until the app is activated.
  * @INFO_REQUEST: Bounce the icon for one second.
+ *
+ * The possible values for dock attention requests.
  */
 typedef enum {
   CRITICAL_REQUEST = 0,
