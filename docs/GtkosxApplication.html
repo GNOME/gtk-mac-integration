@@ -8,7 +8,7 @@
 <link rel="up" href="ch01.html" title="GtkosxApplication Reference">
 <link rel="prev" href="gtk-mac-integration-gtkosx-image.html" title="gtkosx-image">
 <link rel="next" href="object-tree.html" title="Object Hierarchy">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.33.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -95,6 +95,14 @@
 </td>
 <td class="function_name">
 <a href="GtkosxApplication.html#gtkosx-application-insert-app-menu-item" title="gtkosx_application_insert_app_menu_item ()">gtkosx_application_insert_app_menu_item</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a href="GtkosxApplication.html#gtkosx-application-set-about-item" title="gtkosx_application_set_about_item ()">gtkosx_application_set_about_item</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -249,10 +257,6 @@
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a href="GtkosxApplication.html#GtkosxApplicationAttentionType" title="enum GtkosxApplicationAttentionType">GtkosxApplicationAttentionType</a></td>
 </tr>
-<tr>
-<td class="define_keyword">#define</td>
-<td class="function_name"><a href="GtkosxApplication.html#GTKOSX-TYPE-APPLICATION-ATTENTION-TYPE:CAPS" title="GTKOSX_TYPE_APPLICATION_ATTENTION_TYPE">GTKOSX_TYPE_APPLICATION_ATTENTION_TYPE</a></td>
-</tr>
 </tbody>
 </table></div>
 </div>
@@ -280,7 +284,7 @@ First, create an instance at startup:</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">GtkosxApplication *theApp = g_object_new(GTKOSX_TYPE_APPLICATION, <span class="number">NULL</span>);</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="n">GtkosxApplication</span> <span class="o">*</span><span class="n">theApp</span> <span class="o">=</span> <span class="n">g_object_new</span><span class="p">(</span><span class="n">GTKOSX_TYPE_APPLICATION</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -293,7 +297,7 @@ First, create an instance at startup:</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtk_init()</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="n">gtk_init</span><span class="p">()</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -306,7 +310,7 @@ Don't forget to guard it, and all other calls into the library, with</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="preproc">#ifdef MAC_INTEGRATION</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="cp">#ifdef MAC_INTEGRATION</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -334,7 +338,7 @@ more-or-less set up on the Gtk+ side, you need only hide the menu
 and call <code class="function">gtkosx_application_set_main_menu()</code>. Here's an example with
 GtkBuilder:</p>
 <div class="refsect3" lang="en">
-<a name="idp140700768824168"></a><h4>Setting the MenuBar</h4>
+<a name="idp140320645222816"></a><h4>Setting the MenuBar</h4>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -347,14 +351,14 @@ GtkBuilder:</p>
 6
 7
 8</pre></td>
-        <td class="listing_code"><pre class="programlisting">GtkUIManager *mgr = gtk_ui_manager_new();
-GtkosxApplication *theApp = g_object_new(GTKOSX_TYPE_APPLICATION, <span class="number">NULL</span>);
-...
-mergeid = gtk_ui_manager_add_ui_from_file(mgr, <span class="number">&quot;src/testui.xml&quot;</span>, &amp;err);
-...
-menubar = gtk_ui_manager_get_widget(mgr, <span class="number">&quot;/menubar&quot;</span>);
-gtk_widget_hide (menubar);
-gtkosx_application_set_menu_bar(theApp, GTK_MENU_SHELL(menubar));</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="n">GtkUIManager</span> <span class="o">*</span><span class="n">mgr</span> <span class="o">=</span> <span class="n">gtk_ui_manager_new</span><span class="p">();</span>
+<span class="n">GtkosxApplication</span> <span class="o">*</span><span class="n">theApp</span> <span class="o">=</span> <span class="n">g_object_new</span><span class="p">(</span><span class="n">GTKOSX_TYPE_APPLICATION</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="n">mergeid</span> <span class="o">=</span> <span class="n">gtk_ui_manager_add_ui_from_file</span><span class="p">(</span><span class="n">mgr</span><span class="p">,</span> <span class="s">&quot;src/testui.xml&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">err</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="n">menubar</span> <span class="o">=</span> <span class="n">gtk_ui_manager_get_widget</span><span class="p">(</span><span class="n">mgr</span><span class="p">,</span> <span class="s">&quot;/menubar&quot;</span><span class="p">);</span>
+<span class="n">gtk_widget_hide</span> <span class="p">(</span><span class="n">menubar</span><span class="p">);</span>
+<span class="n">gtkosx_application_set_menu_bar</span><span class="p">(</span><span class="n">theApp</span><span class="p">,</span> <span class="n">GTK_MENU_SHELL</span><span class="p">(</span><span class="n">menubar</span><span class="p">));</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -380,7 +384,7 @@ you're using GtkMenuItems instead of GtkActions, you'll need to
 connect a special handler as shown in the following example:</p>
 </div>
 <div class="refsect3" lang="en">
-<a name="idp140700768831272"></a><h4>Enabling Accelerators on Hidden Menus</h4>
+<a name="idp140320645229360"></a><h4>Enabling Accelerators on Hidden Menus</h4>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -393,14 +397,14 @@ connect a special handler as shown in the following example:</p>
 6
 7
 8</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">static</span> gboolean
-can_activate_cb(GtkWidget* widget, guint signal_id, gpointer data)
-{
-  <span class="keyword">return</span> gtk_widget_is_sensitive(widget);
-}
-...
-  g_signal_connect(menubar, <span class="number">&quot;can-activate-accel&quot;</span>,
-                   G_CALLBACK(can_activate_cb), <span class="number">NULL</span>);</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="k">static</span> <span class="n">gboolean</span>
+<span class="nf">can_activate_cb</span><span class="p">(</span><span class="n">GtkWidget</span><span class="o">*</span> <span class="n">widget</span><span class="p">,</span> <span class="n">guint</span> <span class="n">signal_id</span><span class="p">,</span> <span class="n">gpointer</span> <span class="n">data</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">return</span> <span class="n">gtk_widget_is_sensitive</span><span class="p">(</span><span class="n">widget</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="p">...</span>
+  <span class="n">g_signal_connect</span><span class="p">(</span><span class="n">menubar</span><span class="p">,</span> <span class="s">&quot;can-activate-accel&quot;</span><span class="p">,</span>
+                   <span class="n">G_CALLBACK</span><span class="p">(</span><span class="n">can_activate_cb</span><span class="p">),</span> <span class="nb">NULL</span><span class="p">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -425,7 +429,7 @@ on the File menu so that it doesn't show up twice:</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtk_widget_hide(GTK_WIDGET(file_quit_menu_item));</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="n">gtk_widget_hide</span><span class="p">(</span><span class="n">GTK_WIDGET</span><span class="p">(</span><span class="n">file_quit_menu_item</span><span class="p">));</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -452,18 +456,18 @@ items to the groups. Here's an example:</p>
 10
 11
 12</pre></td>
-        <td class="listing_code"><pre class="programlisting">GtkosxApplicationMenuGroup *group;
-GtkMenuItem *about_item, *preferences_item;
-about_item = gtk_ui_manager_get_widget(mgr, <span class="number">&quot;/menubar/Help/About&quot;</span>);
-preferences_item = gtk_ui_manager_get_widget(mgr, <span class="number">&quot;/menubar/Edit/Preferences&quot;</span>);
+        <td class="listing_code"><pre class="programlisting"><span class="n">GtkosxApplicationMenuGroup</span> <span class="o">*</span><span class="n">group</span><span class="p">;</span>
+<span class="n">GtkMenuItem</span> <span class="o">*</span><span class="n">about_item</span><span class="p">,</span> <span class="o">*</span><span class="n">preferences_item</span><span class="p">;</span>
+<span class="n">about_item</span> <span class="o">=</span> <span class="n">gtk_ui_manager_get_widget</span><span class="p">(</span><span class="n">mgr</span><span class="p">,</span> <span class="s">&quot;/menubar/Help/About&quot;</span><span class="p">);</span>
+<span class="n">preferences_item</span> <span class="o">=</span> <span class="n">gtk_ui_manager_get_widget</span><span class="p">(</span><span class="n">mgr</span><span class="p">,</span> <span class="s">&quot;/menubar/Edit/Preferences&quot;</span><span class="p">);</span>
 
-group = gtkosx_application_add_app_menu_group (theApp);
-gtkosx_application_add_app_menu_item  (theApp, group,
-                                       GTK_MENU_ITEM (about_item));
+<span class="n">group</span> <span class="o">=</span> <span class="n">gtkosx_application_add_app_menu_group</span> <span class="p">(</span><span class="n">theApp</span><span class="p">);</span>
+<span class="n">gtkosx_application_add_app_menu_item</span>  <span class="p">(</span><span class="n">theApp</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span>
+                                       <span class="n">GTK_MENU_ITEM</span> <span class="p">(</span><span class="n">about_item</span><span class="p">));</span>
 
-group = gtkosx_application_add_app_menu_group (theApp);
-gtkosx_application_add_app_menu_item  (theApp, group,
-                                       GTK_MENU_ITEM (preferences_item));</pre></td>
+<span class="n">group</span> <span class="o">=</span> <span class="n">gtkosx_application_add_app_menu_group</span> <span class="p">(</span><span class="n">theApp</span><span class="p">);</span>
+<span class="n">gtkosx_application_add_app_menu_item</span>  <span class="p">(</span><span class="n">theApp</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span>
+                                       <span class="n">GTK_MENU_ITEM</span> <span class="p">(</span><span class="n">preferences_item</span><span class="p">));</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -478,7 +482,7 @@ we're ready:</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtkosx_application_ready(theApp);</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="n">gtkosx_application_ready</span><span class="p">(</span><span class="n">theApp</span><span class="p">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -496,20 +500,20 @@ window, as with changing pages in a GtkNotebook) you need to call</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gtkosx_application_sync_menubar(theApp)</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="n">gtkosx_application_sync_menubar</span><span class="p">(</span><span class="n">theApp</span><span class="p">)</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
 <p></p>
-<p>N.B.: One GtkMenu function, <a href="../gtk3/GtkMenu.html#gtk-menu-reorder-child"><code class="function">gtk_menu_reorder_child()</code></a>, changes the
+<p>N.B.: One GtkMenu function, <code class="function">gtk_menu_reorder_child()</code>, changes the
 menu appearance without emitting a signal, so if you use that
 function in your code you'll need to call
 <a href="GtkosxApplication.html#gtkosx-application-sync-menubar" title="gtkosx_application_sync_menubar ()"><code class="function">gtkosx_application_sync_menubar()</code></a> afterwards.</p>
 </div>
 <div class="refsect3" lang="en">
-<a name="idp140700768805336"></a><h4>Dock Support</h4>
+<a name="idp140320645243520"></a><h4>Dock Support</h4>
 <p>The dock is that bar of icons that normally lives at the bottom of
 the display on a Mac (though it can be moved to one of the other
 sides; this author likes his on the left, which is where it was
@@ -534,7 +538,7 @@ They're all pretty simple, so you can just read the details below.</p>
 </ul></div>
 </div>
 <div class="refsect3" lang="en">
-<a name="idp140700768810408"></a><h4>Bundle Support</h4>
+<a name="idp140320645248592"></a><h4>Bundle Support</h4>
 <p>The last feature to which GtkosxApplication provides an interface
 is the bundle. Normally in OS X, graphical applications are packaged
 along with their non-standard dependencies and their resources
@@ -567,7 +571,7 @@ line as</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">$ Foo.app/Contents/MacOS/Foo</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="err">$</span> <span class="n">Foo</span><span class="p">.</span><span class="n">app</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">MacOS</span><span class="o">/</span><span class="n">Foo</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -584,7 +588,7 @@ as long as that value is a string. If it isn't, then the function
 returns a null string ("").</p>
 </div>
 <div class="refsect3" lang="en">
-<a name="idp140700768741880"></a><h4>Notifications</h4>
+<a name="idp140320645260128"></a><h4>Notifications</h4>
 <p>Finally, notice the signals. These are emitted in response to the
 indicated OS X notifications. Except for
 <a href="GtkosxApplication.html#GtkosxApplication-NSApplicationBlockTermination" title="The “NSApplicationBlockTermination” signal"><span class="type">“NSApplicationBlockTermination”</span></a>, most programs
@@ -603,9 +607,11 @@ from quitting.</p>
 <a name="gtkosx-application-get"></a><h3>gtkosx_application_get ()</h3>
 <pre class="programlisting"><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="returnvalue">GtkosxApplication</span></a> *
 gtkosx_application_get (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Get the singleton NSApplication object.</p>
 <div class="refsect3" lang="en">
 <a name="gtkosx-application-get.returns"></a><h4>Returns</h4>
-<p> (transfer none) the singleton application object.</p>
+<p>the singleton application object. </p>
+<p><span class="annotation">[<acronym title="The data is owned by the callee, which is responsible of freeing it."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -695,7 +701,7 @@ gtkosx_application_use_quartz_accelerators
 <a name="gtkosx-application-set-menu-bar"></a><h3>gtkosx_application_set_menu_bar ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_set_menu_bar (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                 <em class="parameter"><code><a href="../gtk3/GtkMenuShell.html#GtkMenuShell-struct"><span class="type">GtkMenuShell</span></a> *menu_shell</code></em>);</pre>
+                                 <em class="parameter"><code><span class="type">GtkMenuShell</span> *menu_shell</code></em>);</pre>
 <p>Set a window's menubar as the application menu bar. Call this once
 for each window as you create them. It works best if the menubar is
 reasonably fully populated before you call it. Once set, it will
@@ -754,7 +760,7 @@ the menus with signals blocked or disconnected.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_insert_app_menu_item
                                (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                <em class="parameter"><code><a href="../gtk3/GtkWidget.html#GtkWidget-struct"><span class="type">GtkWidget</span></a> *menu_item</code></em>,
+                                <em class="parameter"><code><span class="type">GtkWidget</span> *menu_item</code></em>,
                                 <em class="parameter"><code><span class="type">gint</span> index</code></em>);</pre>
 <p>Certain menu items (About, Check for updates, and Preferences in
 particular) are normally found in the so-called Application menu
@@ -800,10 +806,43 @@ inserted. The first item is 0.</p></td>
 </div>
 <hr>
 <div class="refsect2" lang="en">
+<a name="gtkosx-application-set-about-item"></a><h3>gtkosx_application_set_about_item ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtkosx_application_set_about_item (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
+                                   <em class="parameter"><code><span class="type">GtkWidget</span> *item</code></em>);</pre>
+<p>Sets the designated menu item as the "About &lt;appname&gt;", the first
+one on the App Menu. We take a GtkMenuItem* because it's less work
+for app developers than unwrapping a GtkAction for us to wrap in an
+NSAction.</p>
+<div class="refsect3" lang="en">
+<a name="gtkosx-application-set-about-item.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The application object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>item</p></td>
+<td class="parameter_description"><p>The about menu item</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
 <a name="gtkosx-application-set-window-menu"></a><h3>gtkosx_application_set_window_menu ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_set_window_menu (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                    <em class="parameter"><code><a href="../gtk3/GtkMenuItem.html#GtkMenuItem-struct"><span class="type">GtkMenuItem</span></a> *menu_item</code></em>);</pre>
+                                    <em class="parameter"><code><span class="type">GtkMenuItem</span> *menu_item</code></em>);</pre>
 <p>Sets a designated menu item already on the menu bar as the Window
 menu. This is the menu which contains a list of open windows for
 the application; by default it also provides menu items to minimize
@@ -840,7 +879,7 @@ will create a new menu for you, which will not be gettext translatable.</p>
 <a name="gtkosx-application-set-help-menu"></a><h3>gtkosx_application_set_help_menu ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_set_help_menu (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                  <em class="parameter"><code><a href="../gtk3/GtkMenuItem.html#GtkMenuItem-struct"><span class="type">GtkMenuItem</span></a> *menu_item</code></em>);</pre>
+                                  <em class="parameter"><code><span class="type">GtkMenuItem</span> *menu_item</code></em>);</pre>
 <p>Sets a designated menu item already on the menu bar as the Help
 menu. Call this after <code class="function">gtk_osx_application_set_menu_bar()</code>, but
 before <code class="function">gtk_osx_application_window_menu()</code>, especially if you're
@@ -877,7 +916,7 @@ for you, which will not be gettext translatable.</p>
 <a name="gtkosx-application-set-dock-menu"></a><h3>gtkosx_application_set_dock_menu ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_set_dock_menu (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                  <em class="parameter"><code><a href="../gtk3/GtkMenuShell.html#GtkMenuShell-struct"><span class="type">GtkMenuShell</span></a> *menu_shell</code></em>);</pre>
+                                  <em class="parameter"><code><span class="type">GtkMenuShell</span> *menu_shell</code></em>);</pre>
 <p>Set a GtkMenu as the dock menu.</p>
 <p>This menu does not have a "sync" function, so changes made while
 signals are disconnected will not update the menu which appears in
@@ -914,7 +953,7 @@ pass it in</p></td>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtkosx_application_set_dock_icon_pixbuf
                                (<em class="parameter"><code><a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *self</code></em>,
-                                <em class="parameter"><code><a href="../gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf-struct"><span class="type">GdkPixbuf</span></a> *pixbuf</code></em>);</pre>
+                                <em class="parameter"><code><span class="type">GdkPixbuf</span> *pixbuf</code></em>);</pre>
 <p>Set the dock icon from a GdkPixbuf</p>
 <div class="refsect3" lang="en">
 <a name="gtkosx-application-set-dock-icon-pixbuf.parameters"></a><h4>Parameters</h4>
@@ -1163,6 +1202,7 @@ the Application menu.</p>
 <hr>
 <div class="refsect2" lang="en">
 <a name="GtkosxApplicationAttentionType"></a><h3>enum GtkosxApplicationAttentionType</h3>
+<p>The possible values for dock attention requests.</p>
 <div class="refsect3" lang="en">
 <a name="GtkosxApplicationAttentionType.members"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1189,12 +1229,6 @@ the Application menu.</p>
 </tbody>
 </table></div>
 </div>
-</div>
-<hr>
-<div class="refsect2" lang="en">
-<a name="GTKOSX-TYPE-APPLICATION-ATTENTION-TYPE:CAPS"></a><h3>GTKOSX_TYPE_APPLICATION_ATTENTION_TYPE</h3>
-<pre class="programlisting">#define GTKOSX_TYPE_APPLICATION_ATTENTION_TYPE (gtkosx_type_application_attention_type_get_type())
-</pre>
 </div>
 </div>
 <div class="refsect1" lang="en">
@@ -1283,7 +1317,7 @@ there is anything you need to do when the application is activated.</p>
 <a name="GtkosxApplication-NSApplicationOpenFile"></a><h3>The <code class="literal">“NSApplicationOpenFile”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">gboolean</span>
 user_function (<a href="GtkosxApplication.html" title="GtkosxApplication"><span class="type">GtkosxApplication</span></a> *app,
-               <span class="type">gchar</span>             *path,
+               <span class="type">char</span>              *path,
                <span class="type">gpointer</span>           user_data)</pre>
 <p>Emitted when a OpenFile, OpenFiles, or OpenEmptyFile event is
 received from the operating system. This signal does not implement
@@ -1374,7 +1408,7 @@ user_function (<a href="GtkosxApplication.html" title="GtkosxApplication"><span 
                <span class="type">gpointer</span>           user_data)</pre>
 <p>Emitted by the Application Delegate when the application reeeives
 an NSApplicationSWillTerminate notification. Connect your final
-shutdown routine (the one that calls <a href="../gtk3/gtk3-General.html#gtk-main-quit"><code class="function">gtk_main_quit()</code></a> here.</p>
+shutdown routine (the one that calls <code class="function">gtk_main_quit()</code> here.</p>
 <div class="refsect3" lang="en">
 <a name="GtkosxApplication-NSApplicationWillTerminate.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1407,6 +1441,6 @@ shutdown routine (the one that calls <a href="../gtk3/gtk3-General.html#gtk-main
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.33.1</div>
 </body>
 </html>
