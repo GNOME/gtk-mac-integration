@@ -1026,7 +1026,7 @@ gtkosx_application_set_dock_icon_pixbuf (GtkosxApplication *self,
 /**
  * gtkosx_application_set_dock_icon_resource:
  * @self: The GtkosxApplication
- * @name: The ame of the image file
+ * @name: The name of the image file
  * @type: The extension (e.g., jpg) of the filename
  * @subdir: The subdirectory of $Bundle/Contents/Resources in which to
  * look for the file.
