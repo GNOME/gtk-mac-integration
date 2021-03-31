@@ -895,7 +895,7 @@ gtkosx_application_set_about_item (GtkosxApplication* self,
  * menu. This is the menu which contains a list of open windows for
  * the application; by default it also provides menu items to minimize
  * and zoom the current window and to bring all windows to the
- * front. Call this after gtk_osx_application_set_menu_bar(). It
+ * front. Call this after gtkosx_application_set_menu_bar(). It
  * operates on the currently active menubar. If @nenu_item is NULL, it
  * will create a new menu for you, which will not be gettext translatable.
  */
@@ -929,8 +929,8 @@ gtkosx_application_set_window_menu (GtkosxApplication *self,
  * @menu_item: The menu item which will be set as the Window menu
  *
  * Sets a designated menu item already on the menu bar as the Help
- * menu. Call this after gtk_osx_application_set_menu_bar(), but
- * before gtk_osx_application_window_menu(), especially if you're
+ * menu. Call this after gtkosx_application_set_menu_bar(), but
+ * before gtkosx_application_set_window_menu(), especially if you're
  * letting GtkosxApplication create a Window menu for you (it helps
  * position the Window menu correctly). It operates on the currently
  * active menubar. If @nenu_item is %NULL, it will create a new menu
