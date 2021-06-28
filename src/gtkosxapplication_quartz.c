@@ -593,6 +593,23 @@ gtkosx_application_init (GtkosxApplication *self)
   [NSApp setDelegate: [GtkApplicationDelegate new]];
   self->priv->delegate = [NSApp delegate];
   bindtextdomain (PACKAGE_NAME, LOCALEDIR);
+
+  /* Check if we're running inside an application bundle and overwrite the
+   * previously bound domain to a location inside the bundle.
+   */
+  gchar *bundle_id = gtkosx_application_get_bundle_id();
+  if (bundle_id)
+    {
+      gchar *resource_path = gtkosx_application_get_resource_path();
+      if (resource_path)
+        {
+          gchar *locale_dir = g_strdup_printf("%s/share/locale", resource_path);
+          g_free(resource_path);
+          bindtextdomain (PACKAGE_NAME, locale_dir);
+          g_free(locale_dir);
+        }
+      g_free(bundle_id);
+    }
 }
 
 static void
