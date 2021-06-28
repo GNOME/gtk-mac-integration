@@ -38,7 +38,7 @@ msgstr "Amaga altres"
 #. Translators: This is the Show All menu item in the "Apple" menu.
 #: src/gtkosxapplication_quartz.c:291
 msgid "Show All"
-msgstr "Mostra Totes"
+msgstr "Mostra-ho tot"
 
 #. Translators: This is the Quit menu item for the "Apple" menu. The
 #. parameter is the application name.
@@ -46,7 +46,7 @@ msgstr "Mostra Totes"
 #: src/gtkosxapplication_quartz.c:306
 #, c-format
 msgid "Quit %s"
-msgstr "Deixar %s"
+msgstr "Surt %s"
 
 #. Translators: This is the title of the Window menu in the menubar.
 #: src/gtkosxapplication_quartz.c:339
@@ -56,15 +56,15 @@ msgstr "Finestra"
 #. Translators: This is the Minimize menuitem for the Window menu.
 #: src/gtkosxapplication_quartz.c:355
 msgid "Minimize"
-msgstr "Minimitzar"
+msgstr "Minimitza"
 
 #. Translators: This is a menu item in the Window menu.
 #: src/gtkosxapplication_quartz.c:359
 msgid "Bring All to Front"
-msgstr "Portar tot al capdavant"
+msgstr "Porta tot al capdavant"
 
 #. Translators: This is the "About foo" menu item at the top of the App menu.
 #: src/gtkosxapplication_quartz.c:859 src/gtkosxapplication_quartz.c:883
 #, c-format
 msgid "About %s"
-msgstr "Sobre %s"
+msgstr "Quant a %s"

@@ -593,6 +593,23 @@ gtkosx_application_init (GtkosxApplication *self)
   [NSApp setDelegate: [GtkApplicationDelegate new]];
   self->priv->delegate = [NSApp delegate];
   bindtextdomain (PACKAGE_NAME, LOCALEDIR);
+
+  /* Check if we're running inside an application bundle and overwrite the
+   * previously bound domain to a location inside the bundle.
+   */
+  gchar *bundle_id = gtkosx_application_get_bundle_id();
+  if (bundle_id)
+    {
+      gchar *resource_path = gtkosx_application_get_resource_path();
+      if (resource_path)
+        {
+          gchar *locale_dir = g_strdup_printf("%s/share/locale", resource_path);
+          g_free(resource_path);
+          bindtextdomain (PACKAGE_NAME, locale_dir);
+          g_free(locale_dir);
+        }
+      g_free(bundle_id);
+    }
 }
 
 static void
@@ -895,7 +912,7 @@ gtkosx_application_set_about_item (GtkosxApplication* self,
  * menu. This is the menu which contains a list of open windows for
  * the application; by default it also provides menu items to minimize
  * and zoom the current window and to bring all windows to the
- * front. Call this after gtk_osx_application_set_menu_bar(). It
+ * front. Call this after gtkosx_application_set_menu_bar(). It
  * operates on the currently active menubar. If @nenu_item is NULL, it
  * will create a new menu for you, which will not be gettext translatable.
  */
@@ -929,8 +946,8 @@ gtkosx_application_set_window_menu (GtkosxApplication *self,
  * @menu_item: The menu item which will be set as the Window menu
  *
  * Sets a designated menu item already on the menu bar as the Help
- * menu. Call this after gtk_osx_application_set_menu_bar(), but
- * before gtk_osx_application_window_menu(), especially if you're
+ * menu. Call this after gtkosx_application_set_menu_bar(), but
+ * before gtkosx_application_set_window_menu(), especially if you're
  * letting GtkosxApplication create a Window menu for you (it helps
  * position the Window menu correctly). It operates on the currently
  * active menubar. If @nenu_item is %NULL, it will create a new menu
