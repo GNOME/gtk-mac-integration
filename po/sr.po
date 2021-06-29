@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gtk-mac-integration master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gtk-mac-integration/"
 "issues\n"
-"POT-Creation-Date: 2021-01-11 14:28-0800\n"
+"POT-Creation-Date: 2021-06-29 14:40-0700\n"
 "PO-Revision-Date: 2019-09-16 08:24+0200\n"
 "Last-Translator: Марко М. Костић <marko.m.kostic@gmail.com>\n"
 "Language-Team: Serbian <gnome-sr@googlegroups.com>\n"
@@ -67,7 +67,7 @@ msgid "Bring All to Front"
 msgstr "Пребаци све у прочеље"
 
 #. Translators: This is the "About foo" menu item at the top of the App menu.
-#: src/gtkosxapplication_quartz.c:859 src/gtkosxapplication_quartz.c:883
+#: src/gtkosxapplication_quartz.c:876 src/gtkosxapplication_quartz.c:900
 #, c-format
 msgid "About %s"
 msgstr "О програму %s"
