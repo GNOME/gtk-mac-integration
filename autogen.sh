@@ -21,8 +21,9 @@ if [ "$#" = 0 -a "x$NOCONFIGURE" = "x" ]; then
         echo "*** '$0' command line." >&2
         echo "" >&2
 fi
-aclocal -I m4 --install
+autopoint
 gtkdocize --copy || exit 1
+aclocal -I m4 --install
 autoreconf --verbose --force --install || exit 1
 
 cd "$olddir"
