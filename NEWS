@@ -1,3 +1,10 @@
+Changes from version gtk-mac-integration-3.0.0 to version
+        gtk-mac-integration-3.0.1
+* Fix localization of the Apple menu when running in a bundle.
+* Fix gettext configuration when building from a clean git repo.
+* Change the GtkosxApplicationAttentionType enums to avoid namespace pollution.
+* New/Updated translations: Basque, Catalan, Galician, Swedish.
+
 Changes from version gtk-mac-integration-2.1.3 to version
         gtk-mac-integration-3.0.0
 * Removed the obsolete Carbon-based gtk-mac-bundle, gtk-mac-dock, and
