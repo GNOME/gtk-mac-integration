@@ -44,6 +44,7 @@ idle_call_activate (ClosureData *action)
 
   /* All menu items have the action "activate", which will be handled by this child class
    */
+  const char* locale = setlocale(LC_NUMERIC, "C");
   self = [ super initWithTitle: title action: @selector (activate: ) keyEquivalent: @"" ];
 
   if (self)
@@ -58,6 +59,7 @@ idle_call_activate (ClosureData *action)
       notUsed = NO;
       g_weak_ref_set (&menuItem, GTK_MENU_ITEM (gtkmenuitem));
     }
+  setlocale(LC_NUMERIC, locale);
   return self;
 }
 
