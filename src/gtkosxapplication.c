@@ -131,23 +131,28 @@
  * |[
  * gtk_widget_hide(GTK_WIDGET(file_quit_menu_item));
  * ]|
- * The other two must be moved in code, and there are two functions
- * for doing that. The first one creates "goups", which is just an
- * easy way to manage separators, and the second adds the actual menu
- * items to the groups. Here's an example:
+ * The other two must be moved in code. That's done by inserting them
+ * into the app menu. The following example demonstrates this along
+ * with placing separators above and below to set off our new menu
+ * items.
  * |[
  *  GtkosxApplicationMenuGroup *group;
  *  GtkMenuItem *about_item, *preferences_item;
  *  about_item = gtk_ui_manager_get_widget(mgr, "/menubar/Help/About");
  *  preferences_item = gtk_ui_manager_get_widget(mgr, "/menubar/Edit/Preferences");
+ *  sep = gtk_separator_menu_item_new ();
+ *  g_object_ref (sep);
+ *  gtkosx_application_insert_app_menu_item  (theApp, sep, 1);
+
  *
- *  group = gtkosx_application_add_app_menu_group (theApp);
- *  gtkosx_application_add_app_menu_item  (theApp, group,
- *                                         GTK_MENU_ITEM (about_item));
+ *  gtkosx_application_insert_app_menu_item  (theApp,
+ *                                            GTK_MENU_ITEM (about_item), 1);
  *
- *  group = gtkosx_application_add_app_menu_group (theApp);
- *  gtkosx_application_add_app_menu_item  (theApp, group,
- *                                         GTK_MENU_ITEM (preferences_item));
+ *  gtkosx_application_insert_app_menu_item  (theApp,
+ *                                            GTK_MENU_ITEM (preferences_item), 2);
+ *  sep = gtk_separator_menu_item_new ();
+ *  g_object_ref (sep);
+ *  gtkosx_application_insert_app_menu_item  (theApp, sep, 1);
  * ]|
  * Once we have everything set up for as many windows as we're going
  * to open before we call gtk_main_loop(), we need to tell OS X that
