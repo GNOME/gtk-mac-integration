@@ -36,7 +36,15 @@
  * Exposes to the Gtk+ program important functions of
  * OS X's NSApplication class for use by Gtk+ applications running with
  * the quartz Gdk backend and provides addtional functions for
- * integrating a Gtk+ program into the OS X user environment.
+ * integrating a Gtk+ program into the macOS user environment.
+ *
+ * Note: There's a complete example program in src/testintegration.c.
+ *
+ * Note: This library is obsolescent in Gtk3 as there are built-in
+ * features in GLib and Gtk to integrate Gtk applications with macOS.
+ *
+ * Note: gtkosxapplication does not and cannot support Gtk4. Use the
+ * built-in macOS integration features.
  *
  * Using GtkosxApplication is pretty simple.
  * First, create an instance at startup:
