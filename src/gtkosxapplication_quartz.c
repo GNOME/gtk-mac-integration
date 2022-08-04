@@ -593,6 +593,7 @@ gtkosx_application_init (GtkosxApplication *self)
   [NSApp setDelegate: [GtkApplicationDelegate new]];
   self->priv->delegate = [NSApp delegate];
   bindtextdomain (PACKAGE_NAME, LOCALEDIR);
+  bind_textdomain_codeset(PACKAGE_NAME, "UTF-8");
 
   /* Check if we're running inside an application bundle and overwrite the
    * previously bound domain to a location inside the bundle.
