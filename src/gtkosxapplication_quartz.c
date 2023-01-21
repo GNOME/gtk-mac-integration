@@ -25,6 +25,7 @@
  */
 
 #include <gtk/gtk.h>
+#include <AvailabilityMacros.h>
 
 #import "GtkApplicationDelegate.h"
 #import "GtkApplicationNotify.h"
@@ -215,6 +216,12 @@ _nsapp_hide_others (id sender)
   [NSApp hideOtherApplications:sender];
 }
 
+static void
+_nsapp_quit (id sender)
+{
+  [NSApp terminate:nil];
+}
+
 /*
  * create_apple_menu:
  * @self: The GtkosxApplication object.
@@ -251,7 +258,7 @@ create_apple_menu (GtkosxApplication *self, GtkWidget *toplevel)
   NSString *title = [NSString stringWithUTF8String: _("Services")];
   NSMenu *menuServices = [[[NSMenu alloc] initWithTitle: title] autorelease];
   const char *appname = [get_application_name () UTF8String];
-  GClosure *hide_closure, *hide_others_closure;
+  GClosure *hide_closure, *hide_others_closure, *quit_closure;
   GtkAccelGroup *accel_group = gtk_accel_group_new ();
   gtk_window_add_accel_group (GTK_WINDOW (toplevel), accel_group);
 
@@ -305,6 +312,10 @@ create_apple_menu (GtkosxApplication *self, GtkWidget *toplevel)
    */
   menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithFormat: [NSString stringWithUTF8String: _("Quit %s")], appname]
 	      action: @selector (terminate:) keyEquivalent: @"q"];
+  quit_closure = g_cclosure_new (G_CALLBACK (_nsapp_quit),
+				 (void*)menuitem, NULL);
+  gtk_accel_group_connect (accel_group, GDK_q, GDK_META_MASK,
+			   GTK_ACCEL_MASK, quit_closure);
 /*
  * Accounts for the added application name to the Quit menu item in a
  * way that word order can be defined.
@@ -528,6 +539,7 @@ block_termination_accumulator (GSignalInvocationHint *ihint, GValue *accum,
  *
  * Returns: Whether to continue event processing.
  */
+
 static GdkFilterReturn
 global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
                           gpointer  user_data)
@@ -547,8 +559,7 @@ global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
    * thread; use an idle or timer event to start the handler if
    * necessary.
    */
-  if ([nsevent type] == NSKeyDown &&
-      gtkosx_application_use_quartz_accelerators (app) )
+  if ([nsevent type] == GDK_NS_KEY_DOWN && gtkosx_application_use_quartz_accelerators (app))
     {
       gboolean result;
 #if GTK_CHECK_VERSION (3, 6, 0)

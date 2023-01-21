@@ -65,6 +65,7 @@
 /* These others are optional */
 #define GTK_DISABLE_DEPRECATION_WARNINGS 1
 #define BUILT_UI //The built UI uses deprecated functions
+//#define GTKOSXAPPLICATION //Uses GtkMenuItems instead of GtkActions
 //#define QUARTZ_HANDLERS
 
 
