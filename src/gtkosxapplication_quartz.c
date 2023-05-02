@@ -53,6 +53,15 @@
 #endif
 #define G_LOG_DOMAIN "gtkosxapplication"
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
+#define GDK_QUARTZ_ALTERNATE_KEY_MASK NSAlternateKeyMask
+#define GDK_QUARTZ_COMMAND_KEY_MASK NSCommandKeyMask
+#define GDK_QUARTZ_KEY_DOWN NSKeyDown
+#else
+#define GDK_QUARTZ_ALTERNATE_KEY_MASK NSEventModifierFlagOption
+#define GDK_QUARTZ_COMMAND_KEY_MASK NSEventModifierFlagCommand
+#define GDK_QUARTZ_KEY_DOWN NSEventTypeKeyDown
+#endif
 /* This is a private function in libgdk; we need to have is so that we
    can force new windows onto the Window menu */
 extern NSWindow* gdk_quartz_window_get_nswindow (GdkWindow*);
@@ -290,7 +299,7 @@ create_apple_menu (GtkosxApplication *self, GtkWidget *toplevel)
   /* Translators: This is the "Hide Others" menu item for the "Apple" menu. */
   menuitem = [[NSMenuItem alloc] initWithTitle: [NSString stringWithUTF8String: _("Hide Others")]
 	      action: @selector (hideOtherApplications: ) keyEquivalent: @"h"];
-  [menuitem setKeyEquivalentModifierMask: NSCommandKeyMask | NSAlternateKeyMask];
+  [menuitem setKeyEquivalentModifierMask: GDK_QUARTZ_COMMAND_KEY_MASK | GDK_QUARTZ_ALTERNATE_KEY_MASK];
   [menuitem setTarget: NSApp];
   [app_menu addItem: menuitem];
   [menuitem release];
@@ -559,7 +568,7 @@ global_event_filter_func (gpointer  windowing_event, GdkEvent *event,
    * thread; use an idle or timer event to start the handler if
    * necessary.
    */
-  if ([nsevent type] == GDK_NS_KEY_DOWN && gtkosx_application_use_quartz_accelerators (app))
+  if ([nsevent type] == GDK_QUARTZ_KEY_DOWN && gtkosx_application_use_quartz_accelerators (app))
     {
       gboolean result;
 #if GTK_CHECK_VERSION (3, 6, 0)

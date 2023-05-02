@@ -25,6 +25,7 @@
  */
 
 #include <config.h>
+#include <gdk/gdkquartz.h> //for gdk_quartz_osx_version()
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include "gtkosx-image.h"
 #include "gtk-mac-image-utils.h"
@@ -97,8 +98,15 @@ nsimage_from_pixbuf (GdkPixbuf *pixbuf)
   [newImage lockFocus];
 
   // Get the Quartz context and draw.
-  imageContext = (CGContextRef)[[NSGraphicsContext currentContext]
-                                graphicsPort];
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 101000
+    imageContext = [[NSGraphicsContext currentContext] graphicsPort];
+#else
+  if (gdk_quartz_osx_version () < GDK_OSX_YOSEMITE)
+    imageContext = [[NSGraphicsContext currentContext] graphicsPort];
+  else
+    imageContext = [[NSGraphicsContext currentContext] CGContext];
+#endif
+
   CGContextDrawImage (imageContext, * (CGRect*)&imageRect, image);
   [newImage unlockFocus];
   CGImageRelease (image);
