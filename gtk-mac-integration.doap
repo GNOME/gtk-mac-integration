@@ -16,7 +16,7 @@
 
   Gtk-mac-integration is licensed under the Gnu Lesser General Public
   License, the same terms under whic Gtk+ is licensed.</description>
-  <homepage rdf:resource="http://www.gtk+.org/" />
+  <homepage rdf:resource="https://www.gtk.org/" />
   <license rdf:resource="http://usefulinc.com/doap/licenses/gpl" />
   <bug-database rdf:resource="https://gitlab.gnome.org/GNOME/gtk-mac-integration/issues/" />
   <download-page rdf:resource="https://sourceforge.net/projects/gtk-osx/files/" />
