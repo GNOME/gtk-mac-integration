@@ -1,0 +1,73 @@
+# Hindi translation for gtk-mac-integration.
+# Copyright (C) 2024 gtk-mac-integration's COPYRIGHT HOLDER
+# This file is distributed under the same license as the gtk-mac-integration package.
+# Scrambled 777 <weblate.scrambled777@simplelogin.com>, 2024.
+# Scrambled777 <weblate.scrambled777@simplelogin.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gtk-mac-integration master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gtk-mac-integration/"
+"issues\n"
+"POT-Creation-Date: 2024-01-07 10:22+0000\n"
+"PO-Revision-Date: 2024-04-23 13:16+0530\n"
+"Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
+"Language-Team: Hindi\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Gtranslator 46.0\n"
+
+#. Translators: This is the Services menu item for the "Apple" menu.
+#: src/gtkosxapplication_quartz.c:267
+msgid "Services"
+msgstr "सेवाएं"
+
+#. Translators: This is the "Hide" menu item of the "Apple"
+#. menu. The parameter is the application name.
+#.
+#: src/gtkosxapplication_quartz.c:286
+#, c-format
+msgid "Hide %s"
+msgstr "%s छुपाएं"
+
+#. Translators: This is the "Hide Others" menu item for the "Apple" menu.
+#: src/gtkosxapplication_quartz.c:300
+msgid "Hide Others"
+msgstr "अन्य को छुपाएं"
+
+#. Translators: This is the Show All menu item in the "Apple" menu.
+#: src/gtkosxapplication_quartz.c:307
+msgid "Show All"
+msgstr "सभी दिखाएं"
+
+#. Translators: This is the Quit menu item for the "Apple" menu. The
+#. parameter is the application name.
+#.
+#: src/gtkosxapplication_quartz.c:322
+#, c-format
+msgid "Quit %s"
+msgstr "%s छोड़ें"
+
+#. Translators: This is the title of the Window menu in the menubar.
+#: src/gtkosxapplication_quartz.c:359
+msgid "Window"
+msgstr "विंडो"
+
+#. Translators: This is the Minimize menuitem for the Window menu.
+#: src/gtkosxapplication_quartz.c:375
+msgid "Minimize"
+msgstr "छोटा करें"
+
+#. Translators: This is a menu item in the Window menu.
+#: src/gtkosxapplication_quartz.c:379
+msgid "Bring All to Front"
+msgstr "सभी को सामने लायें"
+
+#. Translators: This is the "About foo" menu item at the top of the App menu.
+#: src/gtkosxapplication_quartz.c:897 src/gtkosxapplication_quartz.c:921
+#, c-format
+msgid "About %s"
+msgstr "%s के बारे में"
