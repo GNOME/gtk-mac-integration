@@ -101,9 +101,11 @@ nsimage_from_pixbuf (GdkPixbuf *pixbuf)
 #if MAC_OS_X_VERSION_MAX_ALLOWED < 101000
     imageContext = [[NSGraphicsContext currentContext] graphicsPort];
 #else
+# if MAC_OS_X_VERSION_MIN_REQUIRED < 101000
   if (gdk_quartz_osx_version () < GDK_OSX_YOSEMITE)
     imageContext = [[NSGraphicsContext currentContext] graphicsPort];
   else
+#endif
     imageContext = [[NSGraphicsContext currentContext] CGContext];
 #endif
 

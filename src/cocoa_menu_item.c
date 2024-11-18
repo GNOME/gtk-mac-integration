@@ -21,6 +21,7 @@
  */
 
 #include <config.h>
+#include <gdk/gdkquartz.h> //for gdk_quartz_osx_version()
 #import <Cocoa/Cocoa.h>
 #include <gtk/gtk.h>
 #if GTK_MAJOR_VERSION == 3
@@ -121,13 +122,37 @@ cocoa_menu_item_update_checked (_GNSMenuItem *cocoa_item,
                 "active", &active,
                 "inconsistent", &inconsistent,
                 NULL);
-
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 101300
   if (inconsistent)
     [cocoa_item setState: NSMixedState];
   else if (active)
     [cocoa_item setState: NSOnState];
   else
     [cocoa_item setState: NSOffState];
+#else
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101300
+  if (gdk_quartz_osx_version () < GDK_OSX_HIGH_SIERRA)
+  {
+    if (inconsistent)
+      [cocoa_item setState: NSMixedState];
+    else if (active)
+      [cocoa_item setState: NSOnState];
+    else
+      [cocoa_item setState: NSOffState];
+  }
+  else
+  { 
+#endif
+    if (inconsistent)
+      [cocoa_item setState: NSControlStateValueMixed];
+    else if (active)
+      [cocoa_item setState: NSControlStateValueOn];
+    else
+      [cocoa_item setState: NSControlStateValueOff];
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101300
+  }
+#endif
+#endif
 }
 
 static void
@@ -249,7 +274,16 @@ cocoa_menu_item_update_accelerator (_GNSMenuItem *cocoa_item,
 		  [cocoa_item setKeyEquivalent: @""];
                   return;
                 }
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 101300
               modifiers |= NSNumericPadKeyMask;
+#else
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101300
+              if (gdk_quartz_osx_version () < GDK_OSX_HIGH_SIERRA)
+                modifiers |= NSNumericPadKeyMask;
+              else
+#endif
+                modifiers |= NSEventModifierFlagNumericPad;
+#endif
             }
 
           /* if we somehow got here with GDK_A ... GDK_Z rather than GDK_a ... GDK_z, then take note
@@ -258,7 +292,16 @@ cocoa_menu_item_update_accelerator (_GNSMenuItem *cocoa_item,
 
           if (keyval_is_uppercase (actual_key))
             {
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
               modifiers |= NSShiftKeyMask;
+#else
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
+              if (gdk_quartz_osx_version () < GDK_OSX_SIERRA)
+                modifiers |= NSShiftKeyMask;
+              else
+#endif
+                modifiers |= NSEventModifierFlagShift;
+#endif
             }
 
           str = gdk_quartz_keyval_to_string (actual_key);
@@ -286,24 +329,61 @@ cocoa_menu_item_update_accelerator (_GNSMenuItem *cocoa_item,
             {
               if (key->accel_mods & GDK_SHIFT_MASK)
                 {
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
                   modifiers |= NSShiftKeyMask;
+
+#else
+# if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
+                  if (gdk_quartz_osx_version () < GDK_OSX_SIERRA)
+                    modifiers |= NSShiftKeyMask;
+                  else
+#endif
+                    modifiers |= NSEventModifierFlagShift;
+#endif
                 }
 
               if (key->accel_mods & GDK_CONTROL_MASK)
                 {
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
                   modifiers |= NSControlKeyMask;
+#else
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
+                  if (gdk_quartz_osx_version () < GDK_OSX_SIERRA)
+                    modifiers |= NSControlKeyMask;
+                  else
+#endif
+                    modifiers |= NSEventModifierFlagControl;
+#endif
                 }
 
               /* gdk/quartz maps Alt/Option to Mod5 */
               if (key->accel_mods & (GDK_MOD1_MASK))
                 {
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
                   modifiers |= NSAlternateKeyMask;
+#else 
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
+                  if (gdk_quartz_osx_version () < GDK_OSX_SIERRA)
+                    modifiers |= NSAlternateKeyMask;
+                  else
+#endif
+                    modifiers |= NSEventModifierFlagOption;
+#endif
                 }
 
               /* gdk/quartz maps Command to MOD1 */
               if (key->accel_mods & GDK_META_MASK)
                 {
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
                   modifiers |= NSCommandKeyMask;
+#else
+# if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
+                  if (gdk_quartz_osx_version () < GDK_OSX_SIERRA)
+                    modifiers |= NSCommandKeyMask;
+                  else
+#endif
+                    modifiers |= NSEventModifierFlagCommand;
+#endif
                 }
 
             }
