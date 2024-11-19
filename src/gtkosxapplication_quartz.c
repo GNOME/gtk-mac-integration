@@ -53,15 +53,6 @@
 #endif
 #define G_LOG_DOMAIN "gtkosxapplication"
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
-#define GDK_QUARTZ_ALTERNATE_KEY_MASK NSAlternateKeyMask
-#define GDK_QUARTZ_COMMAND_KEY_MASK NSCommandKeyMask
-#define GDK_QUARTZ_KEY_DOWN NSKeyDown
-#else
-#define GDK_QUARTZ_ALTERNATE_KEY_MASK NSEventModifierFlagOption
-#define GDK_QUARTZ_COMMAND_KEY_MASK NSEventModifierFlagCommand
-#define GDK_QUARTZ_KEY_DOWN NSEventTypeKeyDown
-#endif
 /* This is a private function in libgdk; we need to have is so that we
    can force new windows onto the Window menu */
 extern NSWindow* gdk_quartz_window_get_nswindow (GdkWindow*);

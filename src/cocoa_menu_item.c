@@ -40,33 +40,6 @@
 //#define DEBUG(format, ...) g_printerr ("%s: " format, G_STRFUNC, ## __VA_ARGS__)
 #define DEBUG(format, ...)
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
-#define GDK_QUARTZ_ALTERNATE_KEY_MASK NSAlternateKeyMask
-#define GDK_QUARTZ_COMMAND_KEY_MASK NSCommandKeyMask
-#define GDK_QUARTZ_CONTROL_KEY_MASK NSControlKeyMask
-#define GDK_QUARTZ_SHIFT_KEY_MASK NSShiftKeyMask
-#define GDK_QUARTZ_KEY_DOWN NSKeyDown
-#else
-#define GDK_QUARTZ_ALTERNATE_KEY_MASK NSEventModifierFlagOption
-#define GDK_QUARTZ_COMMAND_KEY_MASK NSEventModifierFlagCommand
-#define GDK_QUARTZ_CONTROL_KEY_MASK NSEventModifierFlagControl
-#define GDK_QUARTZ_SHIFT_KEY_MASK NSEventModifierFlagShift
-#define GDK_QUARTZ_KEY_DOWN NSEventTypeKeyDown
-#endif
-
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 101300
-#define GDK_QUARTZ_MIXED_STATE NSMixedState
-#define GDK_QUARTZ_ON_STATE NSOnState
-#define GDK_QUARTZ_OFF_STATE NSOffState
-#define GDK_QUARTZ_NUMERIC_PAD_KEY_MASK NSNumericPadKeyMask
-#else
-#define GDK_QUARTZ_MIXED_STATE NSControlStateValueMixed
-#define GDK_QUARTZ_ON_STATE NSControlStateValueOn
-#define GDK_QUARTZ_OFF_STATE NSControlStateValueOff
-#define GDK_QUARTZ_NUMERIC_PAD_KEY_MASK NSEventModifierFlagNumericPad
-#endif
-
-
 /*
  * These functions are long, ugly, and monotonous, so forward declare
  * them here and define them at the end of the file.
