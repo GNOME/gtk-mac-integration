@@ -40,6 +40,33 @@
 //#define DEBUG(format, ...) g_printerr ("%s: " format, G_STRFUNC, ## __VA_ARGS__)
 #define DEBUG(format, ...)
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
+#define GDK_QUARTZ_ALTERNATE_KEY_MASK NSAlternateKeyMask
+#define GDK_QUARTZ_COMMAND_KEY_MASK NSCommandKeyMask
+#define GDK_QUARTZ_CONTROL_KEY_MASK NSControlKeyMask
+#define GDK_QUARTZ_SHIFT_KEY_MASK NSShiftKeyMask
+#define GDK_QUARTZ_KEY_DOWN NSKeyDown
+#else
+#define GDK_QUARTZ_ALTERNATE_KEY_MASK NSEventModifierFlagOption
+#define GDK_QUARTZ_COMMAND_KEY_MASK NSEventModifierFlagCommand
+#define GDK_QUARTZ_CONTROL_KEY_MASK NSEventModifierFlagControl
+#define GDK_QUARTZ_SHIFT_KEY_MASK NSEventModifierFlagShift
+#define GDK_QUARTZ_KEY_DOWN NSEventTypeKeyDown
+#endif
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101300
+#define GDK_QUARTZ_MIXED_STATE NSMixedState
+#define GDK_QUARTZ_ON_STATE NSOnState
+#define GDK_QUARTZ_OFF_STATE NSOffState
+#define GDK_QUARTZ_NUMERIC_PAD_KEY_MASK NSNumericPadKeyMask
+#else
+#define GDK_QUARTZ_MIXED_STATE NSControlStateValueMixed
+#define GDK_QUARTZ_ON_STATE NSControlStateValueOn
+#define GDK_QUARTZ_OFF_STATE NSControlStateValueOff
+#define GDK_QUARTZ_NUMERIC_PAD_KEY_MASK NSEventModifierFlagNumericPad
+#endif
+
+
 /*
  * These functions are long, ugly, and monotonous, so forward declare
  * them here and define them at the end of the file.
@@ -122,37 +149,13 @@ cocoa_menu_item_update_checked (_GNSMenuItem *cocoa_item,
                 "active", &active,
                 "inconsistent", &inconsistent,
                 NULL);
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101300
+
   if (inconsistent)
-    [cocoa_item setState: NSMixedState];
+    [cocoa_item setState: GDK_QUARTZ_MIXED_STATE];
   else if (active)
-    [cocoa_item setState: NSOnState];
+    [cocoa_item setState: GDK_QUARTZ_ON_STATE];
   else
-    [cocoa_item setState: NSOffState];
-#else
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 101300
-  if (gdk_quartz_osx_version () < GDK_OSX_HIGH_SIERRA)
-  {
-    if (inconsistent)
-      [cocoa_item setState: NSMixedState];
-    else if (active)
-      [cocoa_item setState: NSOnState];
-    else
-      [cocoa_item setState: NSOffState];
-  }
-  else
-  { 
-#endif
-    if (inconsistent)
-      [cocoa_item setState: NSControlStateValueMixed];
-    else if (active)
-      [cocoa_item setState: NSControlStateValueOn];
-    else
-      [cocoa_item setState: NSControlStateValueOff];
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 101300
-  }
-#endif
-#endif
+    [cocoa_item setState: GDK_QUARTZ_OFF_STATE];
 }
 
 static void
@@ -274,16 +277,7 @@ cocoa_menu_item_update_accelerator (_GNSMenuItem *cocoa_item,
 		  [cocoa_item setKeyEquivalent: @""];
                   return;
                 }
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101300
-              modifiers |= NSNumericPadKeyMask;
-#else
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 101300
-              if (gdk_quartz_osx_version () < GDK_OSX_HIGH_SIERRA)
-                modifiers |= NSNumericPadKeyMask;
-              else
-#endif
-                modifiers |= NSEventModifierFlagNumericPad;
-#endif
+              modifiers |= GDK_QUARTZ_NUMERIC_PAD_KEY_MASK;
             }
 
           /* if we somehow got here with GDK_A ... GDK_Z rather than GDK_a ... GDK_z, then take note
@@ -292,16 +286,7 @@ cocoa_menu_item_update_accelerator (_GNSMenuItem *cocoa_item,
 
           if (keyval_is_uppercase (actual_key))
             {
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
-              modifiers |= NSShiftKeyMask;
-#else
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
-              if (gdk_quartz_osx_version () < GDK_OSX_SIERRA)
-                modifiers |= NSShiftKeyMask;
-              else
-#endif
-                modifiers |= NSEventModifierFlagShift;
-#endif
+              modifiers |= GDK_QUARTZ_SHIFT_KEY_MASK;
             }
 
           str = gdk_quartz_keyval_to_string (actual_key);
@@ -329,61 +314,24 @@ cocoa_menu_item_update_accelerator (_GNSMenuItem *cocoa_item,
             {
               if (key->accel_mods & GDK_SHIFT_MASK)
                 {
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
-                  modifiers |= NSShiftKeyMask;
-
-#else
-# if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
-                  if (gdk_quartz_osx_version () < GDK_OSX_SIERRA)
-                    modifiers |= NSShiftKeyMask;
-                  else
-#endif
-                    modifiers |= NSEventModifierFlagShift;
-#endif
+                  modifiers |= GDK_QUARTZ_SHIFT_KEY_MASK;
                 }
 
               if (key->accel_mods & GDK_CONTROL_MASK)
                 {
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
-                  modifiers |= NSControlKeyMask;
-#else
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
-                  if (gdk_quartz_osx_version () < GDK_OSX_SIERRA)
-                    modifiers |= NSControlKeyMask;
-                  else
-#endif
-                    modifiers |= NSEventModifierFlagControl;
-#endif
+                  modifiers |= GDK_QUARTZ_CONTROL_KEY_MASK;
                 }
 
               /* gdk/quartz maps Alt/Option to Mod5 */
               if (key->accel_mods & (GDK_MOD1_MASK))
                 {
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
-                  modifiers |= NSAlternateKeyMask;
-#else 
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
-                  if (gdk_quartz_osx_version () < GDK_OSX_SIERRA)
-                    modifiers |= NSAlternateKeyMask;
-                  else
-#endif
-                    modifiers |= NSEventModifierFlagOption;
-#endif
+                  modifiers |= GDK_QUARTZ_ALTERNATE_KEY_MASK;
                 }
 
               /* gdk/quartz maps Command to MOD1 */
               if (key->accel_mods & GDK_META_MASK)
                 {
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
-                  modifiers |= NSCommandKeyMask;
-#else
-# if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
-                  if (gdk_quartz_osx_version () < GDK_OSX_SIERRA)
-                    modifiers |= NSCommandKeyMask;
-                  else
-#endif
-                    modifiers |= NSEventModifierFlagCommand;
-#endif
+                  modifiers |= GDK_QUARTZ_COMMAND_KEY_MASK;
                 }
 
             }
