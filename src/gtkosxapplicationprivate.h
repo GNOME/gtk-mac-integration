@@ -29,8 +29,6 @@
 #import "GtkApplicationNotify.h"
 #import "GtkApplicationDelegate.h"
 
-#define  GTKOSX_APPLICATION_GET_PRIVATE(obj)	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), GTKOSX_TYPE_APPLICATION, GtkosxApplicationPrivate))
-
 struct _GtkosxApplicationPrivate
 {
   gboolean use_quartz_accelerators;

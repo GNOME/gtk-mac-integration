@@ -35,8 +35,7 @@ AM_GNU_GETTEXT_REQUIRE_VERSION([0.20.2])
 AC_SUBST([GETTEXT_PACKAGE], [gtk-mac-integration])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], "$GETTEXT_PACKAGE", [Define to the gettext package name.])
 
-AM_PATH_GLIB_2_0([2.14.0])
-AC_MSG_CHECKING([GLib Version])
+AM_PATH_GLIB_2_0([2.38.0])
 PKG_INSTALLDIR()
 
 GTK_DOC_CHECK([1.11], [--flavour no-tmpl])

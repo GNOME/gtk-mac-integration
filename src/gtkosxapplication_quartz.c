@@ -68,7 +68,8 @@ extern NSWindow* gdk_quartz_window_get_nswindow (GdkWindow*);
  * - Figure out what to do per app/window...
  *
  */
-G_DEFINE_TYPE (GtkosxApplication, gtkosx_application, G_TYPE_OBJECT)
+
+G_DEFINE_TYPE_WITH_PRIVATE (GtkosxApplication, gtkosx_application, G_TYPE_OBJECT)
 
 static GQuark emission_hook_quark = 0;
 
@@ -596,7 +597,7 @@ static void
 gtkosx_application_init (GtkosxApplication *self)
 {
   [NSApplication sharedApplication];
-  self->priv = GTKOSX_APPLICATION_GET_PRIVATE (self);
+  self->priv = (GtkosxApplicationPrivate *) gtkosx_application_get_instance_private (self);
   self->priv->use_quartz_accelerators = TRUE;
   self->priv->dock_menu = NULL;
   gdk_window_add_filter (NULL, global_event_filter_func, (gpointer)self);
@@ -644,7 +645,6 @@ void
 gtkosx_application_class_init (GtkosxApplicationClass *klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-  g_type_class_add_private (klass, sizeof (GtkosxApplicationPrivate));
   gobject_class->constructor = gtkosx_application_constructor;
   /**
    * GtkosxApplication::NSApplicationDidBecomeActive:
