@@ -1,7 +1,7 @@
 # Gtk-mac-integration Library.
 # Copyright (C) YEAR John Ralls <jralls@ceridwen.us>
 # This file is distributed under the same license as the gtk-mac-integration package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# MARCO RIVA <oelimar@email.it>, 2021.
 #
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr "Nascondi Altre"
 #. Translators: This is the Show All menu item in the "Apple" menu.
 #: src/gtkosxapplication_quartz.c:291
 msgid "Show All"
-msgstr "ÖMostra tutto"
+msgstr "Mostra tutto"
 
 #. Translators: This is the Quit menu item for the "Apple" menu. The
 #. parameter is the application name.
@@ -46,7 +46,7 @@ msgstr "ÖMostra tutto"
 #: src/gtkosxapplication_quartz.c:306
 #, c-format
 msgid "Quit %s"
-msgstr "Smettere %s"
+msgstr "Esci %s"
 
 #. Translators: This is the title of the Window menu in the menubar.
 #: src/gtkosxapplication_quartz.c:339
