@@ -28,16 +28,12 @@
 
 
 G_BEGIN_DECLS
-#define GTKOSX_TYPE_APPLICATION	(gtkosx_application_get_type())
-#define GTKOSX_APPLICATION(obj) 	(G_TYPE_CHECK_INSTANCE_CAST ((obj), GTKOSX_TYPE_APPLICATION, GtkosxApplication))
-#define GTKOSX_IS_APPLICATION(obj)	(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTKOSX_TYPE_APPLICATION))
-#define GTKOSX_APPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTKOSX_TYPE_APPLICATION, GtkosxApplicationClass))
-#define GTKOSX_IS_APPLICATION_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass),  GTKOSX_TYPE_APPLICATION))
-#define GTKOSX_APPLICATION_GET_CLASS(obj) 	(G_TYPE_INSTANCE_GET_CLASS ((obj), GTKOSX_TYPE_APPLICATION, GtkosxApplicationClass))
+#define GTKOSX_TYPE_APPLICATION (gtkosx_application_get_type())
+G_DECLARE_FINAL_TYPE (GtkosxApplication, gtkosx_application, GTKOSX, APPLICATION, GObject)
 
 typedef struct _GtkosxApplication GtkosxApplication;
 typedef struct _GtkosxApplicationPrivate GtkosxApplicationPrivate;
-typedef struct _GtkosxApplicationClass GtkosxApplicationClass;
+
 /**
  * GtkosxApplicationMenuGroup:
  * @items: List of menu items in the group.
@@ -65,7 +61,6 @@ struct _GtkosxApplicationMenuGroup
 };
 
 
-GType gtkosx_application_get_type (void);
 GtkosxApplication *gtkosx_application_get (void);
 
 //void gtkosx_application_init (GtkosxApplication *self);
@@ -97,8 +92,8 @@ void gtkosx_application_set_help_menu (GtkosxApplication *self,
  * GtkosxApplicationAttentionType:
  * @GTKOSX_APPLICATION_ATTENTION_TYPE_CRITICAL_REQUEST: Bounce the icon until the app is activated.
  * @GTKOSX_APPLICATION_ATTENTION_TYPE_INFO_REQUEST: Bounce the icon for one second.
- * @CRITICAL_REQUEST: (Deprecated) Bounce the icon until the app is activated.
- * @INFO_REQUEST: (Deprecated) Bounce the icon for one second.
+ * @CRITICAL_REQUEST (Deprecated): Bounce the icon until the app is activated.
+ * @INFO_REQUEST (Deprecated): Bounce the icon for one second.
  *
  * The possible values for dock attention requests.
  */
