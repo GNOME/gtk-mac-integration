@@ -73,6 +73,26 @@
   return result;
 }
 
+-(void) application: (NSApplication*)theApplication openFiless: (NSArray<NSString *> *) files
+{
+  gboolean overall_result = TRUE;
+  guint sig = g_signal_lookup ("NSApplicationOpenFile",
+                               GTKOSX_TYPE_APPLICATION);
+  if (sig)
+  {
+    GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
+    for (NSString *file in files)
+      {
+        gboolean result = TRUE;
+        g_signal_emit (app, sig, 0, [file UTF8String], &result);
+        if (!result)
+          overall_result = FALSE;
+      }
+      [theApplication replyToOpenOrPrint: overall_result ? NSApplicationDelegateReplySuccess : NSApplicationDelegateReplyFailure];
+    g_object_unref (app);
+  }
+}
+
 -(NSApplicationTerminateReply) applicationShouldTerminate: (NSApplication *)sender
 {
   GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);

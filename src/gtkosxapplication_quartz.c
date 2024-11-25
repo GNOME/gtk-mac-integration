@@ -726,10 +726,11 @@ gtkosx_application_class_init (GtkosxApplicationClass *klass)
    * @path: A UTF8-encoded file path to open.
    * @user_data: Data attached at connection
    *
-   * Emitted when a OpenFile, OpenFiles, or OpenEmptyFile event is
-   * received from the operating system. This signal does not implement
-   * drops, but it does implement "open with" events from Finder. An
-   * OpenEmptyFile is received at launch in Python applications.
+   * Emitted when an OpenFile, OpenFiles, or (in macOS 10.13 or later)
+   * OpenURLs event is received from the operating system. This signal
+   * does not implement drops, but it does implement "open with"
+   * events from Finder. If more than one file or URL is supplied then
+   * the signal is emitted once for each file.
    *
    * Returns: Boolean indicating success at opening the file.
    */
