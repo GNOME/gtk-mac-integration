@@ -51,7 +51,14 @@
     g_object_unref (app);
   }
 }
-#else
+#endif
+
+/* The openURLs documentation says that if the delegate implements it
+   then openFile won't be called, but that's not quite true: If the
+   odoc devent meets the criteria (it's a URL whose type is registered
+   in the app's CFBundleURLTypes and applicationDidFinishlaunching has
+   run) it calls openURLs otherwise it calls openFile or openFiles.
+ */
 -(BOOL) application: (NSApplication*)theApplication openFile: (NSString*) file
 {
   GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
@@ -65,7 +72,6 @@
   g_object_unref (app);
   return result;
 }
-#endif
 
 -(NSApplicationTerminateReply) applicationShouldTerminate: (NSApplication *)sender
 {
