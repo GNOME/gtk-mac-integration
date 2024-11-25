@@ -1,3 +1,16 @@
+Changes from version gtk-mac-integration-3.0.1 to version
+        gtk-mac-integration-3.0.2
+* Set C locale when creating a menu item.
+* Replace obsolete functions in documentation example
+* Add notes about obsolesence and Gtk4 non-support to docs and README
+* Fix crash with some locales
+* Fix Quit menu item key equivalent for GtkMenuItems case
+* Fix deprecations and no-longer-defined symbol.
+* DOAP: Fix 404 homepage URL
+* Update GObject declaration and definition macros. Requires Glib 2.38 or later
+* Add support for openFiles and openURLs in GtkApplicationDelegate.
+* New/Updated Translations: Belorussan, Georgian, HEbrew, Hindi, Italian
+
 Changes from version gtk-mac-integration-3.0.0 to version
         gtk-mac-integration-3.0.1
 * Fix localization of the Apple menu when running in a bundle.
