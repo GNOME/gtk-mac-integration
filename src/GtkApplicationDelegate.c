@@ -78,6 +78,7 @@ static gchar *utf8_path = NULL;
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 10130
 -(void) application: (NSApplication*)theApplication openURLs: (NSArray<NSURL *> *) urls
 {
+  gboolean overall_result = TRUE;
   guint sig = g_signal_lookup ("NSApplicationOpenFile",
                                GTKOSX_TYPE_APPLICATION);
   if (sig)
@@ -88,12 +89,10 @@ static gchar *utf8_path = NULL;
         gboolean result = TRUE;
         utf8_paths = g_slist_append(utf8_paths, g_strdup([[url absoluteString] UTF8String]));
         g_signal_emit (app, sig, 0, [[url absoluteString] UTF8String], &result);
-        if (result == FALSE)
-        {
-          [theApplication replyToOpenOrPrint:NSApplicationDelegateReplyFailure];
-        }
+        if (!result)
+          overall_result = FALSE;
       }
-    [theApplication replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
+      [theApplication replyToOpenOrPrint: overall_result ? NSApplicationDelegateReplySuccess : NSApplicationDelegateReplyFailure];
     g_slist_free_full(utf8_paths, g_free);
     utf8_paths = NULL;
     g_object_unref (app);
