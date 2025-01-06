@@ -43,7 +43,7 @@
     for (NSURL* url in urls)
       {
         gboolean result = TRUE;
-        g_signal_emit (app, sig, 0, [[url absoluteString] UTF8String], &result);
+        g_signal_emit (app, sig, 0, [[url file] UTF8String], &result);
         if (!result)
           overall_result = FALSE;
       }
