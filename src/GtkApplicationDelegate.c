@@ -73,7 +73,7 @@
   return result;
 }
 
--(void) application: (NSApplication*)theApplication openFiless: (NSArray<NSString *> *) files
+-(void) application: (NSApplication*)theApplication openFiles: (NSArray<NSString *> *) files
 {
   gboolean overall_result = TRUE;
   guint sig = g_signal_lookup ("NSApplicationOpenFile",

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gtk-mac-integration master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gtk-mac-integration/"
 "issues\n"
-"POT-Creation-Date: 2023-05-02 23:39+0000\n"
+"POT-Creation-Date: 2024-11-25 17:37-0800\n"
 "PO-Revision-Date: 2023-09-07 23:05+0300\n"
 "Last-Translator: Yuras Shumovich <shumovichy@gmail.com>\n"
 "Language-Team: Belarusian <i18n-bel-gnome@googlegroups.com>\n"
@@ -21,53 +21,53 @@ msgstr ""
 "X-Generator: Poedit 3.3.2\n"
 
 #. Translators: This is the Services menu item for the "Apple" menu.
-#: src/gtkosxapplication_quartz.c:267
+#: src/gtkosxapplication_quartz.c:259
 msgid "Services"
 msgstr "Сэрвісы"
 
 #. Translators: This is the "Hide" menu item of the "Apple"
 #. menu. The parameter is the application name.
 #.
-#: src/gtkosxapplication_quartz.c:286
+#: src/gtkosxapplication_quartz.c:278
 #, c-format
 msgid "Hide %s"
 msgstr "Схаваць %s"
 
 #. Translators: This is the "Hide Others" menu item for the "Apple" menu.
-#: src/gtkosxapplication_quartz.c:300
+#: src/gtkosxapplication_quartz.c:292
 msgid "Hide Others"
 msgstr "Схаваць іншыя"
 
 #. Translators: This is the Show All menu item in the "Apple" menu.
-#: src/gtkosxapplication_quartz.c:307
+#: src/gtkosxapplication_quartz.c:299
 msgid "Show All"
 msgstr "Паказаць усе"
 
 #. Translators: This is the Quit menu item for the "Apple" menu. The
 #. parameter is the application name.
 #.
-#: src/gtkosxapplication_quartz.c:322
+#: src/gtkosxapplication_quartz.c:314
 #, c-format
 msgid "Quit %s"
 msgstr "Выйсці з %s"
 
 #. Translators: This is the title of the Window menu in the menubar.
-#: src/gtkosxapplication_quartz.c:359
+#: src/gtkosxapplication_quartz.c:351
 msgid "Window"
 msgstr "Акно"
 
 #. Translators: This is the Minimize menuitem for the Window menu.
-#: src/gtkosxapplication_quartz.c:375
+#: src/gtkosxapplication_quartz.c:367
 msgid "Minimize"
 msgstr "Згарнуць"
 
 #. Translators: This is a menu item in the Window menu.
-#: src/gtkosxapplication_quartz.c:379
+#: src/gtkosxapplication_quartz.c:371
 msgid "Bring All to Front"
 msgstr "Змясціць усё на пярэднім плане"
 
 #. Translators: This is the "About foo" menu item at the top of the App menu.
-#: src/gtkosxapplication_quartz.c:897 src/gtkosxapplication_quartz.c:921
+#: src/gtkosxapplication_quartz.c:889 src/gtkosxapplication_quartz.c:913
 #, c-format
 msgid "About %s"
 msgstr "Пра %s"

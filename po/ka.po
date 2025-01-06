@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gtk-mac-integration master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gtk-mac-integration/"
 "issues\n"
-"POT-Creation-Date: 2022-08-06 19:03+0000\n"
+"POT-Creation-Date: 2024-11-25 17:37-0800\n"
 "PO-Revision-Date: 2022-11-20 18:56+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <ka@li.org>\n"
@@ -19,53 +19,53 @@ msgstr ""
 "X-Generator: Poedit 3.2\n"
 
 #. Translators: This is the Services menu item for the "Apple" menu.
-#: src/gtkosxapplication_quartz.c:251
+#: src/gtkosxapplication_quartz.c:259
 msgid "Services"
 msgstr "სერვისები"
 
 #. Translators: This is the "Hide" menu item of the "Apple"
 #. menu. The parameter is the application name.
 #.
-#: src/gtkosxapplication_quartz.c:270
+#: src/gtkosxapplication_quartz.c:278
 #, c-format
 msgid "Hide %s"
 msgstr "%s-ის დამალვა"
 
 #. Translators: This is the "Hide Others" menu item for the "Apple" menu.
-#: src/gtkosxapplication_quartz.c:284
+#: src/gtkosxapplication_quartz.c:292
 msgid "Hide Others"
 msgstr "სხვების დამალვა"
 
 #. Translators: This is the Show All menu item in the "Apple" menu.
-#: src/gtkosxapplication_quartz.c:291
+#: src/gtkosxapplication_quartz.c:299
 msgid "Show All"
 msgstr "ყველას ჩვენება"
 
 #. Translators: This is the Quit menu item for the "Apple" menu. The
 #. parameter is the application name.
 #.
-#: src/gtkosxapplication_quartz.c:306
+#: src/gtkosxapplication_quartz.c:314
 #, c-format
 msgid "Quit %s"
 msgstr "%s-დან გასვლა"
 
 #. Translators: This is the title of the Window menu in the menubar.
-#: src/gtkosxapplication_quartz.c:339
+#: src/gtkosxapplication_quartz.c:351
 msgid "Window"
 msgstr "ფანჯარა"
 
 #. Translators: This is the Minimize menuitem for the Window menu.
-#: src/gtkosxapplication_quartz.c:355
+#: src/gtkosxapplication_quartz.c:367
 msgid "Minimize"
 msgstr "ჩაკეცვა"
 
 #. Translators: This is a menu item in the Window menu.
-#: src/gtkosxapplication_quartz.c:359
+#: src/gtkosxapplication_quartz.c:371
 msgid "Bring All to Front"
 msgstr "ყველას წინ გამოტანა"
 
 #. Translators: This is the "About foo" menu item at the top of the App menu.
-#: src/gtkosxapplication_quartz.c:877 src/gtkosxapplication_quartz.c:901
+#: src/gtkosxapplication_quartz.c:889 src/gtkosxapplication_quartz.c:913
 #, c-format
 msgid "About %s"
 msgstr "%s-ის შესახებ"
