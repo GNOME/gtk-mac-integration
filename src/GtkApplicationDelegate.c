@@ -35,15 +35,23 @@
 -(void) application: (NSApplication*)theApplication openURLs: (NSArray<NSURL *> *) urls
 {
   gboolean overall_result = TRUE;
-  guint sig = g_signal_lookup ("NSApplicationOpenFile",
-                               GTKOSX_TYPE_APPLICATION);
-  if (sig)
+  guint file_sig = g_signal_lookup ("NSApplicationOpenFile",
+                                    GTKOSX_TYPE_APPLICATION);
+  guint url_sig = g_signal_lookup ("NSApplicationOpenURL",
+                                    GTKOSX_TYPE_APPLICATION);
+  if (file_sig || url_sig)
   {
     GtkosxApplication *app = g_object_new (GTKOSX_TYPE_APPLICATION, NULL);
     for (NSURL* url in urls)
       {
         gboolean result = TRUE;
-        g_signal_emit (app, sig, 0, [[url file] UTF8String], &result);
+
+        if (file_sig && url.path)
+          g_signal_emit (app, file_sig, 0, [url.path UTF8String], &result);
+
+        if (url_sig)
+          g_signal_emit (app, url_sig, 0, [url.absoluteString UTF8String], &result);
+
         if (!result)
           overall_result = FALSE;
       }

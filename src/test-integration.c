@@ -551,6 +551,13 @@ app_open_file_cb (GtkosxApplication *app, gchar *path, gpointer user_data)
   return FALSE;
 }
 
+static gboolean
+app_open_url_cb (GtkosxApplication *app, gchar *url, gpointer user_data)
+{
+  printf("Open url %s\n", url);
+  return FALSE;
+}
+
 static GtkWidget*
 create_window (const gchar *title)
 {
@@ -736,6 +743,8 @@ main (int argc, char **argv)
                       G_CALLBACK (app_will_quit_cb), NULL);
     g_signal_connect (theApp, "NSApplicationOpenFile",
                       G_CALLBACK (app_open_file_cb), (gpointer)window1);
+    g_signal_connect (theApp, "NSApplicationOpenURL",
+                      G_CALLBACK (app_open_url_cb), (gpointer)window1);
   }
 # ifndef QUARTZ_HANDLERS
   gtkosx_application_set_use_quartz_accelerators (theApp, FALSE);

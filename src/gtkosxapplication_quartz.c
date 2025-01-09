@@ -582,6 +582,7 @@ enum
   BlockTermination,
   WillTerminate,
   OpenFile,
+  OpenURL,
   LastSignal
 };
 
@@ -727,7 +728,8 @@ gtkosx_application_class_init (GtkosxApplicationClass *klass)
    * @user_data: Data attached at connection
    *
    * Emitted when an OpenFile, OpenFiles, or (in macOS 10.13 or later)
-   * OpenURLs event is received from the operating system. This signal
+   * OpenURLs event is received from the operating system and in the
+   * last case when the URL is a file type. This signal
    * does not implement drops, but it does implement "open with"
    * events from Finder. If more than one file or URL is supplied then
    * the signal is emitted once for each file.
@@ -736,6 +738,31 @@ gtkosx_application_class_init (GtkosxApplicationClass *klass)
    */
   gtkosx_application_signals[OpenFile] =
     g_signal_new ("NSApplicationOpenFile",
+                  GTKOSX_TYPE_APPLICATION,
+                  G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
+                  0, NULL, NULL,
+                  g_cclosure_marshal_BOOLEAN__STRING,
+                  G_TYPE_BOOLEAN, 1, G_TYPE_STRING);
+
+  /**
+   * GtkosxApplication::NSApplicationOpenURL:
+   * @app: The application object
+   * @url: A UTF8-encoded, URL-escaped URL to open.
+   * @user_data: Data attached at connection
+   *
+   * Emitted in macOS 10.13 or later when an OpenURLs event is
+   * received from the operating system, including file types, meaning
+   * that both NSApplicationOpenFile and NSApplicationOpenURL are
+   * emitted when file type URLs are received. A separate signal will
+   * be emitted for each URL if more than one is received. If the URLs
+   * array contains a mix of file and the application handles both
+   * signals then it will get a mix of NSApplicationOpenFile and
+   * NSApplicationOpenURL signals.
+   *
+   * Returns: Boolean indicating success at opening the file.
+   */
+  gtkosx_application_signals[OpenURL] =
+    g_signal_new ("NSApplicationOpenURL",
                   GTKOSX_TYPE_APPLICATION,
                   G_SIGNAL_NO_RECURSE | G_SIGNAL_ACTION,
                   0, NULL, NULL,
