@@ -8,7 +8,7 @@ GtkosxApplication compiles and works with i386, x86_64 and arm64.  New
 Gtk3 applications should prefer the GApplication/GtkApplication and
 GMenuModel/GMenu APIs which make this library unnecessary. Gtk4
 applications must use those facilities as the older API on which this
-libary depends have been remobed.
+library depends have been removed.
 
 Example and test code may be found in src/test-integration.c; Being
 GUI code this library is somewhat resistant to useful automated
